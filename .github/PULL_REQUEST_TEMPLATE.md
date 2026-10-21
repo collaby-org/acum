@@ -17,7 +17,7 @@
 
 <!-- e.g. 1.0.0 → 1.1.0 -->
 
-## Evidence
+## Verification
 
 <!--
 What proves this works? Paste the command output, the screenshot, the

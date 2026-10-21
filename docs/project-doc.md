@@ -86,6 +86,31 @@ did when the probe ran. The UI says so in plain Romanian.
 - Colours come from the tokens in `src/app/globals.css`.
 - The interface is in Romanian, with correct diacritics.
 - Motion is subtle; celebration particles respect `prefers-reduced-motion`.
+- Icons: `lucide-react` only. Components: shadcn-first.
+- Version line: `package.json` `version` and `docs/VERSION` move together —
+  one PR, one bump. Feature or architecture → minor, fix or docs or chore →
+  patch, breaking → major.
+- `docs/changelog.md` gets its entry in the same commit as the change.
+
+The repository-wide agent contract lives in `AGENTS.md`, which is kept
+byte-identical to the global blueprint at `~/.config/opencode/AGENTS.md`.
+
+## The data pipeline
+
+The channel dataset is generated, never hand-edited.
+
+```bash
+node scripts/scrape-channels.mjs   # cool-etv.net -> data/channels.raw.json
+node scripts/check-embeds.mjs      # liveness probe -> data/embed-health.json
+node scripts/build-dataset.mjs      # merge + logos -> src/data/channels.ts
+node scripts/fetch-fonts.mjs        # self-host the brand fonts
+node scripts/verify-ui.mjs <url>    # headless UI verification -> docs/reviews/
+```
+
+`scripts/channel-taxonomy.json` is the hand-written editorial layer. Edit
+that, never the generated module. `data/channels.raw.json` and
+`data/embed-health.json` are committed so the build is reproducible without
+network access.
 
 ## Where the data comes from
 

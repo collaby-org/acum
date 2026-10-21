@@ -1,28 +1,10 @@
-# AGENTS.md
-
-> This file is the project contract for AI agents and humans working on VIZOR.
-> It mirrors the global workflow at `~/.config/opencode/AGENTS.md` and adds the
-> project-specific rules that only make sense here.
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-## This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
-
-## Global Agent Workflow
+# Global Agent Workflow
 
 Every task moves through four beats. This file governs everywhere; project
-specifics go in the repo's own location. Never build on
-`main`. New builds and
-migrations start at `/scope` first (new build → `/scope` then
-`/new-feature`; migration → `/scope` then the plan). When project context
-is missing or stale, `/audit` runs first — HUMAN-ONLY: never invoke it
-without explicit authorization in that same task.
+specifics go in the repo's own `AGENTS.md`. Skills carry the procedures; this
+file carries the rules and the pointers.
+
+## Workflow
 
 1. **Isolate — `new-feature`.** Established projects only: every feature
    starts in a worktree branched from `origin/main`, on the same drive as the
@@ -54,10 +36,11 @@ without explicit authorization in that same task.
    living docs and the changelog of the folder worked in (the same-commit rule
    is in Docs and versions), then `/document` and `/unslop`. `/check review` is
    an optional single quick read; it never replaces `/code-review`. The bar
-   for the review comments is in the PR-Agent preset. Merging is the human's
-   decision: never merge unless told. Keep the worktree until
+   for the review comments is in the PR-Agent preset. Merging is
+   the human's decision: never merge unless told. Keep the worktree until
    merge, delete it after.
-   `/sync` is HUMAN-ONLY: never invoke it without explicit authorization in that same task, never auto-chained.
+   `/sync` is HUMAN-ONLY: never invoke it without explicit authorization in
+   that same task, never auto-chained.
 
 ## Repo standards (always)
 
@@ -145,20 +128,20 @@ tree and the boundary rules. Stale system docs are a bug.
 
 ## Data & backend rules
 
-Prisma migrations via the `prisma` MCP (`migrate-dev`); never hand-edit
-applied migrations; `$transaction` for multi-writes; raw SQL only when
-Prisma cannot express it or changes complexity class.
-Parameterized queries always. No destructive SQL without confirmation.
-`.env*` is blocked by `envsitter-guard` — use its tools, never paste
-secrets. Pasted logs are sanitized automatically.
+- Prisma migrations via the `prisma` MCP (`migrate-dev`); never hand-edit
+  applied migrations; `$transaction` for multi-writes; raw SQL only when
+  Prisma cannot express it or changes complexity class.
+- Parameterized queries always. No destructive SQL without confirmation.
+- `.env*` is blocked by `envsitter-guard` — use its tools, never paste
+  secrets. Pasted logs are sanitized automatically.
 
 ## Multi-agent rules
 
 One worktree and one branch per task/agent. Never touch another agent's
-worktree, branch or uncommitted work. Scope check first (`gh pr list`,
-`gh pr diff <n> --name-only`). Never plain `--force`; `--force-with-lease` on
-your own branch only. Regenerate lockfiles, never hand-merge. Worktrees do not
-isolate ports or databases — confirm the port answers your process; no schema
+worktree, branch or uncommitted work. Scope check first (`gh pr list`, `gh pr
+diff <n> --name-only`). Never plain `--force`; `--force-with-lease` on your own
+branch only. Regenerate lockfiles, never hand-merge. Worktrees do not isolate
+ports or databases — confirm the port answers your process; no schema
 experiments on shared DBs. Memory (`opencode-mem`) captures durable facts;
 costs roll into `opencode-telemetry`. Unresolved conflict: stop and report.
 
@@ -238,72 +221,3 @@ exist before checking `.github/workflows/`.
 
 Load the `ship` skill for the full end-of-task protocol; the four beats above
 are its order.
-
----
-
-## VIZOR project rules
-
-### What this repository is
-
-VIZOR is a Netflix-style directory of Romanian live TV channels. It indexes
-the public embed URLs published on `https://www.cool-etv.net/` and renders
-them in a clean, account-free player.
-
-- **No backend.** There is no database, no API and no auth. The channel list
-  is a generated TypeScript module committed to the repository.
-- **No accounts.** Favourites live in `localStorage` only.
-- **No ads.** The app ships no analytics, no trackers and no ad scripts. The
-  third-party players it embeds are outside our control — say so in the UI
-  rather than pretending otherwise.
-
-### Docs home
-
-`docs/` in this repository. Update it in the same commit as any code change
-that makes it stale. See `docs/project-doc.md`.
-
-### Version line
-
-`package.json` `version` and `docs/VERSION` move together. One PR, one bump:
-feature or architecture → minor, fix or docs or chore → patch, breaking →
-major. `v<version>` tags come only from the merged commit.
-
-### Data pipeline
-
-The channel dataset is generated, never hand-edited in `src/data/channels.ts`.
-
-```bash
-node scripts/scrape-channels.mjs   # cool-etv.net -> data/channels.raw.json
-node scripts/check-embeds.mjs      # liveness probe  -> data/embed-health.json
-node scripts/build-dataset.mjs     # merge + logos   -> src/data/channels.ts
-node scripts/fetch-fonts.mjs       # self-host the brand fonts
-```
-
-- `scripts/channel-taxonomy.json` is the hand-written editorial layer: display
-  names and categories. Edit that, never the generated module.
-- `data/channels.raw.json` and `data/embed-health.json` are committed so the
-  build is reproducible without network access.
-- Re-running the pipeline changes `src/data/channels.ts`; commit it with the
-  taxonomy change so the diff explains itself.
-
-### UI rules
-
-- Icons: `lucide-react` only.
-- Components: shadcn-first. The primitives in `src/components/ui/` follow the
-  shadcn contract (`cn` + `cva` variants, `data-slot` attributes).
-- Tokens live in `src/app/globals.css` under `@theme`. Do not hard-code
-  colours in components; add a token instead.
-- Motion must be invisible or meaningful. Celebration particles are the only
-  loud motion, and they respect `prefers-reduced-motion`.
-- Self-host fonts. No runtime CDN requests.
-
-### Build and check
-
-```bash
-npm run lint       # ESLint flat config, no `next lint`
-npm run typecheck  # next typegen && tsc --noEmit
-npm run build      # Turbopack production build
-```
-
-`next lint` no longer exists in Next.js 16 — use the ESLint CLI directly.
-`next typegen` must run before the type check: the route-type helpers
-(`LayoutProps`, `PageProps`, `RouteContext`) are generated, not shipped.

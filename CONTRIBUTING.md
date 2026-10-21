@@ -69,5 +69,5 @@ and come back; the `status` field in the dataset is refreshed by
 
 ## Security
 
-Report vulnerabilities privately — see `SECURITY.md`. Do not open a public
-issue for a security problem.
+Report vulnerabilities privately — see [.github/SECURITY.md](.github/SECURITY.md).
+Do not open a public issue for a security problem.

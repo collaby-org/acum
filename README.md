@@ -107,6 +107,7 @@ docs/              living docs
   components, motion rules
 - [AGENTS.md](AGENTS.md) — the contract for agents and contributors
 - [CONTRIBUTING.md](CONTRIBUTING.md) — how to contribute
+- [.github/SECURITY.md](.github/SECURITY.md) — how to report a vulnerability
 
 ## Contributing
 
@@ -115,8 +116,8 @@ request, and the template asks for evidence and a `version: before → after`.
 
 ## Security
 
-See [SECURITY.md](SECURITY.md). Report vulnerabilities privately through
-GitHub's security advisory form.
+See [.github/SECURITY.md](.github/SECURITY.md). Report vulnerabilities privately
+through GitHub's security advisory form.
 
 ## Licence
 
