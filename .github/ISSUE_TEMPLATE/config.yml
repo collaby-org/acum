@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/collaby-org/vizor/security/advisories/new
+    about: Report privately. Please do not open a public issue.
+  - name: Channel out of date
+    url: https://www.cool-etv.net/
+    about: The catalogue is scraped from this source; check it first.

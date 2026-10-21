@@ -1,0 +1,845 @@
+[
+  {
+    "url": "https://arwen1.panaka001.cfd/000/canald.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/canald.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/duk.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/duk.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/etno.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/etno.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/favorit.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/favorit.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/fishy.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/fishy.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/kys.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/kys.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/much.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/much.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/prx.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/prx.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/vexpl.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/vexpl.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/vhis.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/vhis.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://arwen1.panaka001.cfd/000/vnature.html",
+    "host": "arwen1.panaka001.cfd",
+    "status": 403,
+    "finalUrl": "https://arwen1.panaka001.cfd/000/vnature.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/epy.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/epy.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/fbux1.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/fbux1.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/minmax.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/minmax.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/nichitun.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/nichitun.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/t1c.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/t1c.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/tivisp.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/tivisp.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://atlantida1.aquax001.shop/000/tnnt.html",
+    "host": "atlantida1.aquax001.shop",
+    "status": 403,
+    "finalUrl": "https://atlantida1.aquax001.shop/000/tnnt.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://canale-tv.com/channel-v2/a1.html",
+    "host": "canale-tv.com",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel-v2/a1.html",
+    "state": "player",
+    "bytes": 13459
+  },
+  {
+    "url": "https://canale-tv.net/channel-v2/a1.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel-v2/a1.html",
+    "state": "player",
+    "bytes": 13459
+  },
+  {
+    "url": "https://canale-tv.net/channel-v2/pr0tv.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel-v2/pr0tv.html",
+    "state": "player",
+    "bytes": 13484
+  },
+  {
+    "url": "https://canale-tv.net/channel-v2/primatv.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel-v2/primatv.html",
+    "state": "player",
+    "bytes": 13316
+  },
+  {
+    "url": "https://canale-tv.net/channel/a1.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/a1.html",
+    "state": "player",
+    "bytes": 9422
+  },
+  {
+    "url": "https://canale-tv.net/channel/dgsp3.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/dgsp3.html",
+    "state": "player",
+    "bytes": 9294
+  },
+  {
+    "url": "https://canale-tv.net/channel/dgsp4.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/dgsp4.html",
+    "state": "player",
+    "bytes": 9290
+  },
+  {
+    "url": "https://canale-tv.net/channel/ppv1.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/ppv1.html",
+    "state": "player",
+    "bytes": 9279
+  },
+  {
+    "url": "https://canale-tv.net/channel/ppv2.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/ppv2.html",
+    "state": "player",
+    "bytes": 9279
+  },
+  {
+    "url": "https://canale-tv.net/channel/primasp4.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/primasp4.html",
+    "state": "player",
+    "bytes": 9289
+  },
+  {
+    "url": "https://canale-tv.net/channel/primasp5.html",
+    "host": "canale-tv.net",
+    "status": 200,
+    "finalUrl": "https://canale-tv.net/channel/primasp5.html",
+    "state": "player",
+    "bytes": 9282
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1axy.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1axy.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1canad2.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1canad2.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1cx1.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1cx1.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1cx2.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1cx2.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1hitivi.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1hitivi.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1rteve.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1rteve.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1spyn.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1spyn.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1travil.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1travil.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://cronos.mangora1.cfd/000/1utivi.html",
+    "host": "cronos.mangora1.cfd",
+    "status": 403,
+    "finalUrl": "https://cronos.mangora1.cfd/000/1utivi.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1bomy.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1bomy.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1buly.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1buly.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1news.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1news.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1reality.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1reality.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1tarafy.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1tarafy.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://flash1.bogulus1.cfd/000/1uild.html",
+    "host": "flash1.bogulus1.cfd",
+    "status": 403,
+    "finalUrl": "https://flash1.bogulus1.cfd/000/1uild.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1h3.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1h3.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1hyst.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1hyst.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1n24.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1n24.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias001.cfd/000/1papi.html",
+    "host": "galandriel1.thobias001.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias001.cfd/000/1papi.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://galandriel1.thobias11.cfd/000/1hyst.html",
+    "host": "galandriel1.thobias11.cfd",
+    "status": 403,
+    "finalUrl": "https://galandriel1.thobias11.cfd/000/1hyst.html",
+    "state": "blocked",
+    "bytes": 4450
+  },
+  {
+    "url": "https://iron1.jarvisx1.cfd/000/astar.html",
+    "host": "iron1.jarvisx1.cfd",
+    "status": null,
+    "finalUrl": null,
+    "state": "error",
+    "bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "url": "https://iron1.jarvisx1.cfd/000/cbsrealy.html",
+    "host": "iron1.jarvisx1.cfd",
+    "status": null,
+    "finalUrl": null,
+    "state": "error",
+    "bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "url": "https://iron1.xn--x2rw19a.space/000/puk1.html",
+    "host": "iron1.xn--x2rw19a.space",
+    "status": 403,
+    "finalUrl": "https://iron1.xn--x2rw19a.space/000/puk1.html",
+    "state": "blocked",
+    "bytes": 5975
+  },
+  {
+    "url": "https://iron1.xn--x2rw19a.space/000/puk2.html",
+    "host": "iron1.xn--x2rw19a.space",
+    "status": 403,
+    "finalUrl": "https://iron1.xn--x2rw19a.space/000/puk2.html",
+    "state": "blocked",
+    "bytes": 5975
+  },
+  {
+    "url": "https://iron1.xn--x2rw19a.space/000/puk3.html",
+    "host": "iron1.xn--x2rw19a.space",
+    "status": 403,
+    "finalUrl": "https://iron1.xn--x2rw19a.space/000/puk3.html",
+    "state": "blocked",
+    "bytes": 5975
+  },
+  {
+    "url": "https://kuruk1.xn--okq6e.shop/000/1er1.html",
+    "host": "kuruk1.xn--okq6e.shop",
+    "status": 403,
+    "finalUrl": "https://kuruk1.xn--okq6e.shop/000/1er1.html",
+    "state": "blocked",
+    "bytes": 5973
+  },
+  {
+    "url": "https://kuruk1.xn--okq6e.shop/000/1er2.html",
+    "host": "kuruk1.xn--okq6e.shop",
+    "status": 403,
+    "finalUrl": "https://kuruk1.xn--okq6e.shop/000/1er2.html",
+    "state": "blocked",
+    "bytes": 5973
+  },
+  {
+    "url": "https://kuruk1.xn--okq6e.shop/000/1kuk1.html",
+    "host": "kuruk1.xn--okq6e.shop",
+    "status": 403,
+    "finalUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk1.html",
+    "state": "blocked",
+    "bytes": 5976
+  },
+  {
+    "url": "https://kuruk1.xn--okq6e.shop/000/1kuk2.html",
+    "host": "kuruk1.xn--okq6e.shop",
+    "status": 403,
+    "finalUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk2.html",
+    "state": "blocked",
+    "bytes": 5976
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/axalb.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/axalb.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/cry.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/cry.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/fboye.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/fboye.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/fboyp.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/fboyp.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/h2.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/h2.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/ngeo.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/ngeo.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta001.cfd/000/niki.html",
+    "host": "onyx1.mofta001.cfd",
+    "status": 403,
+    "finalUrl": "https://onyx1.mofta001.cfd/000/niki.html",
+    "state": "blocked",
+    "bytes": 4548
+  },
+  {
+    "url": "https://onyx1.mofta1.cfd/000/discoscify.html",
+    "host": "onyx1.mofta1.cfd",
+    "status": null,
+    "finalUrl": null,
+    "state": "error",
+    "bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "url": "https://pulse1.xn--x2rv05jjkg.shop/000/1pypy3.html",
+    "host": "pulse1.xn--x2rv05jjkg.shop",
+    "status": 403,
+    "finalUrl": "https://pulse1.xn--x2rv05jjkg.shop/000/1pypy3.html",
+    "state": "blocked",
+    "bytes": 4456
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/amece.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/amece.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/astar.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/astar.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/axblack.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/axblack.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/b1.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/b1.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/cartun.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/cartun.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/disc.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/disc.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/ert.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/ert.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/hap.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/hap.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/jimy.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/jimy.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/komedi.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/komedi.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/prima.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/prima.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/procinema.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/procinema.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://saruman1.tharen001.cfd/000/zzz.html",
+    "host": "saruman1.tharen001.cfd",
+    "status": 403,
+    "finalUrl": "https://saruman1.tharen001.cfd/000/zzz.html",
+    "state": "blocked",
+    "bytes": 4549
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/d1va.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/d1va.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/df.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/df.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/ernews.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/ernews.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/goldy.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/goldy.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/h1.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/h1.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/prnews.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/prnews.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/schi1.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/schi1.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/schi2.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/schi2.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/sienen.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/sienen.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/tivi1.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/tivi1.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/tivi2.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/tivi2.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/tivi3.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/tivi3.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://thor1.syndula001.cfd/000/tivinter.html",
+    "host": "thor1.syndula001.cfd",
+    "status": 403,
+    "finalUrl": "https://thor1.syndula001.cfd/000/tivinter.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://ultra3.ronanx001.shop/000/porkys.html",
+    "host": "ultra3.ronanx001.shop",
+    "status": 403,
+    "finalUrl": "https://ultra3.ronanx001.shop/000/porkys.html",
+    "state": "blocked",
+    "bytes": 4550
+  },
+  {
+    "url": "https://www.cool-etv.net/ch/etc/mold/moldova-1.html",
+    "host": "www.cool-etv.net",
+    "status": 200,
+    "finalUrl": "https://www.cool-etv.net/ch/etc/mold/moldova-1.html",
+    "state": "player",
+    "bytes": 849
+  },
+  {
+    "url": "https://www.cool-etv.net/ch/etc/mold/publika.html",
+    "host": "www.cool-etv.net",
+    "status": 200,
+    "finalUrl": "https://www.cool-etv.net/ch/etc/mold/publika.html",
+    "state": "player",
+    "bytes": 792
+  },
+  {
+    "url": "https://www.youtube.com/embed/dWW7ucvedFw",
+    "host": "www.youtube.com",
+    "status": 200,
+    "finalUrl": "https://www.youtube.com/embed/dWW7ucvedFw",
+    "state": "player",
+    "bytes": 145659
+  },
+  {
+    "url": "https://www.youtube.com/embed/FRzSaHqOURQ",
+    "host": "www.youtube.com",
+    "status": 200,
+    "finalUrl": "https://www.youtube.com/embed/FRzSaHqOURQ",
+    "state": "player",
+    "bytes": 144978
+  }
+]

@@ -1,0 +1,525 @@
+{
+  "categories": [
+    { "id": "generaliste", "label": "Generaliste", "tagline": "Canale naționale și de niște" },
+    { "id": "stiri", "label": "Știri", "tagline": "Actualitate, politică, evenimente" },
+    { "id": "sport", "label": "Sport", "tagline": "Fotbal, meciuri și competiții" },
+    { "id": "movies", "label": "Filme", "tagline": "Cinema și seriale premium" },
+    { "id": "kids", "label": "Copii", "tagline": "Animatoare și conținut pentru cei mici" },
+    { "id": "documentare", "label": "Documentare", "tagline": "Natură, știință și explorare" },
+    { "id": "music", "label": "Muzică", "tagline": "Clipse, hituri și radio video" }
+  ],
+  "families": {
+    "Pro Tv": {
+      "name": "PRO TV",
+      "category": "generaliste",
+      "kids": {
+        "protv": "PRO TV",
+        "protv-s2": "PRO TV HD",
+        "protv-s3": "PRO TV S3",
+        "protv-s4": "PRO TV S4",
+        "protv-s7": "PRO TV News"
+      }
+    },
+    "ProCinema": {
+      "name": "PRO CINEMA",
+      "category": "movies",
+      "kids": { "procinema": "PRO CINEMA", "procinema-s2": "PRO CINEMA S2" }
+    },
+    "TVR 's": {
+      "name": "TVR",
+      "category": "generaliste",
+      "kids": {
+        "tvr1": "TVR 1",
+        "tvr1-s2": "TVR 1 S2",
+        "tvr2": "TVR 2",
+        "tvr2-s2": "TVR 2 S2",
+        "tvr3-s1": "TVR 3",
+        "tvrsp-s1": "TVR Sport",
+        "tvr-inter-s1": "TVR Internazionale"
+      }
+    },
+    "Prima Tv": {
+      "name": "Prima TV",
+      "category": "generaliste",
+      "kids": {
+        "primatv": "Prima TV",
+        "primatv-s2": "Prima TV S2",
+        "primatv-s3": "Prima TV S3"
+      }
+    },
+    "HB0 R0": {
+      "name": "HBO",
+      "category": "movies",
+      "kids": {
+        "hro1-s1": "HBO HD",
+        "hro1-s2": "HBO S2",
+        "hro2-s1": "HBO 2 S1",
+        "hro2-s2": "HBO 2 S2",
+        "hro3-s1": "HBO 3 S1",
+        "hro3-s2": "HBO 3 S2",
+        "cmax1-s1": "Cinemax 1 S1",
+        "cmax1-s2": "Cinemax 1 S2",
+        "cmax2-s1": "Cinemax 2 S1",
+        "cmax2-s2": "Cinemax 2 S2"
+      }
+    },
+    "National Tv": {
+      "name": "Național TV",
+      "category": "generaliste",
+      "kids": {
+        "nationaltv": "Național TV",
+        "nationaltv-s2": "Național TV S2",
+        "nationaltv-s3": "Național TV S3"
+      }
+    },
+    "Caln D 1&2": {
+      "name": "Kanal D",
+      "category": "generaliste",
+      "kids": {
+        "cd-s1": "Kanal D",
+        "cd-s2": "Kanal D S2",
+        "cd-s3": "Kanal D 2",
+        "cd-s4": "Kanal D 2 S2"
+      }
+    },
+    "Ant 1": {
+      "name": "Antena 1",
+      "category": "generaliste",
+      "kids": {
+        "an1": "Antena 1",
+        "an1-s2": "Antena 1 HD",
+        "an1-s3": "Antena 1 S3",
+        "an1-s4": "Antena 1 S4"
+      }
+    },
+    "Pro 2": {
+      "name": "PRO 2",
+      "category": "generaliste",
+      "kids": {
+        "acasatv": "PRO 2",
+        "acasatv-s2": "PRO 2 S2",
+        "acasatv-gold": "PRO 2 Gold",
+        "acasatv-gold-s2": "PRO 2 Gold S2"
+      }
+    },
+    "PR0 - X": {
+      "name": "PRO X",
+      "category": "generaliste",
+      "kids": { "sportro": "PRO X", "sportro-s2": "PRO X S2", "sportro-s3": "PRO X S3" }
+    },
+    "Ant 3": {
+      "name": "Antena 3",
+      "category": "generaliste",
+      "kids": { "an3": "Antena 3", "an3-s2": "Antena 3 S2", "an3-s3": "Antena 3 S3" }
+    },
+    "Realitatea Tv": {
+      "name": "Realitatea",
+      "category": "generaliste",
+      "kids": {
+        "realitatea": "Realitatea",
+        "realitatea-s2": "Realitatea S2",
+        "realitatea-s3": "Realitatea S3"
+      }
+    },
+    "Sport's Tv": {
+      "name": "SuperSport",
+      "category": "sport",
+      "kids": {
+        "sport1-s1": "SuperSport 1",
+        "sport1-s2": "SuperSport 1 S2",
+        "sport2-s1": "SuperSport 2",
+        "sport2-s2": "SuperSport 2 S2",
+        "sport3-s1": "SuperSport 3",
+        "sport3-s2": "SuperSport 3 S2",
+        "sport4-s1": "SuperSport 4",
+        "sport4-s2": "SuperSport 4 S2"
+      }
+    },
+    "TELEK0M Sport": {
+      "name": "Telekom Sport",
+      "category": "sport",
+      "kids": {
+        "dolce1-s1": "Telekom Sport 1",
+        "dolce1-s2": "Telekom Sport 1 S2",
+        "dolce2-s1": "Telekom Sport 2",
+        "dolce2-s2": "Telekom Sport 2 S2",
+        "dolce3-s1": "Telekom Sport 3",
+        "dolce3-s2": "Telekom Sport 3 S2",
+        "dolce4-s1": "Telekom Sport 4",
+        "dolce4-s2": "Telekom Sport 4 S2"
+      }
+    },
+    "L00K Tv": {
+      "name": "LOOK TV",
+      "category": "sport",
+      "kids": {
+        "look-tv-s1": "LOOK Sport 1",
+        "look-tv-s2": "LOOK Sport 2",
+        "look-tv-s3": "LOOK Sport 3",
+        "look-tv-plus-s1": "LOOK Sport 4",
+        "look-tv-plus-s2": "LOOK Sport 5",
+        "look-tv-pp1": "LOOK PP1",
+        "look-tv-pp2": "LOOK PP2",
+        "look-tv-pp3": "LOOK PP3"
+      }
+    },
+    "ESport's": {
+      "name": "eSports",
+      "category": "sport",
+      "kids": {
+        "er1-s1": "eSports 1",
+        "er1-s2": "eSports 1 S2",
+        "er2-s1": "eSports 2",
+        "er2-s2": "eSports 2 S2"
+      }
+    },
+    "RTV": {
+      "name": "RTV",
+      "category": "generaliste",
+      "kids": {
+        "realitatea-rtv": "RTV",
+        "realitatea-rtv-s2": "RTV S2",
+        "realitatea-rtv-s3": "RTV S3"
+      }
+    },
+    "TV 1000 Max": {
+      "name": "TV 1000 Max",
+      "category": "movies",
+      "kids": { "tv100": "TV 1000 Max", "tv100-s2": "TV 1000 Max S2" }
+    },
+    "Movies": {
+      "name": "Movies",
+      "category": "movies",
+      "kids": { "movie-s1": "Movies", "movie-s2": "Movies S2" }
+    },
+    "ZuTv": {
+      "name": "Zu TV",
+      "category": "movies",
+      "kids": { "zu": "Zu TV", "zu-s2": "Zu TV S2" }
+    },
+    "FilmBox": {
+      "name": "Filmbox",
+      "category": "movies",
+      "kids": {
+        "filmbox-s1": "Filmbox HD",
+        "filmbox-s2": "Filmbox Family",
+        "filmbox-s3": "Filmbox Extra",
+        "filmbox-s4": "Filmbox"
+      }
+    },
+    "Antena Stars": {
+      "name": "Antena Stars",
+      "category": "movies",
+      "kids": { "an2-s1": "Antena Stars", "an2-s2": "Antena Stars S2" }
+    },
+    "Teen Nick": {
+      "name": "TeenNick",
+      "category": "kids",
+      "kids": { "universal-ch": "TeenNick", "universal-ch-s2": "TeenNick S2" }
+    },
+    "Film Cafe": {
+      "name": "Film Café",
+      "category": "movies",
+      "kids": { "film-cafe": "Film Café", "film-cafe-s2": "Film Café S2" }
+    },
+    "Happy": {
+      "name": "Happy Channel",
+      "category": "movies",
+      "kids": { "euforia": "Happy Channel", "euforia-s2": "Happy Channel S2" }
+    },
+    "Diva Universal": {
+      "name": "Diva Universal",
+      "category": "movies",
+      "kids": { "diva": "Diva Universal", "diva-s2": "Diva Universal S2" }
+    },
+    "Disney Channel": {
+      "name": "Disney",
+      "category": "kids",
+      "kids": {
+        "jetix-cartoon": "Disney Channel",
+        "jetix-cartoon-s2": "Disney Channel S2",
+        "jetix-junior": "Disney Junior",
+        "jetix-junior-s2": "Disney Junior S2"
+      }
+    },
+    "Cartoon Network": {
+      "name": "Cartoon Network",
+      "category": "kids",
+      "kids": { "cartoon": "Cartoon Network", "cartoon-s2": "Cartoon Network S2" }
+    },
+    "Boomerang": {
+      "name": "Boomerang",
+      "category": "kids",
+      "kids": { "boomerang": "Boomerang", "boomerang-s2": "Boomerang S2" }
+    },
+    "MiniMax & Jim": {
+      "name": "MiniMax & Jim Jam",
+      "category": "kids",
+      "kids": {
+        "minimaxro": "MiniMax",
+        "minimaxro-s2": "MiniMax S2",
+        "jim-jam": "Jim Jam",
+        "jim-jam-s2": "Jim Jam S2"
+      }
+    },
+    "B1 Tv": {
+      "name": "B1 TV",
+      "category": "generaliste",
+      "kids": { "b1": "B1 TV", "b1-s2": "B1 TV S2", "b1-s3": "B1 TV S3" }
+    },
+    "Nickelodeon": {
+      "name": "Nickelodeon",
+      "category": "kids",
+      "kids": {
+        "nickelodeon": "Nickelodeon",
+        "nickelodeon-s2": "Nickelodeon S2",
+        "nickelodeon-jr": "Nickelodeon Junior",
+        "nickelodeon-jr-s2": "Nickelodeon Junior S2",
+        "nick-toons-s1": "NickToons",
+        "nick-toons-s2": "NickToons S2"
+      }
+    },
+    "AMC": {
+      "name": "AMC",
+      "category": "movies",
+      "kids": { "amc-s1": "AMC", "amc-s2": "AMC S2" }
+    },
+    "BBC Earth": {
+      "name": "BBC Earth",
+      "category": "documentare",
+      "kids": { "bbc-earth-s1": "BBC Earth", "bbc-earth-s2": "BBC Earth S2" }
+    },
+    "Prima News": {
+      "name": "Prima News",
+      "category": "stiri",
+      "kids": { "prima-news-s1": "Prima News", "prima-news-s2": "Prima News S2" }
+    },
+    "Euro News": {
+      "name": "EuroNews",
+      "category": "stiri",
+      "kids": { "euro-news-s1": "EuroNews", "euro-news-s2": "EuroNews S2" }
+    },
+    "Show 1": {
+      "name": "SHOW 1",
+      "category": "generaliste",
+      "kids": { "shut1-s1": "SHOW 1", "shut1-s2": "SHOW 1 S2" }
+    },
+    "Show 2": {
+      "name": "SHOW 2",
+      "category": "generaliste",
+      "kids": { "shut2-s1": "SHOW 2", "shut2-s2": "SHOW 2 S2" }
+    },
+    "AXN": {
+      "name": "AXN",
+      "category": "movies",
+      "kids": { "axn": "AXN", "axn-s2": "AXN S2" }
+    },
+    "AXN Black": {
+      "name": "AXN Black",
+      "category": "movies",
+      "kids": { "axn-black-s1": "AXN Black", "axn-black-s2": "AXN Black S2" }
+    },
+    "AXN White": {
+      "name": "AXN White",
+      "category": "movies",
+      "kids": { "axn-white-s1": "AXN White", "axn-white-s2": "AXN White S2" }
+    },
+    "AXN Spin": {
+      "name": "AXN Spin",
+      "category": "movies",
+      "kids": { "axn-spin": "AXN Spin", "axn-spin-s2": "AXN Spin S2" }
+    },
+    "TNT": {
+      "name": "TNT",
+      "category": "movies",
+      "kids": { "tnt-s1": "TNT", "tnt-s2": "TNT S2" }
+    },
+    "Epic Drama": {
+      "name": "Epic Drama",
+      "category": "movies",
+      "kids": { "epic-drama-s1": "Epic Drama", "epic-drama-s2": "Epic Drama S2" }
+    },
+    "Comedy & Shorts": {
+      "name": "Comedy & Shorts",
+      "category": "movies",
+      "kids": { "comedy-central": "Comedy Central", "comedy-shorts": "Shorts" }
+    },
+    "ViaSat": {
+      "name": "ViaSat",
+      "category": "documentare",
+      "kids": {
+        "via-nature": "ViaSat Nature",
+        "via-explorer": "ViaSat Explorer",
+        "via-his": "ViaSat History"
+      }
+    },
+    "Duck Tv": {
+      "name": "Duck TV",
+      "category": "kids",
+      "kids": { "duck-tv-s1": "Duck TV", "duck-tv-s2": "Duck TV S2" }
+    },
+    "BollyWood Tv": {
+      "name": "Bollywood TV",
+      "category": "movies",
+      "kids": {
+        "bollywood-clasic-s1": "Bollywood Clasic",
+        "bollywood-tv-s1": "Bollywood TV",
+        "bollywood-extra-s1": "Bollywood Extra"
+      }
+    },
+    "Crime +": {
+      "name": "Crime+",
+      "category": "movies",
+      "kids": {
+        "crime-investigation-s1": "Crime+",
+        "crime-investigation-s2": "Crime+ S2"
+      }
+    },
+    "Discovery Travel": {
+      "name": "Discovery Travel",
+      "category": "documentare",
+      "kids": {
+        "tlc-s1": "TLC",
+        "tlc-s2": "TLC S2",
+        "travel-ch-s1": "Travel Channel",
+        "travel-ch-s2": "Travel Channel S2",
+        "travel-living-s1": "Travel & Living",
+        "travel-living-s2": "Travel & Living S2"
+      }
+    },
+    "National Geo": {
+      "name": "National Geographic",
+      "category": "documentare",
+      "kids": { "natgeo": "National Geographic", "natgeo-hd": "National Geographic S2" }
+    },
+    "Nat Geo Wild": {
+      "name": "Nat Geo Wild",
+      "category": "documentare",
+      "kids": { "natgeowild": "Nat Geo Wild", "natgeowild-s2": "Nat Geo Wild S2" }
+    },
+    "Animal Planet": {
+      "name": "Animal Planet",
+      "category": "documentare",
+      "kids": { "animal": "Animal Planet", "animal-s2": "Animal Planet S2" }
+    },
+    "Discovery Channel": {
+      "name": "Discovery Channel",
+      "category": "documentare",
+      "kids": {
+        "discovery-channel-s1": "Discovery Channel",
+        "discovery-channel-s2": "Discovery Channel S2"
+      }
+    },
+    "HlST0 ChanneI": {
+      "name": "History Channel",
+      "category": "documentare",
+      "kids": { "his": "History Channel", "his-s2": "History Channel S2" }
+    },
+    "Discovery ID": {
+      "name": "Discovery ID",
+      "category": "documentare",
+      "kids": { "discoid": "Discovery ID", "discoid-s2": "Discovery ID S2" }
+    },
+    "Discovery Science": {
+      "name": "Discovery Science",
+      "category": "documentare",
+      "kids": {
+        "discoscience": "Discovery Science",
+        "discoscience-s2": "Discovery Science S2"
+      }
+    },
+    "Discovery World": {
+      "name": "Discovery World",
+      "category": "documentare",
+      "kids": {
+        "disco-world-s1": "Discovery World",
+        "disco-world-s2": "Discovery World S2"
+      }
+    },
+    "Alte Tv-uri !": {
+      "name": "Alte canale",
+      "category": "generaliste",
+      "kids": {
+        "trinitas-tv": "Trinitas TV",
+        "credo-tv": "Credo TV",
+        "moldova-1": "Moldova 1",
+        "publika": "Publika TV"
+      }
+    },
+    "PaprikaTv": {
+      "name": "Paprika TV",
+      "category": "movies",
+      "kids": { "paprika-s1": "Paprika TV", "paprika-s2": "Paprika TV S2" }
+    },
+    "CBS-Reality": {
+      "name": "CBS Reality",
+      "category": "documentare",
+      "kids": { "cbs-reality-s1": "CBS Reality" }
+    },
+    "Fishing Hunting": {
+      "name": "Fishing & Hunting",
+      "category": "documentare",
+      "kids": { "fishing-hunting-s1": "Fishing & Hunting" }
+    },
+    "U-TV Music": {
+      "name": "U-TV Music",
+      "category": "music",
+      "kids": { "utv": "U-TV Music" }
+    },
+    "N24 +": {
+      "name": "N24+",
+      "category": "stiri",
+      "kids": { "n24": "N24+", "n24-s2": "N24+ S2" }
+    },
+    "Kiss Tv": {
+      "name": "Kiss TV",
+      "category": "music",
+      "kids": { "kisslive": "Kiss TV" }
+    },
+    "Taraf Tv": {
+      "name": "Taraf TV",
+      "category": "music",
+      "kids": { "taraf": "Taraf TV" }
+    },
+    "Favorit Tv": {
+      "name": "Favorit TV",
+      "category": "music",
+      "kids": { "favorit": "Favorit TV" }
+    },
+    "Music Channel": {
+      "name": "Music Channel",
+      "category": "music",
+      "kids": { "mch": "Music Channel" }
+    },
+    "Hit Music": {
+      "name": "Hit Music",
+      "category": "music",
+      "kids": { "hit-music": "Hit Music" }
+    },
+    "News 24": {
+      "name": "News 24",
+      "category": "stiri",
+      "kids": { "news": "News 24" }
+    },
+    "Inedit Tv": {
+      "name": "Inedit TV",
+      "category": "music",
+      "kids": { "inedit-s1": "Inedit TV" }
+    },
+    "France24": {
+      "name": "France 24",
+      "category": "stiri",
+      "kids": { "france-24-live-s1": "France 24" }
+    },
+    "CNN": {
+      "name": "CNN",
+      "category": "stiri",
+      "kids": { "cnn-live-s1": "CNN" }
+    },
+    "Etno Tv": {
+      "name": "Etno TV",
+      "category": "generaliste",
+      "kids": { "etnotv": "Etno TV" }
+    }
+  }
+}

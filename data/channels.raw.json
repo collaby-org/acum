@@ -1,0 +1,4673 @@
+{
+  "source": "https://www.cool-etv.net",
+  "generatedAt": "2026-10-20T23:50:37.102Z",
+  "groups": [
+    {
+      "family": "Pro Tv",
+      "title": "Pro Tv Live Online",
+      "kids": [
+        {
+          "slug": "protv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_1.png"
+        },
+        {
+          "slug": "protv-s2",
+          "label": "S2 HD",
+          "icon": "/menu/mbico_mb5czm_2.png"
+        },
+        {
+          "slug": "protv-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_3.png"
+        },
+        {
+          "slug": "protv-s4",
+          "label": "S4",
+          "icon": "/menu/mbico_mb5czm_4.png"
+        },
+        {
+          "slug": "protv-s7",
+          "label": "ProTv News",
+          "icon": "/menu/mbico_mb5czm_5.png"
+        }
+      ]
+    },
+    {
+      "family": "ProCinema",
+      "title": null,
+      "kids": [
+        {
+          "slug": "procinema",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_6.png"
+        },
+        {
+          "slug": "procinema-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_7.png"
+        }
+      ]
+    },
+    {
+      "family": "TVR 's",
+      "title": "TVR Live Online",
+      "kids": [
+        {
+          "slug": "tvr1",
+          "label": "TVR 1 S1",
+          "icon": "/menu/mbico_mb5czm_8.png"
+        },
+        {
+          "slug": "tvr1-s2",
+          "label": "TVR 1 S2",
+          "icon": "/menu/mbico_mb5czm_9.png"
+        },
+        {
+          "slug": "tvr2",
+          "label": "TVR 2 S1",
+          "icon": "/menu/mbico_mb5czm_10.png"
+        },
+        {
+          "slug": "tvr2-s2",
+          "label": "TVR 2 S2",
+          "icon": "/menu/mbico_mb5czm_11.png"
+        },
+        {
+          "slug": "tvr3-s1",
+          "label": "TVR 3",
+          "icon": "/menu/tvr3.png"
+        },
+        {
+          "slug": "tvrsp-s1",
+          "label": "TVR Sport",
+          "icon": "/menu/tvr-sport.png"
+        },
+        {
+          "slug": "tvr-inter-s1",
+          "label": "TVR Inter",
+          "icon": "/menu/tvr-inter.png"
+        }
+      ]
+    },
+    {
+      "family": "Prima Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "primatv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_14.png"
+        },
+        {
+          "slug": "primatv-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_15.png"
+        },
+        {
+          "slug": "primatv-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_16.png"
+        }
+      ]
+    },
+    {
+      "family": "HB0 R0",
+      "title": null,
+      "kids": [
+        {
+          "slug": "hro1-s1",
+          "label": "HB0 HD",
+          "icon": "/menu/mbico_mb5czm_17.png"
+        },
+        {
+          "slug": "hro1-s2",
+          "label": "HB0 S2",
+          "icon": "/menu/mbico_mb5czm_18.png"
+        },
+        {
+          "slug": "hro2-s1",
+          "label": "HB0 2 S1",
+          "icon": "/menu/mbico_mb5czm_19.png"
+        },
+        {
+          "slug": "hro2-s2",
+          "label": "HB0 2 S2",
+          "icon": "/menu/mbico_mb5czm_20.png"
+        },
+        {
+          "slug": "hro3-s1",
+          "label": "HB0 3 S1",
+          "icon": "/menu/mbico_mb5czm_21.png"
+        },
+        {
+          "slug": "hro3-s2",
+          "label": "HB0 3 S2",
+          "icon": "/menu/mbico_mb5czm_22.png"
+        },
+        {
+          "slug": "cmax1-s1",
+          "label": "Cin3Max1 S1",
+          "icon": "/menu/mbico_mb5czm_23.png"
+        },
+        {
+          "slug": "cmax1-s2",
+          "label": "Cin3Max1 S2",
+          "icon": "/menu/mbico_mb5czm_24.png"
+        },
+        {
+          "slug": "cmax2-s1",
+          "label": "Cin3Max2 S1",
+          "icon": "/menu/mbico_mb5czm_25.png"
+        },
+        {
+          "slug": "cmax2-s2",
+          "label": "Cin3Max2 S2",
+          "icon": "/menu/mbico_mb5czm_26.png"
+        }
+      ]
+    },
+    {
+      "family": "National Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "nationaltv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_27.png"
+        },
+        {
+          "slug": "nationaltv-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_28.png"
+        },
+        {
+          "slug": "nationaltv-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_29.png"
+        }
+      ]
+    },
+    {
+      "family": "Caln D 1&2",
+      "title": null,
+      "kids": [
+        {
+          "slug": "cd-s1",
+          "label": "Caln D",
+          "icon": "/menu/mbico_mb5czm_30.png"
+        },
+        {
+          "slug": "cd-s2",
+          "label": "Caln D",
+          "icon": "/menu/mbico_mb5czm_30.png"
+        },
+        {
+          "slug": "cd-s3",
+          "label": "Caln D 2",
+          "icon": "/menu/mbico_mb5czm_30x.png"
+        },
+        {
+          "slug": "cd-s4",
+          "label": "Caln D 2",
+          "icon": "/menu/mbico_mb5czm_30x.png"
+        }
+      ]
+    },
+    {
+      "family": "Ant 1",
+      "title": null,
+      "kids": [
+        {
+          "slug": "an1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_33.png"
+        },
+        {
+          "slug": "an1-s2",
+          "label": "S2 HD",
+          "icon": "/menu/mbico_mb5czm_34.png"
+        },
+        {
+          "slug": "an1-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_35.png"
+        },
+        {
+          "slug": "an1-s4",
+          "label": "S4",
+          "icon": "/menu/mbico_mb5czm_36.png"
+        }
+      ]
+    },
+    {
+      "family": "Pro 2",
+      "title": null,
+      "kids": [
+        {
+          "slug": "acasatv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_37.png"
+        },
+        {
+          "slug": "acasatv-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_38.png"
+        },
+        {
+          "slug": "acasatv-gold",
+          "label": "Gold S1",
+          "icon": "/menu/mbico_mb5czm_39.png"
+        },
+        {
+          "slug": "acasatv-gold-s2",
+          "label": "Gold S2",
+          "icon": "/menu/mbico_mb5czm_40.png"
+        }
+      ]
+    },
+    {
+      "family": "PR0 - X",
+      "title": null,
+      "kids": [
+        {
+          "slug": "sportro",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_41.png"
+        },
+        {
+          "slug": "sportro-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_42.png"
+        },
+        {
+          "slug": "sportro-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_43.png"
+        }
+      ]
+    },
+    {
+      "family": "Ant 3",
+      "title": null,
+      "kids": [
+        {
+          "slug": "an3",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_44.png"
+        },
+        {
+          "slug": "an3-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_45.png"
+        },
+        {
+          "slug": "an3-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_46.png"
+        }
+      ]
+    },
+    {
+      "family": "Realitatea Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "realitatea",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_47.png"
+        },
+        {
+          "slug": "realitatea-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_48.png"
+        },
+        {
+          "slug": "realitatea-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_49.png"
+        }
+      ]
+    },
+    {
+      "family": "Sport's Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "sport1-s1",
+          "label": "Super Sport1 S1",
+          "icon": "/menu/mbico_mb5czm_51.png"
+        },
+        {
+          "slug": "sport1-s2",
+          "label": "Super Sport1 S2",
+          "icon": "/menu/mbico_mb5czm_52.png"
+        },
+        {
+          "slug": "sport2-s1",
+          "label": "Super Sport2 S1",
+          "icon": "/menu/mbico_mb5czm_53.png"
+        },
+        {
+          "slug": "sport2-s2",
+          "label": "Super Sport2 S2",
+          "icon": "/menu/mbico_mb5czm_54.png"
+        },
+        {
+          "slug": "sport3-s1",
+          "label": "Super Sport3 S1",
+          "icon": "/menu/mbico_mb5czm_55.png"
+        },
+        {
+          "slug": "sport3-s2",
+          "label": "Super Sport3 S2",
+          "icon": "/menu/mbico_mb5czm_56.png"
+        },
+        {
+          "slug": "sport4-s1",
+          "label": "Super Sport4 S1",
+          "icon": "/menu/mbico_mb5czm_57.png"
+        },
+        {
+          "slug": "sport4-s2",
+          "label": "Super Sport4 S2",
+          "icon": "/menu/mbico_mb5czm_58.png"
+        }
+      ]
+    },
+    {
+      "family": "TELEK0M Sport",
+      "title": null,
+      "kids": [
+        {
+          "slug": "dolce1-s1",
+          "label": "TELEK0M Sport 1 S1",
+          "icon": "/menu/mbico_mb5czm_60.png"
+        },
+        {
+          "slug": "dolce1-s2",
+          "label": "TELEK0M Sport 1 S2",
+          "icon": "/menu/mbico_mb5czm_61.png"
+        },
+        {
+          "slug": "dolce2-s1",
+          "label": "TELEK0M Sport 2 S1",
+          "icon": "/menu/mbico_mb5czm_62.png"
+        },
+        {
+          "slug": "dolce2-s2",
+          "label": "TELEK0M Sport 2 S2",
+          "icon": "/menu/mbico_mb5czm_63.png"
+        },
+        {
+          "slug": "dolce3-s1",
+          "label": "TELEK0M Sport 3 S1",
+          "icon": "/menu/mbico_mb5czm_64.png"
+        },
+        {
+          "slug": "dolce3-s2",
+          "label": "TELEK0M Sport 3 S2",
+          "icon": "/menu/mbico_mb5czm_65.png"
+        },
+        {
+          "slug": "dolce4-s1",
+          "label": "TELEK0M Sport 4 S1",
+          "icon": "/menu/mbico_mb5czm_66.png"
+        },
+        {
+          "slug": "dolce4-s2",
+          "label": "TELEK0M Sport 4 S1",
+          "icon": "/menu/mbico_mb5czm_67.png"
+        }
+      ]
+    },
+    {
+      "family": "L00K Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "look-tv-s1",
+          "label": "L00K Tv Sport 1",
+          "icon": "/menu/mbico_mb5czm_69.png"
+        },
+        {
+          "slug": "look-tv-s2",
+          "label": "L00K Tv Sport 2",
+          "icon": "/menu/mbico_mb5czm_70.png"
+        },
+        {
+          "slug": "look-tv-s3",
+          "label": "L00K Tv Sport 3",
+          "icon": "/menu/mbico_mb5czm_71.png"
+        },
+        {
+          "slug": "look-tv-plus-s1",
+          "label": "L00K Tv Sport 4",
+          "icon": "/menu/mbico_mb5czm_72.png"
+        },
+        {
+          "slug": "look-tv-plus-s2",
+          "label": "L00K Tv Sport 5",
+          "icon": "/menu/mbico_mb5czm_73.png"
+        },
+        {
+          "slug": "look-tv-pp1",
+          "label": "L00K Tv Sport PP1",
+          "icon": "/menu/mbico_mb5czm_73.png"
+        },
+        {
+          "slug": "look-tv-pp2",
+          "label": "L00K Tv Sport PP2",
+          "icon": "/menu/mbico_mb5czm_73.png"
+        },
+        {
+          "slug": "look-tv-pp3",
+          "label": "L00K Tv Sport PP3",
+          "icon": "/menu/mbico_mb5czm_73.png"
+        }
+      ]
+    },
+    {
+      "family": "ESport's",
+      "title": null,
+      "kids": [
+        {
+          "slug": "er1-s1",
+          "label": "Er S1",
+          "icon": "/menu/mbico_mb5czm_74.png"
+        },
+        {
+          "slug": "er1-s2",
+          "label": "Er S2",
+          "icon": "/menu/mbico_mb5czm_75.png"
+        },
+        {
+          "slug": "er2-s1",
+          "label": "Er2 S1",
+          "icon": "/menu/mbico_mb5czm_76.png"
+        },
+        {
+          "slug": "er2-s2",
+          "label": "Er2 S2",
+          "icon": "/menu/mbico_mb5czm_77.png"
+        }
+      ]
+    },
+    {
+      "family": "RTV",
+      "title": null,
+      "kids": [
+        {
+          "slug": "realitatea-rtv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_78.png"
+        },
+        {
+          "slug": "realitatea-rtv-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_79.png"
+        },
+        {
+          "slug": "realitatea-rtv-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_80.png"
+        }
+      ]
+    },
+    {
+      "family": "TV 1000 Max",
+      "title": null,
+      "kids": [
+        {
+          "slug": "tv100",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_81.png"
+        },
+        {
+          "slug": "tv100-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_82.png"
+        }
+      ]
+    },
+    {
+      "family": "Movies",
+      "title": null,
+      "kids": [
+        {
+          "slug": "movie-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_83.png"
+        },
+        {
+          "slug": "movie-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_84.png"
+        }
+      ]
+    },
+    {
+      "family": "ZuTv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "zu",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_85.png"
+        },
+        {
+          "slug": "zu-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_86.png"
+        }
+      ]
+    },
+    {
+      "family": "FilmBox",
+      "title": null,
+      "kids": [
+        {
+          "slug": "filmbox-s1",
+          "label": "FilmBox HD",
+          "icon": "/menu/mbico_mb5czm_87.png"
+        },
+        {
+          "slug": "filmbox-s2",
+          "label": "FilmBox Fam",
+          "icon": "/menu/mbico_mb5czm_88.png"
+        },
+        {
+          "slug": "filmbox-s3",
+          "label": "FilmBox Extra",
+          "icon": "/menu/mbico_mb5czm_89.png"
+        },
+        {
+          "slug": "filmbox-s4",
+          "label": "FilmBox",
+          "icon": "/menu/mbico_mb5czm_90.png"
+        }
+      ]
+    },
+    {
+      "family": "Antena Stars",
+      "title": null,
+      "kids": [
+        {
+          "slug": "an2-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_91.png"
+        },
+        {
+          "slug": "an2-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_92.png"
+        }
+      ]
+    },
+    {
+      "family": "Teen Nick",
+      "title": null,
+      "kids": [
+        {
+          "slug": "universal-ch",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_93.png"
+        },
+        {
+          "slug": "universal-ch-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_94.png"
+        }
+      ]
+    },
+    {
+      "family": "Film Cafe",
+      "title": null,
+      "kids": [
+        {
+          "slug": "film-cafe",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_95.png"
+        },
+        {
+          "slug": "film-cafe-s2",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_96.png"
+        }
+      ]
+    },
+    {
+      "family": "Happy",
+      "title": null,
+      "kids": [
+        {
+          "slug": "euforia",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_97.png"
+        },
+        {
+          "slug": "euforia-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_98.png"
+        }
+      ]
+    },
+    {
+      "family": "Diva Universal",
+      "title": null,
+      "kids": [
+        {
+          "slug": "diva",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_99.png"
+        },
+        {
+          "slug": "diva-s2",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_100.png"
+        }
+      ]
+    },
+    {
+      "family": "Disney Channel",
+      "title": null,
+      "kids": [
+        {
+          "slug": "jetix-cartoon",
+          "label": "Disney Channel S1",
+          "icon": "/menu/mbico_mb5czm_101.png"
+        },
+        {
+          "slug": "jetix-cartoon-s2",
+          "label": "Disney Channel S2",
+          "icon": "/menu/mbico_mb5czm_102.png"
+        },
+        {
+          "slug": "jetix-junior",
+          "label": "Disney Junior S1",
+          "icon": "/menu/mbico_mb5czm_103.png"
+        },
+        {
+          "slug": "jetix-junior-s2",
+          "label": "Disney Junior S2",
+          "icon": "/menu/mbico_mb5czm_104.png"
+        }
+      ]
+    },
+    {
+      "family": "Cartoon Network",
+      "title": null,
+      "kids": [
+        {
+          "slug": "cartoon",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_105.png"
+        },
+        {
+          "slug": "cartoon-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_106.png"
+        }
+      ]
+    },
+    {
+      "family": "Boomerang",
+      "title": null,
+      "kids": [
+        {
+          "slug": "boomerang",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_107.png"
+        },
+        {
+          "slug": "boomerang-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_108.png"
+        }
+      ]
+    },
+    {
+      "family": "MiniMax & Jim",
+      "title": null,
+      "kids": [
+        {
+          "slug": "minimaxro",
+          "label": "MiniMax S1",
+          "icon": "/menu/mbico_mb5czm_109.png"
+        },
+        {
+          "slug": "minimaxro-s2",
+          "label": "MiniMax S2",
+          "icon": "/menu/mbico_mb5czm_110.png"
+        },
+        {
+          "slug": "jim-jam",
+          "label": "Jim Jam S1",
+          "icon": "/menu/mbico_mb5czm_111.png"
+        },
+        {
+          "slug": "jim-jam-s2",
+          "label": "Jim Jam S2",
+          "icon": "/menu/mbico_mb5czm_112.png"
+        }
+      ]
+    },
+    {
+      "family": "B1 Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "b1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_113.png"
+        },
+        {
+          "slug": "b1-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_114.png"
+        },
+        {
+          "slug": "b1-s3",
+          "label": "S3",
+          "icon": "/menu/mbico_mb5czm_115.png"
+        }
+      ]
+    },
+    {
+      "family": "Nickelodeon",
+      "title": null,
+      "kids": [
+        {
+          "slug": "nickelodeon",
+          "label": "Nickelodeon S1",
+          "icon": "/menu/mbico_mb5czm_116.png"
+        },
+        {
+          "slug": "nickelodeon-s2",
+          "label": "Nickelodeon S2",
+          "icon": "/menu/mbico_mb5czm_117.png"
+        },
+        {
+          "slug": "nickelodeon-jr",
+          "label": "Nickelodeon Junior S1",
+          "icon": "/menu/mbico_mb5czm_118.png"
+        },
+        {
+          "slug": "nickelodeon-jr-s2",
+          "label": "Nickelodeon Junior S2",
+          "icon": "/menu/mbico_mb5czm_119.png"
+        },
+        {
+          "slug": "nick-toons-s1",
+          "label": "Nick Toons S1",
+          "icon": "/menu/mbico_mb5czm_120.png"
+        },
+        {
+          "slug": "nick-toons-s2",
+          "label": "Nick Toons S2",
+          "icon": "/menu/mbico_mb5czm_121.png"
+        }
+      ]
+    },
+    {
+      "family": "AMC",
+      "title": null,
+      "kids": [
+        {
+          "slug": "amc-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_122.png"
+        },
+        {
+          "slug": "amc-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_123.png"
+        }
+      ]
+    },
+    {
+      "family": "BBC Earth",
+      "title": null,
+      "kids": [
+        {
+          "slug": "bbc-earth-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_124.png"
+        },
+        {
+          "slug": "bbc-earth-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_125.png"
+        }
+      ]
+    },
+    {
+      "family": "Prima News",
+      "title": null,
+      "kids": [
+        {
+          "slug": "prima-news-s1",
+          "label": "S1",
+          "icon": "/menu/prima-news.png"
+        },
+        {
+          "slug": "prima-news-s2",
+          "label": "S2",
+          "icon": "/menu/prima-news.png"
+        }
+      ]
+    },
+    {
+      "family": "Euro News",
+      "title": null,
+      "kids": [
+        {
+          "slug": "euro-news-s1",
+          "label": "S1",
+          "icon": "/menu/euronews.png"
+        },
+        {
+          "slug": "euro-news-s2",
+          "label": "S2",
+          "icon": "/menu/euronews.png"
+        }
+      ]
+    },
+    {
+      "family": "Show 1",
+      "title": null,
+      "kids": [
+        {
+          "slug": "shut1-s1",
+          "label": "S1",
+          "icon": "/menu/shut-1.png"
+        },
+        {
+          "slug": "shut1-s2",
+          "label": "S2",
+          "icon": "/menu/shut-1.png"
+        }
+      ]
+    },
+    {
+      "family": "Show 2",
+      "title": null,
+      "kids": [
+        {
+          "slug": "shut2-s1",
+          "label": "S1",
+          "icon": "/menu/shut-2.png"
+        },
+        {
+          "slug": "shut2-s2",
+          "label": "S2",
+          "icon": "/menu/shut-2.png"
+        }
+      ]
+    },
+    {
+      "family": "AXN",
+      "title": null,
+      "kids": [
+        {
+          "slug": "axn",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_126.png"
+        },
+        {
+          "slug": "axn-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_127.png"
+        }
+      ]
+    },
+    {
+      "family": "AXN Black",
+      "title": null,
+      "kids": [
+        {
+          "slug": "axn-black-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_128.png"
+        },
+        {
+          "slug": "axn-black-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_129.png"
+        }
+      ]
+    },
+    {
+      "family": "AXN White",
+      "title": null,
+      "kids": [
+        {
+          "slug": "axn-white-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_130.png"
+        },
+        {
+          "slug": "axn-white-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_131.png"
+        }
+      ]
+    },
+    {
+      "family": "AXN Spin",
+      "title": null,
+      "kids": [
+        {
+          "slug": "axn-spin",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_132.png"
+        },
+        {
+          "slug": "axn-spin-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_133.png"
+        }
+      ]
+    },
+    {
+      "family": "TNT",
+      "title": null,
+      "kids": [
+        {
+          "slug": "tnt-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_134.png"
+        },
+        {
+          "slug": "tnt-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_135.png"
+        }
+      ]
+    },
+    {
+      "family": "Epic Drama",
+      "title": null,
+      "kids": [
+        {
+          "slug": "epic-drama-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_136.png"
+        },
+        {
+          "slug": "epic-drama-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_137.png"
+        }
+      ]
+    },
+    {
+      "family": "Comedy & Shorts",
+      "title": null,
+      "kids": [
+        {
+          "slug": "comedy-central",
+          "label": "Central Tv",
+          "icon": "/menu/mbico_mb5czm_138.png"
+        },
+        {
+          "slug": "comedy-shorts",
+          "label": "Shorts",
+          "icon": "/menu/mbico_mb5czm_139.png"
+        }
+      ]
+    },
+    {
+      "family": "ViaSat",
+      "title": null,
+      "kids": [
+        {
+          "slug": "via-nature",
+          "label": "Nature",
+          "icon": "/menu/mbico_mb5czm_140.png"
+        },
+        {
+          "slug": "via-explorer",
+          "label": "Explorer",
+          "icon": "/menu/mbico_mb5czm_141.png"
+        },
+        {
+          "slug": "via-his",
+          "label": "History",
+          "icon": "/menu/mbico_mb5czm_142.png"
+        }
+      ]
+    },
+    {
+      "family": "Duck Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "duck-tv-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_143.png"
+        },
+        {
+          "slug": "duck-tv-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_144.png"
+        }
+      ]
+    },
+    {
+      "family": "BollyWood Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "bollywood-clasic-s1",
+          "label": "BollyWood Clasic",
+          "icon": "/menu/mbico_mb5czm_145.png"
+        },
+        {
+          "slug": "bollywood-tv-s1",
+          "label": "BollyWood Tv",
+          "icon": "/menu/mbico_mb5czm_146.png"
+        },
+        {
+          "slug": "bollywood-extra-s1",
+          "label": "BollyWood Extra",
+          "icon": "/menu/mbico_mb5czm_147.png"
+        }
+      ]
+    },
+    {
+      "family": "Crime +",
+      "title": null,
+      "kids": [
+        {
+          "slug": "crime-investigation-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_148.png"
+        },
+        {
+          "slug": "crime-investigation-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_149.png"
+        }
+      ]
+    },
+    {
+      "family": "Discovery Travel",
+      "title": null,
+      "kids": [
+        {
+          "slug": "tlc-s1",
+          "label": "TLC S1",
+          "icon": "/menu/mbico_mb5czm_150.png"
+        },
+        {
+          "slug": "tlc-s2",
+          "label": "TLC S2",
+          "icon": "/menu/mbico_mb5czm_151.png"
+        },
+        {
+          "slug": "travel-ch-s1",
+          "label": "Travel Ch S1",
+          "icon": "/menu/mbico_mb5czm_152.png"
+        },
+        {
+          "slug": "travel-ch-s2",
+          "label": "Travel Ch S2",
+          "icon": "/menu/mbico_mb5czm_153.png"
+        },
+        {
+          "slug": "travel-living-s1",
+          "label": "Travel & Living S1",
+          "icon": "/menu/mbico_mb5czm_154.png"
+        },
+        {
+          "slug": "travel-living-s2",
+          "label": "Travel & Living S2",
+          "icon": "/menu/mbico_mb5czm_155.png"
+        }
+      ]
+    },
+    {
+      "family": "National Geo",
+      "title": null,
+      "kids": [
+        {
+          "slug": "natgeo",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_156.png"
+        },
+        {
+          "slug": "natgeo-hd",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_157.png"
+        }
+      ]
+    },
+    {
+      "family": "Nat Geo Wild",
+      "title": null,
+      "kids": [
+        {
+          "slug": "natgeowild",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_158.png"
+        },
+        {
+          "slug": "natgeowild-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_159.png"
+        }
+      ]
+    },
+    {
+      "family": "Animal Planet",
+      "title": null,
+      "kids": [
+        {
+          "slug": "animal",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_160.png"
+        },
+        {
+          "slug": "animal-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_161.png"
+        }
+      ]
+    },
+    {
+      "family": "Discovery Channel",
+      "title": null,
+      "kids": [
+        {
+          "slug": "discovery-channel-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_162.png"
+        },
+        {
+          "slug": "discovery-channel-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_163.png"
+        }
+      ]
+    },
+    {
+      "family": "HlST0 ChanneI",
+      "title": null,
+      "kids": [
+        {
+          "slug": "his",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_164.png"
+        },
+        {
+          "slug": "his-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_165.png"
+        }
+      ]
+    },
+    {
+      "family": "Discovery ID",
+      "title": null,
+      "kids": [
+        {
+          "slug": "discoid",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_166.png"
+        },
+        {
+          "slug": "discoid-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_167.png"
+        }
+      ]
+    },
+    {
+      "family": "Discovery Science",
+      "title": null,
+      "kids": [
+        {
+          "slug": "discoscience",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_168.png"
+        },
+        {
+          "slug": "discoscience-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_169.png"
+        }
+      ]
+    },
+    {
+      "family": "Discovery World",
+      "title": null,
+      "kids": [
+        {
+          "slug": "disco-world-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_170.png"
+        },
+        {
+          "slug": "disco-world-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_171.png"
+        }
+      ]
+    },
+    {
+      "family": "Alte Tv-uri !",
+      "title": null,
+      "kids": [
+        {
+          "slug": "trinitas-tv",
+          "label": "Trinitas Tv",
+          "icon": "/menu/mbico_mb5czm_172.png"
+        },
+        {
+          "slug": "credo-tv",
+          "label": "Credo Tv",
+          "icon": "/menu/mbico_mb5czm_173.png"
+        },
+        {
+          "slug": "moldova-1",
+          "label": "Moldova Tv",
+          "icon": "/menu/mbico_mb5czm_174.png"
+        },
+        {
+          "slug": "publika",
+          "label": "Publika Tv",
+          "icon": "/menu/mbico_mb5czm_175.png"
+        }
+      ]
+    },
+    {
+      "family": "PaprikaTv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "paprika-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_176.png"
+        },
+        {
+          "slug": "paprika-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_177.png"
+        }
+      ]
+    },
+    {
+      "family": "CBS-Reality",
+      "title": null,
+      "kids": [
+        {
+          "slug": "cbs-reality-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_178.png"
+        }
+      ]
+    },
+    {
+      "family": "Fishing Hunting",
+      "title": null,
+      "kids": [
+        {
+          "slug": "fishing-hunting-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_179.png"
+        }
+      ]
+    },
+    {
+      "family": "U-TV Music",
+      "title": null,
+      "kids": [
+        {
+          "slug": "utv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_180.png"
+        }
+      ]
+    },
+    {
+      "family": "N24 +",
+      "title": null,
+      "kids": [
+        {
+          "slug": "n24",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_181.png"
+        },
+        {
+          "slug": "n24-s2",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_182.png"
+        }
+      ]
+    },
+    {
+      "family": "Kiss Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "kisslive",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_183.png"
+        },
+        {
+          "slug": "kisslive",
+          "label": "S2",
+          "icon": "/menu/mbico_mb5czm_184.png"
+        }
+      ]
+    },
+    {
+      "family": "Taraf Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "taraf",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_185.png"
+        }
+      ]
+    },
+    {
+      "family": "Favorit Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "favorit",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_186.png"
+        }
+      ]
+    },
+    {
+      "family": "Music Channel",
+      "title": null,
+      "kids": [
+        {
+          "slug": "mch",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_187.png"
+        }
+      ]
+    },
+    {
+      "family": "Hit Music",
+      "title": null,
+      "kids": [
+        {
+          "slug": "hit-music",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_188.png"
+        }
+      ]
+    },
+    {
+      "family": "News 24",
+      "title": null,
+      "kids": [
+        {
+          "slug": "news",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_189.png"
+        }
+      ]
+    },
+    {
+      "family": "Inedit Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "inedit-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_190.png"
+        }
+      ]
+    },
+    {
+      "family": "France24",
+      "title": null,
+      "kids": [
+        {
+          "slug": "france-24-live-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_191.png"
+        }
+      ]
+    },
+    {
+      "family": "CNN",
+      "title": null,
+      "kids": [
+        {
+          "slug": "cnn-live-s1",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_192.png"
+        }
+      ]
+    },
+    {
+      "family": "Etno Tv",
+      "title": null,
+      "kids": [
+        {
+          "slug": "etnotv",
+          "label": "S1",
+          "icon": "/menu/mbico_mb5czm_193.png"
+        }
+      ]
+    }
+  ],
+  "channels": [
+    {
+      "slug": "protv",
+      "family": "Pro Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_1.png",
+      "sourcePage": "https://www.cool-etv.net/ch/protv.htm",
+      "rawTitle": "Pro Tv Online ~ Vezi Pro Tv Live - Tv Online Live",
+      "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html",
+      "embeds": [
+        "https://ultra3.ronanx001.shop/000/porkys.html"
+      ],
+      "acestreamId": "6aa9b9e06e1a2ca844003ec5340725ea5be399c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "protv-s2",
+      "family": "Pro Tv",
+      "label": "S2 HD",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_2.png",
+      "sourcePage": "https://www.cool-etv.net/ch/protv-s2.htm",
+      "rawTitle": "Pro Tv S2 Online ~ Vezi Pro Tv S2 Live - Cool-eTv.net",
+      "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html",
+      "embeds": [
+        "https://ultra3.ronanx001.shop/000/porkys.html"
+      ],
+      "acestreamId": "6aa9b9e06e1a2ca844003ec5340725ea5be399c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "protv-s3",
+      "family": "Pro Tv",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_3.png",
+      "sourcePage": "https://www.cool-etv.net/ch/protv-s3.htm",
+      "rawTitle": "Pro Tv S3 Online ~ Vezi Pro Tv S3 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel-v2/pr0tv.html",
+      "embeds": [
+        "https://canale-tv.net/channel-v2/pr0tv.html"
+      ],
+      "acestreamId": "6aa9b9e06e1a2ca844003ec5340725ea5be399c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "protv-s4",
+      "family": "Pro Tv",
+      "label": "S4",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_4.png",
+      "sourcePage": "https://www.cool-etv.net/ch/protv-s4.htm",
+      "rawTitle": "Pro Tv S4 Online ~ Vezi Pro Tv S4 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel-v2/pr0tv.html",
+      "embeds": [
+        "https://canale-tv.net/channel-v2/pr0tv.html"
+      ],
+      "acestreamId": "6aa9b9e06e1a2ca844003ec5340725ea5be399c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "protv-s7",
+      "family": "Pro Tv",
+      "label": "ProTv News",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_5.png",
+      "sourcePage": "https://www.cool-etv.net/ch/protv-s7.htm",
+      "rawTitle": "Pro Tv News Online ~ Vezi Pro Tv News Live - Cool-eTv.net",
+      "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html",
+      "embeds": [
+        "https://ultra3.ronanx001.shop/000/porkys.html"
+      ],
+      "acestreamId": "6aa9b9e06e1a2ca844003ec5340725ea5be399c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "procinema",
+      "family": "ProCinema",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_6.png",
+      "sourcePage": "https://www.cool-etv.net/ch/procinema.htm",
+      "rawTitle": "Procinema Online ~ Vezi Procinema Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/procinema.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/procinema.html"
+      ],
+      "acestreamId": "ffd0049009b2e8e27e1b967e67759a20a52ee916",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "procinema-s2",
+      "family": "ProCinema",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_7.png",
+      "sourcePage": "https://www.cool-etv.net/ch/procinema-s2.htm",
+      "rawTitle": "Procinema S2 Online ~ Vezi Procinema S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/procinema.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/procinema.html"
+      ],
+      "acestreamId": "ffd0049009b2e8e27e1b967e67759a20a52ee916",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr1",
+      "family": "TVR 's",
+      "label": "TVR 1 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_8.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr1.htm",
+      "rawTitle": "Tvr1 Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivi1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivi1.html"
+      ],
+      "acestreamId": "e2f2cca9abb5a0c650ebbed54efaaf6e0b14a467",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr1-s2",
+      "family": "TVR 's",
+      "label": "TVR 1 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_9.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr1-s2.htm",
+      "rawTitle": "Tvr1 S2 Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivi1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivi1.html"
+      ],
+      "acestreamId": "e2f2cca9abb5a0c650ebbed54efaaf6e0b14a467",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr2",
+      "family": "TVR 's",
+      "label": "TVR 2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_10.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr2.htm",
+      "rawTitle": "Tvr2 Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivi2.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivi2.html"
+      ],
+      "acestreamId": "209adefd7ea0dada79da1965108b8ffa4827e6ff",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr2-s2",
+      "family": "TVR 's",
+      "label": "TVR 2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_11.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr2-s2.htm",
+      "rawTitle": "Tvr2 S2 Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivi2.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivi2.html"
+      ],
+      "acestreamId": "209adefd7ea0dada79da1965108b8ffa4827e6ff",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr3-s1",
+      "family": "TVR 's",
+      "label": "TVR 3",
+      "icon": "https://www.cool-etv.net/menu/tvr3.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr3-s1.htm",
+      "rawTitle": "Tvr3 Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivi3.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivi3.html"
+      ],
+      "acestreamId": "209adefd7ea0dada79da1965108b8ffa4827e6ff",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvrsp-s1",
+      "family": "TVR 's",
+      "label": "TVR Sport",
+      "icon": "https://www.cool-etv.net/menu/tvr-sport.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvrsp-s1.htm",
+      "rawTitle": "Tvr Sport Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/tivisp.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/tivisp.html"
+      ],
+      "acestreamId": "209adefd7ea0dada79da1965108b8ffa4827e6ff",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tvr-inter-s1",
+      "family": "TVR 's",
+      "label": "TVR Inter",
+      "icon": "https://www.cool-etv.net/menu/tvr-inter.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tvr-inter-s1.htm",
+      "rawTitle": "Tvr International Online ~ Vezi Tvr+ Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/tivinter.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/tivinter.html"
+      ],
+      "acestreamId": "209adefd7ea0dada79da1965108b8ffa4827e6ff",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "primatv",
+      "family": "Prima Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_14.png",
+      "sourcePage": "https://www.cool-etv.net/ch/primatv.htm",
+      "rawTitle": "PrimaTv Online ~ Vezi Prima Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/prima.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/prima.html"
+      ],
+      "acestreamId": "f67e3b05a7863b47065b9599a6433f06dac2fcdb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "primatv-s2",
+      "family": "Prima Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_15.png",
+      "sourcePage": "https://www.cool-etv.net/ch/primatv-s2.htm",
+      "rawTitle": "PrimaTv S2 Online ~ Vezi Prima Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/prima.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/prima.html"
+      ],
+      "acestreamId": "f67e3b05a7863b47065b9599a6433f06dac2fcdb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "primatv-s3",
+      "family": "Prima Tv",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_16.png",
+      "sourcePage": "https://www.cool-etv.net/ch/primatv-s3.htm",
+      "rawTitle": "PrimaTv S3 Online ~ Vezi Prima Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel-v2/primatv.html",
+      "embeds": [
+        "https://canale-tv.net/channel-v2/primatv.html"
+      ],
+      "acestreamId": "f67e3b05a7863b47065b9599a6433f06dac2fcdb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro1-s1",
+      "family": "HB0 R0",
+      "label": "HB0 HD",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_17.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro1-s1.htm",
+      "rawTitle": "movie Online ~ Vezi movie Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/h1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/h1.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro1-s2",
+      "family": "HB0 R0",
+      "label": "HB0 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_18.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro1-s2.htm",
+      "rawTitle": "movie S2 Online ~ Vezi movie S2 Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/h1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/h1.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro2-s1",
+      "family": "HB0 R0",
+      "label": "HB0 2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_19.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro2-s1.htm",
+      "rawTitle": "Movie2 Online ~ Vezi movie Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/h2.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/h2.html"
+      ],
+      "acestreamId": "e78d73fe2a32557fc4d28a75a850c3bb9f854d85",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro2-s2",
+      "family": "HB0 R0",
+      "label": "HB0 2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_20.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro2-s2.htm",
+      "rawTitle": "Movie2 S2 Online ~ Vezi movie Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/h2.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/h2.html"
+      ],
+      "acestreamId": "e78d73fe2a32557fc4d28a75a850c3bb9f854d85",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro3-s1",
+      "family": "HB0 R0",
+      "label": "HB0 3 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_21.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro3-s1.htm",
+      "rawTitle": "Movie3 Online ~ Vezi movie Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1h3.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1h3.html"
+      ],
+      "acestreamId": "efbc6f8cb234ed9f89556a972bb44f32d3b2feb1",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hro3-s2",
+      "family": "HB0 R0",
+      "label": "HB0 3 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_22.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hro3-s2.htm",
+      "rawTitle": "Movie3 S2 Online ~ Vezi movie Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1h3.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1h3.html"
+      ],
+      "acestreamId": "efbc6f8cb234ed9f89556a972bb44f32d3b2feb1",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cmax1-s1",
+      "family": "HB0 R0",
+      "label": "Cin3Max1 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_23.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cmax1-s1.htm",
+      "rawTitle": "Max Online ~ Vezi Max Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1cx1.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1cx1.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cmax1-s2",
+      "family": "HB0 R0",
+      "label": "Cin3Max1 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_24.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cmax1-s2.htm",
+      "rawTitle": "Max S2 Online ~ Vezi Max S2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1cx1.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1cx1.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cmax2-s1",
+      "family": "HB0 R0",
+      "label": "Cin3Max2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_25.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cmax2-s1.htm",
+      "rawTitle": "Max2 Online ~ Vezi Max2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1cx2.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1cx2.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cmax2-s2",
+      "family": "HB0 R0",
+      "label": "Cin3Max2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_26.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cmax2-s2.htm",
+      "rawTitle": "Max2 S2 Online ~ Vezi Max2 S2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1cx2.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1cx2.html"
+      ],
+      "acestreamId": "fb2d2747d60002afc3f69ad52fde33a6b3856f15",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nationaltv",
+      "family": "National Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_27.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nationaltv.htm",
+      "rawTitle": "National Tv Online ~ Vezi National Tv Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1nationai.html"
+      ],
+      "acestreamId": "dd1bdf1e1cfac92c3ad53c92c15170b3185d63cb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nationaltv-s2",
+      "family": "National Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_28.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nationaltv-s2.htm",
+      "rawTitle": "National Tv S2 Online ~ Vezi National Tv S2 Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1nationai.html"
+      ],
+      "acestreamId": "dd1bdf1e1cfac92c3ad53c92c15170b3185d63cb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nationaltv-s3",
+      "family": "National Tv",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_29.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nationaltv-s3.htm",
+      "rawTitle": "National Tv S3 Online ~ Vezi National Tv S3 Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1nationai.html"
+      ],
+      "acestreamId": "dd1bdf1e1cfac92c3ad53c92c15170b3185d63cb",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cd-s1",
+      "family": "Caln D 1&2",
+      "label": "Caln D",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_30.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cd-s1.htm",
+      "rawTitle": "tv Online ~ Vezi tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/canald.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/canald.html"
+      ],
+      "acestreamId": "f15354d90dcc2c4b015aa20f0a473f408c19f548",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cd-s2",
+      "family": "Caln D 1&2",
+      "label": "Caln D",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_30.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cd-s2.htm",
+      "rawTitle": "tv Online ~ Vezi tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/canald.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/canald.html"
+      ],
+      "acestreamId": "f15354d90dcc2c4b015aa20f0a473f408c19f548",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cd-s3",
+      "family": "Caln D 1&2",
+      "label": "Caln D 2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_30x.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cd-s3.htm",
+      "rawTitle": "tv Online ~ Vezi tv Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1canad2.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1canad2.html"
+      ],
+      "acestreamId": "f15354d90dcc2c4b015aa20f0a473f408c19f548",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cd-s4",
+      "family": "Caln D 1&2",
+      "label": "Caln D 2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_30x.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cd-s4.htm",
+      "rawTitle": "tv Online ~ Vezi tv Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1canad2.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1canad2.html"
+      ],
+      "acestreamId": "f15354d90dcc2c4b015aa20f0a473f408c19f548",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an1",
+      "family": "Ant 1",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_33.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an1.htm",
+      "rawTitle": "Al Online ~ Vezi All Live - Tv Online Live",
+      "embedUrl": "https://canale-tv.net/channel-v2/a1.html",
+      "embeds": [
+        "https://canale-tv.net/channel-v2/a1.html",
+        "https://alpha1.yozefina.cfd/000/anyone.html"
+      ],
+      "acestreamId": "257601c048fac7b7b5272f4e97369533127d0544",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an1-s2",
+      "family": "Ant 1",
+      "label": "S2 HD",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_34.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an1-s2.htm",
+      "rawTitle": "Al S2 Online ~ Vezi All Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/a1.html",
+      "embeds": [
+        "https://canale-tv.net/channel/a1.html"
+      ],
+      "acestreamId": "257601c048fac7b7b5272f4e97369533127d0544",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an1-s3",
+      "family": "Ant 1",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_35.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an1-s3.htm",
+      "rawTitle": "Al S3 Online ~ Vezi All Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel-v2/a1.html",
+      "embeds": [
+        "https://canale-tv.net/channel-v2/a1.html"
+      ],
+      "acestreamId": "257601c048fac7b7b5272f4e97369533127d0544",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an1-s4",
+      "family": "Ant 1",
+      "label": "S4",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_36.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an1-s4.htm",
+      "rawTitle": "Al S4 Online ~ Vezi All Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.com/channel-v2/a1.html",
+      "embeds": [
+        "https://canale-tv.com/channel-v2/a1.html"
+      ],
+      "acestreamId": "257601c048fac7b7b5272f4e97369533127d0544",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "acasatv",
+      "family": "Pro 2",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_37.png",
+      "sourcePage": "https://www.cool-etv.net/ch/acasatv.htm",
+      "rawTitle": "Pro2 Online ~ Vezi Pro2 Live - Tv Online Live",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "aaf2733baf792d23ec0448851cef543ceb7a5fed",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "acasatv-s2",
+      "family": "Pro 2",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_38.png",
+      "sourcePage": "https://www.cool-etv.net/ch/acasatv-s2.htm",
+      "rawTitle": "Pro2 S2 Online ~ Vezi Pro2 S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "aaf2733baf792d23ec0448851cef543ceb7a5fed",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "acasatv-gold",
+      "family": "Pro 2",
+      "label": "Gold S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_39.png",
+      "sourcePage": "https://www.cool-etv.net/ch/acasatv-gold.htm",
+      "rawTitle": "ProGold Online ~ Vezi ProGold Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/goldy.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/goldy.html"
+      ],
+      "acestreamId": "00efde498b8de5a07d823bc338868fc855d11d27",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "acasatv-gold-s2",
+      "family": "Pro 2",
+      "label": "Gold S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_40.png",
+      "sourcePage": "https://www.cool-etv.net/ch/acasatv-gold-s2.htm",
+      "rawTitle": "ProGold S2 Online ~ Vezi ProGold S2 Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/goldy.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/goldy.html"
+      ],
+      "acestreamId": "00efde498b8de5a07d823bc338868fc855d11d27",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sportro",
+      "family": "PR0 - X",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_41.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sportro.htm",
+      "rawTitle": "ProX Online ~ Vezi ProX Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/prx.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sportro-s2",
+      "family": "PR0 - X",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_42.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sportro-s2.htm",
+      "rawTitle": "ProX S2 Online ~ Vezi ProX S2 Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/prx.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sportro-s3",
+      "family": "PR0 - X",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_43.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sportro-s3.htm",
+      "rawTitle": "ProX S3 Online ~ Vezi ProX S3 Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/prx.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an3",
+      "family": "Ant 3",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_44.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an3.htm",
+      "rawTitle": "Ant3na Online ~ Vezi Ant3 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "784e028c661114e5edc5041f9e4b3e5ecf2e0b2a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an3-s2",
+      "family": "Ant 3",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_45.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an3-s2.htm",
+      "rawTitle": "Ant3na S2 Online ~ Vezi Ant3 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "784e028c661114e5edc5041f9e4b3e5ecf2e0b2a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an3-s3",
+      "family": "Ant 3",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_46.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an3-s3.htm",
+      "rawTitle": "Ant3na S3 Online ~ Vezi Ant3 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "784e028c661114e5edc5041f9e4b3e5ecf2e0b2a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea",
+      "family": "Realitatea Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_47.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea.htm",
+      "rawTitle": "Realitatea Tv Online ~ Vezi Realitatea RTV Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1reality.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea-s2",
+      "family": "Realitatea Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_48.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea-s2.htm",
+      "rawTitle": "Realitatea S2 Tv Online ~ Vezi Realitatea S2 RTV Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1reality.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea-s3",
+      "family": "Realitatea Tv",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_49.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea-s3.htm",
+      "rawTitle": "Realitatea S3 Tv Online ~ Vezi Realitatea S3 RTV Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1reality.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport1-s1",
+      "family": "Sport's Tv",
+      "label": "Super Sport1 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_51.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport1-s1.htm",
+      "rawTitle": "Sport 1 Online ~ Vezi Sport 1 Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk1.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1kuk1.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport1-s2",
+      "family": "Sport's Tv",
+      "label": "Super Sport1 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_52.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport1-s2.htm",
+      "rawTitle": "Sport 1 S2 Online ~ Vezi Sport 1 S2 Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk1.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1kuk1.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport2-s1",
+      "family": "Sport's Tv",
+      "label": "Super Sport2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_53.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport2-s1.htm",
+      "rawTitle": "Sport 2 Online ~ Vezi Sport 2 Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk2.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1kuk2.html"
+      ],
+      "acestreamId": "b7db2c0404f90f99b01a8875713c047cd07595f7",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport2-s2",
+      "family": "Sport's Tv",
+      "label": "Super Sport2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_54.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport2-s2.htm",
+      "rawTitle": "Sport 2 S2Online ~ Vezi Sport 2 S2Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1kuk2.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1kuk2.html"
+      ],
+      "acestreamId": "b7db2c0404f90f99b01a8875713c047cd07595f7",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport3-s1",
+      "family": "Sport's Tv",
+      "label": "Super Sport3 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_55.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport3-s1.htm",
+      "rawTitle": "Sport 3 Online ~ Vezi Sport 3 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/dgsp3.html",
+      "embeds": [
+        "https://canale-tv.net/channel/dgsp3.html"
+      ],
+      "acestreamId": "b9dc6fdeaca5a5f4275db80d68536e023ce4ea06",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport3-s2",
+      "family": "Sport's Tv",
+      "label": "Super Sport3 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_56.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport3-s2.htm",
+      "rawTitle": "Sport 3 S2 Online ~ Vezi Sport 3 S2 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/dgsp3.html",
+      "embeds": [
+        "https://canale-tv.net/channel/dgsp3.html"
+      ],
+      "acestreamId": "b9dc6fdeaca5a5f4275db80d68536e023ce4ea06",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport4-s1",
+      "family": "Sport's Tv",
+      "label": "Super Sport4 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_57.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport4-s1.htm",
+      "rawTitle": "Sport 4 Online ~ Vezi Sport 4 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/dgsp4.html",
+      "embeds": [
+        "https://canale-tv.net/channel/dgsp4.html"
+      ],
+      "acestreamId": "b9dc6fdeaca5a5f4275db80d68536e023ce4ea06",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "sport4-s2",
+      "family": "Sport's Tv",
+      "label": "Super Sport4 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_58.png",
+      "sourcePage": "https://www.cool-etv.net/ch/sport4-s2.htm",
+      "rawTitle": "Sport 4 S2 Online ~ Vezi Sport 4 S2 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/dgsp4.html",
+      "embeds": [
+        "https://canale-tv.net/channel/dgsp4.html"
+      ],
+      "acestreamId": "b9dc6fdeaca5a5f4275db80d68536e023ce4ea06",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce1-s1",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 1 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_60.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce1-s1.htm",
+      "rawTitle": "DolceSport 1 Online ~ Vezi DolceSport 1 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce1-s2",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 1 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_61.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce1-s2.htm",
+      "rawTitle": "DolceSport S2 Online ~ Vezi DolceSport S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce2-s1",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_62.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce2-s1.htm",
+      "rawTitle": "DolceSport 2 Online ~ Vezi DolceSport 2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce2-s2",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_63.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce2-s2.htm",
+      "rawTitle": "DolceSport 2 S2 Online ~ Vezi DolceSport 2 S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce3-s1",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 3 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_64.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce3-s1.htm",
+      "rawTitle": "DolceSport 3 Online ~ Vezi DolceSport 3 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce3-s2",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 3 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_65.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce3-s2.htm",
+      "rawTitle": "DolceSport 3 S2 Online ~ Vezi DolceSport 3 S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce4-s1",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 4 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_66.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce4-s1.htm",
+      "rawTitle": "DolceSport 4 Online ~ Vezi DolceSport 4 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "dolce4-s2",
+      "family": "TELEK0M Sport",
+      "label": "TELEK0M Sport 4 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_67.png",
+      "sourcePage": "https://www.cool-etv.net/ch/dolce4-s2.htm",
+      "rawTitle": "DolceSport 4 S2 Online ~ Vezi DolceSport 4 S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "149e7fa6b3b1a4bbc6bc6f060e7106f7b427a414",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-s1",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport 1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_69.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-s1.htm",
+      "rawTitle": "L00K Tv Online ~ Vezi L00K Live - Cool-eTv.net",
+      "embedUrl": "https://iron1.xn--x2rw19a.space/000/puk1.html",
+      "embeds": [
+        "https://iron1.xn--x2rw19a.space/000/puk1.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-s2",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport 2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_70.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-s2.htm",
+      "rawTitle": "L00K2 Tv Online ~ Vezi L00K2 Live - Cool-eTv.net",
+      "embedUrl": "https://iron1.xn--x2rw19a.space/000/puk2.html",
+      "embeds": [
+        "https://iron1.xn--x2rw19a.space/000/puk2.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-s3",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport 3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_71.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-s3.htm",
+      "rawTitle": "L00K3 Tv Online ~ Vezi L00K3 Live - Cool-eTv.net",
+      "embedUrl": "https://iron1.xn--x2rw19a.space/000/puk3.html",
+      "embeds": [
+        "https://iron1.xn--x2rw19a.space/000/puk3.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-plus-s1",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport 4",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_72.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-plus-s1.htm",
+      "rawTitle": "L00K4 Tv Online ~ Vezi L00K4 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/primasp4.html",
+      "embeds": [
+        "https://canale-tv.net/channel/primasp4.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-plus-s2",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport 5",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_73.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-plus-s2.htm",
+      "rawTitle": "L00K5 Sport Tv Online ~ Vezi L00K5 Sport Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/primasp5.html",
+      "embeds": [
+        "https://canale-tv.net/channel/primasp5.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-pp1",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport PP1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_73.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-pp1.htm",
+      "rawTitle": "L00K PP1 Tv Online ~ Vezi L00K PP1 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/ppv1.html",
+      "embeds": [
+        "https://canale-tv.net/channel/ppv1.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-pp2",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport PP2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_73.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-pp2.htm",
+      "rawTitle": "L00K PP2 Tv Online ~ Vezi L00K PP2 Live - Cool-eTv.net",
+      "embedUrl": "https://canale-tv.net/channel/ppv2.html",
+      "embeds": [
+        "https://canale-tv.net/channel/ppv2.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "look-tv-pp3",
+      "family": "L00K Tv",
+      "label": "L00K Tv Sport PP3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_73.png",
+      "sourcePage": "https://www.cool-etv.net/ch/look-tv-pp3.htm",
+      "rawTitle": "L00K PP3 Tv Online ~ Vezi L00K PP3 Live - Cool-eTv.net",
+      "embedUrl": "https://pulse1.xn--x2rv05jjkg.shop/000/1pypy3.html",
+      "embeds": [
+        "https://pulse1.xn--x2rv05jjkg.shop/000/1pypy3.html"
+      ],
+      "acestreamId": "51cee9d0b29dbd9104e9a3971fd2569419eab159",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "er1-s1",
+      "family": "ESport's",
+      "label": "Er S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_74.png",
+      "sourcePage": "https://www.cool-etv.net/ch/er1-s1.htm",
+      "rawTitle": "SP0RT Online ~ Vezi SP0RT Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1er1.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1er1.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "er1-s2",
+      "family": "ESport's",
+      "label": "Er S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_75.png",
+      "sourcePage": "https://www.cool-etv.net/ch/er1-s2.htm",
+      "rawTitle": "SP0RT S2 Online ~ Vezi SP0RT S2 Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1er1.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1er1.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "er2-s1",
+      "family": "ESport's",
+      "label": "Er2 S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_76.png",
+      "sourcePage": "https://www.cool-etv.net/ch/er2-s1.htm",
+      "rawTitle": "SP0RT Online ~ Vezi SP0RT Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1er2.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1er2.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "er2-s2",
+      "family": "ESport's",
+      "label": "Er2 S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_77.png",
+      "sourcePage": "https://www.cool-etv.net/ch/er2-s2.htm",
+      "rawTitle": "SP0RT S2 Online ~ Vezi SP0RT S2 Live - Cool-eTv.net",
+      "embedUrl": "https://kuruk1.xn--okq6e.shop/000/1er2.html",
+      "embeds": [
+        "https://kuruk1.xn--okq6e.shop/000/1er2.html"
+      ],
+      "acestreamId": "813a474832768ded2e012d58236f686a7ed9274a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea-rtv",
+      "family": "RTV",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_78.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea-rtv.htm",
+      "rawTitle": "Romania Tv Online ~ Vezi Romania RTV Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1rteve.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea-rtv-s2",
+      "family": "RTV",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_79.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea-rtv-s2.htm",
+      "rawTitle": "Romania Tv Online S2 ~ Vezi Romania RTV Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1rteve.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "realitatea-rtv-s3",
+      "family": "RTV",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_80.png",
+      "sourcePage": "https://www.cool-etv.net/ch/realitatea-rtv-s3.htm",
+      "rawTitle": "Romania Tv Online S2 ~ Vezi Romania RTV Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1rteve.html"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tv100",
+      "family": "TV 1000 Max",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_81.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tv100.htm",
+      "rawTitle": "TV1000 Online ~ Vezi TV1000 Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1tivi10.html"
+      ],
+      "acestreamId": "e4c69ecfc9d99ede1ec21209ad4921bd77db1634",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tv100-s2",
+      "family": "TV 1000 Max",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_82.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tv100-s2.htm",
+      "rawTitle": "TV1000 S2 Online ~ Vezi TV1000 S2 Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1tivi10.html"
+      ],
+      "acestreamId": "e4c69ecfc9d99ede1ec21209ad4921bd77db1634",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "movie-s1",
+      "family": "Movies",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_83.png",
+      "sourcePage": "https://www.cool-etv.net/ch/movie-s1.htm",
+      "rawTitle": "Best Movie Online ~ Vezi Best Movie Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/df.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/df.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "movie-s2",
+      "family": "Movies",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_84.png",
+      "sourcePage": "https://www.cool-etv.net/ch/movie-s2.htm",
+      "rawTitle": "Best Movie S2 Online ~ Vezi Best Movie S2 Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/df.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/df.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "zu",
+      "family": "ZuTv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_85.png",
+      "sourcePage": "https://www.cool-etv.net/ch/zu.htm",
+      "rawTitle": "ZTv Online ~ Vezi ZTv Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/zzz.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/zzz.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "zu-s2",
+      "family": "ZuTv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_86.png",
+      "sourcePage": "https://www.cool-etv.net/ch/zu-s2.htm",
+      "rawTitle": "ZTv S2 Online ~ Vezi ZTv S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/zzz.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/zzz.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "filmbox-s1",
+      "family": "FilmBox",
+      "label": "FilmBox HD",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_87.png",
+      "sourcePage": "https://www.cool-etv.net/ch/filmbox-s1.htm",
+      "rawTitle": "FB0X Online ~ Vezi FB0X Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/fbux1.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/fbux1.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "filmbox-s2",
+      "family": "FilmBox",
+      "label": "FilmBox Fam",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_88.png",
+      "sourcePage": "https://www.cool-etv.net/ch/filmbox-s2.htm",
+      "rawTitle": "FB0X S2Online ~ Vezi FB0X S2Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/fboyp.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/fboyp.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "filmbox-s3",
+      "family": "FilmBox",
+      "label": "FilmBox Extra",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_89.png",
+      "sourcePage": "https://www.cool-etv.net/ch/filmbox-s3.htm",
+      "rawTitle": "FB0X S3Online ~ Vezi FB0X S3Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/fboye.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/fboye.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "filmbox-s4",
+      "family": "FilmBox",
+      "label": "FilmBox",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_90.png",
+      "sourcePage": "https://www.cool-etv.net/ch/filmbox-s4.htm",
+      "rawTitle": "FB0X S4Online ~ Vezi FB0X S4Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/fboyp.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/fboyp.html"
+      ],
+      "acestreamId": "47fa841739d8585ad57d6ae1ff8abddc08bfcccc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an2-s1",
+      "family": "Antena Stars",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_91.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an2-s1.htm",
+      "rawTitle": "Ant3naStar Online ~ Vezi Ant3naStar Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/astar.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/astar.html"
+      ],
+      "acestreamId": "4d98169f6af7f6b4f379542b09c99d7d8cd4db19",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "an2-s2",
+      "family": "Antena Stars",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_92.png",
+      "sourcePage": "https://www.cool-etv.net/ch/an2-s2.htm",
+      "rawTitle": "Ant3naStar S2 Online ~ Vezi Ant3naStar S2 Live - Cool-eTv.net",
+      "embedUrl": "https://iron1.jarvisx1.cfd/000/astar.html",
+      "embeds": [
+        "https://iron1.jarvisx1.cfd/000/astar.html",
+        "https://saruman1.tharen001.cfd/000/astar.html"
+      ],
+      "acestreamId": "4d98169f6af7f6b4f379542b09c99d7d8cd4db19",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "universal-ch",
+      "family": "Teen Nick",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_93.png",
+      "sourcePage": "https://www.cool-etv.net/ch/universal-ch.htm",
+      "rawTitle": "Teen Nick Online ~ Vezi Teen Nick Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "a2e1e230cc8d83a9450be5d1922321362ee6a573",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "universal-ch-s2",
+      "family": "Teen Nick",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_94.png",
+      "sourcePage": "https://www.cool-etv.net/ch/universal-ch-s2.htm",
+      "rawTitle": "Teen Nick S2 Online ~ Vezi Teen Nick S2 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "a2e1e230cc8d83a9450be5d1922321362ee6a573",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "film-cafe",
+      "family": "Film Cafe",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_95.png",
+      "sourcePage": "https://www.cool-etv.net/ch/film-cafe.htm",
+      "rawTitle": "FilmCafe Online ~ Vezi FilmCafe Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/cofyfilm.html"
+      ],
+      "acestreamId": "9cfae198419227e4f1b0443e79f101283237e1c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "film-cafe-s2",
+      "family": "Film Cafe",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_96.png",
+      "sourcePage": "https://www.cool-etv.net/ch/film-cafe-s2.htm",
+      "rawTitle": "FilmCafe S2 Online ~ Vezi FilmCafe S2 Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/cofyfilm.html"
+      ],
+      "acestreamId": "9cfae198419227e4f1b0443e79f101283237e1c6",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "euforia",
+      "family": "Happy",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_97.png",
+      "sourcePage": "https://www.cool-etv.net/ch/euforia.htm",
+      "rawTitle": "Happy Tv Online ~ Vezi Happy Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/hap.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/hap.html"
+      ],
+      "acestreamId": "36578ca484df8bc0e290eda20e6c42de0041f2b1",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "euforia-s2",
+      "family": "Happy",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_98.png",
+      "sourcePage": "https://www.cool-etv.net/ch/euforia-s2.htm",
+      "rawTitle": "Happy S2 Tv Online ~ Vezi Happy S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/hap.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/hap.html"
+      ],
+      "acestreamId": "36578ca484df8bc0e290eda20e6c42de0041f2b1",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "diva",
+      "family": "Diva Universal",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_99.png",
+      "sourcePage": "https://www.cool-etv.net/ch/diva.htm",
+      "rawTitle": "Diva Online ~ Vezi Diva Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/d1va.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/d1va.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "diva-s2",
+      "family": "Diva Universal",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_100.png",
+      "sourcePage": "https://www.cool-etv.net/ch/diva-s2.htm",
+      "rawTitle": "Diva S2 Online ~ Vezi Diva S2 Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/d1va.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/d1va.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jetix-cartoon",
+      "family": "Disney Channel",
+      "label": "Disney Channel S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_101.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jetix-cartoon.htm",
+      "rawTitle": "Dysney Online ~ Vezi Dysney Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1dysn.html"
+      ],
+      "acestreamId": "2db705d4f8638ce919446d1d2887a0cdcb9beb63",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jetix-cartoon-s2",
+      "family": "Disney Channel",
+      "label": "Disney Channel S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_102.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jetix-cartoon-s2.htm",
+      "rawTitle": "Dysney S2 Online ~ Vezi Dysney S2 Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1dysn.html"
+      ],
+      "acestreamId": "2db705d4f8638ce919446d1d2887a0cdcb9beb63",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jetix-junior",
+      "family": "Disney Channel",
+      "label": "Disney Junior S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_103.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jetix-junior.htm",
+      "rawTitle": "Dysney Junior Online ~ Vezi Dysney Junior Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/dysneejr.html"
+      ],
+      "acestreamId": "9a5130f0f8d9346f027c9e3f07d360d37f27b2a2",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jetix-junior-s2",
+      "family": "Disney Channel",
+      "label": "Disney Junior S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_104.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jetix-junior-s2.htm",
+      "rawTitle": "Dysney Junior S2 Online ~ Vezi Dysney Junior S2 Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/dysneejr.html"
+      ],
+      "acestreamId": "9a5130f0f8d9346f027c9e3f07d360d37f27b2a2",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cartoon",
+      "family": "Cartoon Network",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_105.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cartoon.htm",
+      "rawTitle": "CartoonNetwork Online ~ Vezi CartoonNetwork Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/cartun.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/cartun.html"
+      ],
+      "acestreamId": "0a53471694629fc5ecf7fdaaa2b1e3d256cb56da",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cartoon-s2",
+      "family": "Cartoon Network",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_106.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cartoon-s2.htm",
+      "rawTitle": "CartoonNetwork S2 Online ~ Vezi CartoonNetwork S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/cartun.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/cartun.html"
+      ],
+      "acestreamId": "0a53471694629fc5ecf7fdaaa2b1e3d256cb56da",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "boomerang",
+      "family": "Boomerang",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_107.png",
+      "sourcePage": "https://www.cool-etv.net/ch/boomerang.htm",
+      "rawTitle": "Cartoonito Online ~ Vezi Cartoonito Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1bomy.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1bomy.html"
+      ],
+      "acestreamId": "fa09f597a0f96c255bac2c2f482598546b85798f",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "boomerang-s2",
+      "family": "Boomerang",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_108.png",
+      "sourcePage": "https://www.cool-etv.net/ch/boomerang-s2.htm",
+      "rawTitle": "Cartoonito S2 Online ~ Vezi Cartoonito S2 Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1bomy.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1bomy.html"
+      ],
+      "acestreamId": "fa09f597a0f96c255bac2c2f482598546b85798f",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "minimaxro",
+      "family": "MiniMax & Jim",
+      "label": "MiniMax S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_109.png",
+      "sourcePage": "https://www.cool-etv.net/ch/minimaxro.htm",
+      "rawTitle": "MiniMax Online ~ Vezi MiniMax Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/minmax.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/minmax.html"
+      ],
+      "acestreamId": "b6987dd99aaaa62b5e456102935283fcb03e5f18",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "minimaxro-s2",
+      "family": "MiniMax & Jim",
+      "label": "MiniMax S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_110.png",
+      "sourcePage": "https://www.cool-etv.net/ch/minimaxro-s2.htm",
+      "rawTitle": "MiniMax KidsOnline ~ Vezi MiniMax KidsLive - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/minmax.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/minmax.html"
+      ],
+      "acestreamId": "b6987dd99aaaa62b5e456102935283fcb03e5f18",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jim-jam",
+      "family": "MiniMax & Jim",
+      "label": "Jim Jam S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_111.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jim-jam.htm",
+      "rawTitle": "JimJam Online ~ Vezi JimJam Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/jimy.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/jimy.html"
+      ],
+      "acestreamId": "b6987dd99aaaa62b5e456102935283fcb03e5f18",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "jim-jam-s2",
+      "family": "MiniMax & Jim",
+      "label": "Jim Jam S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_112.png",
+      "sourcePage": "https://www.cool-etv.net/ch/jim-jam-s2.htm",
+      "rawTitle": "JimJam S2 Online ~ Vezi JimJam S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/jimy.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/jimy.html"
+      ],
+      "acestreamId": "b6987dd99aaaa62b5e456102935283fcb03e5f18",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "b1",
+      "family": "B1 Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_113.png",
+      "sourcePage": "https://www.cool-etv.net/ch/b1.htm",
+      "rawTitle": "B1 Tv Online ~ Vezi B1 Tv Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/b1.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "b1-s2",
+      "family": "B1 Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_114.png",
+      "sourcePage": "https://www.cool-etv.net/ch/b1-s2.htm",
+      "rawTitle": "B1 Stiri Tv Online ~ Vezi B1 Stiri Tv Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/b1.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "b1-s3",
+      "family": "B1 Tv",
+      "label": "S3",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_115.png",
+      "sourcePage": "https://www.cool-etv.net/ch/b1-s3.htm",
+      "rawTitle": "B1 Live Tv Online ~ Vezi B1 LiveTv Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/b1.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nickelodeon",
+      "family": "Nickelodeon",
+      "label": "Nickelodeon S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_116.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nickelodeon.htm",
+      "rawTitle": "Nickelodeon Online ~ Vezi Nickelodeon Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/niki.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/niki.html"
+      ],
+      "acestreamId": "a2e1e230cc8d83a9450be5d1922321362ee6a573",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nickelodeon-s2",
+      "family": "Nickelodeon",
+      "label": "Nickelodeon S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_117.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nickelodeon-s2.htm",
+      "rawTitle": "Nickelodeon S2 Online ~ Vezi Nickelodeon S2 Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/niki.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/niki.html"
+      ],
+      "acestreamId": "a2e1e230cc8d83a9450be5d1922321362ee6a573",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nickelodeon-jr",
+      "family": "Nickelodeon",
+      "label": "Nickelodeon Junior S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_118.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nickelodeon-jr.htm",
+      "rawTitle": "Nickelodeon Junior Online ~ Vezi Nickelodeon Junior Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1nikijr.html"
+      ],
+      "acestreamId": "c89d4013cdf1025c0f515e17fd81a3b9b58b16f7",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nickelodeon-jr-s2",
+      "family": "Nickelodeon",
+      "label": "Nickelodeon Junior S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_119.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nickelodeon-jr-s2.htm",
+      "rawTitle": "Nickelodeon Junior S2 Online ~ Vezi Nickelodeon Junior S2 Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1nikijr.html"
+      ],
+      "acestreamId": "c89d4013cdf1025c0f515e17fd81a3b9b58b16f7",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nick-toons-s1",
+      "family": "Nickelodeon",
+      "label": "Nick Toons S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_120.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nick-toons-s1.htm",
+      "rawTitle": "Nick Toons Online ~ Vezi Nick Toons Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/nichitun.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/nichitun.html"
+      ],
+      "acestreamId": "3b8fec47f38a9444d5c3056f58bb07ce3c36b441",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "nick-toons-s2",
+      "family": "Nickelodeon",
+      "label": "Nick Toons S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_121.png",
+      "sourcePage": "https://www.cool-etv.net/ch/nick-toons-s2.htm",
+      "rawTitle": "Nick Toons S2 Online ~ Vezi Nick Toons S2 Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/nichitun.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/nichitun.html"
+      ],
+      "acestreamId": "3b8fec47f38a9444d5c3056f58bb07ce3c36b441",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "amc-s1",
+      "family": "AMC",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_122.png",
+      "sourcePage": "https://www.cool-etv.net/ch/amc-s1.htm",
+      "rawTitle": "AMC Online ~ Vezi AMC Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/amece.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/amece.html"
+      ],
+      "acestreamId": "0c211536ea36e61053999df481f0ef0f59f81769",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "amc-s2",
+      "family": "AMC",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_123.png",
+      "sourcePage": "https://www.cool-etv.net/ch/amc-s2.htm",
+      "rawTitle": "AMC S2 Online ~ Vezi AMC S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/amece.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/amece.html"
+      ],
+      "acestreamId": "0c211536ea36e61053999df481f0ef0f59f81769",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "bbc-earth-s1",
+      "family": "BBC Earth",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_124.png",
+      "sourcePage": "https://www.cool-etv.net/ch/bbc-earth-s1.htm",
+      "rawTitle": "BBC Earth Online ~ Vezi BBC Earth Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/ert.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/ert.html"
+      ],
+      "acestreamId": "9d0c99bc76611b7e36d8e103e9e7babbd8ed9265",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "bbc-earth-s2",
+      "family": "BBC Earth",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_125.png",
+      "sourcePage": "https://www.cool-etv.net/ch/bbc-earth-s2.htm",
+      "rawTitle": "BBC Earth S2 Online ~ Vezi BBC Earth S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/ert.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/ert.html"
+      ],
+      "acestreamId": "9d0c99bc76611b7e36d8e103e9e7babbd8ed9265",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "prima-news-s1",
+      "family": "Prima News",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/prima-news.png",
+      "sourcePage": "https://www.cool-etv.net/ch/prima-news-s1.htm",
+      "rawTitle": "Prima News Tv Online ~ Vezi Prima News Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/prnews.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/prnews.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "prima-news-s2",
+      "family": "Prima News",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/prima-news.png",
+      "sourcePage": "https://www.cool-etv.net/ch/prima-news-s2.htm",
+      "rawTitle": "Prima News S2 Tv Online ~ Vezi Prima News S2 Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/prnews.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/prnews.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "euro-news-s1",
+      "family": "Euro News",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/euronews.png",
+      "sourcePage": "https://www.cool-etv.net/ch/euro-news-s1.htm",
+      "rawTitle": "EuroNews Tv Online ~ Vezi EuroNews Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/ernews.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/ernews.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "euro-news-s2",
+      "family": "Euro News",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/euronews.png",
+      "sourcePage": "https://www.cool-etv.net/ch/euro-news-s2.htm",
+      "rawTitle": "EuroNews S2 Tv Online ~ Vezi EuroNews S2 Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/ernews.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/ernews.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "shut1-s1",
+      "family": "Show 1",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/shut-1.png",
+      "sourcePage": "https://www.cool-etv.net/ch/shut1-s1.htm",
+      "rawTitle": "M0VIES TIME Tv Online ~ Vezi M0VIES TIME Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/schi1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/schi1.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "shut1-s2",
+      "family": "Show 1",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/shut-1.png",
+      "sourcePage": "https://www.cool-etv.net/ch/shut1-s2.htm",
+      "rawTitle": "M0VIES TIME Tv Online ~ Vezi M0VIES TIME Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/schi1.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/schi1.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "shut2-s1",
+      "family": "Show 2",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/shut-2.png",
+      "sourcePage": "https://www.cool-etv.net/ch/shut2-s1.htm",
+      "rawTitle": "M0VIES TIME 2 Tv Online ~ Vezi M0VIES TIME 2 Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/schi2.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/schi2.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "shut2-s2",
+      "family": "Show 2",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/shut-2.png",
+      "sourcePage": "https://www.cool-etv.net/ch/shut2-s2.htm",
+      "rawTitle": "M0VIES TIME 2 Tv Online ~ Vezi M0VIES TIME 2 Tv Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/schi2.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/schi2.html"
+      ],
+      "acestreamId": "51f19d45ce7faa4892ceae2bcdda6fb098b574f3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn",
+      "family": "AXN",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_126.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn.htm",
+      "rawTitle": "AXN Online ~ Vezi AXN Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1axy.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1axy.html"
+      ],
+      "acestreamId": "44c07300a796c974b655cc8c6305e547ab182595",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-s2",
+      "family": "AXN",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_127.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-s2.htm",
+      "rawTitle": "AXN S2 Online ~ Vezi AXN S2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1axy.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1axy.html"
+      ],
+      "acestreamId": "44c07300a796c974b655cc8c6305e547ab182595",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-black-s1",
+      "family": "AXN Black",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_128.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-black-s1.htm",
+      "rawTitle": "AXN Black Online ~ Vezi AXN Black Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/axblack.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/axblack.html"
+      ],
+      "acestreamId": "f58ab93bfa9b4b9ac08df31bb16ed05860dc4227",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-black-s2",
+      "family": "AXN Black",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_129.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-black-s2.htm",
+      "rawTitle": "AXN Black Online S2 ~ Vezi AXN Black Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/axblack.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/axblack.html"
+      ],
+      "acestreamId": "f58ab93bfa9b4b9ac08df31bb16ed05860dc4227",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-white-s1",
+      "family": "AXN White",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_130.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-white-s1.htm",
+      "rawTitle": "AXN White Online ~ Vezi AXN White Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/axalb.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/axalb.html"
+      ],
+      "acestreamId": "af0fcc5834827e716b4051302b6d005724cc90e9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-white-s2",
+      "family": "AXN White",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_131.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-white-s2.htm",
+      "rawTitle": "AXN White S2 Online ~ Vezi AXN S2 White Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/axalb.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/axalb.html"
+      ],
+      "acestreamId": "af0fcc5834827e716b4051302b6d005724cc90e9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-spin",
+      "family": "AXN Spin",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_132.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-spin.htm",
+      "rawTitle": "AXN Spin Online ~ Vezi AXN Spin Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1spyn.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1spyn.html"
+      ],
+      "acestreamId": "44c07300a796c974b655cc8c6305e547ab182595",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "axn-spin-s2",
+      "family": "AXN Spin",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_133.png",
+      "sourcePage": "https://www.cool-etv.net/ch/axn-spin-s2.htm",
+      "rawTitle": "AXN Spin S2 Online ~ Vezi AXN Spin S2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1spyn.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1spyn.html"
+      ],
+      "acestreamId": "44c07300a796c974b655cc8c6305e547ab182595",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tnt-s1",
+      "family": "TNT",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_134.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tnt-s1.htm",
+      "rawTitle": "TNT Online ~ Vezi TNT Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/tnnt.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/tnnt.html"
+      ],
+      "acestreamId": "e807bcee50f6e3709094c3ab6d09d435874a2ea5",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tnt-s2",
+      "family": "TNT",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_135.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tnt-s2.htm",
+      "rawTitle": "TNT S2 Online ~ Vezi TNT S2 Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/tnnt.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/tnnt.html"
+      ],
+      "acestreamId": "e807bcee50f6e3709094c3ab6d09d435874a2ea5",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "epic-drama-s1",
+      "family": "Epic Drama",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_136.png",
+      "sourcePage": "https://www.cool-etv.net/ch/epic-drama-s1.htm",
+      "rawTitle": "EpicDrama Online ~ Vezi EpicDrama Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/epy.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/epy.html"
+      ],
+      "acestreamId": "5cb51df0c0940aaa43bdac8e8625203b08bee3a4",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "epic-drama-s2",
+      "family": "Epic Drama",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_137.png",
+      "sourcePage": "https://www.cool-etv.net/ch/epic-drama-s2.htm",
+      "rawTitle": "Epic Drama Online ~ Vezi Epic Drama Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/epy.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/epy.html"
+      ],
+      "acestreamId": "5cb51df0c0940aaa43bdac8e8625203b08bee3a4",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "comedy-central",
+      "family": "Comedy & Shorts",
+      "label": "Central Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_138.png",
+      "sourcePage": "https://www.cool-etv.net/ch/comedy-central.htm",
+      "rawTitle": "ComedyCentral Online ~ Vezi ComedyCentral Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/komedi.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/komedi.html"
+      ],
+      "acestreamId": "a2002a6c5658661533096684bd9f3e3bbc37986d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "comedy-shorts",
+      "family": "Comedy & Shorts",
+      "label": "Shorts",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_139.png",
+      "sourcePage": "https://www.cool-etv.net/ch/comedy-shorts.htm",
+      "rawTitle": "ComedyCentral Online ~ Vezi ComedyCentral Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/komedi.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/komedi.html"
+      ],
+      "acestreamId": "a2002a6c5658661533096684bd9f3e3bbc37986d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "via-nature",
+      "family": "ViaSat",
+      "label": "Nature",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_140.png",
+      "sourcePage": "https://www.cool-etv.net/ch/via-nature.htm",
+      "rawTitle": "Via Nature Online ~ Vezi Via Nature Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/vnature.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/vnature.html"
+      ],
+      "acestreamId": "af9d26f05efeeae8977e45d3f18baafc727539f9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "via-explorer",
+      "family": "ViaSat",
+      "label": "Explorer",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_141.png",
+      "sourcePage": "https://www.cool-etv.net/ch/via-explorer.htm",
+      "rawTitle": "Via Explorer Online ~ Vezi Via Explorer Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/vexpl.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/vexpl.html"
+      ],
+      "acestreamId": "af9d26f05efeeae8977e45d3f18baafc727539f9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "via-his",
+      "family": "ViaSat",
+      "label": "History",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_142.png",
+      "sourcePage": "https://www.cool-etv.net/ch/via-his.htm",
+      "rawTitle": "Via History Online ~ Vezi Via History Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/vhis.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/vhis.html"
+      ],
+      "acestreamId": "af9d26f05efeeae8977e45d3f18baafc727539f9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "duck-tv-s1",
+      "family": "Duck Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_143.png",
+      "sourcePage": "https://www.cool-etv.net/ch/duck-tv-s1.htm",
+      "rawTitle": "Duck Tv Cartoon copii Online ~ Vezi Duck Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/duk.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/duk.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "duck-tv-s2",
+      "family": "Duck Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_144.png",
+      "sourcePage": "https://www.cool-etv.net/ch/duck-tv-s2.htm",
+      "rawTitle": "Duck Tv S2 Cartoon copii Online ~ Vezi Duck Tv S2 Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/duk.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/duk.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "bollywood-clasic-s1",
+      "family": "BollyWood Tv",
+      "label": "BollyWood Clasic",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_145.png",
+      "sourcePage": "https://www.cool-etv.net/ch/bollywood-clasic-s1.htm",
+      "rawTitle": "BollywoodClasic Online ~ Vezi BollywoodClasic Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1buly.html"
+      ],
+      "acestreamId": "7e30921d56d2dda65b71ab096ca49a7b45dc0aa4",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "bollywood-tv-s1",
+      "family": "BollyWood Tv",
+      "label": "BollyWood Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_146.png",
+      "sourcePage": "https://www.cool-etv.net/ch/bollywood-tv-s1.htm",
+      "rawTitle": "Bollywood Tv Online ~ Vezi BollywoodClasic Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1buly.html"
+      ],
+      "acestreamId": "7e30921d56d2dda65b71ab096ca49a7b45dc0aa4",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "bollywood-extra-s1",
+      "family": "BollyWood Tv",
+      "label": "BollyWood Extra",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_147.png",
+      "sourcePage": "https://www.cool-etv.net/ch/bollywood-extra-s1.htm",
+      "rawTitle": "BollywoodExtra Online ~ Vezi BollywoodExtra Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1buly.html"
+      ],
+      "acestreamId": "21ba23d7ec08860d8ef3177359e2c17377983d13",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "crime-investigation-s1",
+      "family": "Crime +",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_148.png",
+      "sourcePage": "https://www.cool-etv.net/ch/crime-investigation-s1.htm",
+      "rawTitle": "Crime Investigation Online ~ Vezi Crime Investigation Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/cryinvest2.html"
+      ],
+      "acestreamId": "86b26cc91e93f03d1764378518cac5eccb0e7c85",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "crime-investigation-s2",
+      "family": "Crime +",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_149.png",
+      "sourcePage": "https://www.cool-etv.net/ch/crime-investigation-s2.htm",
+      "rawTitle": "Crime Investigation S2 Online ~ Vezi Crime Investigation S2 Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/cryinvest2.html"
+      ],
+      "acestreamId": "86b26cc91e93f03d1764378518cac5eccb0e7c85",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tlc-s1",
+      "family": "Discovery Travel",
+      "label": "TLC S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_150.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tlc-s1.htm",
+      "rawTitle": "TLC Online ~ Vezi TLC Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/t1c.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/t1c.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "tlc-s2",
+      "family": "Discovery Travel",
+      "label": "TLC S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_151.png",
+      "sourcePage": "https://www.cool-etv.net/ch/tlc-s2.htm",
+      "rawTitle": "TLC S2 Online ~ Vezi TLC S2 Live - Cool-eTv.net",
+      "embedUrl": "https://atlantida1.aquax001.shop/000/t1c.html",
+      "embeds": [
+        "https://atlantida1.aquax001.shop/000/t1c.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "travel-ch-s1",
+      "family": "Discovery Travel",
+      "label": "Travel Ch S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_152.png",
+      "sourcePage": "https://www.cool-etv.net/ch/travel-ch-s1.htm",
+      "rawTitle": "Travel Online ~ Vezi Travel Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1travil.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1travil.html"
+      ],
+      "acestreamId": "0a53471694629fc5ecf7fdaaa2b1e3d256cb56da",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "travel-ch-s2",
+      "family": "Discovery Travel",
+      "label": "Travel Ch S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_153.png",
+      "sourcePage": "https://www.cool-etv.net/ch/travel-ch-s2.htm",
+      "rawTitle": "Travel S2 Online ~ Vezi Travel S2 Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1travil.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1travil.html"
+      ],
+      "acestreamId": "0a53471694629fc5ecf7fdaaa2b1e3d256cb56da",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "travel-living-s1",
+      "family": "Discovery Travel",
+      "label": "Travel & Living S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_154.png",
+      "sourcePage": "https://www.cool-etv.net/ch/travel-living-s1.htm",
+      "rawTitle": "Travel - Living Online ~ Vezi Travel - Living Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "4142c1fb0cd6546cb9bb18019d86afffb056351c",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "travel-living-s2",
+      "family": "Discovery Travel",
+      "label": "Travel & Living S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_155.png",
+      "sourcePage": "https://www.cool-etv.net/ch/travel-living-s2.htm",
+      "rawTitle": "Travel - Living Online S2 ~ Vezi Travel - Living Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "4142c1fb0cd6546cb9bb18019d86afffb056351c",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "natgeo",
+      "family": "National Geo",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_156.png",
+      "sourcePage": "https://www.cool-etv.net/ch/natgeo.htm",
+      "rawTitle": "NatGeo Online ~ Vezi NatGeo Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/ngeo.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/ngeo.html"
+      ],
+      "acestreamId": "b1508450ec0d4fb6fb0892d235d21bc981174dae",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "natgeo-hd",
+      "family": "National Geo",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_157.png",
+      "sourcePage": "https://www.cool-etv.net/ch/natgeo-hd.htm",
+      "rawTitle": "NatGeo S2 Online ~ Vezi NatGeo S2 Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/ngeo.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/ngeo.html"
+      ],
+      "acestreamId": "b1508450ec0d4fb6fb0892d235d21bc981174dae",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "natgeowild",
+      "family": "Nat Geo Wild",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_158.png",
+      "sourcePage": "https://www.cool-etv.net/ch/natgeowild.htm",
+      "rawTitle": "NatGeo Wild Online ~ Vezi NatGeo Wild Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1uild.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1uild.html"
+      ],
+      "acestreamId": "a8931d97ad9e925d9659b006d37ec2ab1101c393",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "natgeowild-s2",
+      "family": "Nat Geo Wild",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_159.png",
+      "sourcePage": "https://www.cool-etv.net/ch/natgeowild-s2.htm",
+      "rawTitle": "NatGeo Wild S2 Online ~ Vezi NatGeo Wild S2 Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1uild.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1uild.html"
+      ],
+      "acestreamId": "a8931d97ad9e925d9659b006d37ec2ab1101c393",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "animal",
+      "family": "Animal Planet",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_160.png",
+      "sourcePage": "https://www.cool-etv.net/ch/animal.htm",
+      "rawTitle": "Animal Planet Online ~ Vezi Animal Planet Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "fc1a6d1bf6ccefab8162621b7896338007110d37",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "animal-s2",
+      "family": "Animal Planet",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_161.png",
+      "sourcePage": "https://www.cool-etv.net/ch/animal-s2.htm",
+      "rawTitle": "Animal Planet Online S2 ~ Vezi Animal Planet Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "9f066a7370d5c8233af7851641e1d14008197899",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discovery-channel-s1",
+      "family": "Discovery Channel",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_162.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discovery-channel-s1.htm",
+      "rawTitle": "Discovery Channel Online ~ Vezi Discovery Channel Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/disc.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/disc.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discovery-channel-s2",
+      "family": "Discovery Channel",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_163.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discovery-channel-s2.htm",
+      "rawTitle": "Discovery Channel S2 Online ~ Vezi Discovery Channel S2 Live - Cool-eTv.net",
+      "embedUrl": "https://saruman1.tharen001.cfd/000/disc.html",
+      "embeds": [
+        "https://saruman1.tharen001.cfd/000/disc.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "his",
+      "family": "HlST0 ChanneI",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_164.png",
+      "sourcePage": "https://www.cool-etv.net/ch/his.htm",
+      "rawTitle": "HlST0 ChanneI Online ~ Vezi HlST0 ChanneI Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1hyst.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1hyst.html"
+      ],
+      "acestreamId": "af9d26f05efeeae8977e45d3f18baafc727539f9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "his-s2",
+      "family": "HlST0 ChanneI",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_165.png",
+      "sourcePage": "https://www.cool-etv.net/ch/his-s2.htm",
+      "rawTitle": "HlST0 ChanneI Online ~ Vezi HlST0 ChanneI Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias11.cfd/000/1hyst.html",
+      "embeds": [
+        "https://galandriel1.thobias11.cfd/000/1hyst.html",
+        "https://galandriel1.thobias001.cfd/000/1hyst.html"
+      ],
+      "acestreamId": "af9d26f05efeeae8977e45d3f18baafc727539f9",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discoid",
+      "family": "Discovery ID",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_166.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discoid.htm",
+      "rawTitle": "Discovery ID Online ~ Vezi Discovery Investigation Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/cry.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/cry.html"
+      ],
+      "acestreamId": "2cc53ba8145f14a89cecf5c016556a9691bf287d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discoid-s2",
+      "family": "Discovery ID",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_167.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discoid-s2.htm",
+      "rawTitle": "Discovery ID S2 Online ~ Vezi Discovery Investigation Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta001.cfd/000/cry.html",
+      "embeds": [
+        "https://onyx1.mofta001.cfd/000/cry.html"
+      ],
+      "acestreamId": "2cc53ba8145f14a89cecf5c016556a9691bf287d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discoscience",
+      "family": "Discovery Science",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_168.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discoscience.htm",
+      "rawTitle": "Discovery Science Online ~ Vezi Discovery Science Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta1.cfd/000/discoscify.html",
+      "embeds": [
+        "https://onyx1.mofta1.cfd/000/discoscify.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "discoscience-s2",
+      "family": "Discovery Science",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_169.png",
+      "sourcePage": "https://www.cool-etv.net/ch/discoscience-s2.htm",
+      "rawTitle": "Discovery Science S2 Online ~ Vezi Discovery Science S2 Live - Cool-eTv.net",
+      "embedUrl": "https://onyx1.mofta1.cfd/000/discoscify.html",
+      "embeds": [
+        "https://onyx1.mofta1.cfd/000/discoscify.html"
+      ],
+      "acestreamId": "23e9be076fdcf62bf623a8dd72b0e65d8fe3cdab",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "disco-world-s1",
+      "family": "Discovery World",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_170.png",
+      "sourcePage": "https://www.cool-etv.net/ch/disco-world-s1.htm",
+      "rawTitle": "Discovery World Online ~ Vezi Discovery World Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "a35ff01f96eed87993261cfbf405bf63d1e08d6d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "disco-world-s2",
+      "family": "Discovery World",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_171.png",
+      "sourcePage": "https://www.cool-etv.net/ch/disco-world-s2.htm",
+      "rawTitle": "Discovery World Online S2 ~ Vezi Discovery World Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "a35ff01f96eed87993261cfbf405bf63d1e08d6d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "trinitas-tv",
+      "family": "Alte Tv-uri !",
+      "label": "Trinitas Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_172.png",
+      "sourcePage": "https://www.cool-etv.net/ch/trinitas-tv.htm",
+      "rawTitle": "Trinitas Tv Online ~ Vezi Trinitas Live - Cool-eTv.net",
+      "embedUrl": "https://www.youtube.com/embed/dWW7ucvedFw",
+      "embeds": [
+        "https://www.youtube.com/embed/dWW7ucvedFw"
+      ],
+      "acestreamId": "f8529a3c986e53ccfb6334a264a2d924041f64c3",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "credo-tv",
+      "family": "Alte Tv-uri !",
+      "label": "Credo Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_173.png",
+      "sourcePage": "https://www.cool-etv.net/ch/credo-tv.htm",
+      "rawTitle": "Trinitas Tv Online - www.cool-etv.net",
+      "embedUrl": "https://www.youtube.com/embed/FRzSaHqOURQ",
+      "embeds": [
+        "https://www.youtube.com/embed/FRzSaHqOURQ"
+      ],
+      "acestreamId": null,
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "moldova-1",
+      "family": "Alte Tv-uri !",
+      "label": "Moldova Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_174.png",
+      "sourcePage": "https://www.cool-etv.net/ch/moldova-1.htm",
+      "rawTitle": "Moldova1 Tv Online - www.cool-etv.net",
+      "embedUrl": "https://www.cool-etv.net/ch/etc/mold/moldova-1.html",
+      "embeds": [
+        "https://www.cool-etv.net/ch/etc/mold/moldova-1.html"
+      ],
+      "acestreamId": null,
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "publika",
+      "family": "Alte Tv-uri !",
+      "label": "Publika Tv",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_175.png",
+      "sourcePage": "https://www.cool-etv.net/ch/publika.htm",
+      "rawTitle": "Publika Tv Online - www.cool-etv.net",
+      "embedUrl": "https://www.cool-etv.net/ch/etc/mold/publika.html",
+      "embeds": [
+        "https://www.cool-etv.net/ch/etc/mold/publika.html"
+      ],
+      "acestreamId": null,
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "paprika-s1",
+      "family": "PaprikaTv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_176.png",
+      "sourcePage": "https://www.cool-etv.net/ch/paprika-s1.htm",
+      "rawTitle": "Paprika Online ~ Vezi Paprika Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1papi.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1papi.html"
+      ],
+      "acestreamId": "27f02bc07441c3c283f4a974fd390cdbd292504f",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "paprika-s2",
+      "family": "PaprikaTv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_177.png",
+      "sourcePage": "https://www.cool-etv.net/ch/paprika-s2.htm",
+      "rawTitle": "Paprika Food Online ~ Vezi Paprika Food Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1papi.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1papi.html"
+      ],
+      "acestreamId": "27f02bc07441c3c283f4a974fd390cdbd292504f",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cbs-reality-s1",
+      "family": "CBS-Reality",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_178.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cbs-reality-s1.htm",
+      "rawTitle": "C8S Reality Online ~ Vezi C8S Reality Live - Cool-eTv.net",
+      "embedUrl": "https://iron1.jarvisx1.cfd/000/cbsrealy.html",
+      "embeds": [
+        "https://iron1.jarvisx1.cfd/000/cbsrealy.html"
+      ],
+      "acestreamId": "0a53471694629fc5ecf7fdaaa2b1e3d256cb56da",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "fishing-hunting-s1",
+      "family": "Fishing Hunting",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_179.png",
+      "sourcePage": "https://www.cool-etv.net/ch/fishing-hunting-s1.htm",
+      "rawTitle": "Fishy-Hunting Tv Online ~ Vezi Fishy-Hunting Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/fishy.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/fishy.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "utv",
+      "family": "U-TV Music",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_180.png",
+      "sourcePage": "https://www.cool-etv.net/ch/utv.htm",
+      "rawTitle": "UTv Online ~ Vezi UTv Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1utivi.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1utivi.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "n24",
+      "family": "N24 +",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_181.png",
+      "sourcePage": "https://www.cool-etv.net/ch/n24.htm",
+      "rawTitle": "N24+ Online ~ Vezi N24+ Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1n24.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1n24.html"
+      ],
+      "acestreamId": "22a33ba976755f0d906c400ba955795bf7e0242e",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "n24-s2",
+      "family": "N24 +",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_182.png",
+      "sourcePage": "https://www.cool-etv.net/ch/n24-s2.htm",
+      "rawTitle": "N24+ Online ~ Vezi N24+ Live - Cool-eTv.net",
+      "embedUrl": "https://galandriel1.thobias001.cfd/000/1n24.html",
+      "embeds": [
+        "https://galandriel1.thobias001.cfd/000/1n24.html"
+      ],
+      "acestreamId": "22a33ba976755f0d906c400ba955795bf7e0242e",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "kisslive",
+      "family": "Kiss Tv",
+      "label": "S2",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_184.png",
+      "sourcePage": "https://www.cool-etv.net/ch/kisslive.htm",
+      "rawTitle": "Kiss Tv Online ~ Vezi Kiss Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/kys.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/kys.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "kisslive",
+      "family": "Kiss Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_183.png",
+      "sourcePage": "https://www.cool-etv.net/ch/kisslive.htm",
+      "rawTitle": "Kiss Tv Online ~ Vezi Kiss Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/kys.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/kys.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "taraf",
+      "family": "Taraf Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_185.png",
+      "sourcePage": "https://www.cool-etv.net/ch/taraf.htm",
+      "rawTitle": "Taraf Tv Online ~ Vezi Taraf Tv Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1tarafy.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1tarafy.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "favorit",
+      "family": "Favorit Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_186.png",
+      "sourcePage": "https://www.cool-etv.net/ch/favorit.htm",
+      "rawTitle": "Favorit Tv Online ~ Vezi Favorit Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/favorit.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/favorit.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "mch",
+      "family": "Music Channel",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_187.png",
+      "sourcePage": "https://www.cool-etv.net/ch/mch.htm",
+      "rawTitle": "M00Z Tv Online ~ Vezi M00Z Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/much.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/much.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "hit-music",
+      "family": "Hit Music",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_188.png",
+      "sourcePage": "https://www.cool-etv.net/ch/hit-music.htm",
+      "rawTitle": "Hit Music Online ~ Vezi Hit Music Live - Cool-eTv.net",
+      "embedUrl": "https://cronos.mangora1.cfd/000/1hitivi.html",
+      "embeds": [
+        "https://cronos.mangora1.cfd/000/1hitivi.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "news",
+      "family": "News 24",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_189.png",
+      "sourcePage": "https://www.cool-etv.net/ch/news.htm",
+      "rawTitle": "News24 Online ~ Vezi News24 Live - Cool-eTv.net",
+      "embedUrl": "https://flash1.bogulus1.cfd/000/1news.html",
+      "embeds": [
+        "https://flash1.bogulus1.cfd/000/1news.html"
+      ],
+      "acestreamId": "6b32ee989a53207753126dd23fc14a04cd098f7a",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "inedit-s1",
+      "family": "Inedit Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_190.png",
+      "sourcePage": "https://www.cool-etv.net/ch/inedit-s1.htm",
+      "rawTitle": "Mooz Dance Tv Online ~ Vezi Mooz Dance Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "7bfeada1031ec48011136c292eb7c9b8d86981f5",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "france-24-live-s1",
+      "family": "France24",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_191.png",
+      "sourcePage": "https://www.cool-etv.net/ch/france-24-live-s1.htm",
+      "rawTitle": "France 24 Online ~ Vezi France 24 Live - Cool-eTv.net",
+      "embedUrl": null,
+      "embeds": [],
+      "acestreamId": "39983af5196a851f4d4d485511eade66b5f7b4cc",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "cnn-live-s1",
+      "family": "CNN",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_192.png",
+      "sourcePage": "https://www.cool-etv.net/ch/cnn-live-s1.htm",
+      "rawTitle": "CNN Tv Online ~ Vezi CNN Live - Cool-eTv.net",
+      "embedUrl": "https://thor1.syndula001.cfd/000/sienen.html",
+      "embeds": [
+        "https://thor1.syndula001.cfd/000/sienen.html",
+        "https://thor1.syndula001.cfd/000/cnn-live-s1.htm"
+      ],
+      "acestreamId": "e7ed8e35754c23218860f4fcdcfe37f851464f3d",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    },
+    {
+      "slug": "etnotv",
+      "family": "Etno Tv",
+      "label": "S1",
+      "icon": "https://www.cool-etv.net/menu/mbico_mb5czm_193.png",
+      "sourcePage": "https://www.cool-etv.net/ch/etnotv.htm",
+      "rawTitle": "Etno Tv Online ~ Vezi Etno Tv Live - Cool-eTv.net",
+      "embedUrl": "https://arwen1.panaka001.cfd/000/etno.html",
+      "embeds": [
+        "https://arwen1.panaka001.cfd/000/etno.html"
+      ],
+      "acestreamId": "146f371912e6c31b1eb688deb177a953cb12b1d0",
+      "localHlsId": null,
+      "directStreams": [],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+# Changelog
+
+All notable changes to VIZOR are recorded here.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+The version line for this project lives in `package.json` and `docs/VERSION`.
+
+## [Unreleased]
+
+Nothing yet.
+
+## [1.0.0] — 2026-10-21
+
+First public release.
+
+### Added
+
+- **Catalogue of 203 Romanian TV feeds** across 74 channel families and 7
+  categories, scraped from `https://www.cool-etv.net/` with
+  `scripts/scrape-channels.mjs` and committed as a typed module in
+  `src/data/channels.ts`.
+- **Embed liveness probe** (`scripts/check-embeds.mjs`) that records, per
+  unique embed URL, whether the upstream host actually serves a player
+  (`live`), refuses the request (`blocked`), or does not answer (`error`).
+  19 channels were verified playable at release time.
+- **Netflix-style browse experience**: hero with a featured live channel,
+  horizontal rails per category, and a complete grid of every channel.
+- **Instant search** across channel name, family and category, diacritic
+  and case insensitive (`⌘K` / `Ctrl+K` focuses the field).
+- **Favourites** stored in `localStorage` — no account, no server, no cookie.
+- **Modal player** that embeds the upstream player in a sandboxed iframe and
+  shows the source page and the raw embed URL for every channel.
+- **Celebration particles** (`canvas-confetti`) when a channel is added to
+  favourites, with a reduced-motion fallback.
+- **Self-hosted brand fonts** (Space Grotesk for display, Inter for UI) in
+  latin and latin-ext, so the app makes no third-party font request.
+- **Channel logos** mirrored into `public/logos/` (194 PNGs) so the UI never
+  hotlinks the source site.
+- **Repository standards**: `AGENTS.md`, `CONTRIBUTING.md`, `CLAUDE.md`,
+  `SECURITY.md`, PR and issue templates, `CODEOWNERS`, `dependabot.yml`, and
+  SHA-pinned CI and secret-scan workflows.
+
+### Known limitations
+
+- 23 channels are AceStream-only. That protocol has no browser player, so
+  they are listed with a "Necesită plugin" status and no player.
+- The majority of upstream embed hosts sit behind a Cloudflare wall that
+  refuses requests from datacenter networks. Those channels are marked
+  "Indisponibil" and may still play from a residential connection.
+- Two channels (Moldova 1, Publika TV) publish a plain HLS playlist on the
+  source site; both were unreachable at release time.
+
+[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/collaby-org/vizor/releases/tag/v1.0.0
