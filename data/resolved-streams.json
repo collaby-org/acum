@@ -1,0 +1,817 @@
+{
+  "protv": {
+    "hlsUrl": "https://omega1.visionxmans1.cfd/porky/high/usergenx7240lrnd.m3u8",
+    "playerPage": "https://ultra3.ronanx001.shop/000/porkys.html",
+    "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html"
+  },
+  "protv-s2": {
+    "hlsUrl": "https://omega1.visionxmans1.cfd/porky/high/usergenx7240lrnd.m3u8",
+    "playerPage": "https://ultra3.ronanx001.shop/000/porkys.html",
+    "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html"
+  },
+  "protv-s4": {
+    "hlsUrl": "https://epsilon1.visionxman1.cfd/porky/high/usergenx7240lrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel-v2/pr0tv.html",
+    "embedUrl": "https://canale-tv.net/channel-v2/pr0tv.html"
+  },
+  "protv-s7": {
+    "hlsUrl": "https://epsilon1.visionxman1.cfd/porky/high/usergenx7240lrnd.m3u8",
+    "playerPage": "https://ultra3.ronanx001.shop/000/porkys.html",
+    "embedUrl": "https://ultra3.ronanx001.shop/000/porkys.html"
+  },
+  "procinema": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/porkynema/usergenrnd0ek16an4l.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/procinema.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/procinema.html"
+  },
+  "procinema-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/porkynema/usergenrnd0ek16an4l.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/procinema.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/procinema.html"
+  },
+  "tvr1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/tevere1/usergendxl4cjlrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivi1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivi1.html"
+  },
+  "tvr1-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/tevere1/usergendxl4cjlrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivi1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivi1.html"
+  },
+  "tvr2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/tevere2/usergendxl6d4vnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivi2.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivi2.html"
+  },
+  "tvr2-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/tevere2/usergendxl6d4vnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivi2.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivi2.html"
+  },
+  "tvr3-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/tevere3/usergenx4klq9qrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivi3.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivi3.html"
+  },
+  "tvrsp-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/tivisp/usergendl3f9xgfm1s.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/tivisp.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/tivisp.html"
+  },
+  "tvr-inter-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/teverei/usergenx6vkj8aqrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/tivinter.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/tivinter.html"
+  },
+  "primatv": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/prima/usergenrnd8qxl92r.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/prima.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/prima.html"
+  },
+  "primatv-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/prima/usergenrnd8qxl92r.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/prima.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/prima.html"
+  },
+  "primatv-s3": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/prima/usergenrnd8qxl92r.m3u8",
+    "playerPage": "https://canale-tv.net/channel-v2/primatv.html",
+    "embedUrl": "https://canale-tv.net/channel-v2/primatv.html"
+  },
+  "hro1-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/h1/usergendx172s9rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/h1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/h1.html"
+  },
+  "hro1-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/h1/usergendx172s9rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/h1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/h1.html"
+  },
+  "hro2-s1": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/h2/usergendxn430rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/h2.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/h2.html"
+  },
+  "hro2-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/h2/usergendxn430rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/h2.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/h2.html"
+  },
+  "hro3-s1": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/h3/usergendx3kdg4rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1h3.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1h3.html"
+  },
+  "hro3-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/h3/usergendx3kdg4rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1h3.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1h3.html"
+  },
+  "cmax1-s1": {
+    "hlsUrl": "https://cronos.mangora1.cfd/xmas1/usergendx27y41s0rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1cx1.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1cx1.html"
+  },
+  "cmax1-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/xmas1/usergendx27y41s0rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1cx1.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1cx1.html"
+  },
+  "cmax2-s1": {
+    "hlsUrl": "https://cronos.mangora1.cfd/xmas2/usergendxt1v8klq6rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1cx2.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1cx2.html"
+  },
+  "cmax2-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/xmas2/usergendxt1v8klq6rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1cx2.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1cx2.html"
+  },
+  "nationaltv": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/national/usergendxl4s0rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html"
+  },
+  "nationaltv-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/national/usergendxl4s0rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html"
+  },
+  "nationaltv-s3": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/national/usergendxl4s0rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1nationai.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1nationai.html"
+  },
+  "cd-s1": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/canald/usergenxq0jl72l0rnd.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/canald.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/canald.html"
+  },
+  "cd-s2": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/canald/usergenxq0jl72l0rnd.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/canald.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/canald.html"
+  },
+  "cd-s3": {
+    "hlsUrl": "https://cronos.mangora1.cfd/canad2/usergendx92c4rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1canad2.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1canad2.html"
+  },
+  "cd-s4": {
+    "hlsUrl": "https://cronos.mangora1.cfd/canad2/usergendx92c4rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1canad2.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1canad2.html"
+  },
+  "an1-s2": {
+    "hlsUrl": "https://alpha1.yozefina.cfd/ah1/usergenx304Jtlrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel/a1.html",
+    "embedUrl": "https://canale-tv.net/channel/a1.html"
+  },
+  "an1-s3": {
+    "hlsUrl": "https://ceres1.vizionman.cfd/ah1/usergenx304Jtlrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel-v2/a1.html",
+    "embedUrl": "https://canale-tv.net/channel-v2/a1.html"
+  },
+  "an1-s4": {
+    "hlsUrl": "https://alpha1.yozefina.cfd/ah1/usergenx304Jtlrnd.m3u8",
+    "playerPage": "https://canale-tv.com/channel-v2/a1.html",
+    "embedUrl": "https://canale-tv.com/channel-v2/a1.html"
+  },
+  "acasatv-gold": {
+    "hlsUrl": "https://thor1.syndula001.cfd/gold/usergendxt638rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/goldy.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/goldy.html"
+  },
+  "acasatv-gold-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/gold/usergendxt638rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/goldy.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/goldy.html"
+  },
+  "sportro": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/Prx/usergenrnvdfki42man4l.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/prx.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html"
+  },
+  "sportro-s2": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/Prx/usergenrnvdfki42man4l.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/prx.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html"
+  },
+  "sportro-s3": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/Prx/usergenrnvdfki42man4l.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/prx.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/prx.html"
+  },
+  "realitatea": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/realy/usergenrx0j3qt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1reality.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html"
+  },
+  "realitatea-s2": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/realy/usergenrx0j3qt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1reality.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html"
+  },
+  "realitatea-s3": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/realy/usergenrx0j3qt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1reality.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1reality.html"
+  },
+  "sport3-s1": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/kuk3/usergendxt1v7slq2rnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel/dgsp3.html",
+    "embedUrl": "https://canale-tv.net/channel/dgsp3.html"
+  },
+  "sport3-s2": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/kuk3/usergendxt1v7slq2rnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel/dgsp3.html",
+    "embedUrl": "https://canale-tv.net/channel/dgsp3.html"
+  },
+  "sport4-s1": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/kuk4/usergendk9g3ks42t3n.m3u8",
+    "playerPage": "https://canale-tv.net/channel/dgsp4.html",
+    "embedUrl": "https://canale-tv.net/channel/dgsp4.html"
+  },
+  "sport4-s2": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/kuk4/usergendk9g3ks42t3n.m3u8",
+    "playerPage": "https://canale-tv.net/channel/dgsp4.html",
+    "embedUrl": "https://canale-tv.net/channel/dgsp4.html"
+  },
+  "look-tv-plus-s1": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/puk4/usergendx3j2x4tqrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel/primasp4.html",
+    "embedUrl": "https://canale-tv.net/channel/primasp4.html"
+  },
+  "look-tv-pp1": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/puki1/usergendx6kal0r2bsm.m3u8",
+    "playerPage": "https://canale-tv.net/channel/ppv1.html",
+    "embedUrl": "https://canale-tv.net/channel/ppv1.html"
+  },
+  "look-tv-pp2": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/puki2/usergendxpk2s6utg0l.m3u8",
+    "playerPage": "https://canale-tv.net/channel/ppv2.html",
+    "embedUrl": "https://canale-tv.net/channel/ppv2.html"
+  },
+  "realitatea-rtv": {
+    "hlsUrl": "https://cronos.mangora1.cfd/rtv/usergendx473dx9qrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1rteve.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html"
+  },
+  "realitatea-rtv-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/rtv/usergendx473dx9qrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1rteve.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html"
+  },
+  "realitatea-rtv-s3": {
+    "hlsUrl": "https://cronos.mangora1.cfd/rtv/usergendx473dx9qrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1rteve.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1rteve.html"
+  },
+  "tv100": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/tivi10/usergenrxs4f7zc.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1tivi10.html"
+  },
+  "tv100-s2": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/tivi10/usergenrxs4f7zc.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1tivi10.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1tivi10.html"
+  },
+  "movie-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/df/usergendlg1ks0t2n.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/df.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/df.html"
+  },
+  "movie-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/df/usergendlg1ks0t2n.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/df.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/df.html"
+  },
+  "zu": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/zzz/usergenrx8c0k3lkr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/zzz.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/zzz.html"
+  },
+  "zu-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/zzz/usergenrx8c0k3lkr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/zzz.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/zzz.html"
+  },
+  "filmbox-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/fboz/usergendx7tc9brnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/fbux1.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/fbux1.html"
+  },
+  "filmbox-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/fboyp/usergendl2kx0ta67js9c.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/fboyp.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/fboyp.html"
+  },
+  "filmbox-s3": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/fboye/usergendlg8sl1ks0tv7sr8n.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/fboye.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/fboye.html"
+  },
+  "filmbox-s4": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/fboyp/usergendl2kx0ta67js9c.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/fboyp.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/fboyp.html"
+  },
+  "an2-s1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/antstar/usergenrxl7m94sq.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/astar.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/astar.html"
+  },
+  "an2-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/antstar/usergenrxl7m94sq.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/astar.html",
+    "embedUrl": "https://iron1.jarvisx1.cfd/000/astar.html"
+  },
+  "film-cafe": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/cofyfilm/usergendxn8lzrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/cofyfilm.html"
+  },
+  "film-cafe-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/cofyfilm/usergendxn8lzrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/cofyfilm.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/cofyfilm.html"
+  },
+  "euforia": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/hap/usergenrnd2gd3ogS7bkd.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/hap.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/hap.html"
+  },
+  "euforia-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/hap/usergenrnd2gd3ogS7bkd.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/hap.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/hap.html"
+  },
+  "diva": {
+    "hlsUrl": "https://thor1.syndula001.cfd/diva/usergenm48Qhxrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/d1va.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/d1va.html"
+  },
+  "diva-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/diva/usergenm48Qhxrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/d1va.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/d1va.html"
+  },
+  "jetix-cartoon": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/dysnee/usergendx0k2rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1dysn.html"
+  },
+  "jetix-cartoon-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/dysnee/usergendx0k2rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1dysn.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1dysn.html"
+  },
+  "jetix-junior": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/disjr/usergendxvoq4rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/dysneejr.html"
+  },
+  "jetix-junior-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/disjr/usergendxvoq4rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/dysneejr.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/dysneejr.html"
+  },
+  "cartoon": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/cartun/usergenrx2xfzol0q.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/cartun.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/cartun.html"
+  },
+  "cartoon-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/cartun/usergenrx2xfzol0q.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/cartun.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/cartun.html"
+  },
+  "boomerang": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/bomer/usergenrx2c86jey.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1bomy.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1bomy.html"
+  },
+  "boomerang-s2": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/bomer/usergenrx2c86jey.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1bomy.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1bomy.html"
+  },
+  "minimaxro": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/minimaxy/usergendxny9zrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/minmax.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/minmax.html"
+  },
+  "minimaxro-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/minimaxy/usergendxny9zrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/minmax.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/minmax.html"
+  },
+  "jim-jam": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/jimy/usergenq3n0lz7kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/jimy.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/jimy.html"
+  },
+  "jim-jam-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/jimy/usergenq3n0lz7kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/jimy.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/jimy.html"
+  },
+  "b1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/b1/usergenrnd840zwl3m.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/b1.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html"
+  },
+  "b1-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/b1/usergenrnd840zwl3m.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/b1.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html"
+  },
+  "b1-s3": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/b1/usergenrnd840zwl3m.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/b1.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/b1.html"
+  },
+  "nickelodeon": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/nike/usergenm24qrnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/niki.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/niki.html"
+  },
+  "nickelodeon-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/nike/usergenm24qrnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/niki.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/niki.html"
+  },
+  "nickelodeon-jr": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/nicjr/usergendxl2c8nd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1nikijr.html"
+  },
+  "nickelodeon-jr-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/nicjr/usergendxl2c8nd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1nikijr.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1nikijr.html"
+  },
+  "nick-toons-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/niktuun/usergendxt7r9CxGrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/nichitun.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/nichitun.html"
+  },
+  "nick-toons-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/niktuun/usergendxt7r9CxGrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/nichitun.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/nichitun.html"
+  },
+  "amc-s1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/amece/usergenrx3oq1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/amece.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/amece.html"
+  },
+  "amc-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/amece/usergenrx3oq1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/amece.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/amece.html"
+  },
+  "bbc-earth-s1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/ert/usergenrx8ofzq1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/ert.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/ert.html"
+  },
+  "bbc-earth-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/ert/usergenrx8ofzq1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/ert.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/ert.html"
+  },
+  "prima-news-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/prnews/usergenx2klq7rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/prnews.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/prnews.html"
+  },
+  "prima-news-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/prnews/usergenx2klq7rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/prnews.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/prnews.html"
+  },
+  "euro-news-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/ernews/usergenx6vkj8aqrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/ernews.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/ernews.html"
+  },
+  "euro-news-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/ernews/usergenx6vkj8aqrnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/ernews.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/ernews.html"
+  },
+  "shut1-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/schi1/usergendxn430rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/schi1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/schi1.html"
+  },
+  "shut1-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/schi1/usergendxn430rnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/schi1.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/schi1.html"
+  },
+  "shut2-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/schi2/usergendxj85trnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/schi2.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/schi2.html"
+  },
+  "shut2-s2": {
+    "hlsUrl": "https://thor1.syndula001.cfd/schi2/usergendxj85trnd.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/schi2.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/schi2.html"
+  },
+  "axn": {
+    "hlsUrl": "https://cronos.mangora1.cfd/axy/usergend3h5jkc9rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1axy.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1axy.html"
+  },
+  "axn-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/axy/usergend3h5jkc9rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1axy.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1axy.html"
+  },
+  "axn-black-s1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/axyblack/usergenrxi6s93hs2.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/axblack.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/axblack.html"
+  },
+  "axn-black-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/axyblack/usergenrxi6s93hs2.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/axblack.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/axblack.html"
+  },
+  "axn-white-s1": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/axwhite/usergenx23rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/axalb.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/axalb.html"
+  },
+  "axn-white-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/axwhite/usergenx23rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/axalb.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/axalb.html"
+  },
+  "axn-spin": {
+    "hlsUrl": "https://cronos.mangora1.cfd/spyn/usergencs85ja0j1rrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1spyn.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1spyn.html"
+  },
+  "axn-spin-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/spyn/usergencs85ja0j1rrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1spyn.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1spyn.html"
+  },
+  "tnt-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/tnnt/usergendxq726jrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/tnnt.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/tnnt.html"
+  },
+  "tnt-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/tnnt/usergendxq726jrnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/tnnt.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/tnnt.html"
+  },
+  "epic-drama-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/epi/usergendxt1v8klq6rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/epy.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/epy.html"
+  },
+  "epic-drama-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/epi/usergendxt1v8klq6rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/epy.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/epy.html"
+  },
+  "comedy-central": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/comedi/usergenrx7zo1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/komedi.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/komedi.html"
+  },
+  "comedy-shorts": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/comedi/usergenrx7zo1kr.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/komedi.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/komedi.html"
+  },
+  "via-nature": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/vnature/usergenrnd2g9eqk.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/vnature.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/vnature.html"
+  },
+  "via-explorer": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/vexplr/usergenrnd7ke5lgt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/vexpl.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/vexpl.html"
+  },
+  "via-his": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/vhis/usergenrnd4v6g8eigt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/vhis.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/vhis.html"
+  },
+  "duck-tv-s1": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/duk/usergenz9ak7fxt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/duk.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/duk.html"
+  },
+  "duck-tv-s2": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/duk/usergenz9ak7fxt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/duk.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/duk.html"
+  },
+  "bollywood-clasic-s1": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/boly/usergenr9j8s2t.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1buly.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html"
+  },
+  "bollywood-tv-s1": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/boly/usergenr9j8s2t.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1buly.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html"
+  },
+  "bollywood-extra-s1": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/boly/usergenr9j8s2t.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1buly.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1buly.html"
+  },
+  "crime-investigation-s1": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/cryinvest2.html"
+  },
+  "crime-investigation-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/cryinvest2.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/cryinvest2.html"
+  },
+  "tlc-s1": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/telece/usergendc8sxt317rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/t1c.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/t1c.html"
+  },
+  "tlc-s2": {
+    "hlsUrl": "https://atlantida1.aquax001.shop/telece/usergendc8sxt317rnd.m3u8",
+    "playerPage": "https://atlantida1.aquax001.shop/000/t1c.html",
+    "embedUrl": "https://atlantida1.aquax001.shop/000/t1c.html"
+  },
+  "travel-ch-s1": {
+    "hlsUrl": "https://cronos.mangora1.cfd/travil/usergenjc20r4rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1travil.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1travil.html"
+  },
+  "travel-ch-s2": {
+    "hlsUrl": "https://cronos.mangora1.cfd/travil/usergenjc20r4rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1travil.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1travil.html"
+  },
+  "natgeo": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/ngeo/usergenrnd84oeigt.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/ngeo.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/ngeo.html"
+  },
+  "natgeo-hd": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/ngeo/usergenrnd84oeigt.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/ngeo.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/ngeo.html"
+  },
+  "natgeowild": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/wild/usergenr9qsi5gt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1uild.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1uild.html"
+  },
+  "natgeowild-s2": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/wild/usergenr9qsi5gt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1uild.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1uild.html"
+  },
+  "discovery-channel-s1": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/disco/usergenrxljmx9su.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/disc.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/disc.html"
+  },
+  "discovery-channel-s2": {
+    "hlsUrl": "https://saruman1.tharen001.cfd/disco/usergenrxljmx9su.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/disc.html",
+    "embedUrl": "https://saruman1.tharen001.cfd/000/disc.html"
+  },
+  "his": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/hystor/usergendxc9g8rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1hyst.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1hyst.html"
+  },
+  "his-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/hystor/usergendxc9g8rnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1hyst.html",
+    "embedUrl": "https://galandriel1.thobias11.cfd/000/1hyst.html"
+  },
+  "discoid": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/cryme/usergendxn0487rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/cry.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/cry.html"
+  },
+  "discoid-s2": {
+    "hlsUrl": "https://onyx1.mofta001.cfd/cryme/usergendxn0487rnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/cry.html",
+    "embedUrl": "https://onyx1.mofta001.cfd/000/cry.html"
+  },
+  "discoscience": {
+    "hlsUrl": "https://onyx1.mofta1.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/discoscify.html",
+    "embedUrl": "https://onyx1.mofta1.cfd/000/discoscify.html"
+  },
+  "discoscience-s2": {
+    "hlsUrl": "https://onyx1.mofta1.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+    "playerPage": "https://onyx1.mofta001.cfd/000/discoscify.html",
+    "embedUrl": "https://onyx1.mofta1.cfd/000/discoscify.html"
+  },
+  "paprika-s1": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/papi/usergendxs3jk0s9nd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1papi.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1papi.html"
+  },
+  "paprika-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/papi/usergendxs3jk0s9nd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1papi.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1papi.html"
+  },
+  "cbs-reality-s1": {
+    "hlsUrl": "https://iron1.jarvisx1.cfd/cbrealy/usergenrxlj5c0q.m3u8",
+    "playerPage": "https://saruman1.tharen001.cfd/000/cbsrealy.html",
+    "embedUrl": "https://iron1.jarvisx1.cfd/000/cbsrealy.html"
+  },
+  "fishing-hunting-s1": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/fishy/usergenrpz6q.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/fishy.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/fishy.html"
+  },
+  "utv": {
+    "hlsUrl": "https://cronos.mangora1.cfd/utivi/usergenck9astrnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1utivi.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1utivi.html"
+  },
+  "n24": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/n24/usergendxs2tp0f0wrnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1n24.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1n24.html"
+  },
+  "n24-s2": {
+    "hlsUrl": "https://galandriel1.thobias001.cfd/n24/usergendxs2tp0f0wrnd.m3u8",
+    "playerPage": "https://galandriel1.thobias001.cfd/000/1n24.html",
+    "embedUrl": "https://galandriel1.thobias001.cfd/000/1n24.html"
+  },
+  "kisslive": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/kys/usergenrndgs6h1vys2n4l.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/kys.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/kys.html"
+  },
+  "taraf": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/tarafy/usergenrxgi1cla6qt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1tarafy.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1tarafy.html"
+  },
+  "favorit": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/favorit/usergenrn9jn4gba.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/favorit.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/favorit.html"
+  },
+  "mch": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/mch/usergenz7h0qdt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/much.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/much.html"
+  },
+  "hit-music": {
+    "hlsUrl": "https://cronos.mangora1.cfd/hitivi/usergendhh62jfcs5rnd.m3u8",
+    "playerPage": "https://cronos.mangora1.cfd/000/1hitivi.html",
+    "embedUrl": "https://cronos.mangora1.cfd/000/1hitivi.html"
+  },
+  "news": {
+    "hlsUrl": "https://flash1.bogulus1.cfd/news/usergenrk91a4gt.m3u8",
+    "playerPage": "https://flash1.bogulus1.cfd/000/1news.html",
+    "embedUrl": "https://flash1.bogulus1.cfd/000/1news.html"
+  },
+  "cnn-live-s1": {
+    "hlsUrl": "https://thor1.syndula001.cfd/cienen/usergenrx8ofzq1kr.m3u8",
+    "playerPage": "https://thor1.syndula001.cfd/000/sienen.html",
+    "embedUrl": "https://thor1.syndula001.cfd/000/sienen.html"
+  },
+  "etnotv": {
+    "hlsUrl": "https://arwen1.panaka001.cfd/etno/usergenrnd7ke5lgt.m3u8",
+    "playerPage": "https://arwen1.panaka001.cfd/000/etno.html",
+    "embedUrl": "https://arwen1.panaka001.cfd/000/etno.html"
+  },
+  "protv-s3": {
+    "hlsUrl": "https://omega1.visionxmans1.cfd/porky/high/usergenx7240lrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel-v2/pr0tv.html",
+    "embedUrl": "https://canale-tv.net/channel-v2/pr0tv.html"
+  },
+  "an1": {
+    "hlsUrl": "https://ceres1.vizionman.cfd/ah1/usergenx304Jtlrnd.m3u8",
+    "playerPage": "https://canale-tv.net/channel-v2/a1.html",
+    "embedUrl": "https://canale-tv.net/channel-v2/a1.html"
+  },
+  "look-tv-plus-s2": {
+    "hlsUrl": "https://pulse1.sanseny001.shop/puk5/usergen0grnd8l2y6gw.m3u8",
+    "playerPage": "https://canale-tv.net/channel/primasp5.html",
+    "embedUrl": "https://canale-tv.net/channel/primasp5.html"
+  }
+}

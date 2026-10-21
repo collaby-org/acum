@@ -2,75 +2,85 @@
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "vizor:favourites:v1";
+const FAVOURITES_KEY = "vizor:favourites:v1";
+const RECENT_KEY = "vizor:recent:v1";
+const RECENT_LIMIT = 12;
 
 const EMPTY: string[] = [];
 
-const listeners = new Set<() => void>();
-let cachedRaw: string | null = null;
-let cachedIds: string[] = EMPTY;
+/**
+ * A tiny external store over `localStorage`.
+ *
+ * `useSyncExternalStore` is the right primitive here: the server render and
+ * the first client render must agree (there is no session, so the server
+ * always sees an empty list), and a change in another tab has to show up
+ * without a reload.
+ */
+function createStore(key: string) {
+  let cachedRaw: string | null = null;
+  let cachedValue: string[] = EMPTY;
+  const listeners = new Set<() => void>();
 
-function parse(raw: string | null): string[] {
-  if (!raw) return EMPTY;
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return EMPTY;
-    return parsed.filter((x): x is string => typeof x === "string");
-  } catch {
-    return EMPTY;
+  function read(): string[] {
+    let raw: string | null = null;
+    try {
+      raw = window.localStorage.getItem(key);
+    } catch {
+      return EMPTY;
+    }
+    if (raw === cachedRaw) return cachedValue;
+    cachedRaw = raw;
+    try {
+      const parsed: unknown = raw ? JSON.parse(raw) : null;
+      cachedValue = Array.isArray(parsed)
+        ? parsed.filter((x): x is string => typeof x === "string")
+        : EMPTY;
+    } catch {
+      cachedValue = EMPTY;
+    }
+    return cachedValue;
   }
-}
 
-function subscribe(onChange: () => void) {
-  listeners.add(onChange);
-  window.addEventListener("storage", onChange);
-  return () => {
-    listeners.delete(onChange);
-    window.removeEventListener("storage", onChange);
+  function write(next: string[]) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(next));
+    } catch {
+      /* private mode — the list simply does not persist */
+    }
+    cachedRaw = null;
+    for (const listener of listeners) listener();
+  }
+
+  return {
+    subscribe(onChange: () => void) {
+      listeners.add(onChange);
+      window.addEventListener("storage", onChange);
+      return () => {
+        listeners.delete(onChange);
+        window.removeEventListener("storage", onChange);
+      };
+    },
+    read,
+    write,
   };
 }
 
-function getSnapshot(): string[] {
-  let raw: string | null = null;
-  try {
-    raw = window.localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return EMPTY;
-  }
-  if (raw !== cachedRaw) {
-    cachedRaw = raw;
-    cachedIds = parse(raw);
-  }
-  return cachedIds;
-}
+const favourites = createStore(FAVOURITES_KEY);
+const recent = createStore(RECENT_KEY);
 
-function getServerSnapshot(): string[] {
-  return EMPTY;
-}
-
-function write(ids: string[]) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-  } catch {
-    /* private mode — favourites simply do not persist */
-  }
-  cachedRaw = null; // force the next snapshot read to pick the new value up
-  for (const listener of listeners) listener();
-}
-
-/**
- * Favourites live entirely in the browser — no account, no server, no cookie.
- *
- * The list is read through `useSyncExternalStore` so the server render and the
- * first client render agree, and so changes from another tab are picked up.
- */
-export function useFavorites() {
-  const ids = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+export function useFavourites() {
+  const ids = useSyncExternalStore(
+    favourites.subscribe,
+    favourites.read,
+    () => EMPTY,
+  );
 
   const toggle = useCallback((id: string) => {
-    const current = getSnapshot();
+    const current = favourites.read();
     const exists = current.includes(id);
-    write(exists ? current.filter((x) => x !== id) : [...current, id]);
+    favourites.write(
+      exists ? current.filter((x) => x !== id) : [...current, id],
+    );
     return !exists;
   }, []);
 
@@ -78,10 +88,24 @@ export function useFavorites() {
     () => ({
       has: (id: string) => ids.includes(id),
       toggle,
-      clear: () => write([]),
+      clear: () => favourites.write([]),
     }),
     [ids, toggle],
   );
 
   return { ids, set };
+}
+
+/** The channels opened most recently, newest first. */
+export function useRecentlyWatched() {
+  const ids = useSyncExternalStore(recent.subscribe, recent.read, () => EMPTY);
+
+  const remember = useCallback((id: string) => {
+    const current = recent.read().filter((x) => x !== id);
+    recent.write([id, ...current].slice(0, RECENT_LIMIT));
+  }, []);
+
+  const clear = useCallback(() => recent.write([]), []);
+
+  return { ids, remember, clear };
 }

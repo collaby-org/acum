@@ -47,12 +47,16 @@ design-system/   tokens, components, motion rules
 | Fact | Value |
 | ---- | ----- |
 | Channel families | 74 |
-| Feeds | 203 |
+| Feeds (servers) | 202 |
+| Channels | 116 — one per real broadcast, S1/S2/S3 folded in |
+| Channels with more than one server | 75 |
 | Unique embed URLs | 105 |
-| Feeds with an iframe embed | 180 |
-| Feeds verified playable | 19 |
-| Feeds behind a bot wall | 157 |
-| AceStream-only feeds | 23 |
+| Feeds with an iframe embed | 179 |
+| Feeds resolved to a direct playlist | 163 |
+| Channels playing a direct playlist | 92 |
+| Live channels | 96 |
+| AceStream-only channels | 12 |
+| Genuinely dead channels | 8 |
 | Categories | 7 — Generaliste, Știri, Sport, Filme, Copii, Documentare, Muzică |
 
 `src/data/channels.ts` is generated. Edit `scripts/channel-taxonomy.json`
@@ -69,11 +73,36 @@ Kanal D. The taxonomy file holds the corrected Romanian display names.
 | Status | Meaning |
 | ------ | ------- |
 | `live` | The embed was verified serving a video player. |
-| `blocked` | The upstream host refused the request (Cloudflare wall, parked domain). |
+| `blocked` | The upstream host refused the request (bot wall, parked domain). |
 | `error` | The upstream host did not answer at all. |
 | `acestream` | The channel uses the AceStream protocol, which has no browser player. |
 | `unknown` | Not probed. |
 | `none` | The source page ships no embeddable player. |
+
+## The upstream referer gate
+
+The upstream media hosts sit behind a Cloudflare allowlist on the `Referer`
+header. Measured, for both a panel host and an HLS host:
+
+| Referer | Result |
+| ------- | ------ |
+| the target's own origin | 200 — real player |
+| `https://www.cool-etv.net/` | 200 — real player |
+| `https://canale-tv.net/` | 200 — real player |
+| anything else, or none | 301 → `https://www.google.com/` |
+
+Two consequences run through the whole project:
+
+- A browser cannot set a `Referer`, so **the stream has to be relayed
+  through the server**. `/api/stream` does that.
+- A panel can only be embedded by a page on `cool-etv.net`, so the fallback
+  for a feed with no resolved playlist is the cool-etv channel page itself
+  (`server.sourcePage`), in a sandboxed frame.
+
+The upstream's channel pages also call `aclib.runPop()`, which opens an ad in
+a new window, and load `adexchangerapid.com`, `usrpubtrk.com` and Google
+Analytics. `/api/player` removes all of it server-side and serves the page
+with a `sandbox` CSP.
 
 `blocked` is not a verdict on the channel — it records what the upstream host
 did when the probe ran. The UI says so in plain Romanian.

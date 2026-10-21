@@ -150,6 +150,16 @@ async function main() {
   const feeds = groups.flatMap((g) => g.kids.map((k) => ({ ...k, family: g.family })));
   console.log(`[menu] ${groups.length} families, ${feeds.length} feeds`);
 
+  // The menu occasionally points two entries at the same feed (the source
+  // lists "S1" and "S2" for one slug). Both are crawled, but the taxonomy
+  // treats them as the single server they really are.
+  const seen = new Map();
+  for (const f of feeds) {
+    if (seen.has(f.slug)) console.warn(`[menu] duplicate slug "${f.slug}" — ${f.family}`);
+    else seen.set(f.slug, f);
+  }
+  console.log(`[menu] ${seen.size} distinct feeds`);
+
   const out = [];
   const CONCURRENCY = 8;
   let cursor = 0;

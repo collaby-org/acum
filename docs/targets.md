@@ -37,9 +37,13 @@ are tired of portals that demand a login before showing a single frame.
 | Lighthouse (accessibility) | ≥ 95 | Lighthouse CI on the static build |
 | Layout shift | < 0.05 | Lighthouse |
 | Catalogue coverage | 100 % of the source menu | `scripts/scrape-channels.mjs` reports family and feed counts |
+| Playable channels | every feed the upstream actually serves | `scripts/check-embeds.mjs`, then `scripts/resolve-streams.mjs` |
 | Freshness | At most 30 days between catalogue refreshes | `data/channels.raw.json` `generatedAt` |
 | Build health | lint, type check and build green | CI on every push and pull request |
 | Third-party requests from our origin | 0 | Browser network panel |
+| Ad hosts contacted | 0 | `scripts/verify-player.mjs` |
+| Windows opened by the app | 0 | `scripts/verify-player.mjs`, target count |
+| Clicks to start a channel | 1 | `scripts/verify-player.mjs` |
 
 ## Definition of done for a change
 
@@ -52,10 +56,15 @@ A change is done when:
 
 ## Known constraints
 
-- **Upstream hosts are unreliable.** 87 of 105 unique embed URLs sit behind a
-  Cloudflare wall that refuses datacenter networks. VIZOR records that
-  honestly instead of hiding it, and the catalogue keeps every channel
-  listed.
+- **The stream is relayed through our server.** The upstream gates its media
+  on a `Referer` header, and a browser cannot set one. That is the price of an
+  own player with no ad scripts and a single click to start. It is a real
+  bandwidth cost and it is stated, not hidden.
+- **The playlist tokens are stable, but nothing guarantees that.** They are
+  deterministic per channel today; a schedule that re-resolves them is on
+  the roadmap.
+- **Some feeds are upstream-down.** A handful of hosts refuse every request
+  regardless of referer. Those channels stay in the catalogue, labelled.
 - **AceStream has no web player.** 23 channels use a desktop protocol
   handler. They stay in the catalogue, labelled.
 - **The catalogue is a snapshot.** It is a generated file, refreshed by

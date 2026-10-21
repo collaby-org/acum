@@ -1,0 +1,478 @@
+/**
+ * The picture.
+ *
+ * Contract for the integrator:
+ *
+ *   const ref = useRef<PlayerHandle>(null);
+ *   <VideoPlayer ref={ref} channelName={channel.name} servers={servers} />
+ *
+ * `servers` is the channel's upstream feeds, best first — the same objects
+ * the catalogue holds in `channel.servers`. The component walks them by
+ * itself: the first feed that plays wins, the others are the fallback.
+ *
+ * The imperative handle exposes `play()`, `pause()`, `retry()`, `next()` and
+ * `getState()`. `play()` is what the parent calls when the modal opens, so
+ * that the first click on a channel card starts the picture.
+ *
+ * Nothing here loads the upstream page: the stream is fetched from our own
+ * `/api/stream` proxy, so the upstream player — and its ad scripts — never
+ * run.
+ */
+"use client";
+
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { Loader2, Radio, TriangleAlert } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PlayerControls } from "@/components/player/player-controls";
+import {
+  usePlayer,
+  type PlayerServer,
+  type PlayerStatus,
+} from "@/hooks/use-player";
+import { cn } from "@/lib/utils";
+
+export type PlayerHandle = {
+  /** Resolve the feed and start the picture. */
+  play: () => void;
+  pause: () => void;
+  /** Start over from the first link of the chain. */
+  retry: () => void;
+  /** Move to the next link of the chain. */
+  next: () => void;
+  /** The state machine, for the parent that wants to render it. */
+  getState: () => {
+    status: PlayerStatus;
+    sourceIndex: number;
+    attempts: number;
+  };
+};
+
+export type VideoPlayerProps = {
+  /** Shown while the picture is loading and when it fails. */
+  channelName: string;
+  /** The channel's upstream feeds, best first. */
+  servers: PlayerServer[];
+  /** Resolve the chain and start playing as soon as the component mounts. */
+  autoPlay?: boolean;
+  /** Hide the transport bar and the overlays. */
+  bare?: boolean;
+  className?: string;
+  onStatusChange?: (status: PlayerStatus) => void;
+  onError?: (message: string) => void;
+};
+
+export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
+  function VideoPlayer(
+    {
+      channelName,
+      servers,
+      autoPlay = false,
+      bare = false,
+      className,
+      onStatusChange,
+      onError,
+    },
+    ref,
+  ) {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const shellRef = useRef<HTMLDivElement>(null);
+    const [playing, setPlaying] = useState(false);
+    const [muted, setMuted] = useState(true);
+    const [volume, setVolume] = useState(1);
+    const [fullscreen, setFullscreen] = useState(false);
+    const [liveWindow, setLiveWindow] = useState<{
+      from: number;
+      to: number;
+      current: number;
+    } | null>(null);
+    const [behindLive, setBehindLive] = useState(false);
+
+    const player = usePlayer({
+      servers,
+      autoStart: autoPlay,
+      onStatusChange,
+    });
+    const { source, status, sources, sourceIndex, attempts, error } = player;
+
+    const failRef = useRef(player.markFailed);
+    useEffect(() => {
+      failRef.current = player.markFailed;
+    }, [player.markFailed]);
+
+    const startPlayback = useCallback(async () => {
+      const video = videoRef.current;
+      if (!video) return;
+      try {
+        await video.play();
+      } catch {
+        // The browser refused sound; the picture matters more than the audio.
+        video.muted = true;
+        setMuted(true);
+        try {
+          await video.play();
+        } catch {
+          /* nothing left to try here */
+        }
+      }
+    }, []);
+
+    const startPlaybackRef = useRef(startPlayback);
+    useEffect(() => {
+      startPlaybackRef.current = startPlayback;
+    }, [startPlayback]);
+
+    // Load the current link.
+    const sourceUrl = source?.url ?? null;
+    const embedded = source?.kind === "embed";
+    const frameUrl = embedded ? (source?.url ?? undefined) : undefined;
+
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || !sourceUrl || embedded) return;
+
+      let disposed = false;
+      let destroy: (() => void) | null = null;
+
+      const attach = async () => {
+        const { default: Hls } = await import("hls.js");
+        if (disposed) return;
+
+        if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          video.src = sourceUrl;
+          await startPlaybackRef.current();
+          return;
+        }
+
+        if (!Hls.isSupported()) {
+          failRef.current(
+            "Browserul nu poate reda fluxuri HLS pe acest dispozitiv.",
+          );
+          return;
+        }
+
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 30,
+          maxBufferLength: 20,
+          // A dead server has to fail over in about a second, not after the
+          // default twenty-second retry ladder. The next feed of the same
+          // channel is the real fallback.
+          manifestLoadPolicy: {
+            default: {
+              maxTimeToFirstByteMs: 8000,
+              maxLoadTimeMs: 12000,
+              timeoutRetry: {
+                maxNumRetry: 0,
+                retryDelayMs: 0,
+                maxRetryDelayMs: 0,
+              },
+              errorRetry: {
+                maxNumRetry: 1,
+                retryDelayMs: 400,
+                maxRetryDelayMs: 800,
+              },
+            },
+          },
+        });
+        destroy = () => hls.destroy();
+
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          // A manifest that will not load is a dead server: fail over at
+          // once, whether or not hls.js still considers the error retryable.
+          const manifestFailed =
+            data.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR ||
+            data.details === Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT ||
+            data.details === Hls.ErrorDetails.MANIFEST_PARSING_ERROR;
+
+          if (!data.fatal && !manifestFailed) return;
+
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            failRef.current("Fluxul nu răspunde. Se încearcă următorul.");
+            return;
+          }
+          failRef.current("Fluxul nu poate fi redat. Se încearcă următorul.");
+        });
+
+        hls.loadSource(sourceUrl);
+        hls.attachMedia(video);
+        await startPlaybackRef.current();
+      };
+
+      void attach();
+
+      return () => {
+        disposed = true;
+        destroy?.();
+        video.removeAttribute("src");
+        video.load();
+      };
+    }, [embedded, sourceUrl]);
+
+    useEffect(() => {
+      if (status === "error" && error) onError?.(error);
+    }, [error, onError, status]);
+
+    const markPlayingRef = useRef(player.markPlaying);
+    useEffect(() => {
+      markPlayingRef.current = player.markPlaying;
+    }, [player.markPlaying]);
+
+    useEffect(() => {
+      if (embedded) markPlayingRef.current();
+    }, [embedded]);
+
+    useEffect(() => {
+      const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
+      document.addEventListener("fullscreenchange", onChange);
+      return () => document.removeEventListener("fullscreenchange", onChange);
+    }, []);
+
+    // The live window: what the stream has buffered, and where the live edge
+    // is right now. A live channel has no past to scrub into.
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video) return;
+
+      const read = () => {
+        const ranges = video.buffered;
+        if (ranges.length === 0) {
+          setLiveWindow(null);
+          return;
+        }
+        const from = ranges.start(0);
+        const to = ranges.end(ranges.length - 1);
+        setLiveWindow({ from, to, current: video.currentTime });
+        setBehindLive(to - video.currentTime > 1.5);
+      };
+
+      read();
+      const timer = window.setInterval(read, 1000);
+      return () => window.clearInterval(timer);
+    }, [sourceUrl]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        play: () => {
+          player.play();
+          void startPlaybackRef.current();
+        },
+        pause: () => {
+          videoRef.current?.pause();
+          setPlaying(false);
+        },
+        retry: () => {
+          player.retry();
+        },
+        next: () => {
+          player.advance();
+        },
+        getState: () => ({
+          status: player.status,
+          sourceIndex: player.sourceIndex,
+          attempts: player.attempts,
+        }),
+      }),
+      [player],
+    );
+
+    const busy = status === "resolving" || status === "retrying";
+    const failed = status === "error";
+    const hasNext = sourceIndex + 1 < sources.length;
+
+    const togglePlay = useCallback(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      if (video.paused) {
+        void startPlaybackRef.current();
+      } else {
+        video.pause();
+      }
+    }, []);
+
+    const toggleMute = useCallback(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.muted = !video.muted;
+      setMuted(video.muted);
+    }, []);
+
+    const changeVolume = useCallback((value: number) => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.volume = value;
+      video.muted = value === 0;
+      setVolume(value);
+      setMuted(video.muted);
+    }, []);
+
+    const toggleFullscreen = useCallback(() => {
+      const shell = shellRef.current;
+      if (!shell) return;
+      if (document.fullscreenElement) {
+        void document.exitFullscreen();
+      } else {
+        void shell.requestFullscreen().catch(() => undefined);
+      }
+    }, []);
+
+    const canPictureInPicture =
+      typeof document !== "undefined" && "pictureInPictureEnabled" in document;
+
+    const togglePictureInPicture = useCallback(() => {
+      const video = videoRef.current;
+      if (!video || !("requestPictureInPicture" in video)) return;
+      if (document.pictureInPictureElement) {
+        void document.exitPictureInPicture().catch(() => undefined);
+        return;
+      }
+      void video.requestPictureInPicture().catch(() => undefined);
+    }, []);
+
+    const seek = useCallback((time: number) => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.currentTime = time;
+    }, []);
+
+    const jumpToLive = useCallback(() => {
+      const video = videoRef.current;
+      if (!video || video.buffered.length === 0) return;
+      video.currentTime = video.buffered.end(video.buffered.length - 1);
+    }, []);
+
+    return (
+      <div
+        ref={shellRef}
+        className={cn(
+          "relative isolate flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black",
+          className,
+        )}
+      >
+        <div className="relative aspect-video w-full bg-black">
+          <video
+            ref={videoRef}
+            className={cn(
+              "absolute inset-0 size-full bg-black object-contain",
+              embedded && "hidden",
+            )}
+            playsInline
+            muted={muted}
+            onPlaying={() => {
+              setPlaying(true);
+              player.markPlaying();
+            }}
+            onPause={() => setPlaying(false)}
+            onWaiting={() => setPlaying(false)}
+            onError={() => failRef.current("Fluxul nu poate fi redat.")}
+          />
+
+          {embedded ? (
+            <iframe
+              key={frameUrl}
+              src={frameUrl}
+              title={`${channelName} — live`}
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              // No `allow-popups`: an ad window can never open from here.
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 size-full border-0 bg-black"
+            />
+          ) : null}
+
+          {embedded ? (
+            <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90">
+              Apasă PLAY în player — fluxul este controlat de sursă.
+            </p>
+          ) : null}
+
+          {busy && !failed && !embedded ? (
+            <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55">
+              <div className="flex flex-col items-center gap-3 text-center">
+                <Loader2 className="size-7 animate-spin text-signal" />
+                <p className="text-sm text-ink/85">
+                  {status === "retrying"
+                    ? "Se încearcă următorul flux…"
+                    : "Se caută fluxul…"}
+                </p>
+                {attempts > 0 ? (
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+                    încercarea {attempts + 1}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
+          {failed ? (
+            <div className="absolute inset-0 grid place-items-center bg-black/80 p-6 text-center">
+              <div className="max-w-sm">
+                <TriangleAlert className="mx-auto size-7 text-signal" />
+                <p className="mt-3 font-display text-base font-semibold text-ink">
+                  {channelName} nu poate fi redat acum
+                </p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
+                  {error ?? "Niciun flux nu a răspuns."}
+                </p>
+                <div className="mt-5 flex justify-center gap-2">
+                  <Button variant="primary" size="sm" onClick={player.retry}>
+                    Încearcă din nou
+                  </Button>
+                  {hasNext ? (
+                    <Button variant="outline" size="sm" onClick={player.advance}>
+                      Alt flux
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {!busy && !failed && status === "idle" && !embedded ? (
+            <div className="pointer-events-none absolute inset-0 grid place-items-center">
+              <div className="flex flex-col items-center gap-2 text-ink-faint">
+                <Radio className="size-6" />
+                <p className="text-[11px] uppercase tracking-[0.2em]">
+                  apasă redare
+                </p>
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        {bare || embedded ? null : (
+          <PlayerControls
+            playing={playing}
+            muted={muted}
+            volume={volume}
+            busy={busy}
+            fullscreen={fullscreen}
+            sourceLabel={source?.label}
+            canSwitch={hasNext}
+            canPictureInPicture={canPictureInPicture}
+            liveWindow={liveWindow}
+            behindLive={behindLive}
+            onTogglePlay={togglePlay}
+            onToggleMute={toggleMute}
+            onVolumeChange={changeVolume}
+            onToggleFullscreen={toggleFullscreen}
+            onTogglePictureInPicture={togglePictureInPicture}
+            onSeek={seek}
+            onJumpToLive={jumpToLive}
+            onRetry={player.retry}
+            onNextSource={player.advance}
+          />
+        )}
+      </div>
+    );
+  },
+);

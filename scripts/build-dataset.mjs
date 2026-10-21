@@ -1,11 +1,15 @@
 /**
  * Dataset builder.
  *
- * Merges the three upstream artifacts into the typed module the app imports:
+ * Merges the upstream artifacts into the typed module the app imports:
  *
- *   data/channels.raw.json   the scrape (slugs, source pages, embed URLs)
- *   data/embed-health.json   the liveness probe (does the embed actually play?)
+ *   data/channels.raw.json      the scrape (slugs, source pages, embed URLs)
+ *   data/embed-health.json      the liveness probe (does the embed play?)
+ *   data/resolved-streams.json  the direct HLS playlist behind a player page
  *   scripts/channel-taxonomy.json  the hand-written names + categories
+ *
+ * A channel is one real broadcast channel; every upstream feed of it is a
+ * *server* of that channel, ordered best first so the player can fall back.
  *
  * It also mirrors the channel logos into public/logos/ so the UI never hotlinks
  * the source site.
@@ -28,9 +32,12 @@ const health = JSON.parse(await readFile(resolve(ROOT, "data/embed-health.json")
 const taxonomy = JSON.parse(
   await readFile(resolve(__dirname, "channel-taxonomy.json"), "utf8"),
 );
+const streams = await readFile(resolve(ROOT, "data/resolved-streams.json"), "utf8").then(
+  (text) => JSON.parse(text),
+  () => ({}),
+);
 
 const healthByUrl = new Map(health.map((h) => [h.url, h]));
-const familyMeta = taxonomy.families;
 
 /* ------------------------------------------------------------------ *
  * Logos
@@ -81,57 +88,136 @@ const localLogo = (remote) => {
 };
 
 /* ------------------------------------------------------------------ *
- * Channels
+ * Feeds
  * ------------------------------------------------------------------ */
-const statusOf = (channel) => {
-  if (channel.embedUrl) {
-    const h = healthByUrl.get(channel.embedUrl);
+/** The scrape lists a few feeds twice (the source reuses one slug). */
+const feedBySlug = new Map();
+for (const feed of raw.channels) {
+  if (!feedBySlug.has(feed.slug)) feedBySlug.set(feed.slug, feed);
+}
+
+const statusOf = (feed) => {
+  if (feed.embedUrl) {
+    const h = healthByUrl.get(feed.embedUrl);
     if (!h) return "unknown";
     if (h.state === "player") return "live";
     if (h.state === "blocked" || h.state === "parked") return "blocked";
     if (h.state === "error") return "error";
     return "unknown";
   }
-  if (channel.acestreamId) return "acestream";
-  if (channel.directStreams?.length) return "live";
+  if (feed.acestreamId) return "acestream";
+  if (feed.directStreams?.length) return "live";
   return "none";
 };
 
+const kindOf = (feed) => {
+  if (feed.embedUrl) return "iframe";
+  if (feed.acestreamId) return "acestream";
+  return "none";
+};
+
+/* ------------------------------------------------------------------ *
+ * Channels
+ * ------------------------------------------------------------------ */
+/** URL-safe id: diacritics folded, everything else alphanumeric. */
+const slugify = (name) =>
+  name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[șț]/g, (c) => (c === "ș" ? "s" : "t"))
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+/** The best status of a channel: live wins over everything else. */
+const STATUS_RANK = { live: 6, blocked: 5, error: 4, unknown: 3, acestream: 2, none: 1 };
+
 const usedIds = new Set();
 const channels = [];
-const missing = [];
+const problems = [];
 
-for (const c of raw.channels) {
-  const meta = familyMeta[c.family];
-  if (!meta) {
-    missing.push(`family "${c.family}" (${c.slug})`);
-    continue;
+for (const [familyKey, family] of Object.entries(taxonomy.families)) {
+  for (const channel of family.channels) {
+    const servers = [];
+    for (const server of channel.servers) {
+      const feed = feedBySlug.get(server.slug);
+      if (!feed) {
+        problems.push(`taxonomy slug "${server.slug}" is not in the scrape (${familyKey})`);
+        continue;
+      }
+      const resolved = streams[server.slug] ?? null;
+      servers.push({
+        id: server.slug,
+        label: server.label,
+        embedUrl: feed.embedUrl ?? null,
+        sourcePage: feed.sourcePage,
+        // A resolved playlist is a live feed, even when the embed page the
+        // source ships for it is dead — the playlist came from the same
+        // upstream, through another panel.
+        status: resolved?.hlsUrl ? "live" : statusOf(feed),
+        kind: kindOf(feed),
+        hlsUrl: resolved?.hlsUrl ?? null,
+      });
+    }
+
+    if (!servers.length) {
+      problems.push(`channel "${channel.name}" has no server in the scrape (${familyKey})`);
+      continue;
+    }
+
+    // The logo comes from the first feed the source lists for the channel.
+    const logo = localLogo(feedBySlug.get(servers[0].id)?.icon ?? null);
+    const logoRemote = feedBySlug.get(servers[0].id)?.icon ?? null;
+
+    // Best first: a resolved playlist, then a live embed, then the rest.
+    servers.sort((a, b) => {
+      if (a.hlsUrl !== b.hlsUrl) return a.hlsUrl ? -1 : 1;
+      const rank = STATUS_RANK[b.status] - STATUS_RANK[a.status];
+      if (rank) return rank;
+      return a.id.localeCompare(b.id);
+    });
+
+    let id = slugify(channel.name);
+    if (!id) id = slugify(familyKey) || "channel";
+    if (usedIds.has(id)) {
+      let n = 2;
+      while (usedIds.has(`${id}-${n}`)) n++;
+      id = `${id}-${n}`;
+    }
+    usedIds.add(id);
+
+    channels.push({
+      id,
+      name: channel.name,
+      family: family.name,
+      familyKey,
+      category: family.category,
+      logo,
+      logoRemote,
+      status: servers.reduce(
+        (best, s) => (STATUS_RANK[s.status] > STATUS_RANK[best] ? s.status : best),
+        "none",
+      ),
+      servers,
+    });
   }
-  const name = meta.kids?.[c.slug] ?? meta.name;
-
-  let id = c.slug;
-  if (usedIds.has(id)) id = `${c.slug}-${c.label.toLowerCase().replace(/\s+/g, "-")}`;
-  usedIds.add(id);
-
-  channels.push({
-    id,
-    slug: c.slug,
-    name,
-    family: meta.name,
-    familyKey: c.family,
-    category: meta.category,
-    label: c.label,
-    logo: localLogo(c.icon),
-    logoRemote: c.icon,
-    embedUrl: c.embedUrl,
-    sourcePage: c.sourcePage,
-    status: statusOf(c),
-  });
 }
 
-if (missing.length) {
-  console.warn(`[warn] no taxonomy entry for ${missing.length} feed(s):`);
-  for (const m of missing) console.warn(`   - ${m}`);
+const taxonomySlugs = new Set();
+for (const family of Object.values(taxonomy.families)) {
+  for (const channel of family.channels) {
+    for (const server of channel.servers) taxonomySlugs.add(server.slug);
+  }
+}
+for (const slug of feedBySlug.keys()) {
+  if (!taxonomySlugs.has(slug)) problems.push(`scraped feed "${slug}" is missing from the taxonomy`);
+}
+
+if (problems.length) {
+  console.warn(`[warn] ${problems.length} taxonomy/scrape mismatch(es):`);
+  for (const p of problems) console.warn(`   - ${p}`);
+} else {
+  console.log("[dataset] taxonomy and scrape agree on every feed");
 }
 
 /* ------------------------------------------------------------------ *
@@ -145,43 +231,27 @@ console.log("[dataset] channels", channels.length, "categories", categoryCounts)
 const statusCounts = {};
 for (const ch of channels) statusCounts[ch.status] = (statusCounts[ch.status] || 0) + 1;
 console.log("[dataset] status", statusCounts);
+const serverCount = channels.reduce((n, ch) => n + ch.servers.length, 0);
+const withHls = channels.filter((ch) => ch.servers.some((s) => s.hlsUrl)).length;
+console.log(
+  `[dataset] servers ${serverCount}, channels with a direct playlist ${withHls}, channels with more than one server ${channels.filter((ch) => ch.servers.length > 1).length}`,
+);
 
 const ts = `// AUTO-GENERATED by scripts/build-dataset.mjs — do not edit by hand.
 //
 // Source: https://www.cool-etv.net/ (scraped ${raw.generatedAt})
-// ${channels.length} feeds across ${taxonomy.categories.length} categories.
+// ${channels.length} channels · ${serverCount} upstream servers · ${taxonomy.categories.length} categories
 
-export type CategoryId =
-${taxonomy.categories.map((c) => `  | "${c.id}"`).join("\n")};
+import type { Category, Channel } from "./types";
 
-export type ChannelStatus =
-  | "live"      // the embed was verified serving a video player
-  | "blocked"   // the upstream host refused the request (bot shield / parked)
-  | "acestream" // AceStream content id — needs a desktop protocol handler
-  | "error"     // the embed host did not answer
-  | "unknown"   // not probed
-  | "none";     // the source page ships no playable embed
-
-export type Category = {
-  id: CategoryId;
-  label: string;
-  tagline: string;
-};
-
-export type Channel = {
-  id: string;
-  slug: string;
-  name: string;
-  family: string;
-  familyKey: string;
-  category: CategoryId;
-  label: string;
-  logo: string | null;
-  logoRemote: string | null;
-  embedUrl: string | null;
-  sourcePage: string;
-  status: ChannelStatus;
-};
+export type {
+  Category,
+  CategoryId,
+  Channel,
+  Server,
+  ServerKind,
+  ServerStatus,
+} from "./types";
 
 export const CATEGORIES: Category[] = ${JSON.stringify(taxonomy.categories, null, 2)};
 

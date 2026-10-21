@@ -46,27 +46,39 @@ export function Header({
     return () => window.removeEventListener("keydown", onKey);
   }, [onQueryChange]);
 
+  const expanded = focused || query.length > 0;
+
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-300",
+        "fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-out",
         scrolled
-          ? "border-b border-white/8 bg-canvas/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-gradient-to-b from-black/70 to-transparent",
+          ? "border-b border-white/[0.08] bg-canvas/80 shadow-[0_20px_44px_-34px_rgba(0,0,0,1)] backdrop-blur-2xl backdrop-saturate-150"
+          : "border-b border-transparent bg-gradient-to-b from-black/70 via-black/35 to-transparent",
       )}
     >
+      {!scrolled && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-full h-10 bg-gradient-to-b from-black/45 to-transparent"
+        />
+      )}
       <div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-4 sm:h-[72px] sm:gap-5 sm:px-8 lg:px-12">
         {/* Wordmark */}
         <a
           href="#top"
-          className="group flex shrink-0 items-center gap-2.5"
+          className="group flex shrink-0 items-center gap-3"
           aria-label="VIZOR — începutul paginii"
         >
-          <span className="relative grid size-8 place-items-center rounded-[10px] bg-signal text-[#141005] shadow-[0_6px_20px_-6px_rgba(240,165,0,0.9)] transition-transform duration-300 group-hover:scale-105">
-            <Tv className="size-4.5" />
+          <span className="relative grid size-9 place-items-center rounded-[11px] bg-gradient-to-br from-signal-bright via-signal to-signal-deep text-signal-ink shadow-[0_10px_30px_-8px_rgba(242,167,27,0.95),inset_0_1px_0_0_rgba(255,255,255,0.45)] transition-transform duration-500 ease-spring group-hover:scale-105">
+            <Tv className="size-4.5" strokeWidth={2.4} />
           </span>
-          <span className="font-display text-[19px] font-bold tracking-[0.16em] text-ink">
+          <span className="font-display text-[19px] font-bold tracking-[0.17em] text-ink">
             VIZOR
+          </span>
+          <span className="hidden h-4 w-px bg-white/12 lg:block" />
+          <span className="hidden text-[10px] font-medium uppercase tracking-[0.22em] text-ink-faint lg:block">
+            TV live · România
           </span>
         </a>
 
@@ -75,14 +87,18 @@ export function Header({
         {/* Search */}
         <div
           className={cn(
-            "flex h-10 items-center gap-2 rounded-full border transition-[width,background-color,border-color] duration-300",
-            focused || query
-              ? "w-full max-w-sm border-white/20 bg-white/8 sm:w-72"
-              : "w-10 border-transparent bg-white/6 sm:w-56 sm:hover:border-white/15",
+            "group relative flex h-10 items-center gap-2 rounded-full border transition-[width,background-color,border-color,box-shadow] duration-500 ease-spring",
+            "border-white/[0.08] bg-white/[0.04] backdrop-blur-xl",
+            expanded
+              ? "w-full max-w-md border-signal/45 bg-canvas/70 shadow-[0_0_0_4px_rgba(242,167,27,0.10),0_18px_40px_-22px_rgba(0,0,0,0.95)]"
+              : "w-10 hover:border-white/20 hover:bg-white/[0.07] sm:w-60",
           )}
         >
           <Search
-            className="ml-3.5 size-4 shrink-0 text-ink-faint"
+            className={cn(
+              "ml-3.5 size-4 shrink-0 transition-colors duration-300",
+              expanded ? "text-signal" : "text-ink-faint",
+            )}
             aria-hidden
           />
           <input
@@ -94,19 +110,19 @@ export function Header({
             onBlur={() => setFocused(false)}
             placeholder="Caută un canal…"
             aria-label="Caută un canal"
-            className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:appearance-none"
+            className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint placeholder:transition-colors placeholder:duration-300 focus:placeholder:text-ink-muted/60 [&::-webkit-search-cancel-button]:appearance-none"
           />
           {query ? (
             <button
               type="button"
               onClick={() => onQueryChange("")}
               aria-label="Șterge căutarea"
-              className="mr-2 grid size-6 place-items-center rounded-full text-ink-faint transition hover:bg-white/10 hover:text-ink"
+              className="mr-2 grid size-6 shrink-0 place-items-center rounded-full text-ink-faint transition duration-300 ease-spring hover:bg-white/10 hover:text-ink"
             >
               <X className="size-3.5" />
             </button>
           ) : (
-            <kbd className="mr-3 hidden rounded border border-white/12 px-1.5 py-0.5 font-mono text-[10px] text-ink-faint sm:block">
+            <kbd className="mr-3 hidden rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-ink-faint sm:block">
               ⌘K
             </kbd>
           )}
@@ -118,27 +134,53 @@ export function Header({
           size="sm"
           onClick={onToggleFavorites}
           aria-pressed={favoritesActive}
-          className="hidden shrink-0 sm:inline-flex"
+          className={cn(
+            "hidden shrink-0 gap-2 sm:inline-flex",
+            "transition-[transform,box-shadow,background-color,color] duration-300 ease-spring",
+            "hover:-translate-y-px",
+            favoritesActive &&
+              "shadow-[0_14px_38px_-14px_rgba(242,167,27,0.9)]",
+          )}
         >
-          <Heart className={cn("size-4", favoritesActive && "fill-current")} />
+          <Heart
+            className={cn(
+              "size-4 transition-transform duration-500 ease-spring",
+              favoritesActive && "scale-110 fill-current",
+            )}
+          />
           Favorite
+          <span
+            key={favoritesCount}
+            className="animate-scale-in ml-0.5 grid min-w-[22px] place-items-center rounded-full bg-black/25 px-1.5 text-[11px] font-semibold tabular-nums"
+          >
+            {favoritesCount}
+          </span>
+        </Button>
+
+        <span className="relative shrink-0 sm:hidden">
+          <Button
+            variant={favoritesActive ? "primary" : "secondary"}
+            size="icon-sm"
+            onClick={onToggleFavorites}
+            aria-label={`Favorite (${favoritesCount})`}
+            aria-pressed={favoritesActive}
+          >
+            <Heart
+              className={cn(
+                "size-4 transition-transform duration-500 ease-spring",
+                favoritesActive && "scale-110 fill-current",
+              )}
+            />
+          </Button>
           {favoritesCount > 0 && (
-            <span className="ml-0.5 rounded-full bg-black/25 px-1.5 text-[11px] font-semibold tabular-nums">
+            <span
+              key={favoritesCount}
+              className="animate-scale-in absolute -right-1 -top-1 grid min-w-[17px] place-items-center rounded-full bg-signal px-1 text-[10px] font-bold tabular-nums text-signal-ink shadow-[0_4px_14px_-4px_rgba(242,167,27,0.95)]"
+            >
               {favoritesCount}
             </span>
           )}
-        </Button>
-
-        <Button
-          variant={favoritesActive ? "primary" : "secondary"}
-          size="icon-sm"
-          onClick={onToggleFavorites}
-          aria-label="Favorite"
-          aria-pressed={favoritesActive}
-          className="shrink-0 sm:hidden"
-        >
-          <Heart className={cn("size-4", favoritesActive && "fill-current")} />
-        </Button>
+        </span>
       </div>
     </header>
   );

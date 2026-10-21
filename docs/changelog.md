@@ -11,6 +11,60 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 Nothing yet.
 
+## [1.1.0] — 2026-10-21
+
+The rebuild. One click to play, no ads, one entry per channel, and a PWA.
+
+### Added
+
+- **One entry per channel, not per feed.** The source site lists the same
+  broadcast once per upstream feed — "Antena 1 S1", "Antena 1 S2 HD",
+  "Antena 1 S3". Those are *servers* of one channel. The catalogue now models
+  a `Channel` with a list of `Server`s, and the player walks that list until
+  one works. 116 channels, 202 servers, **75 channels with more than one
+  server**. See `docs/specs/catalogue-model.md`.
+- **Our own player.** The upstream player is no longer embedded as-is. The app
+  plays a resolved HLS playlist through its own `hls.js` instance, with its
+  own controls, one click to start, and automatic fallback to the next
+  server. **92 of the 116 channels play a directly resolved playlist.**
+  See `docs/specs/player-architecture.md`.
+- **A stream proxy** (`/api/stream`) that relays the upstream media with the
+  referer the upstream requires, and a **player proxy** (`/api/player`) that
+  strips the ad and tracker scripts from the upstream page before serving it.
+- **Server fallback in the UI** — the card shows the server stack, the player
+  shows which server it is on, and "Alt flux" moves to the next one.
+- **Search panel** — instant, diacritic-insensitive, ranked, keyboard-first.
+- **A→Z index** — jump to any letter of the catalogue.
+- **Recently watched**, stored locally alongside favourites.
+- **Apple TV rails** with pointer-follow focus, momentum and snap points.
+- **A design system** — an elevation ladder, glass with specular edges,
+  spring easings, film grain, and eighteen `fx-*` utilities.
+- **PWA** — installable, with a manifest, real icons, an offline page, a
+  service worker, and the safe-area handling an installed app needs.
+- **The verification harness**, as project assets: `scripts/verify-player.mjs`
+  proves one click starts the picture with no popup and no ad host, and
+  `scripts/verify-fallback.mjs` proves the next server takes over.
+
+### Fixed
+
+- **The ad windows.** The upstream page called `aclib.runPop()`, which opened
+  an ad in a new window. Nothing in the app can open a window now: the
+  upstream page is served with a `sandbox` CSP, its ad scripts are removed
+  server-side, and `window.open` is neutralised in the frame.
+- **The double click.** Clicking a channel starts playback immediately.
+- **A wrong catalogue.** 84 embeds serve a real player, not 15. The probe
+  misclassified them because the panel pages contain no `<video>`, no
+  `hls.js` and no `.m3u8` — only `alpha.js` and `omega1.js`.
+- **A slow failover.** hls.js exhausted its twenty-second retry ladder before
+  the player moved on. The manifest policy is now tuned, so a dead server
+  fails over in about a second.
+
+### Changed
+
+- **96 of 116 channels are live** (was 19), 12 are AceStream-only and 8 are
+  genuinely dead upstream.
+- The catalogue is now a snapshot of 116 channels, not a list of 203 feeds.
+
 ## [1.0.1] — 2026-10-21
 
 ### Fixed
@@ -76,6 +130,7 @@ First public release.
 - Two channels (Moldova 1, Publika TV) publish a plain HLS playlist on the
   source site; both were unreachable at release time.
 
-[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/collaby-org/vizor/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/collaby-org/vizor/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/collaby-org/vizor/releases/tag/v1.0.0

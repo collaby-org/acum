@@ -12,514 +12,1146 @@
     "Pro Tv": {
       "name": "PRO TV",
       "category": "generaliste",
-      "kids": {
-        "protv": "PRO TV",
-        "protv-s2": "PRO TV HD",
-        "protv-s3": "PRO TV S3",
-        "protv-s4": "PRO TV S4",
-        "protv-s7": "PRO TV News"
-      }
+      "channels": [
+        {
+          "name": "PRO TV",
+          "servers": [
+            { "slug": "protv", "label": "S1" },
+            { "slug": "protv-s2", "label": "S2 HD" },
+            { "slug": "protv-s3", "label": "S3" },
+            { "slug": "protv-s4", "label": "S4" }
+          ]
+        },
+        {
+          "name": "PRO TV News",
+          "servers": [{ "slug": "protv-s7", "label": "S1" }]
+        }
+      ]
     },
     "ProCinema": {
       "name": "PRO CINEMA",
       "category": "movies",
-      "kids": { "procinema": "PRO CINEMA", "procinema-s2": "PRO CINEMA S2" }
+      "channels": [
+        {
+          "name": "PRO CINEMA",
+          "servers": [
+            { "slug": "procinema", "label": "S1" },
+            { "slug": "procinema-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "TVR 's": {
       "name": "TVR",
       "category": "generaliste",
-      "kids": {
-        "tvr1": "TVR 1",
-        "tvr1-s2": "TVR 1 S2",
-        "tvr2": "TVR 2",
-        "tvr2-s2": "TVR 2 S2",
-        "tvr3-s1": "TVR 3",
-        "tvrsp-s1": "TVR Sport",
-        "tvr-inter-s1": "TVR Internazionale"
-      }
+      "channels": [
+        {
+          "name": "TVR 1",
+          "servers": [
+            { "slug": "tvr1", "label": "S1" },
+            { "slug": "tvr1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "TVR 2",
+          "servers": [
+            { "slug": "tvr2", "label": "S1" },
+            { "slug": "tvr2-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "TVR 3",
+          "servers": [{ "slug": "tvr3-s1", "label": "S1" }]
+        },
+        {
+          "name": "TVR Sport",
+          "servers": [{ "slug": "tvrsp-s1", "label": "S1" }]
+        },
+        {
+          "name": "TVR Internazionale",
+          "servers": [{ "slug": "tvr-inter-s1", "label": "S1" }]
+        }
+      ]
     },
     "Prima Tv": {
       "name": "Prima TV",
       "category": "generaliste",
-      "kids": {
-        "primatv": "Prima TV",
-        "primatv-s2": "Prima TV S2",
-        "primatv-s3": "Prima TV S3"
-      }
+      "channels": [
+        {
+          "name": "Prima TV",
+          "servers": [
+            { "slug": "primatv", "label": "S1" },
+            { "slug": "primatv-s2", "label": "S2" },
+            { "slug": "primatv-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "HB0 R0": {
       "name": "HBO",
       "category": "movies",
-      "kids": {
-        "hro1-s1": "HBO HD",
-        "hro1-s2": "HBO S2",
-        "hro2-s1": "HBO 2 S1",
-        "hro2-s2": "HBO 2 S2",
-        "hro3-s1": "HBO 3 S1",
-        "hro3-s2": "HBO 3 S2",
-        "cmax1-s1": "Cinemax 1 S1",
-        "cmax1-s2": "Cinemax 1 S2",
-        "cmax2-s1": "Cinemax 2 S1",
-        "cmax2-s2": "Cinemax 2 S2"
-      }
+      "channels": [
+        {
+          "name": "HBO",
+          "servers": [
+            { "slug": "hro1-s1", "label": "S1" },
+            { "slug": "hro1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "HBO 2",
+          "servers": [
+            { "slug": "hro2-s1", "label": "S1" },
+            { "slug": "hro2-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "HBO 3",
+          "servers": [
+            { "slug": "hro3-s1", "label": "S1" },
+            { "slug": "hro3-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Cinemax 1",
+          "servers": [
+            { "slug": "cmax1-s1", "label": "S1" },
+            { "slug": "cmax1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Cinemax 2",
+          "servers": [
+            { "slug": "cmax2-s1", "label": "S1" },
+            { "slug": "cmax2-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "National Tv": {
       "name": "Național TV",
       "category": "generaliste",
-      "kids": {
-        "nationaltv": "Național TV",
-        "nationaltv-s2": "Național TV S2",
-        "nationaltv-s3": "Național TV S3"
-      }
+      "channels": [
+        {
+          "name": "Național TV",
+          "servers": [
+            { "slug": "nationaltv", "label": "S1" },
+            { "slug": "nationaltv-s2", "label": "S2" },
+            { "slug": "nationaltv-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "Caln D 1&2": {
       "name": "Kanal D",
       "category": "generaliste",
-      "kids": {
-        "cd-s1": "Kanal D",
-        "cd-s2": "Kanal D S2",
-        "cd-s3": "Kanal D 2",
-        "cd-s4": "Kanal D 2 S2"
-      }
+      "channels": [
+        {
+          "name": "Kanal D",
+          "servers": [
+            { "slug": "cd-s1", "label": "S1" },
+            { "slug": "cd-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Kanal D 2",
+          "servers": [
+            { "slug": "cd-s3", "label": "S1" },
+            { "slug": "cd-s4", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Ant 1": {
       "name": "Antena 1",
       "category": "generaliste",
-      "kids": {
-        "an1": "Antena 1",
-        "an1-s2": "Antena 1 HD",
-        "an1-s3": "Antena 1 S3",
-        "an1-s4": "Antena 1 S4"
-      }
+      "channels": [
+        {
+          "name": "Antena 1",
+          "servers": [
+            { "slug": "an1", "label": "S1" },
+            { "slug": "an1-s2", "label": "S2 HD" },
+            { "slug": "an1-s3", "label": "S3" },
+            { "slug": "an1-s4", "label": "S4" }
+          ]
+        }
+      ]
     },
     "Pro 2": {
       "name": "PRO 2",
       "category": "generaliste",
-      "kids": {
-        "acasatv": "PRO 2",
-        "acasatv-s2": "PRO 2 S2",
-        "acasatv-gold": "PRO 2 Gold",
-        "acasatv-gold-s2": "PRO 2 Gold S2"
-      }
+      "channels": [
+        {
+          "name": "PRO 2",
+          "servers": [
+            { "slug": "acasatv", "label": "S1" },
+            { "slug": "acasatv-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "PRO 2 Gold",
+          "servers": [
+            { "slug": "acasatv-gold", "label": "S1" },
+            { "slug": "acasatv-gold-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "PR0 - X": {
       "name": "PRO X",
       "category": "generaliste",
-      "kids": { "sportro": "PRO X", "sportro-s2": "PRO X S2", "sportro-s3": "PRO X S3" }
+      "channels": [
+        {
+          "name": "PRO X",
+          "servers": [
+            { "slug": "sportro", "label": "S1" },
+            { "slug": "sportro-s2", "label": "S2" },
+            { "slug": "sportro-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "Ant 3": {
       "name": "Antena 3",
       "category": "generaliste",
-      "kids": { "an3": "Antena 3", "an3-s2": "Antena 3 S2", "an3-s3": "Antena 3 S3" }
+      "channels": [
+        {
+          "name": "Antena 3",
+          "servers": [
+            { "slug": "an3", "label": "S1" },
+            { "slug": "an3-s2", "label": "S2" },
+            { "slug": "an3-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "Realitatea Tv": {
       "name": "Realitatea",
       "category": "generaliste",
-      "kids": {
-        "realitatea": "Realitatea",
-        "realitatea-s2": "Realitatea S2",
-        "realitatea-s3": "Realitatea S3"
-      }
+      "channels": [
+        {
+          "name": "Realitatea",
+          "servers": [
+            { "slug": "realitatea", "label": "S1" },
+            { "slug": "realitatea-s2", "label": "S2" },
+            { "slug": "realitatea-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "Sport's Tv": {
       "name": "SuperSport",
       "category": "sport",
-      "kids": {
-        "sport1-s1": "SuperSport 1",
-        "sport1-s2": "SuperSport 1 S2",
-        "sport2-s1": "SuperSport 2",
-        "sport2-s2": "SuperSport 2 S2",
-        "sport3-s1": "SuperSport 3",
-        "sport3-s2": "SuperSport 3 S2",
-        "sport4-s1": "SuperSport 4",
-        "sport4-s2": "SuperSport 4 S2"
-      }
+      "channels": [
+        {
+          "name": "SuperSport 1",
+          "servers": [
+            { "slug": "sport1-s1", "label": "S1" },
+            { "slug": "sport1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "SuperSport 2",
+          "servers": [
+            { "slug": "sport2-s1", "label": "S1" },
+            { "slug": "sport2-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "SuperSport 3",
+          "servers": [
+            { "slug": "sport3-s1", "label": "S1" },
+            { "slug": "sport3-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "SuperSport 4",
+          "servers": [
+            { "slug": "sport4-s1", "label": "S1" },
+            { "slug": "sport4-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "TELEK0M Sport": {
       "name": "Telekom Sport",
       "category": "sport",
-      "kids": {
-        "dolce1-s1": "Telekom Sport 1",
-        "dolce1-s2": "Telekom Sport 1 S2",
-        "dolce2-s1": "Telekom Sport 2",
-        "dolce2-s2": "Telekom Sport 2 S2",
-        "dolce3-s1": "Telekom Sport 3",
-        "dolce3-s2": "Telekom Sport 3 S2",
-        "dolce4-s1": "Telekom Sport 4",
-        "dolce4-s2": "Telekom Sport 4 S2"
-      }
+      "channels": [
+        {
+          "name": "Telekom Sport 1",
+          "servers": [
+            { "slug": "dolce1-s1", "label": "S1" },
+            { "slug": "dolce1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Telekom Sport 2",
+          "servers": [
+            { "slug": "dolce2-s1", "label": "S1" },
+            { "slug": "dolce2-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Telekom Sport 3",
+          "servers": [
+            { "slug": "dolce3-s1", "label": "S1" },
+            { "slug": "dolce3-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Telekom Sport 4",
+          "servers": [
+            { "slug": "dolce4-s1", "label": "S1" },
+            { "slug": "dolce4-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "L00K Tv": {
       "name": "LOOK TV",
       "category": "sport",
-      "kids": {
-        "look-tv-s1": "LOOK Sport 1",
-        "look-tv-s2": "LOOK Sport 2",
-        "look-tv-s3": "LOOK Sport 3",
-        "look-tv-plus-s1": "LOOK Sport 4",
-        "look-tv-plus-s2": "LOOK Sport 5",
-        "look-tv-pp1": "LOOK PP1",
-        "look-tv-pp2": "LOOK PP2",
-        "look-tv-pp3": "LOOK PP3"
-      }
+      "channels": [
+        {
+          "name": "LOOK Sport 1",
+          "servers": [{ "slug": "look-tv-s1", "label": "S1" }]
+        },
+        {
+          "name": "LOOK Sport 2",
+          "servers": [{ "slug": "look-tv-s2", "label": "S1" }]
+        },
+        {
+          "name": "LOOK Sport 3",
+          "servers": [{ "slug": "look-tv-s3", "label": "S1" }]
+        },
+        {
+          "name": "LOOK Sport 4",
+          "servers": [{ "slug": "look-tv-plus-s1", "label": "S1" }]
+        },
+        {
+          "name": "LOOK Sport 5",
+          "servers": [{ "slug": "look-tv-plus-s2", "label": "S1" }]
+        },
+        {
+          "name": "LOOK PP1",
+          "servers": [{ "slug": "look-tv-pp1", "label": "S1" }]
+        },
+        {
+          "name": "LOOK PP2",
+          "servers": [{ "slug": "look-tv-pp2", "label": "S1" }]
+        },
+        {
+          "name": "LOOK PP3",
+          "servers": [{ "slug": "look-tv-pp3", "label": "S1" }]
+        }
+      ]
     },
     "ESport's": {
       "name": "eSports",
       "category": "sport",
-      "kids": {
-        "er1-s1": "eSports 1",
-        "er1-s2": "eSports 1 S2",
-        "er2-s1": "eSports 2",
-        "er2-s2": "eSports 2 S2"
-      }
+      "channels": [
+        {
+          "name": "eSports 1",
+          "servers": [
+            { "slug": "er1-s1", "label": "S1" },
+            { "slug": "er1-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "eSports 2",
+          "servers": [
+            { "slug": "er2-s1", "label": "S1" },
+            { "slug": "er2-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "RTV": {
       "name": "RTV",
       "category": "generaliste",
-      "kids": {
-        "realitatea-rtv": "RTV",
-        "realitatea-rtv-s2": "RTV S2",
-        "realitatea-rtv-s3": "RTV S3"
-      }
+      "channels": [
+        {
+          "name": "RTV",
+          "servers": [
+            { "slug": "realitatea-rtv", "label": "S1" },
+            { "slug": "realitatea-rtv-s2", "label": "S2" },
+            { "slug": "realitatea-rtv-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "TV 1000 Max": {
       "name": "TV 1000 Max",
       "category": "movies",
-      "kids": { "tv100": "TV 1000 Max", "tv100-s2": "TV 1000 Max S2" }
+      "channels": [
+        {
+          "name": "TV 1000 Max",
+          "servers": [
+            { "slug": "tv100", "label": "S1" },
+            { "slug": "tv100-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Movies": {
       "name": "Movies",
       "category": "movies",
-      "kids": { "movie-s1": "Movies", "movie-s2": "Movies S2" }
+      "channels": [
+        {
+          "name": "Movies",
+          "servers": [
+            { "slug": "movie-s1", "label": "S1" },
+            { "slug": "movie-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "ZuTv": {
       "name": "Zu TV",
       "category": "movies",
-      "kids": { "zu": "Zu TV", "zu-s2": "Zu TV S2" }
+      "channels": [
+        {
+          "name": "Zu TV",
+          "servers": [
+            { "slug": "zu", "label": "S1" },
+            { "slug": "zu-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "FilmBox": {
       "name": "Filmbox",
       "category": "movies",
-      "kids": {
-        "filmbox-s1": "Filmbox HD",
-        "filmbox-s2": "Filmbox Family",
-        "filmbox-s3": "Filmbox Extra",
-        "filmbox-s4": "Filmbox"
-      }
+      "channels": [
+        {
+          "name": "Filmbox HD",
+          "servers": [{ "slug": "filmbox-s1", "label": "S1" }]
+        },
+        {
+          "name": "Filmbox Family",
+          "servers": [{ "slug": "filmbox-s2", "label": "S1" }]
+        },
+        {
+          "name": "Filmbox Extra",
+          "servers": [{ "slug": "filmbox-s3", "label": "S1" }]
+        },
+        {
+          "name": "Filmbox",
+          "servers": [{ "slug": "filmbox-s4", "label": "S1" }]
+        }
+      ]
     },
     "Antena Stars": {
       "name": "Antena Stars",
       "category": "movies",
-      "kids": { "an2-s1": "Antena Stars", "an2-s2": "Antena Stars S2" }
+      "channels": [
+        {
+          "name": "Antena Stars",
+          "servers": [
+            { "slug": "an2-s1", "label": "S1" },
+            { "slug": "an2-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Teen Nick": {
       "name": "TeenNick",
       "category": "kids",
-      "kids": { "universal-ch": "TeenNick", "universal-ch-s2": "TeenNick S2" }
+      "channels": [
+        {
+          "name": "TeenNick",
+          "servers": [
+            { "slug": "universal-ch", "label": "S1" },
+            { "slug": "universal-ch-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Film Cafe": {
       "name": "Film Café",
       "category": "movies",
-      "kids": { "film-cafe": "Film Café", "film-cafe-s2": "Film Café S2" }
+      "channels": [
+        {
+          "name": "Film Café",
+          "servers": [
+            { "slug": "film-cafe", "label": "S1" },
+            { "slug": "film-cafe-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Happy": {
       "name": "Happy Channel",
       "category": "movies",
-      "kids": { "euforia": "Happy Channel", "euforia-s2": "Happy Channel S2" }
+      "channels": [
+        {
+          "name": "Happy Channel",
+          "servers": [
+            { "slug": "euforia", "label": "S1" },
+            { "slug": "euforia-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Diva Universal": {
       "name": "Diva Universal",
       "category": "movies",
-      "kids": { "diva": "Diva Universal", "diva-s2": "Diva Universal S2" }
+      "channels": [
+        {
+          "name": "Diva Universal",
+          "servers": [
+            { "slug": "diva", "label": "S1" },
+            { "slug": "diva-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Disney Channel": {
       "name": "Disney",
       "category": "kids",
-      "kids": {
-        "jetix-cartoon": "Disney Channel",
-        "jetix-cartoon-s2": "Disney Channel S2",
-        "jetix-junior": "Disney Junior",
-        "jetix-junior-s2": "Disney Junior S2"
-      }
+      "channels": [
+        {
+          "name": "Disney Channel",
+          "servers": [
+            { "slug": "jetix-cartoon", "label": "S1" },
+            { "slug": "jetix-cartoon-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Disney Junior",
+          "servers": [
+            { "slug": "jetix-junior", "label": "S1" },
+            { "slug": "jetix-junior-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Cartoon Network": {
       "name": "Cartoon Network",
       "category": "kids",
-      "kids": { "cartoon": "Cartoon Network", "cartoon-s2": "Cartoon Network S2" }
+      "channels": [
+        {
+          "name": "Cartoon Network",
+          "servers": [
+            { "slug": "cartoon", "label": "S1" },
+            { "slug": "cartoon-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Boomerang": {
       "name": "Boomerang",
       "category": "kids",
-      "kids": { "boomerang": "Boomerang", "boomerang-s2": "Boomerang S2" }
+      "channels": [
+        {
+          "name": "Boomerang",
+          "servers": [
+            { "slug": "boomerang", "label": "S1" },
+            { "slug": "boomerang-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "MiniMax & Jim": {
       "name": "MiniMax & Jim Jam",
       "category": "kids",
-      "kids": {
-        "minimaxro": "MiniMax",
-        "minimaxro-s2": "MiniMax S2",
-        "jim-jam": "Jim Jam",
-        "jim-jam-s2": "Jim Jam S2"
-      }
+      "channels": [
+        {
+          "name": "MiniMax",
+          "servers": [
+            { "slug": "minimaxro", "label": "S1" },
+            { "slug": "minimaxro-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Jim Jam",
+          "servers": [
+            { "slug": "jim-jam", "label": "S1" },
+            { "slug": "jim-jam-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "B1 Tv": {
       "name": "B1 TV",
       "category": "generaliste",
-      "kids": { "b1": "B1 TV", "b1-s2": "B1 TV S2", "b1-s3": "B1 TV S3" }
+      "channels": [
+        {
+          "name": "B1 TV",
+          "servers": [
+            { "slug": "b1", "label": "S1" },
+            { "slug": "b1-s2", "label": "S2" },
+            { "slug": "b1-s3", "label": "S3" }
+          ]
+        }
+      ]
     },
     "Nickelodeon": {
       "name": "Nickelodeon",
       "category": "kids",
-      "kids": {
-        "nickelodeon": "Nickelodeon",
-        "nickelodeon-s2": "Nickelodeon S2",
-        "nickelodeon-jr": "Nickelodeon Junior",
-        "nickelodeon-jr-s2": "Nickelodeon Junior S2",
-        "nick-toons-s1": "NickToons",
-        "nick-toons-s2": "NickToons S2"
-      }
+      "channels": [
+        {
+          "name": "Nickelodeon",
+          "servers": [
+            { "slug": "nickelodeon", "label": "S1" },
+            { "slug": "nickelodeon-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Nickelodeon Junior",
+          "servers": [
+            { "slug": "nickelodeon-jr", "label": "S1" },
+            { "slug": "nickelodeon-jr-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "NickToons",
+          "servers": [
+            { "slug": "nick-toons-s1", "label": "S1" },
+            { "slug": "nick-toons-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "AMC": {
       "name": "AMC",
       "category": "movies",
-      "kids": { "amc-s1": "AMC", "amc-s2": "AMC S2" }
+      "channels": [
+        {
+          "name": "AMC",
+          "servers": [
+            { "slug": "amc-s1", "label": "S1" },
+            { "slug": "amc-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "BBC Earth": {
       "name": "BBC Earth",
       "category": "documentare",
-      "kids": { "bbc-earth-s1": "BBC Earth", "bbc-earth-s2": "BBC Earth S2" }
+      "channels": [
+        {
+          "name": "BBC Earth",
+          "servers": [
+            { "slug": "bbc-earth-s1", "label": "S1" },
+            { "slug": "bbc-earth-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Prima News": {
       "name": "Prima News",
       "category": "stiri",
-      "kids": { "prima-news-s1": "Prima News", "prima-news-s2": "Prima News S2" }
+      "channels": [
+        {
+          "name": "Prima News",
+          "servers": [
+            { "slug": "prima-news-s1", "label": "S1" },
+            { "slug": "prima-news-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Euro News": {
       "name": "EuroNews",
       "category": "stiri",
-      "kids": { "euro-news-s1": "EuroNews", "euro-news-s2": "EuroNews S2" }
+      "channels": [
+        {
+          "name": "EuroNews",
+          "servers": [
+            { "slug": "euro-news-s1", "label": "S1" },
+            { "slug": "euro-news-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Show 1": {
       "name": "SHOW 1",
       "category": "generaliste",
-      "kids": { "shut1-s1": "SHOW 1", "shut1-s2": "SHOW 1 S2" }
+      "channels": [
+        {
+          "name": "SHOW 1",
+          "servers": [
+            { "slug": "shut1-s1", "label": "S1" },
+            { "slug": "shut1-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Show 2": {
       "name": "SHOW 2",
       "category": "generaliste",
-      "kids": { "shut2-s1": "SHOW 2", "shut2-s2": "SHOW 2 S2" }
+      "channels": [
+        {
+          "name": "SHOW 2",
+          "servers": [
+            { "slug": "shut2-s1", "label": "S1" },
+            { "slug": "shut2-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "AXN": {
       "name": "AXN",
       "category": "movies",
-      "kids": { "axn": "AXN", "axn-s2": "AXN S2" }
+      "channels": [
+        {
+          "name": "AXN",
+          "servers": [
+            { "slug": "axn", "label": "S1" },
+            { "slug": "axn-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "AXN Black": {
       "name": "AXN Black",
       "category": "movies",
-      "kids": { "axn-black-s1": "AXN Black", "axn-black-s2": "AXN Black S2" }
+      "channels": [
+        {
+          "name": "AXN Black",
+          "servers": [
+            { "slug": "axn-black-s1", "label": "S1" },
+            { "slug": "axn-black-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "AXN White": {
       "name": "AXN White",
       "category": "movies",
-      "kids": { "axn-white-s1": "AXN White", "axn-white-s2": "AXN White S2" }
+      "channels": [
+        {
+          "name": "AXN White",
+          "servers": [
+            { "slug": "axn-white-s1", "label": "S1" },
+            { "slug": "axn-white-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "AXN Spin": {
       "name": "AXN Spin",
       "category": "movies",
-      "kids": { "axn-spin": "AXN Spin", "axn-spin-s2": "AXN Spin S2" }
+      "channels": [
+        {
+          "name": "AXN Spin",
+          "servers": [
+            { "slug": "axn-spin", "label": "S1" },
+            { "slug": "axn-spin-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "TNT": {
       "name": "TNT",
       "category": "movies",
-      "kids": { "tnt-s1": "TNT", "tnt-s2": "TNT S2" }
+      "channels": [
+        {
+          "name": "TNT",
+          "servers": [
+            { "slug": "tnt-s1", "label": "S1" },
+            { "slug": "tnt-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Epic Drama": {
       "name": "Epic Drama",
       "category": "movies",
-      "kids": { "epic-drama-s1": "Epic Drama", "epic-drama-s2": "Epic Drama S2" }
+      "channels": [
+        {
+          "name": "Epic Drama",
+          "servers": [
+            { "slug": "epic-drama-s1", "label": "S1" },
+            { "slug": "epic-drama-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Comedy & Shorts": {
       "name": "Comedy & Shorts",
       "category": "movies",
-      "kids": { "comedy-central": "Comedy Central", "comedy-shorts": "Shorts" }
+      "channels": [
+        {
+          "name": "Comedy Central",
+          "servers": [{ "slug": "comedy-central", "label": "S1" }]
+        },
+        {
+          "name": "Shorts",
+          "servers": [{ "slug": "comedy-shorts", "label": "S1" }]
+        }
+      ]
     },
     "ViaSat": {
       "name": "ViaSat",
       "category": "documentare",
-      "kids": {
-        "via-nature": "ViaSat Nature",
-        "via-explorer": "ViaSat Explorer",
-        "via-his": "ViaSat History"
-      }
+      "channels": [
+        {
+          "name": "ViaSat Nature",
+          "servers": [{ "slug": "via-nature", "label": "S1" }]
+        },
+        {
+          "name": "ViaSat Explorer",
+          "servers": [{ "slug": "via-explorer", "label": "S1" }]
+        },
+        {
+          "name": "ViaSat History",
+          "servers": [{ "slug": "via-his", "label": "S1" }]
+        }
+      ]
     },
     "Duck Tv": {
       "name": "Duck TV",
       "category": "kids",
-      "kids": { "duck-tv-s1": "Duck TV", "duck-tv-s2": "Duck TV S2" }
+      "channels": [
+        {
+          "name": "Duck TV",
+          "servers": [
+            { "slug": "duck-tv-s1", "label": "S1" },
+            { "slug": "duck-tv-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "BollyWood Tv": {
       "name": "Bollywood TV",
       "category": "movies",
-      "kids": {
-        "bollywood-clasic-s1": "Bollywood Clasic",
-        "bollywood-tv-s1": "Bollywood TV",
-        "bollywood-extra-s1": "Bollywood Extra"
-      }
+      "channels": [
+        {
+          "name": "Bollywood Clasic",
+          "servers": [{ "slug": "bollywood-clasic-s1", "label": "S1" }]
+        },
+        {
+          "name": "Bollywood TV",
+          "servers": [{ "slug": "bollywood-tv-s1", "label": "S1" }]
+        },
+        {
+          "name": "Bollywood Extra",
+          "servers": [{ "slug": "bollywood-extra-s1", "label": "S1" }]
+        }
+      ]
     },
     "Crime +": {
       "name": "Crime+",
       "category": "movies",
-      "kids": {
-        "crime-investigation-s1": "Crime+",
-        "crime-investigation-s2": "Crime+ S2"
-      }
+      "channels": [
+        {
+          "name": "Crime+",
+          "servers": [
+            { "slug": "crime-investigation-s1", "label": "S1" },
+            { "slug": "crime-investigation-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Discovery Travel": {
       "name": "Discovery Travel",
       "category": "documentare",
-      "kids": {
-        "tlc-s1": "TLC",
-        "tlc-s2": "TLC S2",
-        "travel-ch-s1": "Travel Channel",
-        "travel-ch-s2": "Travel Channel S2",
-        "travel-living-s1": "Travel & Living",
-        "travel-living-s2": "Travel & Living S2"
-      }
+      "channels": [
+        {
+          "name": "TLC",
+          "servers": [
+            { "slug": "tlc-s1", "label": "S1" },
+            { "slug": "tlc-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Travel Channel",
+          "servers": [
+            { "slug": "travel-ch-s1", "label": "S1" },
+            { "slug": "travel-ch-s2", "label": "S2" }
+          ]
+        },
+        {
+          "name": "Travel & Living",
+          "servers": [
+            { "slug": "travel-living-s1", "label": "S1" },
+            { "slug": "travel-living-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "National Geo": {
       "name": "National Geographic",
       "category": "documentare",
-      "kids": { "natgeo": "National Geographic", "natgeo-hd": "National Geographic S2" }
+      "channels": [
+        {
+          "name": "National Geographic",
+          "servers": [
+            { "slug": "natgeo", "label": "S1" },
+            { "slug": "natgeo-hd", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Nat Geo Wild": {
       "name": "Nat Geo Wild",
       "category": "documentare",
-      "kids": { "natgeowild": "Nat Geo Wild", "natgeowild-s2": "Nat Geo Wild S2" }
+      "channels": [
+        {
+          "name": "Nat Geo Wild",
+          "servers": [
+            { "slug": "natgeowild", "label": "S1" },
+            { "slug": "natgeowild-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Animal Planet": {
       "name": "Animal Planet",
       "category": "documentare",
-      "kids": { "animal": "Animal Planet", "animal-s2": "Animal Planet S2" }
+      "channels": [
+        {
+          "name": "Animal Planet",
+          "servers": [
+            { "slug": "animal", "label": "S1" },
+            { "slug": "animal-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Discovery Channel": {
       "name": "Discovery Channel",
       "category": "documentare",
-      "kids": {
-        "discovery-channel-s1": "Discovery Channel",
-        "discovery-channel-s2": "Discovery Channel S2"
-      }
+      "channels": [
+        {
+          "name": "Discovery Channel",
+          "servers": [
+            { "slug": "discovery-channel-s1", "label": "S1" },
+            { "slug": "discovery-channel-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "HlST0 ChanneI": {
       "name": "History Channel",
       "category": "documentare",
-      "kids": { "his": "History Channel", "his-s2": "History Channel S2" }
+      "channels": [
+        {
+          "name": "History Channel",
+          "servers": [
+            { "slug": "his", "label": "S1" },
+            { "slug": "his-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Discovery ID": {
       "name": "Discovery ID",
       "category": "documentare",
-      "kids": { "discoid": "Discovery ID", "discoid-s2": "Discovery ID S2" }
+      "channels": [
+        {
+          "name": "Discovery ID",
+          "servers": [
+            { "slug": "discoid", "label": "S1" },
+            { "slug": "discoid-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Discovery Science": {
       "name": "Discovery Science",
       "category": "documentare",
-      "kids": {
-        "discoscience": "Discovery Science",
-        "discoscience-s2": "Discovery Science S2"
-      }
+      "channels": [
+        {
+          "name": "Discovery Science",
+          "servers": [
+            { "slug": "discoscience", "label": "S1" },
+            { "slug": "discoscience-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Discovery World": {
       "name": "Discovery World",
       "category": "documentare",
-      "kids": {
-        "disco-world-s1": "Discovery World",
-        "disco-world-s2": "Discovery World S2"
-      }
+      "channels": [
+        {
+          "name": "Discovery World",
+          "servers": [
+            { "slug": "disco-world-s1", "label": "S1" },
+            { "slug": "disco-world-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Alte Tv-uri !": {
       "name": "Alte canale",
       "category": "generaliste",
-      "kids": {
-        "trinitas-tv": "Trinitas TV",
-        "credo-tv": "Credo TV",
-        "moldova-1": "Moldova 1",
-        "publika": "Publika TV"
-      }
+      "channels": [
+        {
+          "name": "Trinitas TV",
+          "servers": [{ "slug": "trinitas-tv", "label": "S1" }]
+        },
+        {
+          "name": "Credo TV",
+          "servers": [{ "slug": "credo-tv", "label": "S1" }]
+        },
+        {
+          "name": "Moldova 1",
+          "servers": [{ "slug": "moldova-1", "label": "S1" }]
+        },
+        {
+          "name": "Publika TV",
+          "servers": [{ "slug": "publika", "label": "S1" }]
+        }
+      ]
     },
     "PaprikaTv": {
       "name": "Paprika TV",
       "category": "movies",
-      "kids": { "paprika-s1": "Paprika TV", "paprika-s2": "Paprika TV S2" }
+      "channels": [
+        {
+          "name": "Paprika TV",
+          "servers": [
+            { "slug": "paprika-s1", "label": "S1" },
+            { "slug": "paprika-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "CBS-Reality": {
       "name": "CBS Reality",
       "category": "documentare",
-      "kids": { "cbs-reality-s1": "CBS Reality" }
+      "channels": [
+        {
+          "name": "CBS Reality",
+          "servers": [{ "slug": "cbs-reality-s1", "label": "S1" }]
+        }
+      ]
     },
     "Fishing Hunting": {
       "name": "Fishing & Hunting",
       "category": "documentare",
-      "kids": { "fishing-hunting-s1": "Fishing & Hunting" }
+      "channels": [
+        {
+          "name": "Fishing & Hunting",
+          "servers": [{ "slug": "fishing-hunting-s1", "label": "S1" }]
+        }
+      ]
     },
     "U-TV Music": {
       "name": "U-TV Music",
       "category": "music",
-      "kids": { "utv": "U-TV Music" }
+      "channels": [
+        {
+          "name": "U-TV Music",
+          "servers": [{ "slug": "utv", "label": "S1" }]
+        }
+      ]
     },
     "N24 +": {
       "name": "N24+",
       "category": "stiri",
-      "kids": { "n24": "N24+", "n24-s2": "N24+ S2" }
+      "channels": [
+        {
+          "name": "N24+",
+          "servers": [
+            { "slug": "n24", "label": "S1" },
+            { "slug": "n24-s2", "label": "S2" }
+          ]
+        }
+      ]
     },
     "Kiss Tv": {
       "name": "Kiss TV",
       "category": "music",
-      "kids": { "kisslive": "Kiss TV" }
+      "channels": [
+        {
+          "name": "Kiss TV",
+          "servers": [{ "slug": "kisslive", "label": "S1" }]
+        }
+      ]
     },
     "Taraf Tv": {
       "name": "Taraf TV",
       "category": "music",
-      "kids": { "taraf": "Taraf TV" }
+      "channels": [
+        {
+          "name": "Taraf TV",
+          "servers": [{ "slug": "taraf", "label": "S1" }]
+        }
+      ]
     },
     "Favorit Tv": {
       "name": "Favorit TV",
       "category": "music",
-      "kids": { "favorit": "Favorit TV" }
+      "channels": [
+        {
+          "name": "Favorit TV",
+          "servers": [{ "slug": "favorit", "label": "S1" }]
+        }
+      ]
     },
     "Music Channel": {
       "name": "Music Channel",
       "category": "music",
-      "kids": { "mch": "Music Channel" }
+      "channels": [
+        {
+          "name": "Music Channel",
+          "servers": [{ "slug": "mch", "label": "S1" }]
+        }
+      ]
     },
     "Hit Music": {
       "name": "Hit Music",
       "category": "music",
-      "kids": { "hit-music": "Hit Music" }
+      "channels": [
+        {
+          "name": "Hit Music",
+          "servers": [{ "slug": "hit-music", "label": "S1" }]
+        }
+      ]
     },
     "News 24": {
       "name": "News 24",
       "category": "stiri",
-      "kids": { "news": "News 24" }
+      "channels": [
+        {
+          "name": "News 24",
+          "servers": [{ "slug": "news", "label": "S1" }]
+        }
+      ]
     },
     "Inedit Tv": {
       "name": "Inedit TV",
       "category": "music",
-      "kids": { "inedit-s1": "Inedit TV" }
+      "channels": [
+        {
+          "name": "Inedit TV",
+          "servers": [{ "slug": "inedit-s1", "label": "S1" }]
+        }
+      ]
     },
     "France24": {
       "name": "France 24",
       "category": "stiri",
-      "kids": { "france-24-live-s1": "France 24" }
+      "channels": [
+        {
+          "name": "France 24",
+          "servers": [{ "slug": "france-24-live-s1", "label": "S1" }]
+        }
+      ]
     },
     "CNN": {
       "name": "CNN",
       "category": "stiri",
-      "kids": { "cnn-live-s1": "CNN" }
+      "channels": [
+        {
+          "name": "CNN",
+          "servers": [{ "slug": "cnn-live-s1", "label": "S1" }]
+        }
+      ]
     },
     "Etno Tv": {
       "name": "Etno TV",
       "category": "generaliste",
-      "kids": { "etnotv": "Etno TV" }
+      "channels": [
+        {
+          "name": "Etno TV",
+          "servers": [{ "slug": "etnotv", "label": "S1" }]
+        }
+      ]
     }
   }
 }

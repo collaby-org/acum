@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { PwaRegister } from "@/components/pwa";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06070a",
+  themeColor: "#04050a",
   colorScheme: "dark",
 };
 
@@ -41,13 +42,29 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <link
           rel="preload"
+          href="/fonts/space-grotesk-500-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
           href="/fonts/inter-400-700-latin.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full bg-canvas text-ink">{children}</body>
+      <body className="min-h-full bg-canvas font-sans text-ink">
+        {children}
+        {/* One grain tile over the whole product, under the dialogs. */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-[45] fx-grain opacity-[0.035] mix-blend-overlay"
+        />
+        {/* Registers the service worker and declares the install metadata. */}
+        <PwaRegister />
+      </body>
     </html>
   );
 }

@@ -163,7 +163,7 @@ async function main() {
   console.log(
     "[search]",
     await evaluate(
-      `JSON.stringify({ h1: document.querySelector('main h1')?.textContent, results: document.querySelectorAll('article').length })`,
+      `JSON.stringify({ heading: document.querySelector('[role="search"] h1, [role="search"] h2')?.textContent ?? null, results: document.querySelectorAll('[role="search"] li').length, body: document.querySelector('[role="search"]')?.innerText.replace(/\\s+/g,' ').slice(0,120) ?? null })`,
     ),
   );
   await shot("05-search.png");

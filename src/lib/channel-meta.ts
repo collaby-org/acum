@@ -1,13 +1,16 @@
-import type { Channel, ChannelStatus, CategoryId } from "@/data/channels";
+import type { CategoryId, ServerStatus } from "@/data/types";
 
 /* ------------------------------------------------------------------ *
  * Status
  * ------------------------------------------------------------------ */
 
+/** The status union, under the name the catalogue used to export it. */
+export type ChannelStatus = ServerStatus;
+
 export type StatusTone = "live" | "warn" | "muted" | "none";
 
 export const STATUS_META: Record<
-  ChannelStatus,
+  ServerStatus,
   { label: string; tone: StatusTone; hint: string }
 > = {
   live: {
@@ -92,16 +95,74 @@ export function posterPalette(familyKey: string, category: CategoryId): PosterPa
 }
 
 /* ------------------------------------------------------------------ *
+ * Servers
+ * ------------------------------------------------------------------ */
+
+/** A channel and the upstream feeds that carry it. */
+export type ServerLike = {
+  id?: string;
+  label: string;
+  embedUrl?: string | null;
+  hlsUrl?: string | null;
+  status?: ServerStatus;
+};
+
+/** How many upstream feeds this channel has. */
+export function serverCount(channel: { servers?: readonly ServerLike[] }): number {
+  return channel.servers?.length ?? 0;
+}
+
+/** The feed labels, in the order the player will try them: "S1", "S2 HD". */
+export function serverLabels(channel: { servers?: readonly ServerLike[] }): string[] {
+  return (channel.servers ?? []).map((server) => server.label);
+}
+
+/**
+ * The badge text for the feed stack: "S1 · S2", plus a counter once the
+ * stack grows past two.
+ */
+export function serverSummary(channel: { servers?: readonly ServerLike[] }): string {
+  const labels = serverLabels(channel);
+  if (labels.length <= 2) return labels.join(" · ");
+  return `${labels.slice(0, 2).join(" · ")} +${labels.length - 2}`;
+}
+
+/* ------------------------------------------------------------------ *
  * Sorting
  * ------------------------------------------------------------------ */
 
 /** Live channels first, then alphabetical. */
-export function byPlayability(a: Channel, b: Channel) {
-  const rank = (c: Channel) =>
+export function byPlayability(
+  a: { name: string; status: ServerStatus },
+  b: { name: string; status: ServerStatus },
+) {
+  const rank = (c: { status: ServerStatus }) =>
     c.status === "live" ? 0 : c.status === "blocked" ? 1 : c.status === "unknown" ? 2 : 3;
   const diff = rank(a) - rank(b);
   return diff !== 0 ? diff : a.name.localeCompare(b.name, "ro");
 }
 
-export const isPlayable = (channel: Channel) => channel.status === "live";
-export const hasEmbed = (channel: Channel) => Boolean(channel.embedUrl);
+/** True when at least one feed of this channel can play in a browser. */
+export function isPlayable(channel: {
+  status: ServerStatus;
+  servers?: readonly ServerLike[];
+}): boolean {
+  if (channel.servers?.length) {
+    return channel.servers.some(
+      (server) =>
+        server.status === "live" &&
+        (Boolean(server.embedUrl) || Boolean(server.hlsUrl)),
+    );
+  }
+  return channel.status === "live";
+}
+
+export function hasEmbed(channel: {
+  embedUrl?: string | null;
+  servers?: readonly ServerLike[];
+}): boolean {
+  if (channel.servers) {
+    return channel.servers.some((server) => Boolean(server.embedUrl));
+  }
+  return Boolean(channel.embedUrl);
+}
