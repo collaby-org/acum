@@ -10,10 +10,12 @@ import {
   Radio,
   Check,
   TriangleAlert,
+  X,
 } from "lucide-react";
 import type { Channel } from "@/data/channels";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -94,6 +96,14 @@ export function PlayerModal({
               </div>
             </div>
           )}
+
+          {/* Close */}
+          <DialogClose
+            className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-black/60 text-ink/85 backdrop-blur-md transition hover:bg-black/85 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            aria-label="Închide"
+          >
+            <X className="size-4.5" />
+          </DialogClose>
         </div>
 
         {/* Meta bar */}

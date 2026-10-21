@@ -299,9 +299,11 @@ node scripts/fetch-fonts.mjs       # self-host the brand fonts
 ### Build and check
 
 ```bash
-npm run lint     # ESLint flat config, no `next lint`
-npm run build    # Turbopack production build
-npx tsc --noEmit # type check
+npm run lint       # ESLint flat config, no `next lint`
+npm run typecheck  # next typegen && tsc --noEmit
+npm run build      # Turbopack production build
 ```
 
 `next lint` no longer exists in Next.js 16 — use the ESLint CLI directly.
+`next typegen` must run before the type check: the route-type helpers
+(`LayoutProps`, `PageProps`, `RouteContext`) are generated, not shipped.

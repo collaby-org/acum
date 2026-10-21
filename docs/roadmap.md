@@ -11,6 +11,8 @@ ships or changes shape.
       grid, instant search, favourites, modal player.
 - [x] **v1.0.0 — Honest status.** Per-channel liveness, recorded by a probe
       and surfaced in the UI.
+- [x] **v1.0.1 — Verification.** A headless driver that walks the real app,
+      captures the evidence in `docs/reviews/`, and fails on console errors.
 
 ## Next
 
