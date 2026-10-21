@@ -29,7 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^7"
   },
   "description": "VIZOR — TV live românesc, fără reclame și fără cont. Directorul cananelor live din România.",
   "license": "MIT",
