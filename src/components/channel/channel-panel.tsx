@@ -147,14 +147,14 @@ export function ChannelPanel({
       {showIdentity ? (
         <div className="flex items-start gap-3">
           {logo ? (
-            <span className="relative grid h-11 w-[60px] shrink-0 place-items-center overflow-hidden rounded-[9px] border border-white/12 bg-white/[0.06]">
+            <span className="relative grid h-11 w-14 shrink-0 max-w-[4.5rem] place-items-center overflow-hidden rounded-[9px] border border-white/12 bg-white/[0.06] sm:w-[60px] sm:max-w-none">
               <Image
                 src={logo}
                 alt=""
                 width={60}
                 height={44}
                 unoptimized
-                className="size-full object-contain p-1 opacity-95"
+                className="h-11 w-full object-contain p-1 opacity-95"
               />
             </span>
           ) : (
