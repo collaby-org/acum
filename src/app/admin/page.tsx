@@ -1,14 +1,22 @@
-"use client";
-
-import { useAccount } from "@/hooks/use-account";
-import { isAdmin, ADMIN_EMAIL } from "@/lib/admin-access";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { OverviewPanel } from "@/components/admin/overview";
+import { deskState } from "@/lib/admin";
 
-export default function AdminClientPage() {
-  const { ready, email, plan } = useAccount();
-  const ok = ready && isAdmin(email, plan);
+export const metadata: Metadata = {
+  title: "Panou",
+};
 
-  if (!ready) return <main className="min-h-screen bg-black" />;
-  if (!ok) return <main className="min-h-screen flex items-center justify-center bg-black text-white"><h1>404 — Nu ești autorizat</h1></main>;
+// The desk reads the session on every request, so it is never prerendered —
+// the same contract the rest of the product's data pages use.
+export const instant = false;
+
+/**
+ * The overview: the live audience, the numbers of the day, the last thirty
+ * days, the plans, the catalogue and the newest accounts.
+ */
+export default async function AdminOverviewPage() {
+  const state = await deskState();
+  if (state.status !== "ok") notFound();
   return <OverviewPanel />;
 }

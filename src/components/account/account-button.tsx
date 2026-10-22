@@ -12,7 +12,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { isAdmin, ADMIN_EMAIL } from "@/lib/admin-access";
+import { isAdmin } from "@/lib/admin-access";
 import { LogOut, Ticket, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";

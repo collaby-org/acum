@@ -47,16 +47,15 @@ export const PLAN_IDS: readonly Plan[] = [
   "comp",
 ];
 
-/** The name a plan is shown under, in the product's own words. */
-export const ADMIN_EMAIL = "gmgmethereum@gmail.com";
-
-export function isAdmin(
-  email?: string | null,
-  plan?: string | null,
-): boolean {
-  if (email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) return true;
-  return plan === "comp" || plan === "bypass";
-}
+/**
+ * The desk mark.
+ *
+ * The rule itself lives in `@/lib/admin-access`, which the browser is allowed
+ * to import — this module reads the cookie jar and the service role, so it
+ * must never reach a client bundle. Re-exported here so the server can keep
+ * importing one module.
+ */
+export { ADMIN_EMAIL, isAdmin } from "@/lib/admin-access";
 
 export function planLabel(plan: Plan): string {
   if (plan === "comp") return "Concediat";
