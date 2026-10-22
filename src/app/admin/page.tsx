@@ -1,18 +1,14 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+"use client";
+
+import { useAccount } from "@/hooks/use-account";
+import { isAdmin, ADMIN_EMAIL } from "@/lib/admin-access";
 import { OverviewPanel } from "@/components/admin/overview";
-import { deskState } from "@/lib/admin";
 
-export const metadata: Metadata = {
-  title: "Panou",
-};
+export default function AdminClientPage() {
+  const { session, ready } = useAccount();
+  const ok = ready && session && isAdmin(session.email, session.plan);
 
-/**
- * The overview: the live audience, the numbers of the day, the last thirty
- * days, the plans, the catalogue and the newest accounts.
- */
-export default async function AdminOverviewPage() {
-  const state = await deskState();
-  if (state.status !== "ok") notFound();
+  if (!ready) return <main className="min-h-screen bg-black" />;
+  if (!ok) return <main className="min-h-screen flex items-center justify-center bg-black text-white"><h1>404 — Nu ești autorizat</h1></main>;
   return <OverviewPanel />;
 }
