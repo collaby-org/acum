@@ -15,7 +15,7 @@ import type { ChannelLike } from "@/lib/navigation";
 import { cn, formatViewers } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAccount } from "@/hooks/use-account";
-import { isAdmin } from "@/lib/admin";
+import { isAdmin } from "@/lib/admin-access";
 
 /* ------------------------------------------------------------------ *
  * Quality
