@@ -17,7 +17,7 @@ import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { LandingGate } from "@/components/landing-gate";
-import { InstallBanner } from "@/components/install-banner";
+import InstallBanner from "@/components/install-banner";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
