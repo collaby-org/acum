@@ -106,6 +106,42 @@ create table if not exists public.watch_sessions (
 create index if not exists watch_sessions_user_started_idx
   on public.watch_sessions (user_id, started_at desc);
 
+/* ------------------------------------------------------------------ *
+ * Concurrent streams
+ *
+ * One account, a number of screens: one on the free tier, two on the
+ * individual plan, four on the household and lifetime plans. A row is alive
+ * while its heartbeat is fresh, so a closed tab frees its seat on its own.
+ * ------------------------------------------------------------------ */
+
+-- The screen the house plays on.
+alter table public.profiles
+  add column if not exists household_device text;
+
+comment on column public.profiles.household_device is
+  'The device the household plan is bound to. Re-bound on confirmation.';
+
+create table if not exists public.stream_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  /** The house the stream is counted against, when the account has one. */
+  household_id uuid,
+  /** An opaque name the browser keeps; never a fingerprint of a person. */
+  device text not null,
+  channel_id text,
+  started_at timestamptz not null default now(),
+  last_seen_at timestamptz not null default now(),
+  ended_at timestamptz
+);
+
+create index if not exists stream_sessions_live_idx
+  on public.stream_sessions (user_id, last_seen_at desc)
+  where ended_at is null;
+
+create index if not exists stream_sessions_household_live_idx
+  on public.stream_sessions (household_id, last_seen_at desc)
+  where ended_at is null;
+
 -- The daily allowance, in seconds. Two hours.
 create or replace function public.daily_allowance_seconds(plan text)
 returns integer
@@ -244,6 +280,26 @@ create policy "sessions are their own"
   on public.watch_sessions for all
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+-- Stream sessions: the same, plus the household, which has to be able to
+-- count its own screens.
+alter table public.stream_sessions enable row level security;
+
+drop policy if exists "stream sessions are their own" on public.stream_sessions;
+create policy "stream sessions are their own"
+  on public.stream_sessions for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "a household sees its streams" on public.stream_sessions;
+create policy "a household sees its streams"
+  on public.stream_sessions for select
+  using (
+    household_id is not null
+    and household_id = (
+      select p.household_id from public.profiles p where p.id = auth.uid()
+    )
+  );
 
 -- Subscriptions: readable by their owner, writable only by the desk.
 drop policy if exists "subscriptions are theirs" on public.subscriptions;

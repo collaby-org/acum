@@ -335,10 +335,11 @@ export function signStreamToken(
   url: string,
   channelId?: string,
   ttlSeconds = TOKEN_TTL_SECONDS,
+  sessionId?: string,
 ): string {
   const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
   const payload = Buffer.from(
-    `${expires}:${channelId ?? ""}:${url}`,
+    `${expires}:${channelId ?? ""}:${sessionId ?? ""}:${url}`,
     "utf8",
   ).toString("base64url");
   return `${payload}.${sign(payload)}`;
@@ -350,6 +351,14 @@ export type StreamToken = {
   url: string;
   /** The channel the address belongs to, when the token carries one. */
   channelId: string | null;
+  /**
+   * The registered stream this token belongs to, when it has one.
+   *
+   * It is what the player's heartbeat keeps alive, and what a second screen
+   * is counted against. Tokens minted before the registry existed do not
+   * carry one, and they still open — the address is what matters.
+   */
+  sessionId: string | null;
 };
 
 /** Unwrap a token back into the upstream URL, or null when it is not ours. */
@@ -377,10 +386,22 @@ export function readStreamToken(token: string): StreamToken | null {
   // A token written before the channel was carried still opens: the
   // address is what matters, and the channel is only used for the count.
   const channelId = secondColon > 0 ? rest.slice(0, secondColon) : "";
-  const url = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
+  const tail = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
+
+  // The session sits between the channel and the address. A tail that opens
+  // with the address itself was written before the registry, and has none.
+  let sessionId = "";
+  let url = tail;
+  if (!/^https?:/i.test(tail)) {
+    const thirdColon = tail.indexOf(":");
+    if (thirdColon > 0) {
+      sessionId = tail.slice(0, thirdColon);
+      url = tail.slice(thirdColon + 1);
+    }
+  }
 
   if (!isAllowedMediaUrl(url)) return null;
-  return { url, channelId: channelId || null };
+  return { url, channelId: channelId || null, sessionId: sessionId || null };
 }
 
 /* ------------------------------------------------------------------ *

@@ -34,6 +34,7 @@ import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
 import { MinutesWarning } from "@/components/player/minutes-warning";
+import { StreamNotice } from "@/components/player/stream-notice";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import { Paywall } from "@/components/player/paywall";
 import {
@@ -174,7 +175,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       autoStart: autoPlay && account.ready && !gated,
       onStatusChange,
     });
-    const { source, status, sources, sourceIndex, attempts, error } = player;
+    const { source, status, sources, sourceIndex, attempts, error, block, confirmDevice, retry } =
+      player;
 
     // The watch clock: the player knows how long it has been playing, and
     // the server counts it.
@@ -664,7 +666,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     );
 
     const busy = status === "resolving" || status === "retrying";
-    const failed = status === "error";
+    const failed = status === "error" && !block;
     const hasNext = sourceIndex + 1 < sources.length;
 
     const togglePlay = useCallback(() => {
@@ -919,6 +921,14 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               gated={gated}
             />
           )}
+
+          {/* The plan's own answer: too many screens, or a device the house
+              does not know yet. Under the wall, over the picture. */}
+          <StreamNotice
+            block={gated ? null : block}
+            onConfirm={confirmDevice}
+            onRetry={retry}
+          />
 
           {/* The wall: the account decides whether the picture may play.
               It is the last thing over the frame, and it says nothing about

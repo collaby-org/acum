@@ -138,3 +138,49 @@ export function allowanceMinutes(
   if (definition.allowanceSeconds === null) return null;
   return definition.allowanceSeconds / 60;
 }
+
+/* ------------------------------------------------------------------ *
+ * The streams a plan may run at once
+ *
+ * One account, a number of screens. The free tier is one: the same person
+ * on a phone and a laptop is two streams, and two hours a day is not two
+ * hours a day per screen. The individual plan is two — a phone and a
+ * television. The household plan is four, one per seat, and the lifetime
+ * plan carries the household promise for as long as it lasts.
+ *
+ * `comp` is the desk's own: it counts nothing.
+ * ------------------------------------------------------------------ */
+
+/** How many streams a plan may run at the same time. */
+const STREAM_LIMITS: Record<Plan, number | null> = {
+  free: 1,
+  monthly: 2,
+  household: 4,
+  lifetime: 4,
+  comp: null,
+};
+
+/**
+ * The concurrent streams a plan allows, or `null` for no limit.
+ *
+ * `bypass` is a desk flag rather than a plan, and it is handled next to the
+ * plan — a bypassed account is never counted.
+ */
+export function streamLimit(
+  plan: Plan | string | null | undefined,
+): number | null {
+  if (!plan || !(plan in STREAM_LIMITS)) return null;
+  return STREAM_LIMITS[plan as Plan];
+}
+
+/**
+ * Whether a plan is tied to a household.
+ *
+ * The household plan is one payment for one home, and the lifetime plan
+ * inherits it. A sign-in from a device that is not the one the house plays
+ * on is not refused outright: it is asked to confirm the household, the way
+ * the streaming services do when somebody travels.
+ */
+export function bindsHousehold(plan: Plan | string | null | undefined): boolean {
+  return plan === "household" || plan === "lifetime";
+}

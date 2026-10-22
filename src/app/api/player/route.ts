@@ -28,6 +28,8 @@ import {
 import { catalogueChannel } from "@/lib/catalogue";
 import { secondaryStreamUrl } from "@/lib/secondary";
 import { gate } from "@/lib/account-gate";
+import { claimStream, deviceFrom } from "@/lib/stream-sessions";
+import { bearerToken } from "@/lib/supabase/server";
 import type { Server } from "@/data/types";
 
 type ServerInput = {
@@ -154,6 +156,51 @@ export async function POST(request: Request) {
   }
 
   /**
+   * The stream itself.
+   *
+   * The gate has already decided that the allowance is not spent. This is
+   * the second question, and the one a plan is about: how many screens may
+   * run at once, and is this the house's own device. A refusal here is not
+   * a wall over the picture — it is a sentence the player can act on.
+   */
+  const authorization = bearerToken(request);
+  const claim =
+    authorization && verdict.userId
+      ? await claimStream({
+          token: authorization,
+          userId: verdict.userId,
+          device: deviceFrom(request),
+          channelId,
+        })
+      : null;
+
+  if (claim && !claim.allowed) {
+    if (claim.reason === "stream_limit") {
+      const one = claim.limit === 1;
+      return Response.json(
+        {
+          error: `Ai atins limita de ${claim.limit} ${one ? "flux" : "fluxuri"} simultane din planul tău. Închide un alt ecran și reîncearcă.`,
+          reason: claim.reason,
+          limit: claim.limit,
+          active: claim.active,
+        },
+        { status: 429, headers: { "cache-control": "no-store" } },
+      );
+    }
+
+    return Response.json(
+      {
+        error:
+          "Acest dispozitiv nu este cel înregistrat pentru casă. Confirmă dispozitivul și reluăm.",
+        reason: claim.reason,
+      },
+      { status: 403, headers: { "cache-control": "no-store" } },
+    );
+  }
+
+  const sessionId = claim?.allowed ? claim.sessionId : null;
+
+  /**
    * The viewer.
    *
    * It is a random value the browser keeps for the session. It identifies a
@@ -185,7 +232,12 @@ export async function POST(request: Request) {
 
   const sources = await Promise.all(
     links.map(async ({ server, candidate }) => {
-      const url = `/api/stream?t=${signStreamToken(candidate, channelId ?? undefined)}`;
+      const url = `/api/stream?t=${signStreamToken(
+        candidate,
+        channelId ?? undefined,
+        undefined,
+        sessionId ?? undefined,
+      )}`;
       return {
         id: server.id,
         label: server.label,
@@ -205,7 +257,7 @@ export async function POST(request: Request) {
     ...sources.filter((source) => !source.playable),
   ];
 
-  return Response.json({ sources: ordered });
+  return Response.json({ sources: ordered, session: sessionId });
 }
 
 export type { Server };
