@@ -230,6 +230,18 @@ function classifyStream(url) {
   return "unknown";
 }
 
+/** Drops the short-lived signed token from a stream address. */
+function stripToken(value) {
+  if (!value) return value;
+  try {
+    const url = new URL(value);
+    url.searchParams.delete("token");
+    return url.href;
+  } catch {
+    return value;
+  }
+}
+
 function normalise(rec) {
   const logo = absolute(firstString(rec, LOGO_KEYS));
   const stream = absolute(firstString(rec, STREAM_KEYS));
@@ -246,7 +258,10 @@ function normalise(rec) {
     slug: rec.slug.trim(),
     name: (typeof rec.name === "string" && rec.name.trim()) || rec.slug.trim(),
     logo,
-    stream,
+    // The signed `token` parameter lives for a few minutes and is fetched
+    // fresh on the server, so it is never stored: what is kept is the stable
+    // path, and the token is requested again when the feed is played.
+    stream: stripToken(stream),
     streamPath,
     kind: classifyStream(stream),
     hd,
