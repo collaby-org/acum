@@ -22,9 +22,8 @@ export function LandingGate() {
   const account = useAccount();
 
   useEffect(() => {
-    if (account.ready && account.signedIn) {
-      router.replace("/canale");
-    }
+    if (!account.ready) return; // don't block — show catalogue while session loads
+    if (account.signedIn) router.replace("/canale");
   }, [account.ready, account.signedIn, router]);
 
   return null;
