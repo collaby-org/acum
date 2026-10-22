@@ -16,7 +16,7 @@ import Link from "next/link";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { accountToken } from "@/hooks/use-account";
+import { accountToken, useAccount } from "@/hooks/use-account";
 import {
   cadenceLabel,
   PLANS,
