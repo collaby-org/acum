@@ -21,34 +21,40 @@ ships or changes shape.
 - [x] **v1.1.0 — The interface.** Apple TV rails, pointer-follow focus,
       instant ranked search, an A→Z index, recently watched.
 - [x] **v1.1.0 — PWA.** Installable, offline shell, safe-area chrome.
+- [x] **v1.2.0 — A second source.** 27 more channels, a second feed on 56
+      others, and the programme guide.
+- [x] **v1.2.0 — Measured quality.** The picture height read out of the
+      segment, not the advertised codec. HD feeds are preferred.
+- [x] **v1.2.0 — The logo library.** 111 high-resolution transparent
+      logos from Wikimedia, 21 of them genuine HD lockups.
+- [x] **v1.2.0 — Pinned channels and watch later**, local shelves.
+- [x] **v1.2.0 — Fullscreen on a phone**, and the hover clipping fixed.
 
 ## Next
 
 ### Catalogue freshness
 
-- [ ] A scheduled workflow that re-runs `scrape-channels.mjs` and
-      `check-embeds.mjs` weekly and opens a pull request when the catalogue
-      changes. This keeps `status` honest without a human in the loop.
-- [ ] Re-resolve the HLS playlists on a schedule. The tokens are stable
-      today, but nothing guarantees they stay that way.
+- [ ] A scheduled workflow that re-runs the scrapers, the probe, the
+      resolver and the measurement, and opens a pull request when the
+      catalogue changes. The second source's tokens expire in minutes, so
+      something has to keep them fresh.
 - [ ] A "last checked" timestamp per channel, shown in the player modal.
 
 ### Deeper discovery
 
 - [ ] A channel detail view with the family, the sibling feeds and the
-      direct source link, reachable from the card rather than only the
-      player.
-- [ ] Sort and filter inside a category rail (by status, by family).
+      programme for the rest of the day.
+- [ ] Sort and filter inside a category rail (by status, by quality).
 - [ ] Shareable deep links: `/canal/<slug>` opens that channel's player
       directly, still without an account.
+- [ ] A "tonight's highlights" view built from the guide, per category.
 
 ### Playback
 
-- [ ] Remember the last channel watched locally and offer "Continuă
-      vizionarea" on the home hero.
-- [ ] Picture-in-picture for the player.
+- [ ] Picture-in-picture on the phone layout.
 - [ ] Keyboard shortcuts: `←`/`→` move between channels in a rail, `f`
       toggles favourites, `/` focuses search.
+- [ ] Remember the last channel watched and offer "Continuă vizionarea".
 
 ### Stream cost
 
@@ -58,10 +64,10 @@ ships or changes shape.
 
 ### Presentation
 
-- [ ] Higher-resolution channel logos. The source publishes 40×20 PNGs; the
-      app would need an upscaling or a vector source.
-- [ ] A generated poster for channels whose logo is missing, so every card
-      carries a real brand mark.
+- [ ] A generated poster for the channels that still have no logo, so every
+      card carries a real brand mark.
+- [ ] The 25 channels still on the 40×20 upstream icon: a hand-drawn mark
+      would beat a blurred one.
 
 ## Not planned
 
