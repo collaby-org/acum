@@ -19,7 +19,10 @@ import {
  */
 
 const CATEGORY_LINKS = [
-  { label: "Toate canalele", href: "/canale" },
+  // „Toate canalele" is the directory itself — every channel, alphabetically,
+  // with the letter, category and search filters on it. `/canale` is the
+  // product (hero, shelves, rails) and is reached from the header.
+  { label: "Toate canalele", href: "/canale/toate" },
   { label: "Grupate pe categorii", href: "/canale/grupate" },
   { label: "Top canale live acum", href: "/trending" },
   { label: "Generale", href: "/canale/generaliste" },

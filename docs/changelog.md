@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The version line for this project lives in `package.json` and `docs/VERSION`.
 
+## [1.5.1] - 2026-10-22
+
+### Fixed
+
+- **A signed-in viewer's stream address was refused by our own proxy.** The
+  token that `/api/player` mints carried an empty session field, and the
+  reader took the next field for a session name: every segment answered
+  "Adresă nepermisă", on every channel, so a channel that said *live* never
+  started. The field is written only when there is a session, and the reader
+  tolerates the empty form, so tokens minted in between still open. Verified
+  in a real browser: `/canal/pro-tv` and the catalogue's dialog both reach
+  `readyState 4` and decode.
+
+- **The feed chain is ordered, and it is the chain we ship.** The player
+  endpoint walked the catalogue's feeds in the order the file happened to
+  list them; the ranking the team had written (`pickServer`) was never
+  called. Now a resolved playlist comes first, then the directory's own
+  address, then the pages we can read — live before unknown — and an
+  acestream id or an unresolvable page is dropped instead of being handed to
+  the browser to time out on. Two media hosts the allowlist silently
+  rejected (`alpha1.cool-itv.com`, `iron1.xn--x2rw19a.space`) are named
+  whole.
+
+- **A dead feed no longer holds the request open.** `probePlaylist` now has
+  one deadline for all of its Referer attempts (the endpoint asks for six
+  seconds), and links that did not answer are not shipped when at least one
+  did. A channel with nothing alive still returns its links, so the player
+  can say so.
+
+### Changed
+
+- **The catalogue has an index again — on its own page.** The A–Z strip sat
+  between two rails on `/canale`: it was sticky mid-page, and the grid it
+  filtered started below the fold, so a click looked like nothing happened.
+  `/canale` is now the product — hero, shelves, one rail per category, and a
+  single way through to `/canale/toate` — while the directory is its own
+  page: every channel in one alphabetical list, with the letter, the
+  category and a search above it. The three intersect, each one counts what
+  it would leave behind, and choosing one never moves the page.
+
+- **The player dialog is one shape.** The shell carries the only radius and
+  clips what is inside it; the picture is square against it; the panel's
+  duplicate close button is gone and the dialog's own close — visible at
+  every width — is the one control that closes it.
+
+### Added
+
+- **A refusal from the identity provider is a page, not a body.** The
+  callback reads `error` on the server and answers in Romanian with a way
+  back, and the app has an error boundary (`error.tsx`) and a last-resort
+  `global-error.tsx` so a render failure lands on ACUM's own screen instead
+  of the framework's. `/canale/toate` is in the sitemap.
+
 ## [1.5.0] - 2026-10-22
 
 ### Changed

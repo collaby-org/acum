@@ -15,7 +15,7 @@ import { pickTrending } from "@/lib/popularity";
 export const instant = false;
 
 /**
- * The home page.
+ * The catalogue.
  *
  * The catalogue is stripped before it reaches the browser: the client gets
  * names, artwork, status and quality, but no upstream address and no source
@@ -26,6 +26,10 @@ export const instant = false;
  * **popularity** figure comes from the directory we index, and it is a
  * cumulative counter — a ranking, not a live count, and it is labelled as
  * one wherever it appears.
+ *
+ * This is the product, not the index: the hero, the shelves and one rail per
+ * category. The whole catalogue, alphabetically and filterable, lives on its
+ * own page — `/canale/toate`.
  */
 export default async function Home() {
   await connection();

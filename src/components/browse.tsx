@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import { Compass, Heart, Radio, Sparkles } from "lucide-react";
+import { ArrowRight, Compass, Heart, Sparkles } from "lucide-react";
 import type { Category, Channel } from "@/data/types";
 import type { EpgGuide } from "@/components/now-next";
 import { Header } from "@/components/header";
@@ -9,7 +10,6 @@ import { Hero } from "@/components/hero";
 import { ChannelRail } from "@/components/channel-rail";
 import { TrendingRail } from "@/components/trending-rail";
 import { ChannelCard } from "@/components/channel-card";
-import { ChannelIndex } from "@/components/channel-index";
 import { SearchPanel } from "@/components/search-panel";
 import { ShelfRail } from "@/components/shelf-rail";
 import { PlayerModal } from "@/components/player";
@@ -21,8 +21,8 @@ import { useChannelLauncher } from "@/hooks/use-channel-launcher";
 import { useLiveAudience } from "@/hooks/use-audience";
 import { celebrate, dismiss } from "@/lib/confetti";
 import { byPlayability, isPlayable } from "@/lib/channel-meta";
-import { alphabetBuckets, CATEGORY_ORDER, sortChannels } from "@/lib/navigation";
-import { cn, plural } from "@/lib/utils";
+import { CATEGORY_ORDER } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 
 type BrowseProps = {
   channels: Channel[];
@@ -55,16 +55,6 @@ export function Browse({
 }: BrowseProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("home");
-  /**
-   * The letter the catalogue grid is filtered by — null for everything.
-   * The A→Z strip sets it; the grid below answers to it.
-   *
-   * Choosing a letter is a filter change and nothing else: the page never
-   * moves. The grid is keyed by the letter, so it re-mounts on the spot and
-   * replays its own reveal, while the rails above keep the scroll position
-   * they were left with.
-   */
-  const [letter, setLetter] = useState<string | null>(null);
   const favourites = useFavourites();
   const recent = useRecentlyWatched();
   const shelves = useShelves();
@@ -109,19 +99,6 @@ export function Browse({
     for (const [key, list] of map) map.set(key, [...list].sort(byPlayability));
     return map;
   }, [channels]);
-
-  /**
-   * The catalogue, A→Z. The grid is always alphabetical, so the letter
-   * strip and the grid speak one language: the strip picks a letter, the
-   * grid answers with that letter's channels in order.
-   */
-  const sortedCatalogue = useMemo(() => sortChannels(channels), [channels]);
-  const letterBuckets = useMemo(() => alphabetBuckets(channels), [channels]);
-  const activeBucket = useMemo(
-    () => letterBuckets.find((bucket) => bucket.key === letter) ?? null,
-    [letterBuckets, letter],
-  );
-  const catalogue = activeBucket ? activeBucket.channels : sortedCatalogue;
 
   const favouriteChannels = useMemo(
     () =>
@@ -311,18 +288,23 @@ export function Browse({
                 onToggleFavorite={toggleFavourite}
               />
 
-              {/* A → Z — filters the catalogue grid at the bottom of the
-                  page; it sticks under the header so the letters stay
-                  reachable the whole way down. It is the only filtering
-                  control, and it only filters: choosing a letter never
-                  moves the page, so it never fights a rail's own scroll. */}
-              <ChannelIndex
-                channels={channels}
-                value={letter}
-                onChange={setLetter}
-                controls="toate-canalele"
-                className="mt-2"
-              />
+              {/* A → Z lives on its own page now. A rail is a shelf: it
+                  shows a dozen channels and hides the rest, and an index
+                  squeezed between two shelves was neither. The way there
+                  stays here, where the index used to sit. */}
+              <div className="mt-6 px-4 sm:px-8 lg:px-12">
+                <Link
+                  href="/canale/toate"
+                  className="group inline-flex items-center gap-2 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:text-ink"
+                >
+                  <span className="h-px w-0 bg-signal transition-[width] duration-300 ease-spring group-hover:w-4" />
+                  Toate canalele, A–Z
+                  <ArrowRight
+                    aria-hidden
+                    className="size-3.5 transition-transform duration-300 ease-spring group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </div>
 
               {/* One rail per category */}
               {categories.map((category) => {
@@ -341,61 +323,6 @@ export function Browse({
                   />
                 );
               })}
-
-              {/* Everything — alphabetically, or under the chosen letter.
-                  Keyed by the letter: a new filter re-mounts the grid in
-                  place and replays its reveal, without scrolling. */}
-              <section
-                id="toate-canalele"
-                className="px-4 pt-8 sm:px-8 lg:px-12"
-              >
-                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-                  <div>
-                    <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-signal/85">
-                      <Radio className="size-3.5" />
-                      Cuprins complet
-                    </p>
-                    <h2 className="font-display text-xl font-semibold tracking-tight sm:text-[26px]">
-                      {activeBucket
-                        ? `${activeBucket.label} — ${catalogue.length} ${plural(
-                            catalogue.length,
-                            "canal",
-                            "canale",
-                            "de canale",
-                          )}`
-                        : "Toate canalele"}
-                    </h2>
-                    <p aria-live="polite" className="mt-1 text-sm text-ink-muted">
-                      {activeBucket
-                        ? `Numai canalele care încep cu „${activeBucket.label}”.`
-                        : `${channels.length} ${plural(
-                            channels.length,
-                            "canal",
-                            "canale",
-                            "de canale",
-                          )}, în ordine alfabetică.`}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  key={letter ?? "toate"}
-                  className="grid animate-fade-up grid-cols-2 gap-3.5 motion-reduce:animate-none sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
-                >
-                  {catalogue.map((channel, index) => (
-                    <ChannelCard
-                      key={channel.id}
-                      channel={channel}
-                      onPlay={openPlayer}
-                      isFavorite={isFavourite(channel.id)}
-                      onToggleFavorite={toggleFavourite}
-                      guide={guide ?? null}
-                      className="w-full"
-                      index={index}
-                    />
-                  ))}
-                </div>
-              </section>
             </div>
           </>
         )}

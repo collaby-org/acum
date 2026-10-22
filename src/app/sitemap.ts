@@ -12,6 +12,7 @@ import { SITE_URL } from "@/lib/site";
 const PAGES: { path: string; priority: number; changeFrequency: "daily" | "weekly" | "monthly" }[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/canale", priority: 1, changeFrequency: "daily" },
+  { path: "/canale/toate", priority: 0.9, changeFrequency: "daily" },
   { path: "/canale/grupate", priority: 0.7, changeFrequency: "weekly" },
   { path: "/trending", priority: 0.8, changeFrequency: "daily" },
   { path: "/azi", priority: 0.8, changeFrequency: "daily" },

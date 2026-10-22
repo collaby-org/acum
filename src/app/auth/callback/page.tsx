@@ -3,59 +3,83 @@
  *
  *   /auth/callback
  *
- * Google sends the visitor here with the answer in the address. The
- * exchange happens in the browser, not on the server: the client that
- * started the sign-in is the one that holds the flow's verifier and the
- * storage where the session lives — this repo keeps the session in
- * `localStorage` and has no cookie-based server client, so a server
- * exchange could not finish what the browser started.
+ * Google sends the visitor here with the answer in the address. When the
+ * answer is a *refusal* — the consent screen was closed, the provider is not
+ * configured, the link expired — the reason is in the query string, and this
+ * page says so in Romanian, on the server, as a page. A person who has just
+ * tried to sign in never meets a JSON body or the framework's own screen.
  *
- * Either way the address is left with nothing in it: once the session
- * is in storage, the visitor continues to the accounts page on a clean
- * URL.
+ * When the answer is a code or a token, the browser finishes the exchange:
+ * the client that started the sign-in is the one holding the flow's verifier
+ * and the storage where the session lives.
  */
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { AcumMark } from "@/components/brand";
+import { CallbackExchange } from "./exchange";
 
-import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
-import { getSupabaseClient } from "@/lib/supabase/client";
+export const metadata: Metadata = {
+  title: "Autentificare",
+  robots: { index: false, follow: false },
+};
 
-export default function AuthCallbackPage() {
-  useEffect(() => {
-    const client = getSupabaseClient();
-    const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
+// The answer arrives in the query string, so the page is read per request.
+export const instant = false;
 
-    // The recovery flow lands with the token in the hash (access_token,
-    // refresh_token, type=recovery). Continue to the reset page with
-    // the credentials preserved, so the new password can be set.
-    const hash = window.location.hash;
-    if (hash && (hash.includes("access_token") || hash.includes("type=recovery"))) {
-      window.location.replace(`/reset-password${hash}`);
-      return;
-    }
+/** What the provider's error code means, in the visitor's language. */
+const REASONS: Record<string, string> = {
+  access_denied: "Autentificarea a fost anulată înainte să se încheie.",
+  server_error: "Furnizorul de autentificare nu a răspuns. Încearcă din nou.",
+  temporarily_unavailable:
+    "Autentificarea este indisponibilă pentru câteva momente. Încearcă din nou.",
+  invalid_request: "Cererea de autentificare nu a fost acceptată.",
+  unauthorized_client:
+    "Autentificarea cu acest furnizor nu este disponibilă momentan.",
+};
 
-    // The clean address is the point: whatever was in it has been read,
-    // and the accounts page must not carry it further.
-    const finish = () => window.location.replace("/conturi");
+export default async function AuthCallbackPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const failed = params.error;
+  const code = typeof failed === "string" ? failed : null;
 
-    if (code) {
-      // The auth-code flow lands with `?code=`; the exchange turns it
-      // into a session, kept in storage like any other.
-      void client.auth.exchangeCodeForSession(url.href).then(finish, finish);
-      return;
-    }
+  if (code) {
+    const reason = REASONS[code] ?? "Autentificarea nu s-a încheiat.";
 
-    // The implicit flow lands with the tokens in the hash. The client
-    // reads them on its own (`detectSessionInUrl`); wait until the
-    // session is there, then continue.
-    void client.auth.getSession().then(finish, finish);
-  }, []);
+    return (
+      <main className="grid min-h-dvh place-items-center bg-canvas px-6 py-24 text-center">
+        <div className="max-w-sm">
+          <span className="mx-auto grid size-12 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_12px_30px_-16px_rgba(242,167,27,0.85)]">
+            <AcumMark id="acum-mark-callback" className="size-7" />
+          </span>
+          <h1 className="mt-8 font-display text-2xl font-bold tracking-tight">
+            Autentificarea nu s-a încheiat
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-ink-muted">{reason}</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-faint">
+            Poți încerca din nou, sau intra cu adresa de e-mail și parola.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/conturi"
+              className="inline-flex h-11 items-center rounded-full bg-signal px-6 text-sm font-medium text-[#141005] transition hover:bg-signal-bright"
+            >
+              Înapoi la conectare
+            </Link>
+            <Link
+              href="/canale"
+              className="inline-flex h-11 items-center rounded-full border border-white/12 px-6 text-sm text-ink transition hover:border-white/25 hover:bg-white/[0.04]"
+            >
+              Vezi canalele
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
-  return (
-    <main className="grid min-h-dvh place-items-center bg-canvas">
-      <Loader2 className="size-6 animate-spin text-signal" aria-hidden />
-      <span className="sr-only">Te autentificăm…</span>
-    </main>
-  );
+  return <CallbackExchange />;
 }

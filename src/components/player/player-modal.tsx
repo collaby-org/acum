@@ -15,7 +15,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Radio, X } from "lucide-react";
+import { Radio } from "lucide-react";
 import type { Channel } from "@/data/types";
 import {
   Dialog,
@@ -23,7 +23,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { VideoPlayer, type PlayerHandle } from "@/components/player/video-player";
 import { ChannelPanel } from "@/components/channel/channel-panel";
 import type { PlayerStatus } from "@/hooks/use-player";
@@ -57,7 +56,6 @@ export function PlayerModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        hideClose
         className={cn(
           // On a phone the player is the whole screen: no margins, no
           // rounded frame, the picture as large as the viewport allows.
@@ -65,8 +63,10 @@ export function PlayerModal({
           "max-sm:border-0 max-sm:bg-black max-sm:shadow-none",
           "max-sm:left-0 max-sm:top-0 max-sm:translate-x-0 max-sm:translate-y-0",
           "max-sm:overscroll-contain",
-          // Everywhere else it is the dialog it has always been.
-          "rounded-2xl border border-white/10 bg-canvas-raised shadow-[0_40px_120px_-30px_rgba(0,0,0,1)]",
+          // Everywhere else it is the dialog it has always been. The one
+          // radius belongs to this shell: the picture and the panel are
+          // clipped by it, so nothing inside is rounded on its own.
+          "overflow-hidden rounded-2xl border border-white/10 bg-canvas-raised shadow-[0_40px_120px_-30px_rgba(0,0,0,1)]",
           // The picture decides how tall the dialog is, so the width is
           // capped by the height of the window: a short window gets a
           // narrower picture, not a cut-off one.
@@ -90,7 +90,7 @@ export function PlayerModal({
               channelId={channel.id}
               autoPlay={open}
               onStatusChange={onStatusChange}
-              className="rounded-2xl border-0 max-sm:min-h-0 max-sm:flex-1"
+              className="rounded-none border-0 max-sm:min-h-0 max-sm:flex-1"
             />
           </div>
 
@@ -102,7 +102,9 @@ export function PlayerModal({
               "md:absolute md:inset-y-0 md:right-0 md:w-[340px] md:border-l md:border-t-0",
             )}
           >
-            <div className="mb-4 flex items-start justify-between gap-3">
+            {/* The room on the right is for the dialog's one close button,
+                which floats over this corner in every layout. */}
+            <div className="mb-4 flex items-start gap-3 pr-10">
               <div className="min-w-0">
                 <p className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
                   <Radio className="size-4 shrink-0 text-live" />
@@ -112,16 +114,6 @@ export function PlayerModal({
                   {channel.family}
                 </p>
               </div>
-
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => onOpenChange(false)}
-                aria-label="Închide playerul"
-                title="Închide"
-              >
-                <X className="size-4" />
-              </Button>
             </div>
 
             <ChannelPanel

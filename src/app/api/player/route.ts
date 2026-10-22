@@ -24,6 +24,7 @@ import {
   probePlaylist,
   resolveStreamUrls,
   signStreamToken,
+  pickServer,
 } from "@/lib/stream";
 import { catalogueChannel } from "@/lib/catalogue";
 import { secondaryStreamUrl } from "@/lib/secondary";
@@ -143,7 +144,12 @@ export async function POST(request: Request) {
     if (!channel) {
       return Response.json({ error: "Canal necunoscut." }, { status: 404 });
     }
-    servers = channel.servers.map(readServer);
+    // The catalogue's feeds, ordered by how likely they are to play: a
+    // resolved playlist first, then the directory's own address, then the
+    // pages whose obfuscation we can undo. Feeds that cannot produce a URL
+    // (an acestream id, a dead page) are dropped here rather than shipped to
+    // the browser to fail on.
+    servers = pickServer(channel).map(readServer);
     channelId = channel.id;
   } else {
     servers = (payload.servers ?? [])
@@ -245,19 +251,21 @@ export async function POST(request: Request) {
         // The channel and the viewer travel with the address, so the proxy
         // can count the audience per channel as the segments arrive.
         url: viewer ? `${url}&v=${encodeURIComponent(viewer)}` : url,
-        playable: await probePlaylist(candidate),
+        playable: await probePlaylist(candidate, 6_000),
       };
     }),
   );
 
-  // The playable links come first, so the player starts on a feed that is
-  // answering and only walks further down the list when one of them dies.
-  const ordered = [
-    ...sources.filter((source) => source.playable),
-    ...sources.filter((source) => !source.playable),
-  ];
+  // Only answering links are handed over when there is at least one: the
+  // player would otherwise sit eight seconds on a dead address before it
+  // moved on. When nothing answered, the whole list still goes out — a probe
+  // can be wrong, and the browser is the better judge.
+  const playable = sources.filter((source) => source.playable);
 
-  return Response.json({ sources: ordered, session: sessionId });
+  return Response.json({
+    sources: playable.length > 0 ? playable : sources,
+    session: sessionId,
+  });
 }
 
 export type { Server };

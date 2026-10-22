@@ -486,7 +486,10 @@ const CLICK_RESULT = (index) => `(() => {
 
 /** What the player is showing right now. */
 const READ_PLAYER = `(() => {
-  const dialog = document.querySelector('[role="dialog"]');
+  // More than one element can carry role="dialog" — the first-visit intro
+  // keeps its shell in the document — so the player is the one that holds a
+  // picture, not simply the first one in the tree.
+  const dialog = document.querySelector('[role="dialog"]:has(video), [role="dialog"]:has(iframe)');
   if (!dialog) return { state: "no-dialog" };
   const video = dialog.querySelector("video");
   const frame = dialog.querySelector("iframe");
@@ -516,7 +519,7 @@ const READ_PLAYER = `(() => {
  */
 const DRAW_FRAME = `(() => {
   try {
-    const video = document.querySelector('[role="dialog"] video');
+    const video = document.querySelector('[role="dialog"]:has(video) video');
     if (!video || !video.videoWidth || !video.videoHeight) {
       return { ok: false, reason: "no picture" };
     }
@@ -773,7 +776,7 @@ async function shoot(browser, channel) {
   // presses it.
   if (live.hasFrame && !live.hasVideoPlaying) {
     const src = await browser.evaluate(
-      `(() => { const f = document.querySelector('[role="dialog"] iframe'); return f ? f.src : null; })()`,
+      `(() => { const f = document.querySelector('[role="dialog"]:has(iframe) iframe'); return f ? f.src : null; })()`,
     );
     const session = await frameSession(browser, src);
     if (session) {

@@ -79,6 +79,16 @@ export const MEDIA_HOST_SUFFIXES = [
   ".stream",
 ];
 
+/**
+ * Hosts that do not sit under a shared suffix but are ours to relay.
+ *
+ * Two upstream media hosts are named this way — one on a `.com`, one on a
+ * punycode `.space` label. They are listed whole on purpose: allowing the
+ * whole suffix would turn the proxy into an egress for any host on a
+ * general-purpose TLD.
+ */
+const MEDIA_HOSTS = ["alpha1.cool-itv.com", "iron1.xn--x2rw19a.space"];
+
 /** How long a proxy token stays usable. */
 const TOKEN_TTL_SECONDS = 60 * 60 * 6;
 
@@ -111,6 +121,7 @@ export function isAllowedMediaUrl(url: string | null | undefined): boolean {
     if (parsed.protocol !== "https:") return false;
     const host = parsed.hostname.toLowerCase();
     if (SECONDARY_HOSTS.includes(host)) return true;
+    if (MEDIA_HOSTS.includes(host)) return true;
     return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
   } catch {
     return false;
@@ -673,9 +684,21 @@ export async function openUpstream(url: string): Promise<UpstreamStream | null> 
  * Every Referer the host accepts is tried, not just one: the second
  * source's media host only answers to its own directory, and a feed that
  * plays perfectly well would be called broken otherwise.
+ *
+ * `budgetMs` is the deadline for **all** of those attempts together, not for
+ * each one. The player endpoint asks for an answer in a few seconds; a feed
+ * that has not spoken by then is demoted, not refused, and a dead channel
+ * cannot hold the request open for the sum of its Referers.
  */
-export async function probePlaylist(url: string): Promise<boolean> {
+export async function probePlaylist(
+  url: string,
+  budgetMs = 12_000,
+): Promise<boolean> {
+  const deadline = Date.now() + budgetMs;
+
   for (const referer of orderedReferers(url)) {
+    const left = deadline - Date.now();
+    if (left <= 0) return false;
     try {
       const response = await fetch(url, {
         headers: {
@@ -683,7 +706,7 @@ export async function probePlaylist(url: string): Promise<boolean> {
           referer,
         },
         cache: "no-store",
-        signal: AbortSignal.timeout(12_000),
+        signal: AbortSignal.timeout(Math.min(left, 8_000)),
       });
       if (!response.ok) continue;
       if (isPlaylist(await response.text())) return true;
@@ -703,21 +726,39 @@ export async function probePlaylist(url: string): Promise<boolean> {
  *
  * A feed with a playlist already resolved comes first; then the feeds whose
  * page we know how to read, live ones before unknown ones; the rest last.
+ * A feed that cannot produce an address at all — an acestream id, a player
+ * the catalogue never resolved — is dropped rather than handed to the
+ * browser to fail on.
+ *
+ * Only the feed list is read, so the caller may pass anything that has one:
+ * the two catalogue shapes in this repo differ in which fields they type.
  */
-export function pickServer(channel: UpstreamChannel): UpstreamServer[] {
+type FeedLike = {
+  hlsUrl?: string | null;
+  embedUrl?: string | null;
+  source?: string | null;
+  kind?: string | null;
+  status?: string | null;
+};
+
+export function pickServer<T extends FeedLike>(channel: {
+  servers: T[];
+}): T[] {
   const usable = channel.servers.filter(
     (server) =>
-      server.hlsUrl !== null ||
+      Boolean(server.hlsUrl) ||
       server.source === "secondary" ||
-      (server.embedUrl !== null &&
+      (Boolean(server.embedUrl) &&
         server.kind !== "acestream" &&
         server.kind !== "none"),
   );
 
-  const rank = (server: UpstreamServer): number => {
+  const rank = (server: T): number => {
     if (server.hlsUrl) return 0;
     if (server.source === "secondary") return 1;
-    if (isAllowedPlayerUrl(server.embedUrl)) return server.status === "live" ? 2 : 4;
+    if (isAllowedPlayerUrl(server.embedUrl)) {
+      return server.status === "live" ? 2 : 4;
+    }
     return server.status === "live" ? 3 : 5;
   };
 
