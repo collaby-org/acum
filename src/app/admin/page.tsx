@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 import { OverviewPanel } from "@/components/admin/overview";
 import { deskState } from "@/lib/admin";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Panou",
 };
