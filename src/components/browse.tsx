@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Compass, Heart, Radio, Sparkles } from "lucide-react";
 import type { Category, Channel } from "@/data/types";
 import type { EpgGuide } from "@/components/now-next";
@@ -58,13 +58,17 @@ export function Browse({
   /**
    * The letter the catalogue grid is filtered by — null for everything.
    * The A→Z strip sets it; the grid below answers to it.
+   *
+   * Choosing a letter is a filter change and nothing else: the page never
+   * moves. The grid is keyed by the letter, so it re-mounts on the spot and
+   * replays its own reveal, while the rails above keep the scroll position
+   * they were left with.
    */
   const [letter, setLetter] = useState<string | null>(null);
   const favourites = useFavourites();
   const recent = useRecentlyWatched();
   const shelves = useShelves();
   const launcher = useChannelLauncher();
-  const catalogueRef = useRef<HTMLElement>(null);
 
   /**
    * Our own audience, counted at the proxy.
@@ -156,27 +160,6 @@ export function Browse({
   );
 
   const searching = query.trim().length > 0;
-
-  /**
-   * One letter, one scroll, one target: the catalogue grid the filter
-   * answers to. Clearing the filter leaves the visitor where they are —
-   * they already see the grid they just widened.
-   */
-  const selectLetter = useCallback((key: string | null) => {
-    setLetter(key);
-    if (key === null) return;
-    // The grid only re-renders on the next frame; scroll after it, so the
-    // target's position is the position of the filtered grid.
-    window.requestAnimationFrame(() => {
-      const reduced = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      catalogueRef.current?.scrollIntoView({
-        behavior: reduced ? "auto" : "smooth",
-        block: "start",
-      });
-    });
-  }, []);
 
   return (
     // The bottom bar of the phone layout is fixed, so the page leaves room
@@ -330,11 +313,13 @@ export function Browse({
 
               {/* A → Z — filters the catalogue grid at the bottom of the
                   page; it sticks under the header so the letters stay
-                  reachable the whole way down. */}
+                  reachable the whole way down. It is the only filtering
+                  control, and it only filters: choosing a letter never
+                  moves the page, so it never fights a rail's own scroll. */}
               <ChannelIndex
                 channels={channels}
                 value={letter}
-                onChange={selectLetter}
+                onChange={setLetter}
                 controls="toate-canalele"
                 className="mt-2"
               />
@@ -357,11 +342,12 @@ export function Browse({
                 );
               })}
 
-              {/* Everything — alphabetically, or under the chosen letter */}
+              {/* Everything — alphabetically, or under the chosen letter.
+                  Keyed by the letter: a new filter re-mounts the grid in
+                  place and replays its reveal, without scrolling. */}
               <section
                 id="toate-canalele"
-                ref={catalogueRef}
-                className="scroll-mt-36 px-4 pt-8 sm:px-8 lg:px-12"
+                className="px-4 pt-8 sm:px-8 lg:px-12"
               >
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                   <div>

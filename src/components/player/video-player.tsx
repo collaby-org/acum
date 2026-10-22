@@ -33,6 +33,7 @@ import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
+import { MinutesWarning } from "@/components/player/minutes-warning";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import { Paywall } from "@/components/player/paywall";
 import {
@@ -907,6 +908,17 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               void enableSound();
             }}
           />
+
+          {/* Ten minutes before the wall: the line says so, once a day, and
+              the picture keeps running underneath it. */}
+          {embedded ? null : (
+            <MinutesWarning
+              signedIn={account.signedIn}
+              plan={account.plan}
+              remainingMinutes={account.remainingMinutes}
+              gated={gated}
+            />
+          )}
 
           {/* The wall: the account decides whether the picture may play.
               It is the last thing over the frame, and it says nothing about
