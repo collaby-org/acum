@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { TVDirectory } from "@/components/tv/tv-directory";
+import { TVGate } from "@/components/tv/tv-gate";
 import { TVLoginQR } from "@/components/tv/tv-login-qr";
 import { AcumMark } from "@/components/brand";
 import { CATEGORIES, CHANNELS } from "@/data/channels";
@@ -31,7 +31,7 @@ export default async function TVPage() {
         </nav>
       </header>
 
-      <TVDirectory channels={channels} liveCount={live} />
+      <TVGate channels={channels} liveCount={live} />
     </main>
   );
 }
