@@ -36,7 +36,8 @@ export const metadata: Metadata = {
 export default async function TVPage() {
   await connection();
 
-  const channels = toPublicChannels(CHANNELS, null);
+  const meta = await getSecondaryMeta();
+  const channels = toPublicChannels(CHANNELS, meta);
   const guide = await loadGuide(channels);
   const live = liveAudienceMap();
 
@@ -65,12 +66,9 @@ export default async function TVPage() {
     };
   });
 
-  const categories: ReturnType<typeof Object>[] = [];
-
   return (
     <TVDirectory
       channels={rows}
-      categories={categories}
       liveCount={rows.filter((channel) => channel.status === "live").length}
     />
   );
