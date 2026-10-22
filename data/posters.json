@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T21:17:03.487Z",
+  "generatedAt": "2026-10-22T21:17:29.395Z",
   "posters": {
     "pro-tv": [
       {
@@ -1305,6 +1305,15 @@
       {
         "file": "travel-mix.jpg",
         "capturedAt": "2026-10-22T21:17:03.487Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "canal-33": [
+      {
+        "file": "canal-33.jpg",
+        "capturedAt": "2026-10-22T21:17:28.224Z",
         "width": 640,
         "height": 360,
         "programme": null

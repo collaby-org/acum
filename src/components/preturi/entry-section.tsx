@@ -1,0 +1,54 @@
+"use client";
+
+import Link from "next/link";
+import { useAccount } from "@/hooks/use-account";
+import { planDefinition } from "@/lib/supabase/plans";
+import { Button } from "@/components/ui/button";
+
+export function EntrySection() {
+  const { signedIn, plan, ready } = useAccount();
+
+  // When signed in, show the plan indicator instead of the free-plan intro.
+  if (ready && signedIn) {
+    const label = plan === "comp" ? "Concediat de echipă" : planDefinition(plan).name;
+    return (
+      <section className="mt-24">
+        <div className="rounded-2xl border border-white/[0.08] bg-canvas-raised/70 p-6 backdrop-blur-xl sm:p-10">
+          <div className="max-w-xl">
+            <h2 className="font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-semibold leading-[1.12] tracking-[-0.025em] text-balance text-ink">
+              Planul tău: {label}
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
+              Contul tău este activ. Poți schimba planul oricând din această pagină.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Not signed in: keep the original free-plan intro and register button.
+  return (
+    <section className="mt-24">
+      <div className="flex flex-col items-start gap-6 rounded-2xl border border-white/[0.08] bg-canvas-raised/70 p-6 backdrop-blur-xl sm:p-10 md:flex-row md:items-center md:justify-between">
+        <div className="max-w-xl">
+          <h2 className="font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-semibold leading-[1.12] tracking-[-0.025em] text-balance text-ink">
+            Începe cu planul gratuit. Două ore, fără card.
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
+            Contul se face într-un minut, iar limita se resetează singură în
+            fiecare zi.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="primary" size="lg">
+            <Link href="/conturi?intent=register">Creează un cont</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link href="/">Catalogul</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}

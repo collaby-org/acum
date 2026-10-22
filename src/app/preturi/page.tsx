@@ -15,6 +15,7 @@ import { ArrowLeft, Info, ShieldCheck } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { PlansGrid } from "@/components/account/plans-grid";
+import { EntrySection } from "@/components/preturi/entry-section";
 import { Button } from "@/components/ui/button";
 import { PLANS, freeHours } from "@/lib/supabase/plans";
 import {
@@ -287,28 +288,7 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        {/* The way in */}
-        <section className="mt-24">
-          <div className="flex flex-col items-start gap-6 rounded-2xl border border-white/[0.08] bg-canvas-raised/70 p-6 backdrop-blur-xl sm:p-10 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-xl">
-              <h2 className="font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-semibold leading-[1.12] tracking-[-0.025em] text-balance text-ink">
-                Începe cu planul gratuit. Două ore, fără card.
-              </h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
-                Contul se face într-un minut, iar limita se resetează singură în
-                fiecare zi.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild variant="primary" size="lg">
-                <Link href="/conturi?intent=register">Creează un cont</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/">Catalogul</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <EntrySection />
       </div>
     </main>
   );
