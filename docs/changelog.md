@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The version line for this project lives in `package.json` and `docs/VERSION`.
 
-## [Unreleased]
+## [1.5.0] - 2026-10-22
 
 ### Changed
 
@@ -56,7 +56,53 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
   only place hosted projects can set it. The sender stays Supabase's until a
   custom SMTP is configured; the README says where and why.
 
+- **A plan now says how many screens it may run.** One on the free tier, two
+  on the individual plan, four on the household and lifetime plans; the desk's
+  own accounts count nothing. The player endpoint enforces it after the
+  allowance gate, so a second screen meets a sentence rather than a black
+  frame: the notice names the limit, offers the plans, and offers one more
+  try. Screens are rows in `stream_sessions`, kept alive by a heartbeat every
+  thirty seconds and freed when the player closes or after ninety seconds of
+  silence — a closed tab does not hold a seat. Every read and write treats a
+  missing table or column as nothing to enforce, so the deploy is harmless
+  until `supabase/migrations/20261022_stream_limits.sql` is run.
+
+- **The house has a device, and it can be updated.** A household or lifetime
+  plan binds to the first device that plays. A phone bought later, or a laptop
+  opened on holiday, is asked to confirm; confirming re-binds the house and
+  closes the streams the account left open elsewhere. That is the "update
+  household" case, stated once, on the account rather than on the picture.
+
+- **Ten minutes before the wall.** The free allowance used to run out
+  mid-programme with no line before it. A quiet notice now appears over the
+  picture at ten minutes left, once per Romanian day per browser, dismissable
+  and self-hiding; the picture and the transport bar keep running. It stays
+  silent for signed-out visitors, for plans without a limit, and behind the
+  wall, where the wall is the message.
+
 ### Fixed
+
+- **The build no longer pulls the desk into the browser.** The navbar and the
+  channel cards imported the admin mark from `src/lib/admin.ts`, which reads
+  the cookie jar and the service role; a client bundle cannot depend on
+  `next/headers`, and Vercel's `next build` refused it. The mark now lives in
+  a tiny import-free `src/lib/admin-access.ts`, the server module re-exports
+  it, and the desk pages declare `instant = false` so a session read is never
+  prerendered. The deployment is green again.
+
+- **The desk can see a signed-in visitor.** The session is kept in
+  `localStorage` and sent as a bearer token, so the server-side gate could
+  never see it — `/admin` was closed to its own administrator. The access
+  token is now mirrored into an `acum-session` cookie (base64url JSON, one
+  hour, rewritten on every account refresh and cleared on sign-out), which is
+  what `deskState()` reads after it verifies the token against the auth
+  server. The desk answers 404 to a visitor and opens for an account named in
+  `ADMIN_EMAILS` or holding `comp`/bypass.
+
+- **The A–Z strip filters; it does not jump.** Choosing a letter used to
+  scroll the page to an anchor, which fought the horizontal rails and moved
+  the visitor somewhere they had not asked to go. The letter now sets the
+  filter and the catalogue grid re-mounts in place with its own reveal.
 
 - **The intro plays on every launch of the installed app.** The sting
   followed the *seen* flag alone, so inside an installed app it either

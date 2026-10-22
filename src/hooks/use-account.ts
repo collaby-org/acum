@@ -173,6 +173,7 @@ function setState(next: AccountState): void {
  */
 async function refresh(): Promise<void> {
   const token = await currentToken();
+  syncSessionCookie(token);
 
   if (!token) {
     if (!current.signedIn && current.ready) return;
@@ -264,6 +265,42 @@ function getServerSnapshot(): AccountState {
 }
 
 /* ------------------------------------------------------------------ *
+ * The session cookie
+ *
+ * The desk gate runs on the server, and a server cannot read localStorage —
+ * which is where the session lives. So the access token is mirrored into a
+ * cookie the moment it is read. It is the same token, with the same lifetime
+ * and the same exposure, and it is what lets `/admin` answer with a real
+ * refusal instead of pretending the visitor is signed out.
+ *
+ * The cookie holds a base64url JSON payload (`{ access_token }`), the shape
+ * the desk's own reader already understands.
+ * ------------------------------------------------------------------ */
+
+const SESSION_COOKIE = "acum-session";
+
+/** One hour: every account refresh rewrites it, so it never goes stale. */
+const SESSION_COOKIE_MAX_AGE = 60 * 60;
+
+/** Base64url, without the padding a cookie does not need. */
+function encodeSession(token: string): string {
+  const bytes = new TextEncoder().encode(JSON.stringify({ access_token: token }));
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/** Mirror the session into the cookie, or clear it. */
+function syncSessionCookie(token: string | null): void {
+  if (typeof document === "undefined") return;
+  if (!token) {
+    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
+    return;
+  }
+  document.cookie = `${SESSION_COOKIE}=${encodeSession(token)}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; samesite=lax`;
+}
+
+/* ------------------------------------------------------------------ *
  * The actions
  * ------------------------------------------------------------------ */
 
@@ -302,6 +339,7 @@ async function signUp(email: string, password: string): Promise<void> {
 
 async function signOut(): Promise<void> {
   await getSupabaseClient().auth.signOut();
+  syncSessionCookie(null);
   setState(SIGNED_OUT);
 }
 

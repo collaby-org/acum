@@ -44,3 +44,7 @@ next-env.d.ts
 # verification artifacts
 docs/reviews/.edge-profile/
 
+
+# local run logs
+dev-smoke.log
+stills-run.log
