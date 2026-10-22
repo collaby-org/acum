@@ -1,0 +1,56 @@
+# .github/workflows/openrabbit.yml
+# OpenRabbit review — 4th distinct provider lane (OpenRouter free pool).
+#
+# ADVISORY, NOT A GATE: findings are posted as PR review comments and never
+# block a merge (continue-on-error). Credential-gated: without
+# OPENROUTER_API_KEY the job is SKIPPED (green, zero runner minutes).
+#
+# Provider separation (no two bots share a primary):
+#   PR-Agent            = Gemini (Google)
+#   Kodus local         = DeepSeek on NVIDIA
+#   Kodus GitHub (CI)   = GLM on NVIDIA
+#   OpenRabbit (this)   = OpenRouter free  <-- distinct lane
+#
+# Secrets are set via the GitHub website (Settings > Secrets and variables >
+# Actions) and referenced below with ${{ secrets.* }} — never committed.
+#
+# `edited` is deliberately NOT a trigger: a full LLM review re-run on every PR
+# title/body save is unbounded, metered spend for no new code.
+#
+# Security: `pull_request_target` runs in the BASE repo context (so the bot can
+# read OPENROUTER_API_KEY). The job never checks out PR head code — keep it
+# that way, or the write-scoped token becomes fork-RCE.
+name: OpenRabbit Review
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+
+# One run per ref: N pushes to the same branch collapse into the newest run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  openrabbit_review:
+    # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
+    # an empty string, so this evaluates false instead of erroring.
+    if: ${{ secrets.OPENROUTER_API_KEY != '' }}
+    runs-on: ubuntu-latest
+    # Advisory bot: never block a developer on a red bot run.
+    continue-on-error: true
+    # Hard spend cap for the LLM call.
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: OpenRabbit review
+        uses: aryanbrite/openrabbit@0350c5ff79e6efb3ba92898a46a2e420ae1c526c # v0.9.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          llm_api_key: ${{ secrets.OPENROUTER_API_KEY }}
+          llm_provider: openrouter
+          llm_model: openrouter/free
+          review_mode: both

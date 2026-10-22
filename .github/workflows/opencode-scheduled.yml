@@ -1,0 +1,151 @@
+# .github/workflows/opencode-scheduled.yml
+# Scheduled maintenance (weekly) + manual dispatch. `prompt` input is REQUIRED
+# here (dependency/health-check instructions).
+# NOTE: there is NO official `fallback_models` key in opencode.json or in this
+# action's inputs (verified). Rotation instead: a pick step rotates the PRIMARY
+# across the ladder per (run_number + run_attempt) so free-tier load spreads
+# evenly, and the remaining ladder entries retry in order via `if: failure()` +
+# a skip-if-already-primary guard — never re-running the model that just failed.
+#
+# ADVISORY, NOT A GATE. Credential-gated: without LLM_API_KEY + LLM_API_BASE
+# the job is SKIPPED (green, zero runner minutes) instead of failing, so a
+# weekly schedule with no key configured costs nothing.
+name: opencode-scheduled
+
+on:
+  schedule:
+    - cron: "23 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  issues: write
+
+# One run per ref; cancels a superseded manual dispatch of the same run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scheduled:
+    # Credential gate: unconfigured -> skipped, not failed. `!= ''` on an
+    # unset secret yields an empty string, so this evaluates false instead of
+    # erroring.
+    if: ${{ secrets.LLM_API_KEY != '' && secrets.LLM_API_BASE != '' }}
+    runs-on: ubuntu-latest
+    # Advisory job: never block a developer on a red agent run.
+    continue-on-error: true
+    # Hard spend cap across the primary + three fallback attempts.
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # No PR-branch fetch happens on schedule/workflow_dispatch events
+          # (no pull_request payload, no "Checking out local branch" step),
+          # and issue/PR creation goes through the API via GITHUB_TOKEN env â€”
+          # so credentials are deliberately NOT persisted here.
+          persist-credentials: false
+
+      # Rotating primary: spreads free-tier load across all four models.
+      # Index = (run_number + run_attempt - 2) % 4 -> every new run AND every
+      # re-run of a failed run starts on the next ladder entry.
+      - name: Pick model (rotate per run)
+        id: pick_models
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          LADDER=("openai/deepseek-v4.1-flash-free" "openai/beam-free" "openai/glm-5.3-flash-free" "openai/mimo-v2.6-flash-free")
+          IDX=$(( (RUN_NUMBER + RUN_ATTEMPT - 2) % ${#LADDER[@]} ))
+          echo "primary=${LADDER[$IDX]}" >> "$GITHUB_OUTPUT"
+          echo "Rotated to: ${LADDER[$IDX]} (index $IDX)"
+
+      # Primary model: rotated per run
+      - name: opencode scheduled (primary)
+        id: opencode_scheduled_primary
+        uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
+        with:
+          model: ${{ steps.pick_models.outputs.primary }}
+          prompt: >-
+            Run a weekly repository health check: scan for outdated
+            dependencies, open security advisories, failing or flaky CI, stale
+            open issues/PRs, and missing docs. If you find actionable items,
+            open concise issues or small focused PRs (one concern per PR) with
+            before/after evidence. If everything is healthy, post a one-line
+            summary and do nothing else.
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Fallback 1/3 — enabled.
+
+
+      # (Was disabled to avoid retrying absent credentials; the replacement set is zen-native.)
+
+
+      # (Fallbacks are enabled via if: failure().)
+      - name: opencode scheduled (fallback deepseek-v4.1-flash-free)
+        id: opencode_scheduled_fallback_big_pickle
+        if: failure() && steps.pick_models.outputs.primary != 'openai/beam-free'
+        uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
+        with:
+          model: openai/deepseek-v4.1-flash-free
+          prompt: >-
+            Run a weekly repository health check: scan for outdated
+            dependencies, open security advisories, failing or flaky CI, stale
+            open issues/PRs, and missing docs. If you find actionable items,
+            open concise issues or small focused PRs (one concern per PR) with
+            before/after evidence. If everything is healthy, post a one-line
+            summary and do nothing else.
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Fallback 2/3 — enabled.
+
+
+      # (Was disabled to avoid retrying absent credentials; the replacement set is zen-native.)
+
+
+      # (Fallbacks are enabled via if: failure().)
+      - name: opencode scheduled (fallback glm-5.3-flash-free)
+        id: opencode_scheduled_fallback_space_bunny
+        if: failure() && steps.pick_models.outputs.primary != 'openai/glm-5.3-flash-free'
+        uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
+        with:
+          model: openai/glm-5.3-flash-free
+          prompt: >-
+            Run a weekly repository health check: scan for outdated
+            dependencies, open security advisories, failing or flaky CI, stale
+            open issues/PRs, and missing docs. If you find actionable items,
+            open concise issues or small focused PRs (one concern per PR) with
+            before/after evidence. If everything is healthy, post a one-line
+            summary and do nothing else.
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Fallback 3/3 (last resort)
+      - name: opencode scheduled (fallback mimo-v2.6-flash-free)
+        id: opencode_scheduled_fallback_kimi
+        if: failure() && steps.pick_models.outputs.primary != 'openai/mimo-v2.6-flash-free'
+        uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
+        with:
+          model: openai/mimo-v2.6-flash-free
+          prompt: >-
+            Run a weekly repository health check: scan for outdated
+            dependencies, open security advisories, failing or flaky CI, stale
+            open issues/PRs, and missing docs. If you find actionable items,
+            open concise issues or small focused PRs (one concern per PR) with
+            before/after evidence. If everything is healthy, post a one-line
+            summary and do nothing else.
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

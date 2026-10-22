@@ -12,6 +12,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { isAdmin, ADMIN_EMAIL } from "@/lib/admin";
 import { LogOut, Ticket, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";
@@ -144,6 +145,18 @@ export function AccountButton({ className }: { className?: string }) {
             <UserRound className="size-4" aria-hidden />
             Contul meu
           </Link>
+
+          {isAdmin(account.email, account.plan) ? (
+            <Link
+              href="/admin"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-1 py-1.5 text-[13px] text-ink-muted transition-colors duration-300 hover:text-ink"
+            >
+              <span className="inline-block size-4 text-signal">◆</span>
+              Panou de administrare
+            </Link>
+          ) : null}
 
           <button
             type="button"

@@ -1,0 +1,56 @@
+# .github/workflows/security-audit.yml
+# Daily dependency-security audit (advisory).
+#
+# Runs `npm audit --package-lock-only` against the committed lockfile: no
+# install, no issue comments, no state branch, no PHP. Findings are written
+# as a compact table to the step summary; the job is continue-on-error, so
+# it informs without ever blocking.
+name: Security audit
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.0.0
+        with:
+          node-version: 22
+
+      # --package-lock-only resolves against the committed lockfile without
+      # installing node_modules. `|| true` because npm audit exits non-zero
+      # when it finds vulnerabilities — the JSON is what we want either way.
+      - name: Audit
+        run: npm audit --package-lock-only --json > audit.json || true
+
+      - name: Write summary
+        run: |
+          if jq -e '.metadata.vulnerabilities' audit.json > /dev/null 2>&1; then
+            jq -r '
+              .metadata.vulnerabilities as $v
+              | "# npm audit\n\n"
+              + "| Severity | Count |\n"
+              + "| --- | ---: |\n"
+              + "| info | \($v.info) |\n"
+              + "| low | \($v.low) |\n"
+              + "| moderate | \($v.moderate) |\n"
+              + "| high | \($v.high) |\n"
+              + "| critical | \($v.critical) |\n"
+              + "| **total** | **\($v.total)** |\n"
+            ' audit.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "npm audit returned no summary (see the job log)." >> "$GITHUB_STEP_SUMMARY"
+          fi

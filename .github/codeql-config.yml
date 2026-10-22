@@ -1,0 +1,9 @@
+# CodeQL config for this repository
+
+paths-ignore:
+  - "**/node_modules/**"
+  - ".next/**"
+  - "public/**"
+  - "data/**"
+  - "docs/**"
+  - ".agents/**"

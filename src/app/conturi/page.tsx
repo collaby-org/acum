@@ -49,12 +49,14 @@ type AccountsProps = {
  *
  * Anything else — an absolute address, a protocol, a double slash — is
  * dropped: the address in the query string is written by whoever sent the
- * visitor here, and it must not be able to send them somewhere else.
+ * visitor here, and it must not be able to send them somewhere else. The
+ * fallback is the catalogue, because the landing page is not for a
+ * visitor who just signed in.
  */
 function safeNext(value: string | string[] | undefined): string {
   const raw = Array.isArray(value) ? value[0] : value;
-  if (typeof raw !== "string") return "/";
-  if (!raw.startsWith("/") || raw.startsWith("//")) return "/";
+  if (typeof raw !== "string") return "/canale";
+  if (!raw.startsWith("/") || raw.startsWith("//")) return "/canale";
   return raw;
 }
 
@@ -91,7 +93,7 @@ export default async function AccountsPage({ searchParams }: AccountsProps) {
       {/* The bar: the wordmark and the way back. */}
       <header className="mx-auto flex h-16 max-w-[1120px] items-center gap-4 px-4 sm:h-[72px] sm:px-8">
         <Link
-          href="/"
+          href="/canale"
           className="group flex shrink-0 items-center gap-3"
           aria-label={`${SITE_NAME} — catalogul`}
         >
@@ -106,7 +108,7 @@ export default async function AccountsPage({ searchParams }: AccountsProps) {
         <div className="flex-1" />
 
         <Link
-          href="/"
+          href="/canale"
           className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.1]"
         >
           <ArrowLeft className="size-4" aria-hidden />

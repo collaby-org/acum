@@ -1,0 +1,34 @@
+name: Security report (read first)
+description: DO NOT file public issues for vulnerabilities — read the disclosure policy
+title: "[Security]: "
+labels: ["security", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## STOP — do not disclose vulnerabilities here
+
+        **Do NOT file a public issue for a suspected vulnerability.**
+        Public issues are visible to everyone and put users at risk.
+
+        Please follow responsible disclosure in [`.github/SECURITY.md`](../SECURITY.md):
+        contact the maintainers privately and allow time to fix before any public disclosure.
+
+        If you have already contacted us privately, you may use this form only to track the
+        coordination — **never include exploit details, secrets, `.env` contents, or tokens.**
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      description: Required before submitting.
+      options:
+        - label: I understand I must NOT disclose vulnerability details publicly and will follow SECURITY.md responsible disclosure
+          required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Contact for private follow-up
+      description: How can maintainers reach you privately? (No secrets here.)
+      placeholder: e.g. security contact email or preferred private channel
+    validations:
+      required: true

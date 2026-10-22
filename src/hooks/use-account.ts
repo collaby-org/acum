@@ -306,6 +306,39 @@ async function signOut(): Promise<void> {
 }
 
 /**
+ * Sign in through Google.
+ *
+ * The provider answers with a redirect: the browser leaves for Google
+ * and comes back at the callback route with the answer in the address.
+ * Nothing is refreshed here — the call does not return before the page
+ * has gone.
+ */
+async function signInWithGoogle(): Promise<void> {
+  const { error } = await getSupabaseClient().auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      // The callback turns the redirect into a session and continues to
+      // the accounts page with a clean address.
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  if (error) throw new Error(accountError(error.code, error.message));
+}
+
+async function resetPasswordForEmail(email: string): Promise<void> {
+  const { error } = await getSupabaseClient().auth.resetPasswordForEmail(
+    email.trim(),
+    {
+      redirectTo:
+        typeof window !== "undefined"
+          ? `${window.location.origin}/auth/callback`
+          : undefined,
+    },
+  );
+  if (error) throw new Error(accountError(error.code, error.message));
+}
+
+/**
  * Report a watch session and take the new state.
  *
  * The server writes down what it is willing to write down and answers with
@@ -372,7 +405,9 @@ export function useAccount() {
       householdId: state.householdId,
       signIn,
       signUp,
+      signInWithGoogle,
       signOut,
+      resetPasswordForEmail,
       refresh,
       report,
     }),

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Eye, Heart, Play, Radio, TrendingUp } from "lucide-react";
 import { useMemo } from "react";
+import Link from "next/link";
 import type { MouseEvent } from "react";
 import type { EpgGuide } from "@/components/now-next";
 import type { Quality } from "@/data/types";
@@ -12,6 +13,9 @@ import { useGuideMoment } from "@/hooks/use-guide-clock";
 import { pictureFor } from "@/lib/stills";
 import type { ChannelLike } from "@/lib/navigation";
 import { cn, formatViewers } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { useAccount } from "@/hooks/use-account";
+import { isAdmin } from "@/lib/admin";
 
 /* ------------------------------------------------------------------ *
  * Quality
@@ -181,6 +185,12 @@ export function ChannelScreen({
     [channel.stills, programme, moment],
   );
   const poster = picture.still?.file ?? null;
+
+  const account = useAccount();
+  const showUpgrade =
+    account.ready &&
+    account.plan === "free" &&
+    !isAdmin(account.email, account.plan);
 
   const viewers = views ?? 0;
   const popularity = popularityProp ?? channel.views ?? 0;
@@ -355,6 +365,22 @@ export function ChannelScreen({
               </span>
             )}
           </p>
+
+          {showUpgrade ? (
+            <Link
+              href="/preturi"
+              className="mt-1.5 inline-block shrink-0"
+              aria-label="Planuri și abonamente"
+            >
+              <Badge
+                variant="signal"
+                size="xs"
+                className="h-5 px-2 text-[10px] font-semibold tracking-[0.1em] text-signal-ink"
+              >
+                Upgradează
+              </Badge>
+            </Link>
+          ) : null}
         </div>
 
         {/* Play affordance */}

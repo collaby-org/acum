@@ -1,7 +1,6 @@
 # Email templates
 
-The signup confirmation is the only email ACUM sends today (there is no
-password-reset or magic-link flow in the product), and Supabase's default
+The signup confirmation and the password reset are the only emails ACUM sends today (there is no magic-link flow in the product), and Supabase's default
 template is generic — Supabase's logo, Supabase's words. These files give it
 the product's identity instead.
 
@@ -19,6 +18,11 @@ of truth — and are pasted into the dashboard once.
    is (`Confirm your email address`) or write your own — the body is what
    carries the brand.
 4. **Save**.
+5. Click **Reset password**.
+6. Replace the entire HTML with the contents of
+   [`reset-password.html`](reset-password.html). Leave the **Subject** as it
+   is (`Reset password`) or write your own.
+7. **Save**.
 
 Send yourself a test from **Authentication → Emails → Send Test Email** (or
 sign up with a fresh address) and check the inbox: the mail now carries the
@@ -30,6 +34,7 @@ Supabase" footer is gone.
 | Variable                | What it resolves to                                     |
 | ----------------------- | ------------------------------------------------------- |
 | `{{ .ConfirmationURL }}` | The link that confirms the address (single-use, expires) |
+| `{{ .ResetPasswordURL }}` | The link that resets the password (single-use, expires) |
 | `{{ .SiteURL }}`         | The project's **Site URL** — see below                    |
 | `{{ .Email }}`           | The visitor's address                                    |
 

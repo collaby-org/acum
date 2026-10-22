@@ -1,0 +1,27 @@
+name: General issue / chore
+description: A generic question, task, or chore that is not a bug or feature
+title: "[Chore]: "
+labels: ["triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for questions, tasks, or anything that is not a bug or feature.
+        **Never paste `.env` contents, JWTs, or secrets.**
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Describe the task or question with relevant background.
+      placeholder: What needs to be done, and why?
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Confirm before submitting.
+      options:
+        - label: I checked `docs/` and `tech_stack` for existing answers
+        - label: I did not include any secrets, `.env` contents, or tokens
+        - label: I linked any related issues or PRs (if applicable)

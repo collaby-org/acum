@@ -260,18 +260,3 @@ function bucketRank(key: string): number {
   if (key === "#") return 99;
   return key.charCodeAt(0) - 64;
 }
-
-/**
- * The position of the first channel of every bucket, keyed by bucket.
- * Useful to jump straight to a letter inside an already sorted list.
- */
-export function channelIndex<T extends ChannelLike>(
-  channels: readonly T[],
-): Map<string, number> {
-  const index = new Map<string, number>();
-  channels.forEach((channel, position) => {
-    const key = bucketKey(channel.name);
-    if (!index.has(key)) index.set(key, position);
-  });
-  return index;
-}

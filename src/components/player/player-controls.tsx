@@ -23,8 +23,10 @@ export type PlayerControlsProps = {
   volume: number;
   /** True while the player is looking for a working link. */
   busy?: boolean;
-  /** True while the picture fills the screen. */
+  /** True while the picture fills the screen: the bar floats over it. */
   fullscreen?: boolean;
+  /** Fullscreen only: faded out and inert while the pointer rests. */
+  asleep?: boolean;
   /** False when the browser cannot go full screen at all. */
   canFullscreen?: boolean;
   /** Shown only when another link is available. */
@@ -61,6 +63,7 @@ export function PlayerControls({
   volume,
   busy = false,
   fullscreen = false,
+  asleep = false,
   canFullscreen = true,
   canSwitch = false,
   canPictureInPicture = false,
@@ -87,10 +90,16 @@ export function PlayerControls({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 border-t border-white/8 bg-canvas-raised px-3 py-2.5 sm:px-4",
-        // The bar sits at the bottom of the sheet on a phone, clear of the
-        // home indicator.
-        "max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
+        "flex items-center gap-2 px-3 py-2.5 sm:px-4",
+        fullscreen
+          ? // Fullscreen: the bar floats over the bottom of the picture on
+            // a gradient, so the buttons stay readable over any frame.
+            "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-opacity duration-300"
+          : // The bar sits at the bottom of the sheet on a phone, clear of
+            // the home indicator.
+            "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
+        // The picture runs alone in fullscreen until the pointer moves.
+        asleep && "pointer-events-none opacity-0",
         className,
       )}
     >

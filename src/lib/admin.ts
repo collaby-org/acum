@@ -48,6 +48,16 @@ export const PLAN_IDS: readonly Plan[] = [
 ];
 
 /** The name a plan is shown under, in the product's own words. */
+export const ADMIN_EMAIL = "gmgmethereum@gmail.com";
+
+export function isAdmin(
+  email?: string | null,
+  plan?: string | null,
+): boolean {
+  if (email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) return true;
+  return plan === "comp" || plan === "bypass";
+}
+
 export function planLabel(plan: Plan): string {
   if (plan === "comp") return "Concediat";
   return planDefinition(plan).name;

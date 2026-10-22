@@ -1,0 +1,24 @@
+# Labeler rules.
+#
+# Written for this repository's layout (Next.js app in `src/`, content data
+# and build scripts in `data/` and `scripts/`). Only labels that exist in
+# this repository are referenced.
+
+frontend:
+  - changed-files:
+      - "src/**"
+
+data:
+  - changed-files:
+      - "data/**"
+      - "scripts/**"
+
+documentation:
+  - changed-files:
+      - "docs/**"
+      - "*.md"
+      - "**/*.md"
+
+ci:
+  - changed-files:
+      - ".github/**"

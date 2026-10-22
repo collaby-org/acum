@@ -43,6 +43,7 @@ export function SignInForm({
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resetSent, setResetSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [working, setWorking] = useState(false);
 
@@ -73,6 +74,25 @@ export function SignInForm({
           : "Ceva nu a mers. Încearcă din nou.",
       );
     } finally {
+      setWorking(false);
+    }
+  };
+
+  /** The way in through the provider. The page leaves and does not come back to this call. */
+  const google = async () => {
+    if (working) return;
+
+    setWorking(true);
+    setError(null);
+
+    try {
+      await account.signInWithGoogle();
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Ceva nu a mers. Încearcă din nou.",
+      );
       setWorking(false);
     }
   };
@@ -152,6 +172,35 @@ export function SignInForm({
           <LogIn className="size-4" />
         )}
         {mode === "register" ? "Creează contul" : "Intră"}
+      </Button>
+
+      <div className="flex items-center justify-between pt-0.5">
+        <a
+          href="/reset-password"
+          className="text-[13px] text-ink-muted underline-offset-4 transition-colors duration-300 hover:text-signal-bright hover:underline"
+        >
+          Ai uitat parola?
+        </a>
+      </div>
+
+      {/* The other way in: the provider, for the visitor who would rather not type a password. */}
+      <div className="flex items-center gap-3 pt-0.5">
+        <div className="fx-divider flex-1" aria-hidden />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">
+          sau
+        </span>
+        <div className="fx-divider flex-1" aria-hidden />
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        size={compact ? "md" : "lg"}
+        disabled={working}
+        onClick={() => void google()}
+        className="w-full"
+      >
+        Continuă cu Google
       </Button>
 
       <div className="flex items-center justify-between gap-3 pt-0.5 text-[13px]">

@@ -1,0 +1,59 @@
+# .github/workflows/kodus-review.yml
+# Kodus review — CLI-in-CI pattern (no official Kodus GitHub Action exists).
+#
+# ADVISORY, NOT A GATE: findings are posted as PR review comments. This job
+# never blocks a merge and never fails a developer's PR (continue-on-error).
+# It is also credential-gated: with KODUS_API_URL / KODUS_TEAM_KEY unset the
+# job is SKIPPED (green, zero runner minutes) instead of failing.
+#
+# Auth: KODUS_API_URL + KODUS_TEAM_KEY only (secret refs, never literals).
+# Model routing is dashboard-only: Kodus Cloud CLI models are configured on the
+# BYOK page, NOT via model/base_url env vars in this workflow.
+#
+# Required dashboard BYOK routing (to keep primaries distinct across bots):
+#   primary  = z-ai/glm-5.3        (NVIDIA base https://integrate.api.nvidia.com/v1)
+#   fallback = deepseek-ai/deepseek-v4.1-flash
+#   fallback = gemini-3.8-flash
+# PR-Agent primary is Gemini — Kodus GitHub primary MUST stay GLM so the two
+# bots never share a primary provider. Local self-hosted Kodus uses DeepSeek
+# (see docs/kodus-providers.md).
+name: Kodus Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+# One run per ref: N pushes to the same branch collapse into the newest run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kodus_review:
+    # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
+    # an empty string, so this evaluates false instead of erroring.
+    if: ${{ secrets.KODUS_TEAM_KEY != '' && secrets.KODUS_API_URL != '' }}
+    runs-on: ubuntu-latest
+    # Advisory bot: never block a developer on a red Kodus run.
+    continue-on-error: true
+    # Hard spend cap for the LLM call.
+    timeout-minutes: 15
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '20.19.0'
+
+      # No --fail-on error: findings are reported, not enforced.
+      - name: Kodus review (advisory)
+        run: npx -y @kodus/cli review --format json
+        env:
+          KODUS_API_URL: ${{ secrets.KODUS_API_URL }}
+          KODUS_TEAM_KEY: ${{ secrets.KODUS_TEAM_KEY }}

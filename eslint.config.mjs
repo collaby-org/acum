@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Owner-added agent skill files (untracked tree, contains
+    // intentionally-broken lint fixtures) — not application code.
+    ".agents/**",
   ]),
 ]);
 

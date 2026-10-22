@@ -25,6 +25,7 @@ import {
 } from "@/components/now-next";
 import { useGuideMoment } from "@/hooks/use-guide-clock";
 import { posterPalette } from "@/lib/channel-meta";
+import { pictureFor } from "@/lib/stills";
 import { cn, formatViewers } from "@/lib/utils";
 
 type HeroProps = {
@@ -90,6 +91,18 @@ export function Hero({
 
   const onAir = schedule?.now ?? null;
   const subject = onAir?.title ?? channel.name;
+
+  /**
+   * The still of the show on air, by the same rule the cards follow: the
+   * frame captured for the slot on air, or — while the pipeline catches
+   * up — the newest still of the channel. When there is none at all the
+   * screen keeps its pure gradient look.
+   */
+  const picture = useMemo(
+    () => pictureFor(channel.stills, onAir, moment),
+    [channel.stills, onAir, moment],
+  );
+  const poster = picture.still?.file ?? null;
 
   // How many people are watching the channel the hero is showing. The
   // hero carries the most watched channel on air, so the crowd is the
@@ -181,7 +194,12 @@ export function Hero({
                     alt=""
                     width={44}
                     height={24}
-                    className="h-6 w-11 shrink-0 rounded-[6px] object-cover opacity-95"
+                    /* Contain, not cover: a station wordmark spans a wide
+                       range of proportions (1:1 to 10:1 here), and cover
+                       crops it to the middle of its own name. The full
+                       mark, letterboxed in the same fixed box every other
+                       surface uses. */
+                    className="h-6 w-11 shrink-0 rounded-[6px] object-contain opacity-95"
                     unoptimized
                   />
                 )}
@@ -358,6 +376,43 @@ export function Hero({
                 }}
               />
 
+              {/* The still of the show on air — the picture the channel is
+                  actually broadcasting, laid over the colour wash. The wash
+                  stays underneath as the floor and as the fallback: a still
+                  the catalogue points at but does not ship fades out and
+                  the gradients take the screen back. */}
+              {poster ? (
+                <Image
+                  src={poster}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 600px, 640px"
+                  className="object-cover"
+                  unoptimized
+                  onError={(event) => {
+                    event.currentTarget.style.opacity = "0";
+                  }}
+                />
+              ) : null}
+
+              {/* The scrim — the picture is held back so the lockup and
+                  the info bar read over it, and the scanlines, grain and
+                  vignette laid on top still read as a screen rather than
+                  a photograph. */}
+              {poster ? (
+                <div
+                  aria-hidden
+                  className="absolute inset-0"
+                  style={{
+                    background: [
+                      `radial-gradient(58% 50% at 50% 44%, rgba(0,0,0,0.58) 0%, transparent 74%)`,
+                      `linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.06) 26%, rgba(0,0,0,0.06) 44%, rgba(0,0,0,0.68) 100%)`,
+                      `rgba(0,0,0,0.26)`,
+                    ].join(", "),
+                  }}
+                />
+              ) : null}
+
               {/* The key light raking across the glass. */}
               <div
                 aria-hidden
@@ -430,7 +485,7 @@ export function Hero({
                         alt=""
                         width={40}
                         height={20}
-                        className="h-10 w-20 rounded-[6px] object-cover opacity-95"
+                        className="h-10 w-20 rounded-[6px] object-contain opacity-95"
                         unoptimized
                       />
                     </div>

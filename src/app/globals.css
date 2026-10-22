@@ -477,10 +477,11 @@
 
 /* The picture's frame.
    It takes the shape of the stream it carries — a 16:9 feed gets a 16:9
-   frame, a 4:3 feed keeps its own proportions — and it never grows past
-   the stream's own pixels: a 720p feed on a big screen stays 720p wide
-   and sharp, and the chrome around it grows instead. On a phone the
-   frame goes full bleed and the picture is cropped to fill it. */
+   frame, a 4:3 feed keeps its own proportions — and in the window it
+   never grows past the stream's own pixels: a 720p feed on a big screen
+   stays 720p wide and sharp, and the chrome around it grows instead.
+   Fullscreen drops that cap, right below. On a phone the frame goes full
+   bleed and the picture is cropped to fill it. */
 @utility fx-player-frame {
   aspect-ratio: var(--player-aspect, 16 / 9);
   max-width: var(--player-native-width, none);
@@ -489,6 +490,55 @@
     aspect-ratio: auto;
     max-width: none;
   }
+}
+
+/* Fullscreen: the browser gives the shell the whole screen (its own
+   job), and the frame drops the pixel cap — a 720p feed fills the TV
+   instead of sitting as a 1280px box in the middle of it. The picture is
+   contained, not cropped, so a feed whose shape differs from the screen
+   gets black around it rather than a cut through it; on the 16:9 screens
+   these feeds are made for it fills edge to edge. Sizing is deliberately
+   left to the browser's fullscreen rendering; only the windowed chrome —
+   the border, the rounded corners — is taken off here. Every rule is
+   spelled twice, once per pseudo-class, because an engine that knows
+   only one of them would void a shared rule that mixes them. All of it
+   hangs off `:fullscreen`, so leaving fullscreen restores the windowed
+   cap with no cleanup anywhere. */
+.fx-player:fullscreen {
+  border: 0;
+  border-radius: 0;
+}
+.fx-player:-webkit-full-screen {
+  border: 0;
+  border-radius: 0;
+}
+.fx-player:fullscreen .fx-player-frame {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  aspect-ratio: auto;
+}
+.fx-player:-webkit-full-screen .fx-player-frame {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  aspect-ratio: auto;
+}
+.fx-player:fullscreen .fx-player-frame > video {
+  object-fit: contain;
+}
+.fx-player:-webkit-full-screen .fx-player-frame > video {
+  object-fit: contain;
+}
+
+/* ACUM rounded-corners fix — all sides of the player, not just the container */
+.fx-player,
+.fx-player .fx-player-frame,
+.fx-player .fx-player-frame > video,
+.fx-player .fx-player-frame > iframe {
+  border-radius: 1rem;
 }
 
 /* Physical lift. The spring curve gives the card weight. */

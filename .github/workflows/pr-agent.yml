@@ -1,0 +1,57 @@
+# .github/workflows/pr-agent.yml
+# PR-Agent review bot.
+#
+# ADVISORY, NOT A GATE: comments are posted to the PR; a red bot run never
+# blocks a developer (continue-on-error). Credential-gated: without
+# GEMINI_API_KEY the job is SKIPPED (green, zero runner minutes).
+#
+# Provider: Gemini only. The previous NVIDIA fallback lane was removed — it is
+# metered spend and the free Gemini tier is sufficient on its own. Do not
+# reintroduce OPENAI.KEY / OPENAI.API_BASE without re-checking the cost rule.
+name: PR Agent (custom endpoint)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+
+# One run per ref: N pushes to the same branch collapse into the newest run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr_agent_job:
+    # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
+    # an empty string, so this evaluates false instead of erroring.
+    if: >-
+      secrets.GEMINI_API_KEY != '' &&
+      github.event.sender.type != 'Bot' &&
+      (github.event_name != 'issue_comment' || contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/improve') || contains(github.event.comment.body, '/ask'))
+    runs-on: ubuntu-latest
+    # Advisory bot: never block a developer on a red bot run.
+    continue-on-error: true
+    # Hard spend cap for the LLM call.
+    timeout-minutes: 20
+    permissions:
+      # `contents: write` is kept: /improve can push generated commits.
+      issues: write
+      pull-requests: write
+      contents: write
+    name: Run pr agent on every pull request, respond to user comments
+    steps:
+      - name: PR Agent action step
+        id: pragent
+        uses: the-pr-agent/pr-agent@5a50bf1e00438268374e77c1a947c4ef7ba4a5cf # v0.48.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          config.model: "gemini/gemini-3.8-flash"
+          # Empty fallback list: the NVIDIA lane was dropped, so there is no
+          # second provider to fail over to. Empty (the PR-Agent default) keeps
+          # the run on the free Gemini tier instead of a metered one.
+          config.fallback_models: '[]'
+          config.custom_model_max_tokens: "200000"
+          config.max_model_tokens: "200000"
+          config.enable_large_pr_chunking: "true"
+          config.publish_error_details: "true"

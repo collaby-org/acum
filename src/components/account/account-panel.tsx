@@ -35,7 +35,7 @@ function formatDate(value: string | null): string | null {
 
 export function AccountPanel({
   initialMode = "signin",
-  next = "/",
+  next = "/canale",
 }: {
   initialMode?: AuthMode;
   next?: string;

@@ -21,7 +21,7 @@ import { useChannelLauncher } from "@/hooks/use-channel-launcher";
 import { useLiveAudience } from "@/hooks/use-audience";
 import { celebrate, dismiss } from "@/lib/confetti";
 import { byPlayability, isPlayable } from "@/lib/channel-meta";
-import { CATEGORY_ORDER } from "@/lib/navigation";
+import { alphabetBuckets, CATEGORY_ORDER, sortChannels } from "@/lib/navigation";
 import { cn, plural } from "@/lib/utils";
 
 type BrowseProps = {
@@ -55,11 +55,16 @@ export function Browse({
 }: BrowseProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("home");
+  /**
+   * The letter the catalogue grid is filtered by — null for everything.
+   * The A→Z strip sets it; the grid below answers to it.
+   */
+  const [letter, setLetter] = useState<string | null>(null);
   const favourites = useFavourites();
   const recent = useRecentlyWatched();
   const shelves = useShelves();
   const launcher = useChannelLauncher();
-  const railRefs = useRef(new Map<string, HTMLElement>());
+  const catalogueRef = useRef<HTMLElement>(null);
 
   /**
    * Our own audience, counted at the proxy.
@@ -101,6 +106,19 @@ export function Browse({
     return map;
   }, [channels]);
 
+  /**
+   * The catalogue, A→Z. The grid is always alphabetical, so the letter
+   * strip and the grid speak one language: the strip picks a letter, the
+   * grid answers with that letter's channels in order.
+   */
+  const sortedCatalogue = useMemo(() => sortChannels(channels), [channels]);
+  const letterBuckets = useMemo(() => alphabetBuckets(channels), [channels]);
+  const activeBucket = useMemo(
+    () => letterBuckets.find((bucket) => bucket.key === letter) ?? null,
+    [letterBuckets, letter],
+  );
+  const catalogue = activeBucket ? activeBucket.channels : sortedCatalogue;
+
   const favouriteChannels = useMemo(
     () =>
       channels
@@ -139,9 +157,25 @@ export function Browse({
 
   const searching = query.trim().length > 0;
 
-  const jumpTo = useCallback((channel: Channel) => {
-    const node = railRefs.current.get(channel.category);
-    node?.scrollIntoView({ behavior: "smooth", block: "start" });
+  /**
+   * One letter, one scroll, one target: the catalogue grid the filter
+   * answers to. Clearing the filter leaves the visitor where they are —
+   * they already see the grid they just widened.
+   */
+  const selectLetter = useCallback((key: string | null) => {
+    setLetter(key);
+    if (key === null) return;
+    // The grid only re-renders on the next frame; scroll after it, so the
+    // target's position is the position of the filtered grid.
+    window.requestAnimationFrame(() => {
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      catalogueRef.current?.scrollIntoView({
+        behavior: reduced ? "auto" : "smooth",
+        block: "start",
+      });
+    });
   }, []);
 
   return (
@@ -294,39 +328,41 @@ export function Browse({
                 onToggleFavorite={toggleFavourite}
               />
 
-              {/* A → Z */}
-              <div className="px-4 pt-2 sm:px-8 lg:px-12">
-                <ChannelIndex channels={channels} onJumpTo={jumpTo} />
-              </div>
+              {/* A → Z — filters the catalogue grid at the bottom of the
+                  page; it sticks under the header so the letters stay
+                  reachable the whole way down. */}
+              <ChannelIndex
+                channels={channels}
+                value={letter}
+                onChange={selectLetter}
+                controls="toate-canalele"
+                className="mt-2"
+              />
 
               {/* One rail per category */}
               {categories.map((category) => {
                 const list = byCategory.get(category.id) ?? [];
                 if (list.length === 0) return null;
                 return (
-                  <div
+                  <ChannelRail
                     key={category.id}
-                    ref={(node) => {
-                      if (node) railRefs.current.set(category.id, node);
-                      else railRefs.current.delete(category.id);
-                    }}
-                    className="scroll-mt-24"
-                  >
-                    <ChannelRail
-                      eyebrow={category.tagline}
-                      title={category.label}
-                      channels={list}
-                      guide={guide ?? null}
-                      onPlay={openPlayer}
-                      isFavorite={isFavourite}
-                      onToggleFavorite={toggleFavourite}
-                    />
-                  </div>
+                    eyebrow={category.tagline}
+                    title={category.label}
+                    channels={list}
+                    guide={guide ?? null}
+                    onPlay={openPlayer}
+                    isFavorite={isFavourite}
+                    onToggleFavorite={toggleFavourite}
+                  />
                 );
               })}
 
-              {/* Everything */}
-              <section className="px-4 pt-6 sm:px-8 lg:px-12">
+              {/* Everything — alphabetically, or under the chosen letter */}
+              <section
+                id="toate-canalele"
+                ref={catalogueRef}
+                className="scroll-mt-36 px-4 pt-8 sm:px-8 lg:px-12"
+              >
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                   <div>
                     <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-signal/85">
@@ -334,18 +370,33 @@ export function Browse({
                       Cuprins complet
                     </p>
                     <h2 className="font-display text-xl font-semibold tracking-tight sm:text-[26px]">
-                      Toate canalele
+                      {activeBucket
+                        ? `${activeBucket.label} — ${catalogue.length} ${plural(
+                            catalogue.length,
+                            "canal",
+                            "canale",
+                            "de canale",
+                          )}`
+                        : "Toate canalele"}
                     </h2>
-                    <p className="mt-1 text-sm text-ink-muted">
-                      {channels.length}{" "}
-                      {plural(channels.length, "canal", "canale", "de canale")},
-                      verificate unul cu unul.
+                    <p aria-live="polite" className="mt-1 text-sm text-ink-muted">
+                      {activeBucket
+                        ? `Numai canalele care încep cu „${activeBucket.label}”.`
+                        : `${channels.length} ${plural(
+                            channels.length,
+                            "canal",
+                            "canale",
+                            "de canale",
+                          )}, în ordine alfabetică.`}
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                  {channels.map((channel, index) => (
+                <div
+                  key={letter ?? "toate"}
+                  className="grid animate-fade-up grid-cols-2 gap-3.5 motion-reduce:animate-none sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+                >
+                  {catalogue.map((channel, index) => (
                     <ChannelCard
                       key={channel.id}
                       channel={channel}

@@ -286,7 +286,19 @@ const DECISION = `
       field.setAttribute("data-acum-intro", "still");
       return;
     }
-    if (window.localStorage.getItem(${JSON.stringify(STORAGE_KEY)})) {
+    /* Installed: an app opened from the home screen is a first visit
+       again, so the "seen" flag - the browser's own, and on iOS kept in a
+       storage the installed app cannot reach - never keeps the sting down
+       inside the app. It plays on every cold launch of the installed app
+       and never on an in-app navigation: this script runs once per
+       document, and the field never remounts. */
+    var installed =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+    if (
+      !installed &&
+      window.localStorage.getItem(${JSON.stringify(STORAGE_KEY)})
+    ) {
       field.setAttribute("data-acum-intro", "seen");
       return;
     }
@@ -347,6 +359,20 @@ function markSeen() {
   } catch {
     /* private mode — the sting simply plays again next time */
   }
+}
+
+/**
+ * True when the page is running as an installed app rather than in a
+ * browser tab — any browser reporting standalone display mode, plus
+ * iOS Safari's own flag. Inside the installed app the sting plays on
+ * every cold launch: opening from the home screen is a first visit
+ * again, and the *seen* flag — the browser's own, and on iOS kept in a
+ * storage the installed app cannot reach — has no say in it.
+ */
+function isInstalled() {
+  const query = window.matchMedia("(display-mode: standalone)");
+  const legacy = window.navigator as Navigator & { standalone?: boolean };
+  return query.matches || legacy.standalone === true;
 }
 
 /**
@@ -434,8 +460,12 @@ export function FirstVisitIntro({
       return;
     }
 
-    /* Already seen, on this device. */
-    if (window.localStorage.getItem(STORAGE_KEY)) {
+    /* Already seen, on this device — except inside the installed app: a
+       launch from the home screen is a first visit again, and the sting
+       plays however many times the app has been opened. The sheet reached
+       the same answer before the first paint, so the field is never shown
+       and then taken away. */
+    if (!isInstalled() && window.localStorage.getItem(STORAGE_KEY)) {
       dismiss();
       return;
     }

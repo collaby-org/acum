@@ -1,0 +1,35 @@
+# .github/workflows/stale.yml
+# Stale issue/PR housekeeping. Uses only the automatic GITHUB_TOKEN, so there
+# is no credential to gate on. Concurrency group is workflow+ref scoped like
+# every other workflow in this directory.
+name: Stale
+
+on:
+  schedule:
+    - cron: "34 6 * * *"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stale:
+    name: Mark stale issues and PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mark stale
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          days-before-stale: 30
+          days-before-close: 60
+          exempt-issue-labels: keep,security,pinned
+          exempt-pr-labels: keep,security,pinned
+          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 60 days if no further activity occurs. Add a `keep` label to exempt it."
+          stale-pr-message: "This PR has been automatically marked as stale because it has not had recent activity. It will be closed in 60 days if no further activity occurs. Add a `keep` label to exempt it."
+          operations-per-run: 100

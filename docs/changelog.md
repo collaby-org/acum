@@ -11,6 +11,18 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ### Changed
 
+- **The front door is for visitors; the logo knows the difference.** The
+  wordmark in the app bar used to send everyone to `/canale` and the
+  accounts page sent people who had just signed in back to the landing
+  page. Now the wordmark leads a signed-out visitor to `/` and a
+  signed-in account to `/canale` (staying at the top of the catalogue
+  when already there); `/` itself bounces a signed-in browser straight to
+  `/canale`; and the accounts page — wordmark, "Înapoi la catalog" and
+  every default `next` — lands on the catalogue. Because the session is
+  client-side (storage + bearer token, no cookie), the bounce happens
+  after the first paint: a brief flash of the landing page is the
+  accepted cost of no server session.
+
 - **Every key lives in the environment.** The Supabase URL, the publishable
   key, the service role key, the Stripe keys and the harness account are read
   from the environment and nowhere else — no fallback is compiled into the
@@ -20,7 +32,22 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
   inlined at build time. The capture workflow reads the same names from the
   repository's secrets.
 
+- **GitHub housekeeping now matches this repository.** The workflows copied
+  from another project (Laravel/Obsidian paths, issue-number references) are
+  gone: one lean daily `npm audit` job replaces them, CodeQL scans TypeScript
+  only, the labeler rules, issue labels, and `CONTRIBUTING.md` describe ACUM,
+  and ESLint ignores the agent-skill files under `.agents/`.
+
 ### Added
+
+- **Recuperarea parolei.** Un link "Ai uitat parola?" pe formularul de
+  autentificare duce la `/reset-password`, care trimite un email cu un link
+  de resetare; emailul are marca ACUM, fundal închis și buton auriu,
+  fără emoji, în română. Action-ul `resetPasswordForEmail` din
+  `use-account.ts`, pagina de resetare, ramura de recuperare din
+  `auth/callback` (`access_token` / `type=recovery` → `/reset-password`)
+  și șablonul `supabase/email-templates/reset-password.html` sunt toate
+  în loc.
 
 - **The signup email is ACUM's.** The confirmation a new account receives is
   no longer Supabase's default mail: `supabase/email-templates/` holds a
@@ -28,6 +55,66 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
   Romanian copy — with the exact paste steps for the dashboard, which is the
   only place hosted projects can set it. The sender stays Supabase's until a
   custom SMTP is configured; the README says where and why.
+
+### Fixed
+
+- **The intro plays on every launch of the installed app.** The sting
+  followed the *seen* flag alone, so inside an installed app it either
+  never appeared — Chrome and Android keep the app's storage with the
+  browser's, where the first visit had already written the flag — or, on
+  iOS, ran off a flag of its own that the browser never sees. Both
+  decisions — the pre-paint sheet and the hydration check — now agree that
+  a launch from the home screen is a first visit again: standalone display
+  (`display-mode: standalone`, plus iOS's own `navigator.standalone`) is
+  outside the flag's reach, and the sting plays on every cold launch of
+  the installed app. It still never interrupts an in-app navigation, a
+  channel page, or a visitor who has asked for reduced motion; the
+  animation, the timing and the browser's own once-only behaviour are
+  unchanged.
+- **The hero shows the channel, not a crop of it.** The station mark in the
+  hero — header and screen panel — was fitted with `object-cover` inside
+  fixed ~2:1 boxes, which cut wide wordmarks down to the middle of their own
+  name (PRO TV showed roughly 40% of its logo) and sliced tall ones
+  vertically. Both now use `object-contain`, the fit every other surface
+  already uses.
+- **The hero screen carries the show on air.** The featured channel's screen
+  on `/canale` was a pure gradient; it now lays the still of the programme
+  on air over the colour wash — falling back to the channel's newest still,
+  exactly as the cards do — with a scrim under the lockup and the info bar
+  so the type stays readable, and the scanlines, grain and vignette still
+  on top. Channels without a still keep the gradient screen, unchanged.
+- **A frozen picture on a slow line moves again.** The frame used to stop
+  for good a few seconds after the buffer filled: hls.js's non-fatal
+  stalling errors were passed over and nothing ever restarted the loader.
+  The player now keeps thirty seconds of forward buffer, pins the target
+  latency to three segments behind the edge instead of the playlist's own
+  hold-back — a half-second promise no slow connection can keep — and
+  lets hls.js walk back toward the edge at up to 1.5×, never while the
+  buffer is empty and only within the target's own reach — target plus
+  one segment; a scrub-back deeper than that is treated as DVR and keeps
+  normal speed, so the DVR window and „Înapoi la direct” behave as
+  before. Fatal errors mend in place before the chain moves on: a stopped
+  loader is asked to pull again, a wedged decoder is restarted, with a
+  codec swap on the second try, and only the error that comes back fails
+  over — the manifest that will not load is still the instant failover
+  it was, and the dead instance is torn down so it stops pulling in the
+  background. A watchdog covers what hls.js cannot see: a picture still
+  waiting five seconds in is nudged twice, five seconds apart, and only
+  then does the next feed get its turn; while the video is paused — the
+  wall, the visitor — nothing counts and nothing advances.
+- **Fullscreen fills the screen.** The frame's pixel cap — right in the
+  window, wrong on a TV — was applied inside fullscreen as well, so a
+  720p feed sat as a 1280×720 box in the middle of a 1080p screen. The
+  shell now carries `:fullscreen` (and `:-webkit-full-screen`) rules that
+  drop the cap and the windowed border and rounding; the picture is
+  contained rather than cropped, so a feed whose shape differs from the
+  screen gets black around it instead of a cut through it. The transport
+  bar floats over the bottom of the picture on a gradient, fades with the
+  cursor after three still seconds while the picture runs and returns at
+  the first move or tap — a pause keeps it on screen. Quality is handed
+  back to the bandwidth-only ladder on entry, and the windowed cap now
+  follows a level switch through the video's own `resize` event, so it
+  never sits on a size the stream has left behind.
 
 ## [1.4.0] — 2026-10-22
 
@@ -107,6 +194,16 @@ Accounts, a measured audience, a phone that behaves, and the rest of the site.
   gesture is handed back to the page. Leaving the rail scrolls the page.
 - **The picture keeps its own shape.** The stream is shown by cropping, not
   by stretching, and the frame takes the shape of the picture it carries.
+- **The A→Z bar filters instead of jumping.** The letter buttons on
+  `/canale` fired two competing smooth scrolls at once — one to the
+  category rail, one to the first card carrying that letter, which on a
+  page of shelves could be anywhere — so a click yanked the page in two
+  directions and landed somewhere arbitrary. The strip is now a filter that
+  sticks under the header: a letter narrows the „Toate canalele" grid to
+  that letter's channels in alphabetical order („A — 6 canale"), the grid
+  itself is now A→Z from top to bottom, and „Toate" — or the same letter
+  again — brings the whole catalogue back without moving the page. One
+  scroll, one target, and none at all on the way back.
 
 ### Fixed
 

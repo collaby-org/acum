@@ -14,8 +14,9 @@ import Image from "next/image";
 import { ArrowRight, Radio, ShieldCheck, Users } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
+import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
-import { SignInForm } from "@/components/account/sign-in-form";
+import { LandingGate } from "@/components/landing-gate";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
@@ -79,6 +80,10 @@ export default async function LandingPage() {
 
   return (
     <main className="relative isolate min-h-dvh bg-canvas">
+      {/* A signed-in account has no business on the front door; the gate
+          sends it to the catalogue as soon as the session is known. */}
+      <LandingGate />
+
       {/* The light the page stands in. Screen-blended, so it stays
           luminous over the near-black surface. */}
       <div
@@ -281,7 +286,12 @@ export default async function LandingPage() {
             </div>
 
             <div className="rounded-2xl border border-white/[0.08] bg-surface/60 p-5 sm:p-6">
-              <SignInForm initialMode="register" />
+              {/* The same panel as the accounts page: the form when there
+                  is no account, the account itself when there is one — a
+                  signed-in visitor is never shown the form again. The way
+                  on after signing in is the accounts page: on the accounts
+                  page itself it is the way back here. */}
+              <AccountPanel initialMode="register" next="/conturi" />
             </div>
           </div>
         </div>
