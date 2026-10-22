@@ -46,17 +46,18 @@ design-system/   tokens, components, motion rules
 
 | Fact | Value |
 | ---- | ----- |
-| Channel families | 74 |
-| Feeds (servers) | 202 |
-| Channels | 116 — one per real broadcast, S1/S2/S3 folded in |
-| Channels with more than one server | 75 |
-| Unique embed URLs | 105 |
-| Feeds with an iframe embed | 179 |
+| Channel families | 74 + 1 (the second source) |
+| Feeds (servers) | 274 |
+| Channels | 143 — one per real broadcast, S1/S2/S3 folded in |
+| Channels with more than one server | 84 |
 | Feeds resolved to a direct playlist | 163 |
 | Channels playing a direct playlist | 92 |
-| Live channels | 96 |
-| AceStream-only channels | 12 |
+| Live channels | 117 |
+| HD channels (measured) | 36 — 30 at 720p, 6 at 1080p |
+| AceStream-only channels | 10 |
 | Genuinely dead channels | 8 |
+| Channels in the programme guide | 77 |
+| Programmes in the guide | 1958 |
 | Categories | 7 — Generaliste, Știri, Sport, Filme, Copii, Documentare, Muzică |
 
 `src/data/channels.ts` is generated. Edit `scripts/channel-taxonomy.json`
@@ -78,6 +79,26 @@ Kanal D. The taxonomy file holds the corrected Romanian display names.
 | `acestream` | The channel uses the AceStream protocol, which has no browser player. |
 | `unknown` | Not probed. |
 | `none` | The source page ships no embeddable player. |
+
+## The catalogue is split in two
+
+The browser never holds an upstream address.
+
+- `Channel` — what the client sees: names, artwork, status, quality.
+- `UpstreamChannel` — what the server keeps: the same, plus the embed URLs,
+  the source pages and the resolved playlists.
+
+`page.tsx` projects the full catalogue down to the public one before it
+reaches the client island, and the player asks the server for a feed by
+reference:
+
+```
+POST /api/player { channel: "pro-tv" }
+  -> { sources: [{ url: "/api/stream?t=<signed>" }, …] }
+```
+
+The served page contains no upstream host, no embed URL and no source page.
+A visitor who opens the devtools panel sees our own URLs and nothing else.
 
 ## The upstream referer gate
 
@@ -129,22 +150,29 @@ byte-identical to the global blueprint at `~/.config/opencode/AGENTS.md`.
 The channel dataset is generated, never hand-edited.
 
 ```bash
-node scripts/scrape-channels.mjs   # cool-etv.net -> data/channels.raw.json
-node scripts/check-embeds.mjs      # liveness probe -> data/embed-health.json
-node scripts/build-dataset.mjs      # merge + logos -> src/data/channels.ts
-node scripts/fetch-fonts.mjs        # self-host the brand fonts
-node scripts/verify-ui.mjs <url>    # headless UI verification -> docs/reviews/
+node scripts/scrape-channels.mjs         # the first source  -> data/channels.raw.json
+node scripts/check-embeds.mjs            # liveness probe   -> data/embed-health.json
+node scripts/resolve-streams.mjs          # headless Edge   -> data/resolved-streams.json
+node scripts/scrape-secondary.mjs        # the second source-> data/secondary-sources.json
+node scripts/scrape-epg.mjs              # the guide        -> data/epg.json
+node scripts/measure-quality.mjs         # the resolution  -> data/quality.json
+node scripts/measure-secondary-quality.mjs
+node scripts/fetch-logos-hd.mjs           # the logo library-> data/logo-index.json
+node scripts/merge-secondary.mjs         # fold it in      -> scripts/channel-taxonomy.json
+node scripts/build-dataset.mjs           # everything      -> src/data/channels.ts
+node scripts/fetch-fonts.mjs             # self-host the brand fonts
+node scripts/verify-ui.mjs <url>         # headless UI verification -> docs/reviews/
 ```
 
 `scripts/channel-taxonomy.json` is the hand-written editorial layer. Edit
-that, never the generated module. `data/channels.raw.json` and
-`data/embed-health.json` are committed so the build is reproducible without
-network access.
+that, never the generated module. The `data/*.json` snapshots are committed
+so the build is reproducible without network access.
 
 ## Where the data comes from
 
-`https://www.cool-etv.net/` — the public channel directory. VIZOR indexes
-the embed addresses it publishes and links back to it. The channels
+Two public Romanian TV directories, and nothing else. Their channel lists and
+their embed addresses are indexed, the streams are relayed through our own
+proxy, and the visitor is never told where they came from. The channels
 themselves belong to their respective owners.
 
 ## Running it

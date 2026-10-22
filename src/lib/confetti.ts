@@ -1,7 +1,7 @@
 "use client";
 
 import confetti from "canvas-confetti";
-import type { Channel } from "@/data/channels";
+import type { Channel } from "@/data/types";
 import { familyHue } from "@/lib/channel-meta";
 
 /**

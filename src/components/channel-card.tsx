@@ -1,11 +1,56 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Layers, Play, Radio } from "lucide-react";
+import { Heart, Play, Radio } from "lucide-react";
 import type { CSSProperties, MouseEvent } from "react";
-import { STATUS_META, posterPalette, serverSummary } from "@/lib/channel-meta";
+import type { Quality } from "@/data/types";
+import { QUALITY_META, STATUS_META, posterPalette } from "@/lib/channel-meta";
 import type { ChannelLike } from "@/lib/navigation";
-import { cn, plural } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+
+/* ------------------------------------------------------------------ *
+ * Quality
+ * ------------------------------------------------------------------ */
+
+/** The quality a channel carries, when the catalogue knows it. */
+export function channelQuality(channel: ChannelLike): Quality | undefined {
+  const raw = (channel as { quality?: unknown }).quality;
+  return typeof raw === "string" && raw in QUALITY_META
+    ? (raw as Quality)
+    : undefined;
+}
+
+/**
+ * The quality badge.
+ *
+ * Standard definition earns none — it is the floor, not a feature — and the
+ * badge stays quiet: a hairline ring and a muted label, so it never competes
+ * with the live chip or the channel name.
+ */
+export function QualityBadge({
+  quality,
+  className,
+}: {
+  quality?: Quality | null;
+  className?: string;
+}) {
+  if (!quality) return null;
+  const meta = QUALITY_META[quality];
+  if (!meta?.showBadge) return null;
+
+  return (
+    <span
+      data-slot="quality-badge"
+      className={cn(
+        "inline-flex h-5 items-center rounded-full border border-white/12 bg-white/8 px-2",
+        "text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted",
+        className,
+      )}
+    >
+      {meta.label}
+    </span>
+  );
+}
 
 type ChannelCardProps<T extends ChannelLike> = {
   channel: T;
@@ -15,6 +60,8 @@ type ChannelCardProps<T extends ChannelLike> = {
     channel: T,
     event?: MouseEvent<HTMLButtonElement>,
   ) => void;
+  /** The picture quality, when the caller knows it better than the channel does. */
+  quality?: Quality | null;
   className?: string;
   /** Position inside its rail — used by the keyboard navigation. */
   index?: number;
@@ -24,26 +71,28 @@ type ChannelCardProps<T extends ChannelLike> = {
  * A 16:9 "screen" with the channel's own logo as the broadcast bug, over a
  * backdrop derived from its family colour. The whole screen is one button;
  * the favourite control is a sibling, never nested inside it.
+ *
+ * The card grows on hover, so it needs room on every side: the rail keeps
+ * that room inside the scroller, and the card itself lifts above its
+ * neighbours instead of sliding under them.
  */
 export function ChannelCard<T extends ChannelLike>({
   channel,
   onPlay,
   isFavorite,
   onToggleFavorite,
+  quality,
   className,
   index,
 }: ChannelCardProps<T>) {
   const palette = posterPalette(channel.familyKey, channel.category);
   const status = STATUS_META[channel.status];
   const isLive = channel.status === "live";
-  const feeds = channel.servers ?? [];
-  const stacked = feeds.length > 1;
-  const summary = serverSummary(channel);
+  const badge = quality ?? channelQuality(channel);
 
   const playLabel = [
     `Vizionează ${channel.name}`,
     isLive ? "live acum" : status.label.toLowerCase(),
-    stacked ? plural(feeds.length, "server", "servere", "de servere") : null,
   ]
     .filter(Boolean)
     .join(", ");
@@ -53,10 +102,17 @@ export function ChannelCard<T extends ChannelLike>({
       data-channel-id={channel.id}
       data-card-index={index}
       className={cn(
-        "group/card relative w-[248px] shrink-0 sm:w-[272px]",
-        "fx-lift motion-reduce:transform-none!",
+        "group/card relative z-0 w-[248px] shrink-0 sm:w-[272px]",
+        "transition-[transform,box-shadow] duration-[var(--dur-base,300ms)]",
+        "hover:z-10 hover:-translate-y-1 hover:scale-[1.035] hover:shadow-[var(--shadow-e3)]",
+        "focus-within:z-10 focus-within:-translate-y-1 focus-within:scale-[1.035]",
+        "motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!",
         className,
       )}
+      style={{
+        transitionTimingFunction:
+          "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",
+      }}
     >
       <button
         type="button"
@@ -65,19 +121,7 @@ export function ChannelCard<T extends ChannelLike>({
         aria-label={playLabel}
         className="block w-full cursor-pointer rounded-[var(--radius-card)] text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
       >
-        <div
-          className={cn(
-            "relative aspect-video w-full overflow-hidden rounded-[var(--radius-card)] bg-surface-2 fx-edge",
-            "transition-[transform,box-shadow] duration-[var(--dur-base,300ms)]",
-            "group-hover/card:-translate-y-px group-hover/card:scale-[1.02]",
-            "group-hover/card:shadow-[var(--shadow-e4)]",
-            "motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!",
-          )}
-          style={{
-            transitionTimingFunction:
-              "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",
-          }}
-        >
+        <div className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-card)] bg-surface-2 fx-edge">
           {/* Procedural backdrop, derived from the family colour */}
           <div
             aria-hidden
@@ -109,15 +153,26 @@ export function ChannelCard<T extends ChannelLike>({
             className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
           />
 
-          {/* Broadcast bug — the channel's own logo, at its native 40×20 */}
+          {/* Broadcast bug — the channel's own logo. The HD lockup is used
+              when the channel is actually on an HD feed, and dark artwork
+              gets a light plate so it stays legible. */}
           {channel.logo ? (
-            <span className="absolute left-3 top-3 flex h-7 items-center rounded-[7px] bg-black/45 px-1.5 backdrop-blur-sm fx-edge">
+            <span
+              className={cn(
+                "absolute left-3 top-3 flex h-8 items-center rounded-[7px] px-1.5 backdrop-blur-sm fx-edge",
+                channel.logoDark ? "bg-white/92" : "bg-black/45",
+              )}
+            >
               <Image
-                src={channel.logo}
+                src={
+                  badge && ["hd", "fhd", "uhd"].includes(badge)
+                    ? (channel.logoHd ?? channel.logo)
+                    : channel.logo
+                }
                 alt=""
-                width={40}
-                height={20}
-                className="h-5 w-10 object-contain"
+                width={48}
+                height={24}
+                className="h-6 w-12 object-contain"
                 unoptimized
               />
             </span>
@@ -161,15 +216,7 @@ export function ChannelCard<T extends ChannelLike>({
               <p className="truncate text-[11px] font-medium uppercase tracking-[0.1em] text-ink-muted/80">
                 {channel.family}
               </p>
-              {stacked && (
-                <span
-                  title={plural(feeds.length, "server", "servere", "de servere")}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-full bg-black/45 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.06em] text-ink-muted backdrop-blur-sm fx-edge"
-                >
-                  <Layers aria-hidden className="size-2.5" />
-                  {summary}
-                </span>
-              )}
+              <QualityBadge quality={badge} />
             </div>
           </div>
 

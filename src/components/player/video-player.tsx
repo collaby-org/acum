@@ -4,10 +4,11 @@
  * Contract for the integrator:
  *
  *   const ref = useRef<PlayerHandle>(null);
- *   <VideoPlayer ref={ref} channelName={channel.name} servers={servers} />
+ *   <VideoPlayer ref={ref} channelName={channel.name} channelId={channel.id} />
  *
- * `servers` is the channel's upstream feeds, best first — the same objects
- * the catalogue holds in `channel.servers`. The component walks them by
+ * The browser names the channel and nothing else: the upstream feeds, their
+ * addresses and the source they come from stay on the server. The chain of
+ * playable links is resolved server-side, and the component walks it by
  * itself: the first feed that plays wins, the others are the fallback.
  *
  * The imperative handle exposes `play()`, `pause()`, `retry()`, `next()` and
@@ -33,10 +34,24 @@ import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
 import {
   usePlayer,
-  type PlayerServer,
   type PlayerStatus,
 } from "@/hooks/use-player";
 import { cn } from "@/lib/utils";
+
+/**
+ * The video element as Safari knows it.
+ *
+ * iPhone Safari has no Fullscreen API for elements — only the video's own
+ * native fullscreen, with the system controls.
+ */
+type WebkitVideoElement = HTMLVideoElement & {
+  webkitEnterFullscreen?: () => void;
+  webkitExitFullscreen?: () => void;
+  webkitDisplayingFullscreen?: boolean;
+};
+
+/** How this browser can go full screen. */
+type FullscreenMode = "element" | "video" | "none";
 
 export type PlayerHandle = {
   /** Resolve the feed and start the picture. */
@@ -58,7 +73,7 @@ export type VideoPlayerProps = {
   /** Shown while the picture is loading and when it fails. */
   channelName: string;
   /** The channel's upstream feeds, best first. */
-  servers: PlayerServer[];
+  channelId: string;
   /** Resolve the chain and start playing as soon as the component mounts. */
   autoPlay?: boolean;
   /** Hide the transport bar and the overlays. */
@@ -72,7 +87,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
   function VideoPlayer(
     {
       channelName,
-      servers,
+      channelId,
       autoPlay = false,
       bare = false,
       className,
@@ -87,6 +102,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const [muted, setMuted] = useState(true);
     const [volume, setVolume] = useState(1);
     const [fullscreen, setFullscreen] = useState(false);
+    const [fullscreenMode, setFullscreenMode] = useState<FullscreenMode>("none");
     const [liveWindow, setLiveWindow] = useState<{
       from: number;
       to: number;
@@ -95,7 +111,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const [behindLive, setBehindLive] = useState(false);
 
     const player = usePlayer({
-      servers,
+      channelId,
       autoStart: autoPlay,
       onStatusChange,
     });
@@ -232,8 +248,47 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     useEffect(() => {
       const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
       document.addEventListener("fullscreenchange", onChange);
-      return () => document.removeEventListener("fullscreenchange", onChange);
+      document.addEventListener("webkitfullscreenchange", onChange);
+      return () => {
+        document.removeEventListener("fullscreenchange", onChange);
+        document.removeEventListener("webkitfullscreenchange", onChange);
+      };
     }, []);
+
+    // Safari's native video fullscreen has its own life: it starts and ends
+    // without the document ever entering fullscreen, so the button has to
+    // follow the video, not the page.
+    useEffect(() => {
+      const video = videoRef.current as WebkitVideoElement | null;
+      if (!video) return;
+
+      const onBegin = () => setFullscreen(true);
+      const onEnd = () => setFullscreen(false);
+      video.addEventListener("webkitbeginfullscreen", onBegin);
+      video.addEventListener("webkitendfullscreen", onEnd);
+      return () => {
+        video.removeEventListener("webkitbeginfullscreen", onBegin);
+        video.removeEventListener("webkitendfullscreen", onEnd);
+      };
+    }, []);
+
+    // What this browser can do. iPhone Safari knows neither the element
+    // Fullscreen API nor a picture-in-picture window; it knows the video's
+    // own fullscreen, and that is enough.
+    useEffect(() => {
+      const shell = shellRef.current;
+      const video = videoRef.current as WebkitVideoElement | null;
+
+      if (shell && typeof shell.requestFullscreen === "function") {
+        setFullscreenMode("element");
+        return;
+      }
+      if (!embedded && video && typeof video.webkitEnterFullscreen === "function") {
+        setFullscreenMode("video");
+        return;
+      }
+      setFullscreenMode("none");
+    }, [embedded]);
 
     // The live window: what the stream has buffered, and where the live edge
     // is right now. A live channel has no past to scrub into.
@@ -314,15 +369,52 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       setMuted(video.muted);
     }, []);
 
-    const toggleFullscreen = useCallback(() => {
-      const shell = shellRef.current;
-      if (!shell) return;
-      if (document.fullscreenElement) {
-        void document.exitFullscreen();
-      } else {
-        void shell.requestFullscreen().catch(() => undefined);
+    /**
+     * Safari's own full screen for the video: the native player with the
+     * system controls. It refuses a paused video, so the picture is started
+     * first.
+     */
+    const enterNativeFullscreen = useCallback(() => {
+      const video = videoRef.current as WebkitVideoElement | null;
+      if (!video || typeof video.webkitEnterFullscreen !== "function") return;
+      if (video.paused) void video.play().catch(() => undefined);
+      try {
+        video.webkitEnterFullscreen();
+      } catch {
+        /* nothing left to try */
       }
     }, []);
+
+    const toggleFullscreen = useCallback(() => {
+      const shell = shellRef.current;
+      const video = videoRef.current as WebkitVideoElement | null;
+
+      // Safari's native video fullscreen: it is its own window, and it is
+      // closed through the video, not the document.
+      if (video?.webkitDisplayingFullscreen) {
+        video.webkitExitFullscreen?.();
+        return;
+      }
+
+      if (document.fullscreenElement) {
+        void document.exitFullscreen?.().catch(() => undefined);
+        return;
+      }
+
+      // The element Fullscreen API, where it exists.
+      if (shell && typeof shell.requestFullscreen === "function") {
+        void shell.requestFullscreen().catch(() => {
+          // The browser refused the request — a gesture it did not trust, a
+          // permissions policy, a frame without the right allow attribute.
+          // The video's own fullscreen is the way out.
+          enterNativeFullscreen();
+        });
+        return;
+      }
+
+      // iPhone: the video goes full screen with the system controls.
+      enterNativeFullscreen();
+    }, [enterNativeFullscreen]);
 
     const canPictureInPicture =
       typeof document !== "undefined" && "pictureInPictureEnabled" in document;
@@ -357,7 +449,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           className,
         )}
       >
-        <div className="relative aspect-video w-full bg-black">
+        <div className="relative aspect-video w-full bg-black max-sm:aspect-auto max-sm:min-h-[56.25vw] max-sm:flex-1">
           <video
             ref={videoRef}
             className={cn(
@@ -391,7 +483,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
           {embedded ? (
             <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90">
-              Apasă PLAY în player — fluxul este controlat de sursă.
+              Redarea este controlată din playerul încorporat.
             </p>
           ) : null}
 
@@ -429,7 +521,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                   </Button>
                   {hasNext ? (
                     <Button variant="outline" size="sm" onClick={player.advance}>
-                      Alt flux
+                      Flux următor
                     </Button>
                   ) : null}
                 </div>
@@ -456,7 +548,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             volume={volume}
             busy={busy}
             fullscreen={fullscreen}
-            sourceLabel={source?.label}
+            canFullscreen={fullscreenMode !== "none"}
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}
             liveWindow={liveWindow}

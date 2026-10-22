@@ -37,6 +37,29 @@ const streams = await readFile(resolve(ROOT, "data/resolved-streams.json"), "utf
   () => ({}),
 );
 
+const readJson = async (file, fallback) => {
+  try {
+    return JSON.parse(await readFile(resolve(ROOT, file), "utf8"));
+  } catch {
+    return fallback;
+  }
+};
+
+/**
+ * The second source directory. Its feeds are not in the cool-etv.net scrape,
+ * so they arrive with their own stream URL and watch page.
+ */
+const secondaryData = await readJson("data/secondary-sources.json", { channels: [] });
+const secondaryBySlug = new Map(
+  (secondaryData.channels ?? []).map((c) => [c.slug, c]),
+);
+
+const qualityData = await readJson("data/quality.json", { feeds: {} });
+const qualityByFeed = qualityData.feeds ?? {};
+
+const logoData = await readJson("data/logo-index.json", { channels: {} });
+const logoIndex = logoData.channels ?? {};
+
 const healthByUrl = new Map(health.map((h) => [h.url, h]));
 
 /* ------------------------------------------------------------------ *
@@ -49,6 +72,16 @@ for (const c of raw.channels) {
   if (!c.icon) continue;
   const file = basename(new URL(c.icon).pathname);
   if (!logoSources.has(c.icon)) logoSources.set(c.icon, file);
+}
+// The second source publishes its own logos; mirror them too.
+for (const c of secondaryData.channels ?? []) {
+  if (!c.logo) continue;
+  try {
+    const file = basename(new URL(c.logo).pathname);
+    if (!logoSources.has(c.logo)) logoSources.set(c.logo, file);
+  } catch {
+    /* not a usable URL */
+  }
 }
 
 let downloaded = 0;
@@ -85,6 +118,64 @@ const localLogo = (remote) => {
   if (!remote) return null;
   const file = logoSources.get(remote);
   return file ? `/logos/${file}` : null;
+};
+
+/* ------------------------------------------------------------------ *
+ * Measured quality and the high-resolution logo library
+ * ------------------------------------------------------------------ */
+
+/** The quality of a feed, as measured. */
+const qualityOf = (slug) => qualityByFeed[slug]?.quality ?? "unknown";
+
+/**
+ * The high-resolution logo for a channel, if the library has one.
+ *
+ * The index may be keyed by the channel id, the display name, or any of the
+ * channel's feed slugs, so try each of them before giving up.
+ */
+const highResLogo = (channel, servers) => {
+  const keys = [
+    channel.id,
+    slugify(channel.name),
+    ...servers.map((s) => s.id),
+    ...servers.map((s) => slugify(s.id)),
+  ];
+  for (const key of keys) {
+    const entry = logoIndex[key];
+    if (entry?.file) return `/logos/${entry.file}`;
+  }
+  return null;
+};
+
+const highResLogoHd = (channel, servers) => {
+  const keys = [
+    channel.id,
+    slugify(channel.name),
+    ...servers.map((s) => s.id),
+    ...servers.map((s) => slugify(s.id)),
+  ];
+  for (const key of keys) {
+    const entry = logoIndex[key];
+    if (entry?.hdFile) return `/logos/${entry.hdFile}`;
+  }
+  return null;
+};
+
+/**
+ * Dark artwork needs a light plate behind it to stay legible on a dark card.
+ */
+const logoIsDark = (channel, servers) => {
+  const keys = [
+    channel.id,
+    slugify(channel.name),
+    ...servers.map((s) => s.id),
+    ...servers.map((s) => slugify(s.id)),
+  ];
+  for (const key of keys) {
+    const entry = logoIndex[key];
+    if (entry) return Boolean(entry.dark);
+  }
+  return false;
 };
 
 /* ------------------------------------------------------------------ *
@@ -132,6 +223,9 @@ const slugify = (name) =>
 /** The best status of a channel: live wins over everything else. */
 const STATUS_RANK = { live: 6, blocked: 5, error: 4, unknown: 3, acestream: 2, none: 1 };
 
+/** The best quality wins: HD before SD. */
+const QUALITY_RANK = { uhd: 6, fhd: 5, hd: 4, sd: 3, low: 2, unknown: 1 };
+
 const usedIds = new Set();
 const channels = [];
 const problems = [];
@@ -140,6 +234,33 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
   for (const channel of family.channels) {
     const servers = [];
     for (const server of channel.servers) {
+      // A feed may come from the second source rather than the first scrape.
+      if (server.source === "secondary") {
+        const feed = secondaryBySlug.get(server.slug);
+        if (!feed) {
+          problems.push(
+            `secondary slug "${server.slug}" is not in data/secondary-sources.json (${familyKey})`,
+          );
+          continue;
+        }
+        // The second source's playlist address carries a token that expires in
+        // minutes, so it is never stored: the server asks for a fresh one
+        // when the feed is played.
+        const direct = feed.kind === "hls";
+        servers.push({
+          id: server.slug,
+          label: server.label,
+          embedUrl: direct ? null : (feed.stream ?? null),
+          sourcePage: feed.sourcePage ?? feed.playerPage ?? null,
+          status: direct ? "live" : "unknown",
+          kind: "iframe",
+          hlsUrl: null,
+          quality: direct ? (feed.hd ? "hd" : "sd") : "unknown",
+          source: "secondary",
+        });
+        continue;
+      }
+
       const feed = feedBySlug.get(server.slug);
       if (!feed) {
         problems.push(`taxonomy slug "${server.slug}" is not in the scrape (${familyKey})`);
@@ -157,6 +278,8 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
         status: resolved?.hlsUrl ? "live" : statusOf(feed),
         kind: kindOf(feed),
         hlsUrl: resolved?.hlsUrl ?? null,
+        quality: qualityOf(server.slug),
+        source: "primary",
       });
     }
 
@@ -165,13 +288,22 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
       continue;
     }
 
-    // The logo comes from the first feed the source lists for the channel.
-    const logo = localLogo(feedBySlug.get(servers[0].id)?.icon ?? null);
-    const logoRemote = feedBySlug.get(servers[0].id)?.icon ?? null;
+    // The logo comes from the first feed the source lists for the channel,
+    // unless the high-resolution library has a better one.
+    const firstFeed = feedBySlug.get(servers[0].id);
+    const firstSecondary = secondaryBySlug.get(servers[0].id);
+    const logoRemote = firstFeed?.icon ?? firstSecondary?.logo ?? null;
+    const logo = highResLogo(channel, servers) ?? localLogo(logoRemote);
+    const logoHd = highResLogoHd(channel, servers);
+    const logoDark = logoIsDark(channel, servers);
 
-    // Best first: a resolved playlist, then a live embed, then the rest.
+    // Best first: a resolved playlist, then the highest quality, then a live
+    // embed, then the rest. The player walks this list, so the order is the
+    // failover order.
     servers.sort((a, b) => {
       if (a.hlsUrl !== b.hlsUrl) return a.hlsUrl ? -1 : 1;
+      const quality = QUALITY_RANK[b.quality] - QUALITY_RANK[a.quality];
+      if (quality) return quality;
       const rank = STATUS_RANK[b.status] - STATUS_RANK[a.status];
       if (rank) return rank;
       return a.id.localeCompare(b.id);
@@ -193,10 +325,16 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
       familyKey,
       category: family.category,
       logo,
+      logoHd,
+      logoDark,
       logoRemote,
       status: servers.reduce(
         (best, s) => (STATUS_RANK[s.status] > STATUS_RANK[best] ? s.status : best),
         "none",
+      ),
+      quality: servers.reduce(
+        (best, s) => (QUALITY_RANK[s.quality] > QUALITY_RANK[best] ? s.quality : best),
+        "unknown",
       ),
       servers,
     });
@@ -242,20 +380,23 @@ const ts = `// AUTO-GENERATED by scripts/build-dataset.mjs — do not edit by ha
 // Source: https://www.cool-etv.net/ (scraped ${raw.generatedAt})
 // ${channels.length} channels · ${serverCount} upstream servers · ${taxonomy.categories.length} categories
 
-import type { Category, Channel } from "./types";
+import type { Category, UpstreamChannel } from "./types";
 
 export type {
   Category,
   CategoryId,
   Channel,
+  Quality,
   Server,
   ServerKind,
   ServerStatus,
+  UpstreamChannel,
+  UpstreamServer,
 } from "./types";
 
 export const CATEGORIES: Category[] = ${JSON.stringify(taxonomy.categories, null, 2)};
 
-export const CHANNELS: Channel[] = ${JSON.stringify(channels, null, 2)};
+export const CHANNELS: UpstreamChannel[] = ${JSON.stringify(channels, null, 2)};
 
 export const CHANNEL_COUNT = CHANNELS.length;
 `;

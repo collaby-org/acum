@@ -26,28 +26,45 @@ const APP = process.argv[2] ?? "http://127.0.0.1:3112/";
 
 /**
  * The fallback only proves something on a channel that actually has a second
- * feed to fall back to, so pick the first one with two resolved playlists.
+ * feed to fall back to, so pick the first one the server hands back a chain
+ * of two or more playable links for.
  */
-async function pickChannel() {
+async function pickChannel(appUrl) {
   if (process.argv[3]) return process.argv[3];
   try {
     const source = await readFileSync(
       resolve(__dirname, "..", "src", "data", "channels.ts"),
       "utf8",
     );
-    const match = source.match(/export const CHANNELS: Channel\[\] = ([\s\S]*?);\n\nexport const CHANNEL_COUNT/);
+    const match = source.match(
+      /export const CHANNELS: UpstreamChannel\[\] = ([\s\S]*?);\n\nexport const CHANNEL_COUNT/,
+    );
     if (!match) return null;
     const channels = JSON.parse(match[1]);
-    const multi = channels.find(
-      (c) => c.servers.filter((s) => s.hlsUrl).length > 1,
-    );
-    return multi?.name ?? null;
+
+    for (const channel of channels) {
+      if (channel.servers.length < 2) continue;
+      if (channel.status !== "live") continue;
+      const response = await fetch(new URL("/api/player", appUrl), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ channel: channel.id }),
+      });
+      if (!response.ok) continue;
+      const payload = await response.json();
+      const playable = (payload.sources ?? []).filter(
+        (source) => source.playable && source.kind === "hls",
+      );
+      if (playable.length >= 2) return channel.name;
+    }
   } catch {
     return null;
   }
+  return null;
 }
 
-const WANT = (await pickChannel()) ?? "";
+const APP_URL = new URL(APP).href;
+const WANT = (await pickChannel(APP_URL)) ?? "";
 if (WANT) console.log("channel under test:", WANT);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -1,12 +1,40 @@
 {
   "categories": [
-    { "id": "generaliste", "label": "Generaliste", "tagline": "Canale naționale și de niște" },
-    { "id": "stiri", "label": "Știri", "tagline": "Actualitate, politică, evenimente" },
-    { "id": "sport", "label": "Sport", "tagline": "Fotbal, meciuri și competiții" },
-    { "id": "movies", "label": "Filme", "tagline": "Cinema și seriale premium" },
-    { "id": "kids", "label": "Copii", "tagline": "Animatoare și conținut pentru cei mici" },
-    { "id": "documentare", "label": "Documentare", "tagline": "Natură, știință și explorare" },
-    { "id": "music", "label": "Muzică", "tagline": "Clipse, hituri și radio video" }
+    {
+      "id": "generaliste",
+      "label": "Generaliste",
+      "tagline": "Canale naționale și de niște"
+    },
+    {
+      "id": "stiri",
+      "label": "Știri",
+      "tagline": "Actualitate, politică, evenimente"
+    },
+    {
+      "id": "sport",
+      "label": "Sport",
+      "tagline": "Fotbal, meciuri și competiții"
+    },
+    {
+      "id": "movies",
+      "label": "Filme",
+      "tagline": "Cinema și seriale premium"
+    },
+    {
+      "id": "kids",
+      "label": "Copii",
+      "tagline": "Animatoare și conținut pentru cei mici"
+    },
+    {
+      "id": "documentare",
+      "label": "Documentare",
+      "tagline": "Natură, știință și explorare"
+    },
+    {
+      "id": "music",
+      "label": "Muzică",
+      "tagline": "Clipse, hituri și radio video"
+    }
   ],
   "families": {
     "Pro Tv": {
@@ -16,15 +44,32 @@
         {
           "name": "PRO TV",
           "servers": [
-            { "slug": "protv", "label": "S1" },
-            { "slug": "protv-s2", "label": "S2 HD" },
-            { "slug": "protv-s3", "label": "S3" },
-            { "slug": "protv-s4", "label": "S4" }
+            {
+              "slug": "protv",
+              "label": "S1"
+            },
+            {
+              "slug": "protv-s2",
+              "label": "S2 HD"
+            },
+            {
+              "slug": "protv-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "protv-s4",
+              "label": "S4"
+            }
           ]
         },
         {
           "name": "PRO TV News",
-          "servers": [{ "slug": "protv-s7", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "protv-s7",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -35,8 +80,19 @@
         {
           "name": "PRO CINEMA",
           "servers": [
-            { "slug": "procinema", "label": "S1" },
-            { "slug": "procinema-s2", "label": "S2" }
+            {
+              "slug": "procinema",
+              "label": "S1"
+            },
+            {
+              "slug": "procinema-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "pro-cinema",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -48,28 +104,60 @@
         {
           "name": "TVR 1",
           "servers": [
-            { "slug": "tvr1", "label": "S1" },
-            { "slug": "tvr1-s2", "label": "S2" }
+            {
+              "slug": "tvr1",
+              "label": "S1"
+            },
+            {
+              "slug": "tvr1-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "TVR 2",
           "servers": [
-            { "slug": "tvr2", "label": "S1" },
-            { "slug": "tvr2-s2", "label": "S2" }
+            {
+              "slug": "tvr2",
+              "label": "S1"
+            },
+            {
+              "slug": "tvr2-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "TVR 3",
-          "servers": [{ "slug": "tvr3-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "tvr3-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "tvr-3",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         },
         {
           "name": "TVR Sport",
-          "servers": [{ "slug": "tvrsp-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "tvrsp-s1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "TVR Internazionale",
-          "servers": [{ "slug": "tvr-inter-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "tvr-inter-s1",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -80,9 +168,23 @@
         {
           "name": "Prima TV",
           "servers": [
-            { "slug": "primatv", "label": "S1" },
-            { "slug": "primatv-s2", "label": "S2" },
-            { "slug": "primatv-s3", "label": "S3" }
+            {
+              "slug": "primatv",
+              "label": "S1"
+            },
+            {
+              "slug": "primatv-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "primatv-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "prima-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -94,36 +196,91 @@
         {
           "name": "HBO",
           "servers": [
-            { "slug": "hro1-s1", "label": "S1" },
-            { "slug": "hro1-s2", "label": "S2" }
+            {
+              "slug": "hro1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "hro1-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "hbo",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "HBO 2",
           "servers": [
-            { "slug": "hro2-s1", "label": "S1" },
-            { "slug": "hro2-s2", "label": "S2" }
+            {
+              "slug": "hro2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "hro2-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "hbo-2",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "HBO 3",
           "servers": [
-            { "slug": "hro3-s1", "label": "S1" },
-            { "slug": "hro3-s2", "label": "S2" }
+            {
+              "slug": "hro3-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "hro3-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "hbo-3",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Cinemax 1",
           "servers": [
-            { "slug": "cmax1-s1", "label": "S1" },
-            { "slug": "cmax1-s2", "label": "S2" }
+            {
+              "slug": "cmax1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "cmax1-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "cinemax",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Cinemax 2",
           "servers": [
-            { "slug": "cmax2-s1", "label": "S1" },
-            { "slug": "cmax2-s2", "label": "S2" }
+            {
+              "slug": "cmax2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "cmax2-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "cinemax-2",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -135,9 +292,23 @@
         {
           "name": "Național TV",
           "servers": [
-            { "slug": "nationaltv", "label": "S1" },
-            { "slug": "nationaltv-s2", "label": "S2" },
-            { "slug": "nationaltv-s3", "label": "S3" }
+            {
+              "slug": "nationaltv",
+              "label": "S1"
+            },
+            {
+              "slug": "nationaltv-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "nationaltv-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "national-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -149,15 +320,37 @@
         {
           "name": "Kanal D",
           "servers": [
-            { "slug": "cd-s1", "label": "S1" },
-            { "slug": "cd-s2", "label": "S2" }
+            {
+              "slug": "cd-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "cd-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "kanal-d",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Kanal D 2",
           "servers": [
-            { "slug": "cd-s3", "label": "S1" },
-            { "slug": "cd-s4", "label": "S2" }
+            {
+              "slug": "cd-s3",
+              "label": "S1"
+            },
+            {
+              "slug": "cd-s4",
+              "label": "S2"
+            },
+            {
+              "slug": "kanal-d2",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -169,10 +362,27 @@
         {
           "name": "Antena 1",
           "servers": [
-            { "slug": "an1", "label": "S1" },
-            { "slug": "an1-s2", "label": "S2 HD" },
-            { "slug": "an1-s3", "label": "S3" },
-            { "slug": "an1-s4", "label": "S4" }
+            {
+              "slug": "an1",
+              "label": "S1"
+            },
+            {
+              "slug": "an1-s2",
+              "label": "S2 HD"
+            },
+            {
+              "slug": "an1-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "an1-s4",
+              "label": "S4"
+            },
+            {
+              "slug": "antena-1",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -184,15 +394,27 @@
         {
           "name": "PRO 2",
           "servers": [
-            { "slug": "acasatv", "label": "S1" },
-            { "slug": "acasatv-s2", "label": "S2" }
+            {
+              "slug": "acasatv",
+              "label": "S1"
+            },
+            {
+              "slug": "acasatv-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "PRO 2 Gold",
           "servers": [
-            { "slug": "acasatv-gold", "label": "S1" },
-            { "slug": "acasatv-gold-s2", "label": "S2" }
+            {
+              "slug": "acasatv-gold",
+              "label": "S1"
+            },
+            {
+              "slug": "acasatv-gold-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -204,9 +426,18 @@
         {
           "name": "PRO X",
           "servers": [
-            { "slug": "sportro", "label": "S1" },
-            { "slug": "sportro-s2", "label": "S2" },
-            { "slug": "sportro-s3", "label": "S3" }
+            {
+              "slug": "sportro",
+              "label": "S1"
+            },
+            {
+              "slug": "sportro-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "sportro-s3",
+              "label": "S3"
+            }
           ]
         }
       ]
@@ -218,9 +449,23 @@
         {
           "name": "Antena 3",
           "servers": [
-            { "slug": "an3", "label": "S1" },
-            { "slug": "an3-s2", "label": "S2" },
-            { "slug": "an3-s3", "label": "S3" }
+            {
+              "slug": "an3",
+              "label": "S1"
+            },
+            {
+              "slug": "an3-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "an3-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "antena-3",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -232,9 +477,23 @@
         {
           "name": "Realitatea",
           "servers": [
-            { "slug": "realitatea", "label": "S1" },
-            { "slug": "realitatea-s2", "label": "S2" },
-            { "slug": "realitatea-s3", "label": "S3" }
+            {
+              "slug": "realitatea",
+              "label": "S1"
+            },
+            {
+              "slug": "realitatea-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "realitatea-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "realitatea-plus",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -246,29 +505,53 @@
         {
           "name": "SuperSport 1",
           "servers": [
-            { "slug": "sport1-s1", "label": "S1" },
-            { "slug": "sport1-s2", "label": "S2" }
+            {
+              "slug": "sport1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "sport1-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "SuperSport 2",
           "servers": [
-            { "slug": "sport2-s1", "label": "S1" },
-            { "slug": "sport2-s2", "label": "S2" }
+            {
+              "slug": "sport2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "sport2-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "SuperSport 3",
           "servers": [
-            { "slug": "sport3-s1", "label": "S1" },
-            { "slug": "sport3-s2", "label": "S2" }
+            {
+              "slug": "sport3-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "sport3-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "SuperSport 4",
           "servers": [
-            { "slug": "sport4-s1", "label": "S1" },
-            { "slug": "sport4-s2", "label": "S2" }
+            {
+              "slug": "sport4-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "sport4-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -280,29 +563,53 @@
         {
           "name": "Telekom Sport 1",
           "servers": [
-            { "slug": "dolce1-s1", "label": "S1" },
-            { "slug": "dolce1-s2", "label": "S2" }
+            {
+              "slug": "dolce1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "dolce1-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "Telekom Sport 2",
           "servers": [
-            { "slug": "dolce2-s1", "label": "S1" },
-            { "slug": "dolce2-s2", "label": "S2" }
+            {
+              "slug": "dolce2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "dolce2-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "Telekom Sport 3",
           "servers": [
-            { "slug": "dolce3-s1", "label": "S1" },
-            { "slug": "dolce3-s2", "label": "S2" }
+            {
+              "slug": "dolce3-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "dolce3-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "Telekom Sport 4",
           "servers": [
-            { "slug": "dolce4-s1", "label": "S1" },
-            { "slug": "dolce4-s2", "label": "S2" }
+            {
+              "slug": "dolce4-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "dolce4-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -313,35 +620,75 @@
       "channels": [
         {
           "name": "LOOK Sport 1",
-          "servers": [{ "slug": "look-tv-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-s1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK Sport 2",
-          "servers": [{ "slug": "look-tv-s2", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-s2",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK Sport 3",
-          "servers": [{ "slug": "look-tv-s3", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-s3",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK Sport 4",
-          "servers": [{ "slug": "look-tv-plus-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-plus-s1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK Sport 5",
-          "servers": [{ "slug": "look-tv-plus-s2", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-plus-s2",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK PP1",
-          "servers": [{ "slug": "look-tv-pp1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-pp1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK PP2",
-          "servers": [{ "slug": "look-tv-pp2", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-pp2",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "LOOK PP3",
-          "servers": [{ "slug": "look-tv-pp3", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "look-tv-pp3",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -352,15 +699,27 @@
         {
           "name": "eSports 1",
           "servers": [
-            { "slug": "er1-s1", "label": "S1" },
-            { "slug": "er1-s2", "label": "S2" }
+            {
+              "slug": "er1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "er1-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "eSports 2",
           "servers": [
-            { "slug": "er2-s1", "label": "S1" },
-            { "slug": "er2-s2", "label": "S2" }
+            {
+              "slug": "er2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "er2-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -372,9 +731,18 @@
         {
           "name": "RTV",
           "servers": [
-            { "slug": "realitatea-rtv", "label": "S1" },
-            { "slug": "realitatea-rtv-s2", "label": "S2" },
-            { "slug": "realitatea-rtv-s3", "label": "S3" }
+            {
+              "slug": "realitatea-rtv",
+              "label": "S1"
+            },
+            {
+              "slug": "realitatea-rtv-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "realitatea-rtv-s3",
+              "label": "S3"
+            }
           ]
         }
       ]
@@ -386,8 +754,14 @@
         {
           "name": "TV 1000 Max",
           "servers": [
-            { "slug": "tv100", "label": "S1" },
-            { "slug": "tv100-s2", "label": "S2" }
+            {
+              "slug": "tv100",
+              "label": "S1"
+            },
+            {
+              "slug": "tv100-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -399,8 +773,14 @@
         {
           "name": "Movies",
           "servers": [
-            { "slug": "movie-s1", "label": "S1" },
-            { "slug": "movie-s2", "label": "S2" }
+            {
+              "slug": "movie-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "movie-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -412,8 +792,19 @@
         {
           "name": "Zu TV",
           "servers": [
-            { "slug": "zu", "label": "S1" },
-            { "slug": "zu-s2", "label": "S2" }
+            {
+              "slug": "zu",
+              "label": "S1"
+            },
+            {
+              "slug": "zu-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "zu-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -424,19 +815,44 @@
       "channels": [
         {
           "name": "Filmbox HD",
-          "servers": [{ "slug": "filmbox-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "filmbox-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "filmbox-premium",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         },
         {
           "name": "Filmbox Family",
-          "servers": [{ "slug": "filmbox-s2", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "filmbox-s2",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Filmbox Extra",
-          "servers": [{ "slug": "filmbox-s3", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "filmbox-s3",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Filmbox",
-          "servers": [{ "slug": "filmbox-s4", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "filmbox-s4",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -447,8 +863,19 @@
         {
           "name": "Antena Stars",
           "servers": [
-            { "slug": "an2-s1", "label": "S1" },
-            { "slug": "an2-s2", "label": "S2" }
+            {
+              "slug": "an2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "an2-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "antena-stars",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -460,8 +887,19 @@
         {
           "name": "TeenNick",
           "servers": [
-            { "slug": "universal-ch", "label": "S1" },
-            { "slug": "universal-ch-s2", "label": "S2" }
+            {
+              "slug": "universal-ch",
+              "label": "S1"
+            },
+            {
+              "slug": "universal-ch-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "teennick",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -473,8 +911,14 @@
         {
           "name": "Film Café",
           "servers": [
-            { "slug": "film-cafe", "label": "S1" },
-            { "slug": "film-cafe-s2", "label": "S2" }
+            {
+              "slug": "film-cafe",
+              "label": "S1"
+            },
+            {
+              "slug": "film-cafe-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -486,8 +930,19 @@
         {
           "name": "Happy Channel",
           "servers": [
-            { "slug": "euforia", "label": "S1" },
-            { "slug": "euforia-s2", "label": "S2" }
+            {
+              "slug": "euforia",
+              "label": "S1"
+            },
+            {
+              "slug": "euforia-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "happy-channel",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -499,8 +954,14 @@
         {
           "name": "Diva Universal",
           "servers": [
-            { "slug": "diva", "label": "S1" },
-            { "slug": "diva-s2", "label": "S2" }
+            {
+              "slug": "diva",
+              "label": "S1"
+            },
+            {
+              "slug": "diva-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -512,15 +973,37 @@
         {
           "name": "Disney Channel",
           "servers": [
-            { "slug": "jetix-cartoon", "label": "S1" },
-            { "slug": "jetix-cartoon-s2", "label": "S2" }
+            {
+              "slug": "jetix-cartoon",
+              "label": "S1"
+            },
+            {
+              "slug": "jetix-cartoon-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "disney-channel",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Disney Junior",
           "servers": [
-            { "slug": "jetix-junior", "label": "S1" },
-            { "slug": "jetix-junior-s2", "label": "S2" }
+            {
+              "slug": "jetix-junior",
+              "label": "S1"
+            },
+            {
+              "slug": "jetix-junior-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "disney-junior",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -532,8 +1015,19 @@
         {
           "name": "Cartoon Network",
           "servers": [
-            { "slug": "cartoon", "label": "S1" },
-            { "slug": "cartoon-s2", "label": "S2" }
+            {
+              "slug": "cartoon",
+              "label": "S1"
+            },
+            {
+              "slug": "cartoon-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "cartoon-network",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -545,8 +1039,14 @@
         {
           "name": "Boomerang",
           "servers": [
-            { "slug": "boomerang", "label": "S1" },
-            { "slug": "boomerang-s2", "label": "S2" }
+            {
+              "slug": "boomerang",
+              "label": "S1"
+            },
+            {
+              "slug": "boomerang-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -558,15 +1058,32 @@
         {
           "name": "MiniMax",
           "servers": [
-            { "slug": "minimaxro", "label": "S1" },
-            { "slug": "minimaxro-s2", "label": "S2" }
+            {
+              "slug": "minimaxro",
+              "label": "S1"
+            },
+            {
+              "slug": "minimaxro-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "minimax",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Jim Jam",
           "servers": [
-            { "slug": "jim-jam", "label": "S1" },
-            { "slug": "jim-jam-s2", "label": "S2" }
+            {
+              "slug": "jim-jam",
+              "label": "S1"
+            },
+            {
+              "slug": "jim-jam-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -578,9 +1095,23 @@
         {
           "name": "B1 TV",
           "servers": [
-            { "slug": "b1", "label": "S1" },
-            { "slug": "b1-s2", "label": "S2" },
-            { "slug": "b1-s3", "label": "S3" }
+            {
+              "slug": "b1",
+              "label": "S1"
+            },
+            {
+              "slug": "b1-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "b1-s3",
+              "label": "S3"
+            },
+            {
+              "slug": "b1tv",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -592,22 +1123,50 @@
         {
           "name": "Nickelodeon",
           "servers": [
-            { "slug": "nickelodeon", "label": "S1" },
-            { "slug": "nickelodeon-s2", "label": "S2" }
+            {
+              "slug": "nickelodeon",
+              "label": "S1"
+            },
+            {
+              "slug": "nickelodeon-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "Nickelodeon Junior",
           "servers": [
-            { "slug": "nickelodeon-jr", "label": "S1" },
-            { "slug": "nickelodeon-jr-s2", "label": "S2" }
+            {
+              "slug": "nickelodeon-jr",
+              "label": "S1"
+            },
+            {
+              "slug": "nickelodeon-jr-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "nick-jr",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "NickToons",
           "servers": [
-            { "slug": "nick-toons-s1", "label": "S1" },
-            { "slug": "nick-toons-s2", "label": "S2" }
+            {
+              "slug": "nick-toons-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "nick-toons-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "nicktoons",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -619,8 +1178,19 @@
         {
           "name": "AMC",
           "servers": [
-            { "slug": "amc-s1", "label": "S1" },
-            { "slug": "amc-s2", "label": "S2" }
+            {
+              "slug": "amc-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "amc-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "amc",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -632,8 +1202,19 @@
         {
           "name": "BBC Earth",
           "servers": [
-            { "slug": "bbc-earth-s1", "label": "S1" },
-            { "slug": "bbc-earth-s2", "label": "S2" }
+            {
+              "slug": "bbc-earth-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "bbc-earth-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "bbc-earth",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -645,8 +1226,19 @@
         {
           "name": "Prima News",
           "servers": [
-            { "slug": "prima-news-s1", "label": "S1" },
-            { "slug": "prima-news-s2", "label": "S2" }
+            {
+              "slug": "prima-news-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "prima-news-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "prima-news",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -658,8 +1250,14 @@
         {
           "name": "EuroNews",
           "servers": [
-            { "slug": "euro-news-s1", "label": "S1" },
-            { "slug": "euro-news-s2", "label": "S2" }
+            {
+              "slug": "euro-news-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "euro-news-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -671,8 +1269,14 @@
         {
           "name": "SHOW 1",
           "servers": [
-            { "slug": "shut1-s1", "label": "S1" },
-            { "slug": "shut1-s2", "label": "S2" }
+            {
+              "slug": "shut1-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "shut1-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -684,8 +1288,14 @@
         {
           "name": "SHOW 2",
           "servers": [
-            { "slug": "shut2-s1", "label": "S1" },
-            { "slug": "shut2-s2", "label": "S2" }
+            {
+              "slug": "shut2-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "shut2-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -697,8 +1307,14 @@
         {
           "name": "AXN",
           "servers": [
-            { "slug": "axn", "label": "S1" },
-            { "slug": "axn-s2", "label": "S2" }
+            {
+              "slug": "axn",
+              "label": "S1"
+            },
+            {
+              "slug": "axn-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -710,8 +1326,14 @@
         {
           "name": "AXN Black",
           "servers": [
-            { "slug": "axn-black-s1", "label": "S1" },
-            { "slug": "axn-black-s2", "label": "S2" }
+            {
+              "slug": "axn-black-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "axn-black-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -723,8 +1345,14 @@
         {
           "name": "AXN White",
           "servers": [
-            { "slug": "axn-white-s1", "label": "S1" },
-            { "slug": "axn-white-s2", "label": "S2" }
+            {
+              "slug": "axn-white-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "axn-white-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -736,8 +1364,14 @@
         {
           "name": "AXN Spin",
           "servers": [
-            { "slug": "axn-spin", "label": "S1" },
-            { "slug": "axn-spin-s2", "label": "S2" }
+            {
+              "slug": "axn-spin",
+              "label": "S1"
+            },
+            {
+              "slug": "axn-spin-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -749,8 +1383,14 @@
         {
           "name": "TNT",
           "servers": [
-            { "slug": "tnt-s1", "label": "S1" },
-            { "slug": "tnt-s2", "label": "S2" }
+            {
+              "slug": "tnt-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "tnt-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -762,8 +1402,19 @@
         {
           "name": "Epic Drama",
           "servers": [
-            { "slug": "epic-drama-s1", "label": "S1" },
-            { "slug": "epic-drama-s2", "label": "S2" }
+            {
+              "slug": "epic-drama-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "epic-drama-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "epicdrama",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -774,11 +1425,21 @@
       "channels": [
         {
           "name": "Comedy Central",
-          "servers": [{ "slug": "comedy-central", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "comedy-central",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Shorts",
-          "servers": [{ "slug": "comedy-shorts", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "comedy-shorts",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -788,15 +1449,30 @@
       "channels": [
         {
           "name": "ViaSat Nature",
-          "servers": [{ "slug": "via-nature", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "via-nature",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "ViaSat Explorer",
-          "servers": [{ "slug": "via-explorer", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "via-explorer",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "ViaSat History",
-          "servers": [{ "slug": "via-his", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "via-his",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -807,8 +1483,19 @@
         {
           "name": "Duck TV",
           "servers": [
-            { "slug": "duck-tv-s1", "label": "S1" },
-            { "slug": "duck-tv-s2", "label": "S2" }
+            {
+              "slug": "duck-tv-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "duck-tv-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "duck-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -819,15 +1506,30 @@
       "channels": [
         {
           "name": "Bollywood Clasic",
-          "servers": [{ "slug": "bollywood-clasic-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "bollywood-clasic-s1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Bollywood TV",
-          "servers": [{ "slug": "bollywood-tv-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "bollywood-tv-s1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Bollywood Extra",
-          "servers": [{ "slug": "bollywood-extra-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "bollywood-extra-s1",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -838,8 +1540,19 @@
         {
           "name": "Crime+",
           "servers": [
-            { "slug": "crime-investigation-s1", "label": "S1" },
-            { "slug": "crime-investigation-s2", "label": "S2" }
+            {
+              "slug": "crime-investigation-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "crime-investigation-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "crime-investigation",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -851,22 +1564,45 @@
         {
           "name": "TLC",
           "servers": [
-            { "slug": "tlc-s1", "label": "S1" },
-            { "slug": "tlc-s2", "label": "S2" }
+            {
+              "slug": "tlc-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "tlc-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "tlc",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         },
         {
           "name": "Travel Channel",
           "servers": [
-            { "slug": "travel-ch-s1", "label": "S1" },
-            { "slug": "travel-ch-s2", "label": "S2" }
+            {
+              "slug": "travel-ch-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "travel-ch-s2",
+              "label": "S2"
+            }
           ]
         },
         {
           "name": "Travel & Living",
           "servers": [
-            { "slug": "travel-living-s1", "label": "S1" },
-            { "slug": "travel-living-s2", "label": "S2" }
+            {
+              "slug": "travel-living-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "travel-living-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -878,8 +1614,19 @@
         {
           "name": "National Geographic",
           "servers": [
-            { "slug": "natgeo", "label": "S1" },
-            { "slug": "natgeo-hd", "label": "S2" }
+            {
+              "slug": "natgeo",
+              "label": "S1"
+            },
+            {
+              "slug": "natgeo-hd",
+              "label": "S2"
+            },
+            {
+              "slug": "national-geographic",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -891,8 +1638,14 @@
         {
           "name": "Nat Geo Wild",
           "servers": [
-            { "slug": "natgeowild", "label": "S1" },
-            { "slug": "natgeowild-s2", "label": "S2" }
+            {
+              "slug": "natgeowild",
+              "label": "S1"
+            },
+            {
+              "slug": "natgeowild-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -904,8 +1657,14 @@
         {
           "name": "Animal Planet",
           "servers": [
-            { "slug": "animal", "label": "S1" },
-            { "slug": "animal-s2", "label": "S2" }
+            {
+              "slug": "animal",
+              "label": "S1"
+            },
+            {
+              "slug": "animal-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -917,8 +1676,19 @@
         {
           "name": "Discovery Channel",
           "servers": [
-            { "slug": "discovery-channel-s1", "label": "S1" },
-            { "slug": "discovery-channel-s2", "label": "S2" }
+            {
+              "slug": "discovery-channel-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "discovery-channel-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "discovery",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -930,8 +1700,19 @@
         {
           "name": "History Channel",
           "servers": [
-            { "slug": "his", "label": "S1" },
-            { "slug": "his-s2", "label": "S2" }
+            {
+              "slug": "his",
+              "label": "S1"
+            },
+            {
+              "slug": "his-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "history-channel",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -943,8 +1724,19 @@
         {
           "name": "Discovery ID",
           "servers": [
-            { "slug": "discoid", "label": "S1" },
-            { "slug": "discoid-s2", "label": "S2" }
+            {
+              "slug": "discoid",
+              "label": "S1"
+            },
+            {
+              "slug": "discoid-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "id",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -956,8 +1748,14 @@
         {
           "name": "Discovery Science",
           "servers": [
-            { "slug": "discoscience", "label": "S1" },
-            { "slug": "discoscience-s2", "label": "S2" }
+            {
+              "slug": "discoscience",
+              "label": "S1"
+            },
+            {
+              "slug": "discoscience-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -969,8 +1767,14 @@
         {
           "name": "Discovery World",
           "servers": [
-            { "slug": "disco-world-s1", "label": "S1" },
-            { "slug": "disco-world-s2", "label": "S2" }
+            {
+              "slug": "disco-world-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "disco-world-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -981,19 +1785,39 @@
       "channels": [
         {
           "name": "Trinitas TV",
-          "servers": [{ "slug": "trinitas-tv", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "trinitas-tv",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Credo TV",
-          "servers": [{ "slug": "credo-tv", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "credo-tv",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Moldova 1",
-          "servers": [{ "slug": "moldova-1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "moldova-1",
+              "label": "S1"
+            }
+          ]
         },
         {
           "name": "Publika TV",
-          "servers": [{ "slug": "publika", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "publika",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1004,8 +1828,19 @@
         {
           "name": "Paprika TV",
           "servers": [
-            { "slug": "paprika-s1", "label": "S1" },
-            { "slug": "paprika-s2", "label": "S2" }
+            {
+              "slug": "paprika-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "paprika-s2",
+              "label": "S2"
+            },
+            {
+              "slug": "tv-paprika",
+              "label": "S2",
+              "source": "secondary"
+            }
           ]
         }
       ]
@@ -1016,7 +1851,17 @@
       "channels": [
         {
           "name": "CBS Reality",
-          "servers": [{ "slug": "cbs-reality-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "cbs-reality-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "cbs-reality",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1026,7 +1871,17 @@
       "channels": [
         {
           "name": "Fishing & Hunting",
-          "servers": [{ "slug": "fishing-hunting-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "fishing-hunting-s1",
+              "label": "S1"
+            },
+            {
+              "slug": "fishing-and-hunting",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1036,7 +1891,12 @@
       "channels": [
         {
           "name": "U-TV Music",
-          "servers": [{ "slug": "utv", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "utv",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1047,8 +1907,14 @@
         {
           "name": "N24+",
           "servers": [
-            { "slug": "n24", "label": "S1" },
-            { "slug": "n24-s2", "label": "S2" }
+            {
+              "slug": "n24",
+              "label": "S1"
+            },
+            {
+              "slug": "n24-s2",
+              "label": "S2"
+            }
           ]
         }
       ]
@@ -1059,7 +1925,17 @@
       "channels": [
         {
           "name": "Kiss TV",
-          "servers": [{ "slug": "kisslive", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "kisslive",
+              "label": "S1"
+            },
+            {
+              "slug": "kiss-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1069,7 +1945,17 @@
       "channels": [
         {
           "name": "Taraf TV",
-          "servers": [{ "slug": "taraf", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "taraf",
+              "label": "S1"
+            },
+            {
+              "slug": "taraf-tv",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1079,7 +1965,17 @@
       "channels": [
         {
           "name": "Favorit TV",
-          "servers": [{ "slug": "favorit", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "favorit",
+              "label": "S1"
+            },
+            {
+              "slug": "tv-favorit",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1089,7 +1985,17 @@
       "channels": [
         {
           "name": "Music Channel",
-          "servers": [{ "slug": "mch", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "mch",
+              "label": "S1"
+            },
+            {
+              "slug": "music-channel",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1099,7 +2005,17 @@
       "channels": [
         {
           "name": "Hit Music",
-          "servers": [{ "slug": "hit-music", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "hit-music",
+              "label": "S1"
+            },
+            {
+              "slug": "hit-music-channel",
+              "label": "S2",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -1109,7 +2025,12 @@
       "channels": [
         {
           "name": "News 24",
-          "servers": [{ "slug": "news", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "news",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1119,7 +2040,12 @@
       "channels": [
         {
           "name": "Inedit TV",
-          "servers": [{ "slug": "inedit-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "inedit-s1",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1129,7 +2055,12 @@
       "channels": [
         {
           "name": "France 24",
-          "servers": [{ "slug": "france-24-live-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "france-24-live-s1",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1139,7 +2070,12 @@
       "channels": [
         {
           "name": "CNN",
-          "servers": [{ "slug": "cnn-live-s1", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "cnn-live-s1",
+              "label": "S1"
+            }
+          ]
         }
       ]
     },
@@ -1149,7 +2085,288 @@
       "channels": [
         {
           "name": "Etno TV",
-          "servers": [{ "slug": "etnotv", "label": "S1" }]
+          "servers": [
+            {
+              "slug": "etnotv",
+              "label": "S1"
+            }
+          ]
+        }
+      ]
+    },
+    "Alte canale": {
+      "name": "Alte canale",
+      "category": "generaliste",
+      "channels": [
+        {
+          "name": "Acasa Gold",
+          "servers": [
+            {
+              "slug": "acasa-gold",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Acasa TV",
+          "servers": [
+            {
+              "slug": "acasa-tv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Antena 3 CNN",
+          "servers": [
+            {
+              "slug": "antena-3-cnn",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Balcan Music",
+          "servers": [
+            {
+              "slug": "balcan-music",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "BBC World News",
+          "servers": [
+            {
+              "slug": "bbc-world-news",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Cartoonito",
+          "servers": [
+            {
+              "slug": "cartoonito",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Cinemaraton",
+          "servers": [
+            {
+              "slug": "cinemaraton",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "CineWOW",
+          "servers": [
+            {
+              "slug": "cinewow",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Digi 24",
+          "servers": [
+            {
+              "slug": "digi-24",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Digi Sport 1",
+          "servers": [
+            {
+              "slug": "digi-sport-1",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Digi Sport 2",
+          "servers": [
+            {
+              "slug": "digi-sport-2",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Digi Sport 3",
+          "servers": [
+            {
+              "slug": "digi-sport-3",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Digi Sport 4",
+          "servers": [
+            {
+              "slug": "digi-sport-4",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Dizi",
+          "servers": [
+            {
+              "slug": "dizi",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "EuroSport 1",
+          "servers": [
+            {
+              "slug": "eurosport-1",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "EuroSport 2",
+          "servers": [
+            {
+              "slug": "eurosport-2",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Film Now",
+          "servers": [
+            {
+              "slug": "film-now",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Magic TV",
+          "servers": [
+            {
+              "slug": "magic-tv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "MetroPola TV",
+          "servers": [
+            {
+              "slug": "metropola-tv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "MTV",
+          "servers": [
+            {
+              "slug": "mtv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Prima Sport 1",
+          "servers": [
+            {
+              "slug": "prima-sport-1",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Prima Sport 2",
+          "servers": [
+            {
+              "slug": "prima-sport-2",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Prima Sport 3",
+          "servers": [
+            {
+              "slug": "prima-sport-3",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Pro Arena",
+          "servers": [
+            {
+              "slug": "pro-arena",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Romania TV",
+          "servers": [
+            {
+              "slug": "romania-tv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Traditional TV",
+          "servers": [
+            {
+              "slug": "traditional-tv",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
+        },
+        {
+          "name": "Tralala",
+          "servers": [
+            {
+              "slug": "tralala",
+              "label": "S1",
+              "source": "secondary"
+            }
+          ]
         }
       ]
     }

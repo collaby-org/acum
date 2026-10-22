@@ -73,9 +73,8 @@ export async function Footer() {
             </p>
 
             <p className="mt-5 max-w-md text-sm leading-relaxed text-ink-muted">
-              Un director de canale TV live construit din embed-urile publice de
-              pe cool-etv.net. Fără cont, fără reclame, fără urmărire — și fără
-              ecran negru când apeși play.
+              Un director de canale TV live, cu player propriu și fără reclame.
+              Fără cont, fără urmărire — și fără ecran negru când apeși play.
             </p>
 
             <ul className="mt-7 flex flex-wrap gap-2">
@@ -101,8 +100,8 @@ export async function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm text-ink-muted">
                 <li>Verificare automată a datelor</li>
-                <li>Indexare din cool-etv.net</li>
-                <li>Adrese publice de încorporare</li>
+                <li>Calitate măsurată, nu estimată</li>
+                <li>Rezervă automată între servere</li>
               </ul>
             </div>
           </div>

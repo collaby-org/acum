@@ -25,8 +25,8 @@ export type PlayerControlsProps = {
   busy?: boolean;
   /** True while the picture fills the screen. */
   fullscreen?: boolean;
-  /** Name of the feed currently in use, e.g. "S1". */
-  sourceLabel?: string;
+  /** False when the browser cannot go full screen at all. */
+  canFullscreen?: boolean;
   /** Shown only when another link is available. */
   canSwitch?: boolean;
   /** True when the browser can put the picture in a floating window. */
@@ -61,7 +61,7 @@ export function PlayerControls({
   volume,
   busy = false,
   fullscreen = false,
-  sourceLabel,
+  canFullscreen = true,
   canSwitch = false,
   canPictureInPicture = false,
   liveWindow = null,
@@ -88,6 +88,9 @@ export function PlayerControls({
     <div
       className={cn(
         "flex items-center gap-2 border-t border-white/8 bg-canvas-raised px-3 py-2.5 sm:px-4",
+        // The bar sits at the bottom of the sheet on a phone, clear of the
+        // home indicator.
+        "max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
         className,
       )}
     >
@@ -180,7 +183,7 @@ export function PlayerControls({
           aria-label="Treci la următorul flux"
         >
           <SkipForward className="size-4" />
-          <span className="hidden sm:inline">Alt flux</span>
+          <span className="hidden sm:inline">Flux următor</span>
         </Button>
       ) : null}
 
@@ -197,16 +200,6 @@ export function PlayerControls({
           </Button>
         ) : null}
 
-        {sourceLabel ? (
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-faint">
-            <span
-              aria-hidden
-              className="relative size-1.5 animate-[pulse-live_1.9s_ease-in-out_infinite] rounded-full bg-live"
-            />
-            {sourceLabel}
-          </span>
-        ) : null}
-
         {canPictureInPicture && onTogglePictureInPicture ? (
           <Button
             variant="ghost"
@@ -219,20 +212,22 @@ export function PlayerControls({
           </Button>
         ) : null}
 
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={onToggleFullscreen}
-          aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-          aria-pressed={fullscreen}
-          title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-        >
-          {fullscreen ? (
-            <Minimize className="size-4" />
-          ) : (
-            <Maximize className="size-4" />
-          )}
-        </Button>
+        {canFullscreen ? (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onToggleFullscreen}
+            aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+            aria-pressed={fullscreen}
+            title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+          >
+            {fullscreen ? (
+              <Minimize className="size-4" />
+            ) : (
+              <Maximize className="size-4" />
+            )}
+          </Button>
+        ) : null}
       </div>
     </div>
   );

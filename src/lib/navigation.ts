@@ -6,7 +6,7 @@
  * the shape declared in `src/data/types.ts` and knows nothing about React.
  */
 
-import type { CategoryId, Server, ServerStatus } from "@/data/types";
+import type { CategoryId, Quality, ServerStatus } from "@/data/types";
 import { normalize } from "@/lib/utils";
 
 /**
@@ -23,9 +23,24 @@ export type ChannelLike = {
   familyKey: string;
   category: CategoryId;
   logo: string | null;
-  logoRemote: string | null;
+  logoRemote?: string | null;
+  logoHd?: string | null;
+  logoDark?: boolean;
   status: ServerStatus;
-  servers?: readonly Server[];
+  quality?: Quality;
+  servers?: readonly ServerLike[];
+};
+
+/**
+ * A feed, as far as navigation cares: it names itself and says how it is
+ * doing. The upstream addresses are not part of it.
+ */
+export type ServerLike = {
+  id: string;
+  label: string;
+  status?: ServerStatus;
+  quality?: Quality;
+  source?: "primary" | "secondary";
 };
 
 /* ------------------------------------------------------------------ *

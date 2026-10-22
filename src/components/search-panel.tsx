@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Layers, Play, Radio, Search, X } from "lucide-react";
+import { Heart, Play, Radio, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent } from "react";
-import { STATUS_META, serverSummary } from "@/lib/channel-meta";
+import { STATUS_META } from "@/lib/channel-meta";
 import { groupByCategory, rankResults, type ChannelLike } from "@/lib/navigation";
 import { cn, plural } from "@/lib/utils";
 
@@ -241,7 +241,6 @@ export function SearchPanel<T extends ChannelLike>({
                   const position = positionOf.get(channel.id) ?? 0;
                   const status = STATUS_META[channel.status];
                   const isLive = channel.status === "live";
-                  const feeds = channel.servers ?? [];
                   const favorite = isFavorite(channel.id);
 
                   return (
@@ -287,13 +286,6 @@ export function SearchPanel<T extends ChannelLike>({
                               {channel.family}
                             </span>
                           </span>
-
-                          {feeds.length > 1 && (
-                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-hairline-strong px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.06em] text-ink-muted">
-                              <Layers aria-hidden className="size-2.5" />
-                              {serverSummary(channel)}
-                            </span>
-                          )}
 
                           <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-hairline px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-faint">
                             {isLive ? (

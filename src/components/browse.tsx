@@ -3,15 +3,18 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Compass, Heart, Radio, Sparkles } from "lucide-react";
 import type { Category, Channel } from "@/data/types";
+import type { EpgGuide } from "@/components/now-next";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { ChannelRail } from "@/components/channel-rail";
 import { ChannelCard } from "@/components/channel-card";
 import { ChannelIndex } from "@/components/channel-index";
 import { SearchPanel } from "@/components/search-panel";
+import { ShelfRail } from "@/components/shelf-rail";
 import { PlayerModal } from "@/components/player";
 import { Button } from "@/components/ui/button";
 import { useFavourites, useRecentlyWatched } from "@/hooks/use-favorites";
+import { resolveShelf, useShelves } from "@/hooks/use-shelves";
 import { celebrate, dismiss } from "@/lib/confetti";
 import { byPlayability, isPlayable } from "@/lib/channel-meta";
 import { CATEGORY_ORDER } from "@/lib/navigation";
@@ -20,17 +23,20 @@ import { plural } from "@/lib/utils";
 type BrowseProps = {
   channels: Channel[];
   categories: Category[];
+  /** Today's programme guide, prepared on the server. */
+  guide?: EpgGuide | null;
 };
 
 type View = "home" | "favorites" | "recent";
 
-export function Browse({ channels, categories }: BrowseProps) {
+export function Browse({ channels, categories, guide }: BrowseProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("home");
   const [active, setActive] = useState<Channel | null>(null);
   const [playerOpen, setPlayerOpen] = useState(false);
   const favourites = useFavourites();
   const recent = useRecentlyWatched();
+  const shelves = useShelves();
   const railRefs = useRef(new Map<string, HTMLElement>());
 
   const liveChannels = useMemo(
@@ -179,6 +185,8 @@ export function Browse({ channels, categories }: BrowseProps) {
               isFavorite={isFavourite((liveChannels[0] ?? channels[0]).id)}
               onPlay={openPlayer}
               onToggleFavorite={toggleFavourite}
+              guide={guide ?? null}
+              channels={channels}
               onBrowse={() =>
                 document
                   .getElementById("categorii")
@@ -187,6 +195,31 @@ export function Browse({ channels, categories }: BrowseProps) {
             />
 
             <div id="categorii" className="relative z-10 -mt-6 pb-16 sm:-mt-10">
+              {/* Pinned */}
+              <ShelfRail
+                title="Fixate"
+                eyebrow="Scurtăturile tale"
+                channels={resolveShelf(shelves.pinned.ids, channels)}
+                onPlay={openPlayer}
+                isFavorite={isFavourite}
+                onToggleFavorite={toggleFavourite}
+                onRemove={(channel) => shelves.pinned.unpin(channel.id)}
+                onMove={(channel, delta) => shelves.pinned.move(channel.id, delta)}
+                emptyHint="Fixează un canal ca să-l ai mereu la îndemână."
+              />
+
+              {/* Watch later */}
+              <ShelfRail
+                title="Mai târziu"
+                eyebrow="Pentru când ai timp"
+                channels={resolveShelf(shelves.watchLater.ids, channels)}
+                onPlay={openPlayer}
+                isFavorite={isFavourite}
+                onToggleFavorite={toggleFavourite}
+                onRemove={(channel) => shelves.watchLater.toggle(channel.id)}
+                emptyHint="Adaugă un canal aici ca să-l vezi mai târziu."
+              />
+
               {/* Recently watched */}
               {recentChannels.length > 0 && (
                 <ChannelRail
@@ -255,8 +288,7 @@ export function Browse({ channels, categories }: BrowseProps) {
                     <p className="mt-1 text-sm text-ink-muted">
                       {channels.length}{" "}
                       {plural(channels.length, "canal", "canale", "de canale")},
-                      indexate din{" "}
-                      <span className="text-ink">cool-etv.net</span>.
+                      verificate unul cu unul.
                     </p>
                   </div>
                 </div>

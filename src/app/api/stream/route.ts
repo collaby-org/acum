@@ -6,13 +6,15 @@
  * Google or an HTML cloaking page. A browser cannot set a Referer, so the
  * stream is relayed here instead.
  *
- * Two ways in:
+ * Three ways in:
  *
- *   GET /api/stream?u=<absolute url>   the upstream URL, plain
- *   GET /api/stream?t=<token>          the same URL, signed and opaque
+ *   GET /api/stream?s=<channelId>.<serverId>   the address stays on the server
+ *   GET /api/stream?t=<token>                 the same URL, signed and opaque
+ *   GET /api/stream?u=<absolute url>          the same URL, plain
  *
- * Both are checked against the upstream allowlist, so the route can never be
- * pointed at an address of the caller's choosing.
+ * The first is what the app uses: the browser names a feed and never learns
+ * where it comes from. All three are checked against the upstream allowlist,
+ * so the route can never be pointed at an address of the caller's choosing.
  */
 import {
   isAllowedMediaUrl,
@@ -22,6 +24,7 @@ import {
   rewritePlaylist,
   signStreamToken,
 } from "@/lib/stream";
+import { resolveServerRef } from "@/lib/catalogue";
 
 const PLAYLIST_CONTENT_TYPE = "application/vnd.apple.mpegurl";
 const SEGMENT_CONTENT_TYPE = "video/mp2t";
@@ -30,8 +33,14 @@ export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const token = params.get("t");
   const plain = params.get("u");
+  const reference = params.get("s");
 
-  const upstream = token ? readStreamToken(token) : plain;
+  let upstream = token ? readStreamToken(token) : plain;
+  if (!upstream && reference) {
+    const resolved = await resolveServerRef(reference);
+    if (resolved?.kind === "hls") upstream = resolved.url;
+  }
+
   if (!upstream || !isAllowedMediaUrl(upstream)) {
     return new Response("Adresă nepermisă.", { status: 400 });
   }

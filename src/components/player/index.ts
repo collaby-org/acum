@@ -7,7 +7,6 @@ export {
 } from "@/components/player/video-player";
 export {
   usePlayer,
-  type PlayerServer,
   type PlayerSource,
   type PlayerStatus,
   type UsePlayerOptions,

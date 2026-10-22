@@ -15,20 +15,10 @@ export type PlayerStatus =
   /** Nothing left to try. */
   | "error";
 
-/** One upstream feed of a channel, as the catalogue describes it. */
-export type PlayerServer = {
-  id: string;
-  label: string;
-  embedUrl: string | null;
-  sourcePage?: string | null;
-  hlsUrl?: string | null;
-};
-
 /** One playable link, already resolved and pointed at our proxy. */
 export type PlayerSource = {
   id: string;
   label: string;
-  sourcePage: string | null;
   /** `hls` is a playlist we proxy; `embed` is a sanitised upstream frame. */
   kind: "hls" | "embed";
   url: string;
@@ -36,8 +26,11 @@ export type PlayerSource = {
 };
 
 export type UsePlayerOptions = {
-  /** The channel's feeds, best first. */
-  servers: PlayerServer[];
+  /**
+   * The channel to play. The browser names the channel; the server looks the
+   * upstream feeds up and hands back a chain of our own URLs.
+   */
+  channelId: string;
   /** Resolve the chain as soon as the hook mounts. */
   autoStart?: boolean;
   /** Called on every transition of the state machine. */
@@ -89,16 +82,11 @@ type ChainState = {
  * is loaded, so a single dead mirror never ends the session.
  */
 export function usePlayer({
-  servers,
+  channelId,
   autoStart = false,
   onStatusChange,
 }: UsePlayerOptions): UsePlayerResult {
-  const signature = servers
-    .map(
-      (server) =>
-        `${server.id}:${server.embedUrl ?? ""}:${server.hlsUrl ?? ""}`,
-    )
-    .join("|");
+  const signature = channelId;
 
   const [state, setState] = useState<ChainState>({
     signature,
@@ -145,7 +133,7 @@ export function usePlayer({
       const response = await fetch("/api/player", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ servers }),
+        body: JSON.stringify({ channel: channelId }),
         signal: controller.signal,
       });
 
@@ -188,7 +176,7 @@ export function usePlayer({
       }));
       announce("error");
     }
-  }, [announce, servers, signature]);
+  }, [announce, channelId, signature]);
   const advance = useCallback(() => {
     const chain = fresh ? sources : EMPTY_SOURCES;
     const index = fresh ? sourceIndex : 0;

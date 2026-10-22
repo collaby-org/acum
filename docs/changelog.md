@@ -11,6 +11,57 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 Nothing yet.
 
+## [1.2.0] — 2026-10-22
+
+More channels, HD first, and the source kept out of sight.
+
+### Added
+
+- **A second source.** 83 channels from a second directory, of which **27 are
+  new** — Acasa Gold, Acasa TV, Antena 3 CNN, Balcan Music, BBC World News,
+  Cartoonito, Cinemaraton, CineWOW, Digi 24, Digi Sport 1–4, Dizi, EuroSport
+  1–2, Film Now, Magic TV, MetroPola TV, MTV, Prima Sport 1–3, Pro Arena,
+  Romania TV, Traditional TV, Tralala. The other 56 became a **second feed**
+  on the channels we already had, which is exactly the fallback the player
+  needs. The catalogue is now **143 channels and 274 feeds**.
+- **Measured quality.** Every resolved feed is measured by parsing the H.264
+  sequence parameter set out of a real segment — the advertised codec string
+  is the same on all 89 playlists and lies about the height. Result: 8 feeds
+  at 1080p, 62 at 720p, 82 at 576p. **HD is now a fact, not a guess**, and
+  the servers are ordered HD first.
+- **A high-resolution logo library.** 111 real logos from Wikimedia, 21 of
+  them genuine HD lockups, transparent and up to 2048px wide. The 40×20
+  upstream icons are now only the fallback. Dark artwork gets a light plate
+  so it stays legible on a dark card.
+- **Today's programme guide.** 77 channels, 1958 programmes, Europe/Bucharest.
+  The hero now leads with what is on — "acum", "până la", and what follows —
+  and a "Ce rulează acum pe canale VIZOR" rail puts the best of it in front
+  of the visitor.
+- **Pinned channels and watch later**, local-only shelves. The pins are
+  ordered, and reordering is done with real buttons and arrow keys rather than
+  drag and drop.
+- **A working fullscreen on a phone.** The Fullscreen API does not exist for
+  elements in iOS Safari, so the button used to throw and do nothing. It now
+  feature-detects, falls back to Safari's native video fullscreen, tracks both
+  states, and the player fills the screen on a phone the way the TV apps do.
+
+### Fixed
+
+- **The hover clipping.** A card that grew on hover was cut off by its rail
+  and spilled over the section below. The scroller now keeps the room the
+  grown card needs inside the scrollport, and the card lifts above its
+  neighbours.
+- **The source is nowhere in the browser.** The catalogue the client receives
+  holds names, artwork, status and quality — no upstream address, no source
+  page, no logo URL. The player names the channel it wants and the server
+  hands back a chain of our own URLs. The served page contains no upstream
+  host at all.
+
+### Changed
+
+- **143 channels**, up from 116; 63 playable with a verified player.
+- The interface no longer mentions where the streams come from.
+
 ## [1.1.0] — 2026-10-21
 
 The rebuild. One click to play, no ads, one entry per channel, and a PWA.
@@ -130,7 +181,8 @@ First public release.
 - Two channels (Moldova 1, Publika TV) publish a plain HLS playlist on the
   source site; both were unreachable at release time.
 
-[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/collaby-org/vizor/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/collaby-org/vizor/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/collaby-org/vizor/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/collaby-org/vizor/releases/tag/v1.0.0

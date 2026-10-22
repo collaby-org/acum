@@ -1,4 +1,4 @@
-import type { CategoryId, ServerStatus } from "@/data/types";
+import type { CategoryId, Quality, ServerStatus } from "@/data/types";
 
 /* ------------------------------------------------------------------ *
  * Status
@@ -105,6 +105,8 @@ export type ServerLike = {
   embedUrl?: string | null;
   hlsUrl?: string | null;
   status?: ServerStatus;
+  quality?: Quality;
+  source?: "primary" | "secondary";
 };
 
 /** How many upstream feeds this channel has. */
@@ -128,30 +130,76 @@ export function serverSummary(channel: { servers?: readonly ServerLike[] }): str
 }
 
 /* ------------------------------------------------------------------ *
+ * Quality
+ * ------------------------------------------------------------------ */
+
+/** How a quality is shown to the visitor. */
+export const QUALITY_META: Record<
+  Quality,
+  { label: string; showBadge: boolean; rank: number }
+> = {
+  uhd: { label: "UHD", showBadge: true, rank: 0 },
+  fhd: { label: "FHD", showBadge: true, rank: 1 },
+  hd: { label: "HD", showBadge: true, rank: 2 },
+  sd: { label: "SD", showBadge: false, rank: 3 },
+  low: { label: "SD", showBadge: false, rank: 4 },
+  unknown: { label: "", showBadge: false, rank: 5 },
+};
+
+/** The best quality across a channel's feeds. */
+export function bestQuality(channel: {
+  quality?: Quality;
+  servers?: readonly { quality?: Quality }[];
+}): Quality {
+  if (channel.servers?.length) {
+    let best: Quality = "unknown";
+    for (const server of channel.servers) {
+      const q = server.quality ?? "unknown";
+      if (QUALITY_META[q].rank < QUALITY_META[best].rank) best = q;
+    }
+    return best;
+  }
+  return channel.quality ?? "unknown";
+}
+
+/** True when the channel should carry an HD badge. */
+export function isHighDefinition(channel: {
+  quality?: Quality;
+  servers?: readonly { quality?: Quality }[];
+}): boolean {
+  return QUALITY_META[bestQuality(channel)].showBadge;
+}
+
+/* ------------------------------------------------------------------ *
  * Sorting
  * ------------------------------------------------------------------ */
 
-/** Live channels first, then alphabetical. */
+/** Live channels first, then HD before SD, then alphabetical. */
 export function byPlayability(
-  a: { name: string; status: ServerStatus },
-  b: { name: string; status: ServerStatus },
+  a: { name: string; status: ServerStatus; quality?: Quality },
+  b: { name: string; status: ServerStatus; quality?: Quality },
 ) {
-  const rank = (c: { status: ServerStatus }) =>
+  const rank = (c: { status: ServerStatus; quality?: Quality }) =>
     c.status === "live" ? 0 : c.status === "blocked" ? 1 : c.status === "unknown" ? 2 : 3;
   const diff = rank(a) - rank(b);
-  return diff !== 0 ? diff : a.name.localeCompare(b.name, "ro");
+  if (diff !== 0) return diff;
+  const quality = QUALITY_META[a.quality ?? "unknown"].rank - QUALITY_META[b.quality ?? "unknown"].rank;
+  if (quality !== 0) return quality;
+  return a.name.localeCompare(b.name, "ro");
 }
 
 /** True when at least one feed of this channel can play in a browser. */
 export function isPlayable(channel: {
   status: ServerStatus;
-  servers?: readonly ServerLike[];
+  servers?: readonly (ServerLike & { source?: string })[];
 }): boolean {
   if (channel.servers?.length) {
     return channel.servers.some(
       (server) =>
         server.status === "live" &&
-        (Boolean(server.embedUrl) || Boolean(server.hlsUrl)),
+        (Boolean(server.embedUrl) ||
+          Boolean(server.hlsUrl) ||
+          server.source === "secondary"),
     );
   }
   return channel.status === "live";

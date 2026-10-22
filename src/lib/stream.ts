@@ -5,7 +5,7 @@
  * that the browser hands back to `/api/stream`.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
-import type { Channel, Server } from "@/data/types";
+import type { UpstreamChannel, UpstreamServer } from "@/data/types";
 
 /**
  * The upstream media hosts answer with a 300 kB HTML cloaking page unless the
@@ -48,6 +48,16 @@ export const AD_HOSTS = [
   "popads.net",
   "propellerads.com",
 ];
+
+/**
+ * The second source: the directory that publishes the channel list, and the
+ * media host its streams come from. Both are named outright rather than
+ * opened by suffix.
+ */
+export const SECONDARY_HOSTS = ["canaletvlive.online", "tv.playitforme.online"];
+
+/** The Referer the second source's media host accepts. */
+export const SECONDARY_REFERER = "https://canaletvlive.online/";
 
 /** Host suffixes the media proxy is allowed to pull bytes from. */
 export const MEDIA_HOST_SUFFIXES = [
@@ -95,6 +105,7 @@ export function isAllowedMediaUrl(url: string | null | undefined): boolean {
     const parsed = new URL(url);
     if (parsed.protocol !== "https:") return false;
     const host = parsed.hostname.toLowerCase();
+    if (SECONDARY_HOSTS.includes(host)) return true;
     return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
   } catch {
     return false;
@@ -161,7 +172,7 @@ export function refererChain(url: string): string[] {
   } catch {
     /* the caller already validated the URL */
   }
-  chain.push(UPSTREAM_REFERER, PUBLISHER_REFERER);
+  chain.push(UPSTREAM_REFERER, PUBLISHER_REFERER, SECONDARY_REFERER);
   return [...new Set(chain)];
 }
 
@@ -590,19 +601,21 @@ export async function probePlaylist(url: string): Promise<boolean> {
  * A feed with a playlist already resolved comes first; then the feeds whose
  * page we know how to read, live ones before unknown ones; the rest last.
  */
-export function pickServer(channel: Channel): Server[] {
+export function pickServer(channel: UpstreamChannel): UpstreamServer[] {
   const usable = channel.servers.filter(
     (server) =>
       server.hlsUrl !== null ||
+      server.source === "secondary" ||
       (server.embedUrl !== null &&
         server.kind !== "acestream" &&
         server.kind !== "none"),
   );
 
-  const rank = (server: Server): number => {
+  const rank = (server: UpstreamServer): number => {
     if (server.hlsUrl) return 0;
-    if (isAllowedPlayerUrl(server.embedUrl)) return server.status === "live" ? 1 : 3;
-    return server.status === "live" ? 2 : 4;
+    if (server.source === "secondary") return 1;
+    if (isAllowedPlayerUrl(server.embedUrl)) return server.status === "live" ? 2 : 4;
+    return server.status === "live" ? 3 : 5;
   };
 
   return [...usable].sort((a, b) => rank(a) - rank(b));
