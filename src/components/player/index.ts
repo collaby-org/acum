@@ -7,6 +7,11 @@ export {
   type SoundHintProps,
 } from "@/components/player/mute-overlay";
 export {
+  Paywall,
+  type PaywallProps,
+  type PaywallReason,
+} from "@/components/player/paywall";
+export {
   VideoPlayer,
   type PlayerHandle,
   type VideoPlayerProps,

@@ -1,6 +1,6 @@
 # Verification evidence
 
-Three harnesses, all of them driving the real production build in headless
+Four harnesses, all of them driving the real production build in headless
 Edge over the DevTools protocol. They are project assets, not one-off
 scripts — they are the evidence behind the release claims.
 
@@ -11,6 +11,7 @@ npx next start --port 3115
 npm run verify:player     # one click -> moving picture, no popup, no ad host
 npm run verify:fallback   # kill the first server -> the next one takes over
 npm run verify:ui         # walk the app, capture these screenshots
+npm run verify:acum       # "acum" is on the real clock, and it moves
 ```
 
 `EDGE_PATH` overrides the browser binary.
@@ -83,3 +84,51 @@ Captures the screenshots in this folder and fails on any console error.
 [search] {"results":5,"body":"5 DE REZULTATE FILME 5 HBO HBO S1 · S2 LIVE HBO 2 …"}
 [console errors] none
 ```
+
+## `verify:acum` — the clock, and the proof that it moves
+
+The programme guide says what is on between two absolute timestamps and
+nothing about the present, so "what is on now" is a question about the
+clock. The harness asks that question of the running app and insists on
+the truth:
+
+- the card names the programme that is on air **at the real clock**, and
+  not the one that was on when the guide file was written;
+- the card **moves** when the clock moves — the page is not reloaded, the
+  minute tick is what changes it;
+- the channel panel names the programme that is on air now, asks the server
+  again on the minute, and prints the new programme at the changeover.
+
+The page's own clock is pushed forward with the DevTools virtual clock, so
+the second proof takes seconds instead of a minute. The panel is answered
+by the server, so its proof waits for the real clock to turn the minute
+over.
+
+```
+channel:  tvr-3 (TVR 3)
+guide:    2026-10-22, written 2026-10-22T00:37:40.924Z
+at the file's own stamp the guide said: Cântec și poveste
+panel:    TVR 3 — Provocarea regiunilor
+PASS  the panel is on the page
+PASS  the panel names the programme on air at the real clock — the panel says "Provocarea regiunilor", the guide says "Provocarea regiunilor"
+PASS  the panel asks the server again on the minute — 1 request(s) when it opened, 2 after 75 seconds
+PASS  the answer the panel prints follows the clock — it said "Provocarea regiunilor", now it says "Mașina timpului"
+PASS  the panel moved with the real clock — it said "Provocarea regiunilor", now it says "Mașina timpului"
+PASS  the card is on the page
+PASS  the card names the programme on air at the real clock — the card says "Mașina timpului", the guide says "Mașina timpului"
+PASS  the card does not name the programme the guide file was written at — the card says "Mașina timpului", the file's own stamp said "Cântec și poveste"
+PASS  the page was not reloaded — the marker is there
+PASS  the card moved with the clock — it said "Mașina timpului", now it says "Telescoala in limba maghiara"
+PASS  the card names the programme that is on now — the card says "Telescoala in limba maghiara", the guide says "Telescoala in limba maghiara"
+
+11/11 checks passed
+```
+
+The screenshots and the report of the run are in `acum/`:
+
+| File | What it shows |
+| ---- | ------------- |
+| `acum/01-card.png` | The card with the programme that is on at the real clock. |
+| `acum/02-card-after.png` | The same card, thirty minutes later: the picture and the title have moved. |
+| `acum/03-panel.png` | The channel panel with its own *Acum*. |
+| `acum/report.json` | Every check of the run, with what it compared against. |

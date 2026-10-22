@@ -43,6 +43,129 @@ function reducedMotion() {
 }
 
 /**
+ * The places a row can rest on: the start of every card.
+ *
+ * The row has no CSS snap of its own — a snap would pull the row back to
+ * the card it started from after every small turn of the wheel, and the
+ * wheel would look broken. The row settles on a card by itself, when the
+ * gesture ends close enough to one.
+ */
+function restPoints(
+  el: HTMLUListElement,
+  selector = "[data-card-index]",
+) {
+  const pad = parseFloat(getComputedStyle(el).scrollPaddingLeft) || 0;
+  return Array.from(el.querySelectorAll<HTMLElement>(selector)).map(
+    (item) => item.offsetLeft - el.offsetLeft - pad,
+  );
+}
+
+/** The place to rest on that is nearest to where the row is now. */
+export function nearestRest(
+  el: HTMLUListElement,
+  target: number,
+  selector = "[data-card-index]",
+) {
+  const points = restPoints(el, selector);
+  if (points.length === 0) return { point: target, distance: 0 };
+  let point = points[0];
+  let distance = Infinity;
+  for (const candidate of points) {
+    const gap = Math.abs(candidate - target);
+    if (gap < distance) {
+      distance = gap;
+      point = candidate;
+    }
+  }
+  return { point, distance };
+}
+
+/**
+ * The wheel over a rail moves the rail.
+ *
+ * A horizontal scroller inside a vertical page: a vertical wheel gesture
+ * over the row does nothing by itself, and the browser then scrolls the
+ * page under the visitor's finger. The row under the pointer takes the
+ * gesture instead, and gives it back only when the row has nothing left
+ * to show.
+ *
+ * The rules:
+ *   - a vertical gesture (|deltaY| > |deltaX|) scrolls the row sideways,
+ *     a matching distance for a matching turn of the wheel;
+ *   - a horizontal gesture is left alone — the browser already scrolls the
+ *     row, and the trackpad keeps its momentum;
+ *   - the row stops at its edge and hands the rest of the gesture to the
+ *     page, so leaving the row is a continuation of the same movement and
+ *     never a jump;
+ *   - when the gesture ends close to a card, the row settles on it.
+ *
+ * The listener is not passive: taking the gesture away from the page is
+ * the whole point, and that needs `preventDefault`.
+ */
+export function useRailWheel(
+  scroller: React.RefObject<HTMLUListElement | null>,
+  selector = "[data-card-index]",
+) {
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+
+    let settle: number | undefined;
+
+    const onWheel = (event: WheelEvent) => {
+      // Horizontal belongs to the browser: it scrolls the row already.
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+      const max = el.scrollWidth - el.clientWidth;
+      // The row fits on the screen: there is nothing for it to take.
+      if (max <= 0) return;
+
+      const room = event.deltaY > 0 ? max - el.scrollLeft : el.scrollLeft;
+      // At the edge the row has nothing left to give: the page scrolls.
+      if (room <= 0) return;
+
+      const taken = Math.min(Math.abs(event.deltaY), room);
+      // The scroll is instant: the row follows the wheel, the way a
+      // scrolled row follows a finger.
+      el.scrollTo({
+        left: el.scrollLeft + Math.sign(event.deltaY) * taken,
+        behavior: "instant",
+      });
+
+      // What the row could not take belongs to the page, so the row and
+      // the page are one continuous gesture.
+      const rest = Math.abs(event.deltaY) - taken;
+      event.preventDefault();
+      if (rest > 0) {
+        window.scrollBy({
+          top: Math.sign(event.deltaY) * rest,
+          behavior: "instant",
+        });
+      }
+
+      // The gesture is over: if the row is close to a card, it settles on
+      // it. Further away than that, it stays where the visitor left it.
+      if (settle) window.clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        settle = undefined;
+        const { point, distance } = nearestRest(el, el.scrollLeft, selector);
+        if (distance > 28) return;
+        el.scrollTo({
+          left: point,
+          behavior: reducedMotion() ? "instant" : "smooth",
+        });
+      }, 160);
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      if (settle) window.clearTimeout(settle);
+    };
+  }, [scroller, selector]);
+}
+
+/**
  * A horizontal rail of channel cards.
  *
  * The card under the pointer — or under the keyboard focus — grows, and the
@@ -75,6 +198,8 @@ export function ChannelRail<T extends ChannelLike>({
   const [edges, setEdges] = useState({ start: true, end: true, overflow: false });
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  useRailWheel(scroller);
+
   const sync = useCallback(() => {
     const el = scroller.current;
     if (!el) return;
@@ -101,17 +226,21 @@ export function ChannelRail<T extends ChannelLike>({
   const nudge = (direction: 1 | -1) => {
     const el = scroller.current;
     if (!el) return;
-    el.scrollBy({
-      left: direction * Math.round(el.clientWidth * 0.82),
-      behavior: reducedMotion() ? "auto" : "smooth",
+    // The row moves most of a screen and lands on a card.
+    const want = el.scrollLeft + direction * Math.round(el.clientWidth * 0.82);
+    const { point } = nearestRest(el, want);
+    el.scrollTo({
+      left: point,
+      behavior: reducedMotion() ? "instant" : "smooth",
     });
   };
 
   /**
    * Bring a card that the pointer only grazes back into the rail.
    *
-   * A card that is more than half outside the scrollport is unusable, so the
-   * row moves just enough to show it whole.
+   * A card that is more than half outside the scrollport is unusable, so
+   * the row moves just enough to show it whole — and lands on a card, the
+   * way the row rests everywhere else.
    */
   const reveal = (index: number) => {
     const el = scroller.current;
@@ -131,9 +260,10 @@ export function ChannelRail<T extends ChannelLike>({
     else if (left < viewLeft) delta = left - viewLeft - 24;
     if (Math.abs(delta) < 1) return;
 
-    el.scrollBy({
-      left: delta,
-      behavior: reducedMotion() ? "auto" : "smooth",
+    const { point } = nearestRest(el, el.scrollLeft + delta);
+    el.scrollTo({
+      left: point,
+      behavior: reducedMotion() ? "instant" : "smooth",
     });
   };
 
@@ -237,7 +367,10 @@ export function ChannelRail<T extends ChannelLike>({
           onFocus={onFocusWithin}
           onPointerLeave={() => setActiveIndex(null)}
           style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className="flex snap-x snap-mandatory gap-0.5 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-5 pt-6 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none]"
+          // No CSS snap: a snap would pull the row back to the card it
+          // started from after every small turn of the wheel, and the
+          // wheel would look broken. The row settles on a card itself.
+          className="flex gap-0.5 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-5 pt-6 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none] [contain:paint]"
         >
           {channels.map((channel, index) => (
             <li
@@ -248,8 +381,10 @@ export function ChannelRail<T extends ChannelLike>({
                 reveal(index);
               }}
               className={cn(
-                "relative shrink-0 snap-start px-1.5 transition-[opacity,scale] duration-[var(--dur-base,300ms)]",
-                activeIndex !== null && activeIndex !== index && "opacity-45 scale-[0.97]",
+                "relative shrink-0 px-1.5 transition-[opacity,scale] duration-[var(--dur-base,300ms)]",
+                // The card under the pointer is the lit one; the rest of
+                // the row steps back so it reads as one focus.
+                activeIndex !== null && activeIndex !== index && "opacity-60 scale-[0.985]",
                 activeIndex === index && "z-10",
                 "motion-reduce:transition-none motion-reduce:scale-100!",
               )}

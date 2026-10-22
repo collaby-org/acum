@@ -14,6 +14,7 @@ import { spawn } from "node:child_process";
 import { mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { installSession } from "./harness-signin.mjs";
 
 const OUT = resolve(tmpdir(), "acum-verify-player");
 const EDGE =
@@ -112,6 +113,9 @@ const send = (method, params = {}) =>
 
 await send("Network.enable");
 await send("Page.enable");
+
+// The product is account-gated: the harness has to be signed in.
+await installSession(send);
 await send("Runtime.enable");
 await send("Target.setDiscoverTargets", { discover: true });
 

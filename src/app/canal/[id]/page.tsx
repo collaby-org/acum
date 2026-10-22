@@ -40,7 +40,7 @@ export async function generateMetadata({
   if (!channel) return { title: "Canal" };
   return {
     title: `${channel.name} — live`,
-    description: `Vizionează ${channel.name} live, fără reclame și fără cont.`,
+    description: `Vizionează ${channel.name} live, fără reclame și fără urmărire.`,
   };
 }
 

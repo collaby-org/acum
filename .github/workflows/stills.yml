@@ -1,0 +1,78 @@
+name: Stills
+
+# The stills of the shows that are on.
+#
+# A still is a photograph of one broadcast, so it belongs to the programme
+# that was on air when it was taken. This job takes them again, on a
+# schedule, so the picture in a card follows the schedule instead of
+# sitting still — and it opens a pull request when the pictures changed.
+#
+# The job runs on a **self-hosted** runner on purpose: the upstreams refuse
+# requests from datacenter networks, so a GitHub-hosted runner cannot
+# reach a single one of them and every channel would come back a miss.
+
+on:
+  schedule:
+    # Every half hour. A full cycle over the catalogue takes about half an
+    # hour, so this is as fast as the capture can honestly go.
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: stills
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: Capture the stills of the shows that are on
+    runs-on: self-hosted
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Start the app
+        run: |
+          node node_modules/next/dist/bin/next start --port 3115 &
+          for i in $(seq 1 90); do
+            if curl -sf http://127.0.0.1:3115/ > /dev/null; then break; fi
+            sleep 1
+          done
+
+      - name: Capture the stills
+        run: node scripts/capture-posters.mjs --app=http://127.0.0.1:3115/
+
+      - name: Rebuild the catalogue
+        run: npm run data:build
+
+      - name: Open a pull request when the pictures changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- public/posters data/posters.json src/data/channels.ts; then
+            echo "the pictures did not change — nothing to open"
+            exit 0
+          fi
+          git config user.name "acum-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git checkout -b "chore/stills-$(date -u +%Y%m%d-%H%M)"
+          git add public/posters data/posters.json src/data/channels.ts
+          git commit -m "chore: the stills of the shows that are on, $(date -u +%Y-%m-%d %H:%M UTC)"
+          git push --force origin "chore/stills-$(date -u +%Y%m%d-%H%M)"
+          gh pr create --fill --title "The stills of the shows that are on, $(date -u +%Y-%m-%d %H:%M UTC)" || true

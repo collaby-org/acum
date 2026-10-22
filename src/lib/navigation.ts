@@ -6,7 +6,7 @@
  * the shape declared in `src/data/types.ts` and knows nothing about React.
  */
 
-import type { CategoryId, Quality, ServerStatus } from "@/data/types";
+import type { CategoryId, Quality, ServerStatus, Still } from "@/data/types";
 import { normalize } from "@/lib/utils";
 
 /**
@@ -33,6 +33,11 @@ export type ChannelLike = {
   views?: number | null;
   /** A still of the show on air, when the catalogue ships one. */
   poster?: string | null;
+  /**
+   * The stills of the programmes in the guide's window, newest first. The
+   * card picks the one that belongs to the programme on air right now.
+   */
+  stills?: readonly Still[];
 };
 
 /**

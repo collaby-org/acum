@@ -27,6 +27,7 @@ import {
 } from "@/lib/stream";
 import { catalogueChannel } from "@/lib/catalogue";
 import { secondaryStreamUrl } from "@/lib/secondary";
+import { gate } from "@/lib/account-gate";
 import type { Server } from "@/data/types";
 
 type ServerInput = {
@@ -100,11 +101,33 @@ async function candidatesOf(server: ResolvedServer): Promise<string[]> {
  * So the catalogue says a dead feed is dead, instead of dressing it up.
  */
 export async function POST(request: Request) {
-  let payload: { channel?: unknown; servers?: ServerInput[] };
+  /**
+   * The gate.
+   *
+   * This route mints the signed address of a stream, so it is the place the
+   * allowance is enforced. A visitor whose two hours are spent gets no
+   * address at all — there is nothing to pull and nothing to bypass. The
+   * client is told why, so it can show the wall.
+   */
+  const verdict = await gate(request);
+  if (!verdict.allowed) {
+    return Response.json(
+      { error: "paywall", reason: verdict.reason },
+      { status: 403 },
+    );
+  }
+
+  let payload: {
+    channel?: unknown;
+    servers?: ServerInput[];
+    viewer?: unknown;
+  };
   try {
     payload = (await request.json()) as {
       channel?: unknown;
       servers?: ServerInput[];
+      /** The viewer, as the browser named them. */
+      viewer?: unknown;
     };
   } catch {
     return Response.json({ error: "Cerere invalidă." }, { status: 400 });
@@ -112,12 +135,14 @@ export async function POST(request: Request) {
 
   // The catalogue is the source of truth for the feeds.
   let servers: ResolvedServer[];
+  let channelId: string | null = null;
   if (typeof payload.channel === "string") {
     const channel = catalogueChannel(payload.channel);
     if (!channel) {
       return Response.json({ error: "Canal necunoscut." }, { status: 404 });
     }
     servers = channel.servers.map(readServer);
+    channelId = channel.id;
   } else {
     servers = (payload.servers ?? [])
       .filter(
@@ -127,6 +152,18 @@ export async function POST(request: Request) {
       .map(readServer)
       .slice(0, 12);
   }
+
+  /**
+   * The viewer.
+   *
+   * It is a random value the browser keeps for the session. It identifies a
+   * browser, not a person, and it is the only thing the audience count is
+   * built from — which is why it travels with every segment request.
+   */
+  const viewer =
+    typeof payload.viewer === "string" && payload.viewer.length <= 64
+      ? payload.viewer
+      : null;
 
   const perServer = await Promise.all(
     servers.map(async (server) => ({
@@ -147,13 +184,18 @@ export async function POST(request: Request) {
   }
 
   const sources = await Promise.all(
-    links.map(async ({ server, candidate }) => ({
-      id: server.id,
-      label: server.label,
-      kind: "hls" as const,
-      url: `/api/stream?t=${signStreamToken(candidate)}`,
-      playable: await probePlaylist(candidate),
-    })),
+    links.map(async ({ server, candidate }) => {
+      const url = `/api/stream?t=${signStreamToken(candidate, channelId ?? undefined)}`;
+      return {
+        id: server.id,
+        label: server.label,
+        kind: "hls" as const,
+        // The channel and the viewer travel with the address, so the proxy
+        // can count the audience per channel as the segments arrive.
+        url: viewer ? `${url}&v=${encodeURIComponent(viewer)}` : url,
+        playable: await probePlaylist(candidate),
+      };
+    }),
   );
 
   // The playable links come first, so the player starts on a feed that is

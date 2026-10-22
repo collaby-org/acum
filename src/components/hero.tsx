@@ -15,15 +15,15 @@ import type { Channel, Quality } from "@/data/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { QualityBadge } from "@/components/channel-card";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_PROMISE } from "@/lib/site";
 import {
   NowNext,
   findGuideChannel,
   formatClock,
-  referenceMoment,
   resolveSchedule,
   type EpgGuide,
 } from "@/components/now-next";
+import { useGuideMoment } from "@/hooks/use-guide-clock";
 import { posterPalette } from "@/lib/channel-meta";
 import { cn, formatViewers } from "@/lib/utils";
 
@@ -81,7 +81,7 @@ export function Hero({
     [activeGuide, channel],
   );
 
-  const moment = useGuideClock(activeGuide);
+  const moment = useGuideMoment(activeGuide?.reference);
 
   const schedule = useMemo(
     () => (guideChannel ? resolveSchedule(guideChannel, moment) : null),
@@ -103,9 +103,12 @@ export function Hero({
         ? `În aer acum pe ${channel.name}`
         : `Canalul recomandat · ${channel.family}`;
 
+  // The promise the hero makes. The account is not part of it any more:
+  // what survives is that the picture comes through our own proxy, so
+  // there is nothing else on the page to run, and it starts at once.
   const kicker =
     onAir?.description ??
-    `${channel.name} — unul dintre cele ${totalCount} canale adunate în ${SITE_NAME}. Fără cont, fără reclame, fără pauze: doar canalul și un player care pornește imediat.`;
+    `${channel.name} — unul dintre cele ${totalCount} canale adunate în ${SITE_NAME}. ${SITE_PROMISE} Streamul trece prin proxy-ul nostru: în pagină nu rulează niciun script al altui site, iar playerul pornește imediat.`;
 
   return (
     <section
@@ -391,7 +394,7 @@ export function Hero({
               <div className="absolute inset-x-4 top-4 z-[2] flex items-start justify-between">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/45 px-2.5 py-1.5 backdrop-blur-xl">
                   <span className="relative grid size-2 place-items-center">
-                    <span aria-hidden className="fx-live-eye absolute inset-0" />
+                    <span aria-hidden className="fx-live-eye fx-live-eye-pulse absolute inset-0" />
                     <span
                       aria-hidden
                       className="relative size-2 rounded-full bg-live"
@@ -542,23 +545,4 @@ function useClock() {
   }, []);
 
   return time;
-}
-
-/**
- * The moment the guide is read against. Before the page hydrates the
- * guide's own reference time is used, so the server and the client
- * agree on what "now" means.
- */
-function useGuideClock(guide: EpgGuide | null | undefined) {
-  const reference = referenceMoment(guide);
-  const [moment, setMoment] = useState(reference);
-
-  useEffect(() => {
-    const tick = () => setMoment(Date.now());
-    tick();
-    const id = window.setInterval(tick, 30_000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return moment;
 }

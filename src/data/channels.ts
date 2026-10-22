@@ -70,6 +70,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/pro-tv.jpg",
+    "stills": [
+      {
+        "file": "/posters/pro-tv.jpg",
+        "capturedAt": "2026-10-22T08:05:13.943Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:pr0tv",
@@ -153,6 +160,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/pro-tv-news.jpg",
+    "stills": [
+      {
+        "file": "/posters/pro-tv-news.jpg",
+        "capturedAt": "2026-10-22T08:05:21.371Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "protv-s7",
@@ -181,6 +195,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": "/posters/pro-cinema.jpg",
+    "stills": [
+      {
+        "file": "/posters/pro-cinema.jpg",
+        "capturedAt": "2026-10-22T08:05:32.517Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "procinema",
@@ -231,6 +252,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/tvr-1.jpg",
+    "stills": [
+      {
+        "file": "/posters/tvr-1.jpg",
+        "capturedAt": "2026-10-22T08:05:38.868Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "tvr1-1",
@@ -281,6 +309,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": "/posters/tvr-2.jpg",
+    "stills": [
+      {
+        "file": "/posters/tvr-2.jpg",
+        "capturedAt": "2026-10-22T08:05:46.202Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "tvr2-1",
@@ -331,6 +366,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/tvr-3.jpg",
+    "stills": [
+      {
+        "file": "/posters/tvr-3.jpg",
+        "capturedAt": "2026-10-22T08:05:51.623Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:tvr3",
@@ -381,6 +423,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": "/posters/tvr-sport.jpg",
+    "stills": [
+      {
+        "file": "/posters/tvr-sport.jpg",
+        "capturedAt": "2026-10-22T08:06:01.912Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:tvrsport",
@@ -420,6 +469,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:tvrinter",
@@ -459,6 +509,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/prima-tv.jpg",
+    "stills": [
+      {
+        "file": "/posters/prima-tv.jpg",
+        "capturedAt": "2026-10-22T08:06:14.184Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "primatv",
@@ -520,6 +577,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/hbo.jpg",
+    "stills": [
+      {
+        "file": "/posters/hbo.jpg",
+        "capturedAt": "2026-10-22T08:06:20.578Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:hb",
@@ -581,6 +645,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/hbo-2.jpg",
+    "stills": [
+      {
+        "file": "/posters/hbo-2.jpg",
+        "capturedAt": "2026-10-22T08:06:27.004Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:hb2",
@@ -642,6 +713,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/hbo-3.jpg",
+    "stills": [
+      {
+        "file": "/posters/hbo-3.jpg",
+        "capturedAt": "2026-10-22T08:06:35.458Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:hb3",
@@ -703,6 +781,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/cinemax-1.jpg",
+    "stills": [
+      {
+        "file": "/posters/cinemax-1.jpg",
+        "capturedAt": "2026-10-22T08:06:46.852Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:cmax",
@@ -764,6 +849,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/cinemax-2.jpg",
+    "stills": [
+      {
+        "file": "/posters/cinemax-2.jpg",
+        "capturedAt": "2026-10-22T08:16:26.486Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:cmax2",
@@ -825,6 +917,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": "/posters/national-tv.jpg",
+    "stills": [
+      {
+        "file": "/posters/national-tv.jpg",
+        "capturedAt": "2026-10-22T08:07:48.761Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "nationaltv",
@@ -886,6 +985,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/kanal-d.jpg",
+    "stills": [
+      {
+        "file": "/posters/kanal-d.jpg",
+        "capturedAt": "2026-10-22T08:07:54.848Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:canald",
@@ -947,6 +1053,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": "/posters/kanal-d-2.jpg",
+    "stills": [
+      {
+        "file": "/posters/kanal-d-2.jpg",
+        "capturedAt": "2026-10-22T08:08:04.584Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:canald2",
@@ -1008,6 +1121,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/antena-1.jpg",
+    "stills": [
+      {
+        "file": "/posters/antena-1.jpg",
+        "capturedAt": "2026-10-22T08:08:10.616Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "an1",
@@ -1091,6 +1211,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "acasatv",
@@ -1130,6 +1251,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "acasatv-gold",
@@ -1169,6 +1291,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "sportro",
@@ -1219,6 +1342,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": "/posters/antena-3.jpg",
+    "stills": [
+      {
+        "file": "/posters/antena-3.jpg",
+        "capturedAt": "2026-10-22T08:41:14.723Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "antena-3",
@@ -1280,6 +1410,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": "/posters/realitatea.jpg",
+    "stills": [
+      {
+        "file": "/posters/realitatea.jpg",
+        "capturedAt": "2026-10-22T08:41:20.868Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:realitateatv",
@@ -1352,6 +1489,13 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": "/posters/supersport-1.jpg",
+    "stills": [
+      {
+        "file": "/posters/supersport-1.jpg",
+        "capturedAt": "2026-10-22T08:17:02.639Z",
+        "programme": null
+      }
+    ],
     "servers": [
       {
         "id": "canale-tv:dgsp1",
@@ -1402,6 +1546,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:dgsp2",
@@ -1452,6 +1597,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:dgsp3",
@@ -1502,6 +1648,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:dgsp4",
@@ -1552,6 +1699,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "dolce1-s1",
@@ -1591,6 +1739,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "dolce2-s1",
@@ -1630,6 +1779,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "dolce3-s1",
@@ -1669,6 +1819,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "dolce4-s1",
@@ -1708,6 +1859,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-s1",
@@ -1736,6 +1888,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-s2",
@@ -1764,6 +1917,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-s3",
@@ -1792,6 +1946,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-plus-s1",
@@ -1820,6 +1975,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-plus-s2",
@@ -1848,6 +2004,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-pp1",
@@ -1876,6 +2033,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-pp2",
@@ -1904,6 +2062,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "look-tv-pp3",
@@ -1932,6 +2091,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "er1-s1",
@@ -1971,6 +2131,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "er2-s1",
@@ -2010,6 +2171,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "realitatea-rtv",
@@ -2060,6 +2222,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:tv1000",
@@ -2110,6 +2273,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:fnow",
@@ -2160,6 +2324,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:zutv",
@@ -2221,6 +2386,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:fbox-premium",
@@ -2271,6 +2437,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "filmbox-s2",
@@ -2299,6 +2466,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:fbox-extra",
@@ -2338,6 +2506,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:fbox1",
@@ -2377,6 +2546,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "an2-s1",
@@ -2438,6 +2608,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "teennick",
@@ -2488,6 +2659,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:filmcafe",
@@ -2549,6 +2721,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:happy",
@@ -2610,6 +2783,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "diva-1",
@@ -2660,6 +2834,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:disneych",
@@ -2721,6 +2896,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:disneyjr",
@@ -2782,6 +2958,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:cartoonnet",
@@ -2843,6 +3020,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "boomerang",
@@ -2882,6 +3060,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "minimaxro",
@@ -2932,6 +3111,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:jimjam",
@@ -2993,6 +3173,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "b1",
@@ -3054,6 +3235,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "nickelodeon-1",
@@ -3104,6 +3286,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:nickjr",
@@ -3165,6 +3348,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "nick-toons-s1",
@@ -3215,6 +3399,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "amc-s1",
@@ -3265,6 +3450,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "bbc-earth-s1",
@@ -3326,6 +3512,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primanews",
@@ -3387,6 +3574,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:euronewsromnia",
@@ -3437,6 +3625,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:show1",
@@ -3487,6 +3676,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:show2",
@@ -3537,6 +3727,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "axn-1",
@@ -3587,6 +3778,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "axn-black-s1",
@@ -3637,6 +3829,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "axn-white-s1",
@@ -3687,6 +3880,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "axn-spin",
@@ -3737,6 +3931,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "tnt-s1",
@@ -3776,6 +3971,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:epdrama",
@@ -3837,6 +4033,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:ccentral",
@@ -3887,6 +4084,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "comedy-shorts",
@@ -3915,6 +4113,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:vianature",
@@ -3954,6 +4153,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "via-explorer",
@@ -3993,6 +4193,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:viahist",
@@ -4032,6 +4233,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:ducktv",
@@ -4093,6 +4295,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "bollywood-clasic-s1",
@@ -4121,6 +4324,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "bollywood-tv-s1",
@@ -4160,6 +4364,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "bollywood-extra-s1",
@@ -4188,6 +4393,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:crimeinvest",
@@ -4249,6 +4455,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "tlc-s1",
@@ -4299,6 +4506,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "travel-ch-s1",
@@ -4338,6 +4546,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "travel-living-s1",
@@ -4377,6 +4586,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "natgeo",
@@ -4427,6 +4637,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "natgeowild",
@@ -4466,6 +4677,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "animal",
@@ -4505,6 +4717,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:discoverych",
@@ -4566,6 +4779,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:historych",
@@ -4627,6 +4841,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "discoid",
@@ -4688,6 +4903,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "discoscience",
@@ -4727,6 +4943,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "disco-world-s1",
@@ -4766,6 +4983,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "trinitas-tv",
@@ -4794,6 +5012,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "credo-tv",
@@ -4822,6 +5041,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "moldova-1",
@@ -4850,6 +5070,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "publika",
@@ -4878,6 +5099,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:paprika",
@@ -4939,6 +5161,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:cbsreality",
@@ -4989,6 +5212,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:fishy",
@@ -5039,6 +5263,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "utv",
@@ -5067,6 +5292,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "n24",
@@ -5106,6 +5332,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:kisstv",
@@ -5156,6 +5383,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "taraf",
@@ -5195,6 +5423,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "favorit",
@@ -5234,6 +5463,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:musicch",
@@ -5284,6 +5514,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:hitmusic",
@@ -5334,6 +5565,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:digi24",
@@ -5384,6 +5616,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "inedit-s1",
@@ -5412,6 +5645,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "france-24-live-s1",
@@ -5440,6 +5674,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:cnn",
@@ -5479,6 +5714,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "fhd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:etno",
@@ -5529,6 +5765,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:acasagold",
@@ -5568,6 +5805,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:acasatv",
@@ -5607,6 +5845,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:a3cnn",
@@ -5646,6 +5885,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:balcanmuz",
@@ -5685,6 +5925,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "bbc-world-news",
@@ -5713,6 +5954,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:cartonito",
@@ -5752,6 +5994,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "cinemaraton",
@@ -5780,6 +6023,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "cinewow",
@@ -5808,6 +6052,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "digi-24",
@@ -5836,6 +6081,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "digi-sport-1",
@@ -5864,6 +6110,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "digi-sport-2",
@@ -5892,6 +6139,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "digi-sport-3",
@@ -5920,6 +6168,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "digi-sport-4",
@@ -5948,6 +6197,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:dizy",
@@ -5987,6 +6237,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:eurosp1",
@@ -6026,6 +6277,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:eurosp2",
@@ -6065,6 +6317,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "film-now",
@@ -6093,6 +6346,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "magic-tv",
@@ -6121,6 +6375,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "metropola-tv",
@@ -6149,6 +6404,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "mtv",
@@ -6177,6 +6433,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primasp1",
@@ -6216,6 +6473,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primasp2",
@@ -6255,6 +6513,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primasp3",
@@ -6294,6 +6553,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:proarena",
@@ -6333,6 +6593,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:romaniatv",
@@ -6372,6 +6633,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "traditional-tv",
@@ -6400,6 +6662,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "tralala",
@@ -6428,6 +6691,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:bbcnews",
@@ -6456,6 +6720,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primasp4",
@@ -6484,6 +6749,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:primasp5",
@@ -6512,6 +6778,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:ppv1",
@@ -6540,6 +6807,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:ppv2",
@@ -6568,6 +6836,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:ppv3",
@@ -6596,6 +6865,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:sportextra",
@@ -6624,6 +6894,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:wornertv",
@@ -6652,6 +6923,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:bfirst",
@@ -6680,6 +6952,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "unknown",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:netgeopeople",
@@ -6708,6 +6981,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:travelmix",
@@ -6736,6 +7010,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "hd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:hgtv",
@@ -6764,6 +7039,7 @@ export const CHANNELS: UpstreamChannel[] = [
     "quality": "sd",
     "views": null,
     "poster": null,
+    "stills": [],
     "servers": [
       {
         "id": "canale-tv:canal-33",

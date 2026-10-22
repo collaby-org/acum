@@ -184,16 +184,17 @@
   }
 }
 
+/* The copy rises into place. No blur filter: a filter here would put a
+   blurred layer behind every block of the hero and repaint it on every
+   frame of the entrance. The travel and the fade carry it alone. */
 @keyframes rise {
   from {
     opacity: 0;
     transform: translate3d(0, 26px, 0) scale(0.985);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -457,6 +458,39 @@
   );
 }
 
+/* A luminous edge: a one-pixel ring in the family's own colour, drawn
+   over the frame.
+   The mask keeps the paint to the ring itself, so a lit card costs a thin
+   band and never a full-card layer — and the ring is a line of light, not
+   a blur that leaks onto the neighbour. */
+@utility fx-rim {
+  padding: 2px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* The picture's frame.
+   It takes the shape of the stream it carries — a 16:9 feed gets a 16:9
+   frame, a 4:3 feed keeps its own proportions — and it never grows past
+   the stream's own pixels: a 720p feed on a big screen stays 720p wide
+   and sharp, and the chrome around it grows instead. On a phone the
+   frame goes full bleed and the picture is cropped to fill it. */
+@utility fx-player-frame {
+  aspect-ratio: var(--player-aspect, 16 / 9);
+  max-width: var(--player-native-width, none);
+  margin-inline: auto;
+  @media (width < 40rem) {
+    aspect-ratio: auto;
+    max-width: none;
+  }
+}
+
 /* Physical lift. The spring curve gives the card weight. */
 @utility fx-lift {
   transition:
@@ -490,15 +524,32 @@
   }
 }
 
-/* The breathing live lens. The host element must be positioned. */
+/* The live lens: a red dot with a soft halo around it.
+   The halo is a gradient, never a filter: a blur here would put a
+   blurred layer behind every live card on the page, and the page has
+   hundreds of them. */
 @utility fx-live-eye {
   &::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -60%;
     border-radius: 9999px;
-    background: var(--color-live);
-    filter: blur(6px);
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgb(255 59 71 / 0.8) 0%,
+      rgb(255 59 71 / 0.34) 46%,
+      rgb(255 59 71 / 0) 72%
+    );
+  }
+}
+
+/* The same lens, breathing.
+   One of these is atmosphere. Three hundred of them is a frame-rate tax:
+   every card on the page would carry an animation running at once, and
+   the page would never settle. The cards keep the still lens; the hero
+   gets the breathing one. */
+@utility fx-live-eye-pulse {
+  &::after {
     animation: var(--animate-breathe);
   }
 }
@@ -603,7 +654,9 @@
  * The motion and FX utilities to build on are the ones defined above:
  * `fx-glass`, `fx-glass-bar`, `fx-edge`, `fx-sheen`, `fx-specular`,
  * `fx-sweep`, `fx-grain`, `fx-scanline`, `fx-vignette`, `fx-bloom`,
- * `fx-lift`, `fx-lift-lg`, `fx-press`, `fx-live-eye`, `fx-halo`,
+ * `fx-rim`, `fx-player-frame`,
+ * `fx-lift`, `fx-lift-lg`, `fx-press`, `fx-live-eye`, `fx-live-eye-pulse`,
+ * `fx-halo`,
  * `fx-text-glow`, `fx-divider`, `fx-hide-scrollbar`, `mask-edges`.
  * The curves are `--ease-spring`, `--ease-out-expo`, `--ease-swift`
  * and `--ease-in-out`; the loops are `--animate-sweep`,

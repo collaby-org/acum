@@ -14,6 +14,15 @@ integration added them.
   as an artifact even when the job fails. The gitleaks version is pinned in the
   workflow, and every action is pinned to a commit.
 
+## Scheduled
+
+- `stills.yml` takes the stills of the shows that are on, twice an hour, and
+  opens a pull request when the pictures changed. It runs on a **self-hosted**
+  runner on purpose: the upstreams refuse requests from datacenter networks,
+  so a GitHub-hosted runner cannot reach a single one of them and every
+  channel would come back a miss. The runner needs the app built and started
+  on port 3115 — the job does that itself.
+
 ## Advisory
 
 These are added by the opencode GitHub integration, not by this scaffold. When

@@ -191,7 +191,7 @@ export function Browse({
                 Favorite
               </h1>
               <p className="mt-2 text-sm text-ink-muted">
-                Salvate pe acest dispozitiv. Fără cont, fără sincronizare.
+                Salvate pe acest dispozitiv. Fără sincronizare între dispozitive.
               </p>
             </div>
 

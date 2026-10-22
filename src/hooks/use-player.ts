@@ -1,6 +1,29 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { accountToken, refreshAccount } from "@/hooks/use-account";
+
+/**
+ * This browser's name.
+ *
+ * It is a random value, kept for as long as the tab is open, and it
+ * identifies a browser rather than a person — which is all the audience
+ * count needs. It travels with every segment request, so the server can
+ * count the distinct browsers watching each channel instead of counting
+ * requests, which would be the number of segments rather than the number
+ * of people.
+ */
+let viewer: string | null = null;
+
+function viewerId(): string {
+  if (viewer) return viewer;
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    viewer = crypto.randomUUID();
+  } else {
+    viewer = `v-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
+  }
+  return viewer;
+}
 
 /** The playback state machine. */
 export type PlayerStatus =
@@ -130,14 +153,30 @@ export function usePlayer({
     announce("resolving");
 
     try {
+      const token = await accountToken();
       const response = await fetch("/api/player", {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ channel: channelId }),
+        headers: {
+          "content-type": "application/json",
+          // The gate reads the account from this header. It is the same
+          // token the account routes use.
+          ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ channel: channelId, viewer: viewerId() }),
         signal: controller.signal,
       });
 
       if (!response.ok) {
+        /**
+         * The wall.
+         *
+         * The server refuses to mint an address when the allowance is
+         * spent. The account is re-read so the wall knows why it is up —
+         * the browser's own copy of the state may simply be out of date.
+         */
+        if (response.status === 403) {
+          void refreshAccount();
+        }
         setState((current) => ({
           ...current,
           signature,

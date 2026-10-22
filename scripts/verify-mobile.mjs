@@ -10,6 +10,7 @@ import { mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
+import { installSession } from "./harness-signin.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const OUT = resolve(tmpdir(), "acum-verify-mobile");
@@ -62,6 +63,9 @@ const evaluate = async (expression) => {
 };
 
 await send("Page.enable");
+
+// The product is account-gated: the harness has to be signed in.
+await installSession(send);
 await send("Runtime.enable");
 await send("Emulation.setDeviceMetricsOverride", {
   width: 390,

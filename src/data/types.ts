@@ -54,6 +54,34 @@ export type ServerKind = "iframe" | "acestream" | "none";
 /** The measured picture quality of a feed. */
 export type Quality = "uhd" | "fhd" | "hd" | "sd" | "low" | "unknown";
 
+/**
+ * One still of a broadcast, and the programme it belongs to.
+ *
+ * A still is a photograph of one moment of one channel, so it belongs to the
+ * programme that was on air when it was taken. That link is what makes the
+ * card's picture follow the schedule instead of sitting still: the card
+ * picks the still that belongs to the programme on air right now.
+ */
+export type Still = {
+  /** Where the still is stored, under `/posters`. */
+  file: string;
+  /** When the still was taken. */
+  capturedAt: string | null;
+  /**
+   * The programme the still shows, when the capture knew which one it was.
+   * A still without a programme is a picture of the channel and nothing
+   * more: it cannot be tied to a slot, and it cannot go stale.
+   */
+  programme: {
+    /** The name of the programme. */
+    title: string;
+    /** When it started, in epoch milliseconds. */
+    startsAt: number;
+    /** When it ends, in epoch milliseconds. */
+    endsAt: number;
+  } | null;
+};
+
 /** One upstream feed of a channel, as the browser sees it. */
 export type Server = {
   /** Stable id, unique across the catalogue. */
@@ -104,6 +132,14 @@ export type Channel = {
    * until the stills are fetched.
    */
   poster: string | null;
+  /**
+   * The stills of the programmes in the guide's window, newest first.
+   *
+   * The card picks the one that belongs to the programme on air right now,
+   * so the picture follows the schedule: when the guide moves on, the card
+   * moves with it.
+   */
+  stills: Still[];
   /** Upstream feeds, best first. The player walks this list. */
   servers: Server[];
 };

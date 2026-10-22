@@ -1,4 +1,13 @@
 /**
+ * The geometry of the A, in the mark's 100-unit grid.
+ *
+ * It is exported because the intro draws the same letter with light: the
+ * sting animates this path, so the shape it draws and the shape the product
+ * ships can never drift apart.
+ */
+export const ACUM_MARK_PATH = "M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z";
+
+/**
  * The ACUM mark.
  *
  * A capital A — the first letter of the name — with a bright rail running out
@@ -49,7 +58,7 @@ export function AcumMark({
         rx="6"
         fill={`url(#${id}-rail)`}
       />
-      <path d="M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z" fill={`url(#${id}-gold)`} />
+      <path d={ACUM_MARK_PATH} fill={`url(#${id}-gold)`} />
     </svg>
   );
 }

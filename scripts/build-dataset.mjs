@@ -80,11 +80,40 @@ const logoIndex = logoData.channels ?? {};
 const posterData = await readJson("data/posters.json", { posters: {} });
 const posterIndex = posterData.posters ?? {};
 
-/** The still of a channel, when one has been captured. */
-const posterOf = (id) => {
+/**
+ * How many stills of one channel the catalogue carries.
+ *
+ * The card only ever shows the still of the programme on air and the one
+ * before it; the rest is weight in every page that lists the channel.
+ */
+const STILL_LIMIT = 4;
+
+/**
+ * The stills of a channel, newest first.
+ *
+ * Each still says which programme it shows, so the card can pick the
+ * picture that belongs to the slot on air. The manifest used to hold one
+ * still per channel; that shape is read as a list of one.
+ */
+const stillsOf = (id) => {
   const entry = posterIndex[id];
-  return entry?.file ? `/posters/${entry.file}` : null;
+  if (!entry) return [];
+  const list = Array.isArray(entry) ? entry : [entry];
+  return list
+    .filter((still) => still?.file)
+    .map((still) => ({
+      file: `/posters/${still.file}`,
+      capturedAt: still.capturedAt ?? null,
+      programme: still.programme ?? null,
+    }))
+    .sort(
+      (a, b) => (b.programme?.startsAt ?? 0) - (a.programme?.startsAt ?? 0),
+    )
+    .slice(0, STILL_LIMIT);
 };
+
+/** The still of a channel, when one has been captured. */
+const posterOf = (id) => stillsOf(id)[0]?.file ?? null;
 
 /**
  * The liveness probe, by feed.
@@ -429,6 +458,7 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
       // the source when the page is rendered, never frozen into the build.
       views: null,
       poster: posterOf(id),
+      stills: stillsOf(id),
       servers,
     });
   }

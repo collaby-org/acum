@@ -1,23 +1,67 @@
 import Link from "next/link";
-import { ArrowUp, Radio, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowUp, CalendarDays, EyeOff, ShieldCheck } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { Badge } from "@/components/ui/badge";
-import { SITE_NAME } from "@/lib/site";
+import {
+  SITE_NAME,
+  SITE_PROMISE,
+  SITE_PROMISE_SHORT,
+  SITE_TAGLINE,
+} from "@/lib/site";
+
+/**
+ * The footer.
+ *
+ * Three columns of navigation, in the language the product speaks in: the
+ * channels, the programme guide, and the pages that explain the site. Every
+ * link here goes to a page that exists — a navigation that promises a
+ * destination it does not have is worse than no navigation.
+ */
 
 const CATEGORY_LINKS = [
-  { label: "Generaliste", href: "/#categorii" },
-  { label: "Știri", href: "/#categorii" },
-  { label: "Sport", href: "/#categorii" },
-  { label: "Filme", href: "/#categorii" },
-  { label: "Copii", href: "/#categorii" },
-  { label: "Documentare", href: "/#categorii" },
-  { label: "Muzică", href: "/#categorii" },
+  { label: "Toate canalele", href: "/canale" },
+  { label: "Grupate pe categorii", href: "/canale/grupate" },
+  { label: "Top canale live acum", href: "/trending" },
+  { label: "Generale", href: "/canale/generaliste" },
+  { label: "Știri", href: "/canale/stiri" },
+  { label: "Sport", href: "/canale/sport" },
+  { label: "Filme & Seriale", href: "/canale/movies" },
+  { label: "Divertisment", href: "/canale/divertisment" },
+  { label: "Documentare", href: "/canale/documentare" },
+  { label: "Copii", href: "/canale/kids" },
+];
+
+const GUIDE_LINKS = [
+  { label: "Ghid TV interactiv", href: "/ghid" },
+  { label: "Ce rulează azi", href: "/azi" },
+  { label: "Program de mâine", href: "/maine" },
+  { label: "Programul săptămânii", href: "/saptamana" },
+  { label: "Meciuri live la TV", href: "/meciuri" },
+  { label: "Caută o emisiune", href: "/cauta-o-emisiune" },
+  { label: "Top emisiuni", href: "/top-emisiuni" },
+  { label: "TV pentru diaspora", href: "/diaspora" },
+];
+
+const INFO_LINKS = [
+  { label: "Despre noi", href: "/despre" },
+  { label: "Ghid TV", href: "/ghid-tv" },
+  { label: "Întrebări frecvente", href: "/intrebari" },
+  { label: "Propune un canal", href: "/propune-un-canal" },
+  { label: "Contact", href: "/contact" },
+];
+
+const LEGAL_LINKS = [
+  { label: "Termeni și condiții", href: "/termeni" },
+  { label: "Confidențialitate", href: "/confidentialitate" },
+  { label: "Cookies", href: "/cookies" },
+  { label: "DMCA & Copyright", href: "/dmca" },
+  { label: "Disclaimer", href: "/disclaimer" },
 ];
 
 const PROMISES = [
-  { icon: ShieldCheck, label: "Fără reclame" },
-  { icon: Sparkles, label: "Fără cont" },
-  { icon: Radio, label: "Favorite locale" },
+  { icon: ShieldCheck, label: SITE_PROMISE_SHORT },
+  { icon: CalendarDays, label: "Ghid de programe" },
+  { icon: EyeOff, label: "Fără urmărire" },
 ];
 
 /**
@@ -54,9 +98,9 @@ export async function Footer() {
       <div className="mx-auto max-w-[1800px] px-4 sm:px-8 lg:px-12">
         <div className="fx-divider opacity-60" />
 
-        <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-20 lg:py-20">
+        <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:gap-16 lg:py-20">
           {/* Statement */}
-          <div className="max-w-lg">
+          <div className="max-w-md">
             <div className="flex items-center gap-3">
               <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
                 <AcumMark id="acum-mark-footer" className="size-[21px]" />
@@ -74,9 +118,9 @@ export async function Footer() {
               </span>
             </p>
 
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-ink-muted">
-              Un director de canale TV live, cu player propriu și fără reclame.
-              Fără cont, fără urmărire — și fără ecran negru când apeși play.
+            <p className="mt-5 text-sm leading-relaxed text-ink-muted">
+              Un director de canale TV live, cu player propriu și ghid de
+              programe. {SITE_PROMISE}
             </p>
 
             <ul className="mt-7 flex flex-wrap gap-2">
@@ -90,22 +134,19 @@ export async function Footer() {
                 </li>
               ))}
             </ul>
+
+            <p className="mt-6 text-[12px] leading-relaxed text-ink-faint">
+              {SITE_TAGLINE}. Ghidul de programe este citit de la un director
+              public și acoperă o zi care se rotește.
+            </p>
           </div>
 
           {/* Navigation */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            <FooterColumn title="Categorii" links={CATEGORY_LINKS.slice(0, 4)} />
-            <FooterColumn title="Mai mult" links={CATEGORY_LINKS.slice(4)} />
-            <div>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
-                Produs
-              </h3>
-              <ul className="mt-4 space-y-2.5 text-sm text-ink-muted">
-                <li>Verificare automată a datelor</li>
-                <li>Calitate măsurată, nu estimată</li>
-                <li>Rezervă automată între servere</li>
-              </ul>
-            </div>
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-6">
+            <FooterColumn title="Categorii TV Live" links={CATEGORY_LINKS} />
+            <FooterColumn title="Program TV & Ghid" links={GUIDE_LINKS} />
+            <FooterColumn title="Informații" links={INFO_LINKS} />
+            <FooterColumn title="Legal" links={LEGAL_LINKS} />
           </div>
         </div>
 
@@ -113,12 +154,13 @@ export async function Footer() {
 
         <div className="flex flex-col gap-4 py-7 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {SITE_NAME}. Canalele aparțin deținătorilor lor; {SITE_NAME}
-            indexează doar adresele publice de încorporare.
+            © {year} {SITE_NAME}. Canalele și emisiunile aparțin deținătorilor
+            lor; {SITE_NAME} este un director: le verifică și le face
+            accesibile.
           </p>
           <div className="flex items-center gap-3">
             <Badge variant="outline" size="xs">
-              Date verificate automat
+              Fără reclame, fără urmărire
             </Badge>
             <a
               href="#top"
@@ -156,7 +198,7 @@ function FooterColumn({
       </h3>
       <ul className="mt-4 space-y-2.5 text-sm text-ink-muted">
         {links.map((link) => (
-          <li key={link.label}>
+          <li key={link.href}>
             <Link
               href={link.href}
               className="group inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-ink"

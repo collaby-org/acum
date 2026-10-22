@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { FirstVisitIntro } from "@/components/intro";
 import { PwaRegister } from "@/components/pwa";
 import { REPO_RAW, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_NAME}`,
   },
   description:
-    "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame. Vizionează direct, caută instant și salvează-ți favoritele.",
+    "Ce rulează acum pe canalele din România: 156 de canale live într-un singur loc, cu ghid de programe și cifre de audiență în timp real. Fără reclame, fără urmărire. Plan gratuit cu două ore pe zi.",
   applicationName: SITE_NAME,
   keywords: [
     "tv live",
@@ -31,6 +32,8 @@ export const metadata: Metadata = {
     "ce ruleaza acum",
     "televiziune",
     "live tv",
+    "ghid tv",
+    "fara reclame",
   ],
   authors: [{ name: SITE_NAME }],
   creator: SITE_NAME,
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
-      "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame.",
+      "Ce rulează acum pe canalele din România: 156 de canale live într-un singur loc, cu ghid de programe și cifre de audiență în timp real. Fără reclame, fără urmărire.",
     url: SITE_URL,
     images: [
       {
@@ -56,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
-      "Ce rulează acum pe canalele din România: 143 de canale live, fără cont, fără reclame.",
+      "Ce rulează acum pe canalele din România: 156 de canale live, cu ghid de programe și cifre de audiență în timp real. Fără reclame, fără urmărire.",
     images: [OG_IMAGE],
   },
   robots: { index: true, follow: true },
@@ -94,6 +97,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-full bg-canvas font-sans text-ink">
+        {/* The sting. First visit on this device only, and it never holds
+            the catalogue back — it is an overlay on top of it. */}
+        <FirstVisitIntro />
         {children}
         {/* One grain tile over the whole product, under the dialogs. */}
         <div

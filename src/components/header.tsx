@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Heart, Search, X } from "lucide-react";
 import { AcumMark } from "@/components/brand";
+import { AccountButton } from "@/components/account/account-button";
 import { Button } from "@/components/ui/button";
 import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -66,9 +68,10 @@ export function Header({
         />
       )}
       <div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-4 sm:h-[72px] sm:gap-5 sm:px-8 lg:px-12">
-        {/* Wordmark */}
+        {/* Wordmark — it goes to the top of the catalogue, and to the
+            catalogue itself from anywhere else. */}
         <a
-          href="#top"
+          href={usePathname() === "/canale" ? "#top" : "/canale"}
           className="group flex shrink-0 items-center gap-3"
           aria-label={`${SITE_NAME} — începutul paginii`}
         >
@@ -129,6 +132,9 @@ export function Header({
             </kbd>
           )}
         </div>
+
+        {/* The account: the way in, and what the plan is. */}
+        <AccountButton />
 
         {/* Favourites */}
         <Button

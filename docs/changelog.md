@@ -9,6 +9,102 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.4.0] — 2026-10-22
+
+Accounts, a measured audience, a phone that behaves, and the rest of the site.
+
+### Added
+
+- **Accounts.** A visitor can create an account, sign in, and watch **two
+  hours a day** on the free plan. The limit is enforced on the server, in
+  front of the route that mints a stream's address — a visitor whose
+  allowance is spent gets no address at all, so there is nothing to pull
+  and nothing to bypass. The browser is never trusted with the clock.
+- **Four plans**, and every step up removes a limit rather than adding a
+  feature: **Gratuit** (two hours a day, no card), **Individual** at
+  **3,99 £** a month (no time limit), **Casă** at **5,99 £** a month (the
+  whole house, up to four people) and **De o viață** at **39,99 £**, once.
+  The household plan is 37 % of what four individual plans would cost, and
+  the lifetime plan amortises in the tenth month.
+- **A landing page** at the front door, in the same register as the
+  product: a hero, a short pitch, the plans and a way in.
+- **An admin desk** at `/admin` — the live audience as it is counted right
+  now, today's numbers and the last thirty days, the accounts, the
+  catalogue, and the messages the contact page collects. From it a plan can
+  be granted by hand, the paywall can be lifted for an account, and every
+  grant leaves a line in the account's own history.
+- **The contact page writes into the desk.** No email is sent and none is
+  expected: what a visitor writes is read in the desk.
+- **Twenty-two pages** — the guide (today, tomorrow, the week, the matches,
+  a search of the programmes, the most-watched), the categories, the
+  information and the legal set, in three groups the way a streaming
+  service presents its own.
+- **A first-visit intro** — a two-and-a-half second sting that plays once,
+  on the first visit, and never again. The mark draws itself in light, the
+  rail sweeps out from under it, the wordmark resolves, and the catalogue is
+  simply there. It is an overlay and never a page, so it cannot delay the
+  product; it is skippable, it is silent, and a visitor who asks for
+  reduced motion gets the product at once.
+- **A still belongs to a programme.** The capture pipeline files every frame
+  under the programme that was on air when it was taken, the catalogue keeps
+  the stills of the programmes in the guide's window, and the card picks the
+  one that belongs to the slot on air right now. A still whose programme has
+  ended is stale: it is the pipeline's work, not the picture of the show that
+  is on now.
+- **`scripts/verify-acum.mjs`** — the check behind the claim: the card
+  names the programme that is on at the real clock and not the one the guide
+  file was written at, the card moves when the clock moves (without a
+  reload), and the panel follows the changeover.
+- **A scheduled job for the stills** (`.github/workflows/stills.yml`):
+  twice an hour, on a self-hosted runner that can actually reach the
+  upstreams.
+
+### Changed
+
+- **The site is not "fără cont" any more** — it has accounts. The promise
+  that replaces it is the one that is true here and not of the directories
+  we index: **no adverts, and nothing of anybody else's runs in the page**,
+  because the stream is relayed through our own proxy.
+- **"Acum" is on the real clock now, and it keeps moving.** The card's
+  *Acum* line was resolved against the guide file's own `generatedAt` — the
+  moment the file was written — and never re-read: a page left open kept
+  naming the show that had already ended. The clock is now one thing, shared
+  by the cards, the hero and the channel panel, and it is the real clock,
+  corrected by the server's own stamp so a visitor whose computer is out by
+  five minutes is still told the truth. It turns over once a minute, just
+  after the minute does, because the guide's resolution is the minute.
+- **The channel panel moves.** The panel prints what the server answers, and
+  the server reads the clock — but the panel asked once, when it opened, and
+  then kept the answer for as long as it was on the screen. It asks again on
+  the minute now, and prints the programme that is on at that moment.
+- **The glow is light, not blur.** The card's rim is a luminous edge in the
+  channel's own colour that brightens under the pointer, and it is not
+  painted at all until then — which is also what made the page feel slow.
+  The paint is contained, the hover animates only transform and opacity,
+  and the cards below the fold cost nothing to lay out.
+- **The wheel scrolls the row it is over.** With the pointer on a rail, a
+  vertical gesture moves the rail sideways; at the end of the rail the
+  gesture is handed back to the page. Leaving the rail scrolls the page.
+- **The picture keeps its own shape.** The stream is shown by cropping, not
+  by stretching, and the frame takes the shape of the picture it carries.
+
+### Fixed
+
+- **The audience count was always zero.** The counter existed and nothing
+  fed it. The proxy now counts the distinct browsers watching each channel,
+  over the last ninety seconds, and the count travels with every segment
+  request.
+- **A poster could photograph the upstream's page.** It is now only ever
+  the pixels of our own player.
+- **The live count was wrong** — it said 71 while 130 answered, because the
+  catalogue's status field had gone stale.
+
+## [1.3.0] — 2026-10-22
+
+A third source, a new name, a measured audience.
+
 ### Changed
 
 - **The product is now ACUM.** The name was VIZOR; it is now **ACUM** — Romanian
@@ -36,6 +132,8 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
   is still the project's own home — the app has no domain of its own yet, so
   `metadataBase` points at `https://collaby-org.github.io/acum` and the
   canonical link is `/`.
+
+### Added
 - The canonical origin, the robots file, the sitemap, the README, the licence
   and the contributor documents all say ACUM.
 

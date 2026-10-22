@@ -29,14 +29,17 @@ import {
   useRef,
   useState,
 } from "react";
+import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
+import { Paywall } from "@/components/player/paywall";
 import {
   usePlayer,
   type PlayerStatus,
 } from "@/hooks/use-player";
+import { useAccount, useWatchClock } from "@/hooks/use-account";
 import { cn } from "@/lib/utils";
 
 /**
@@ -104,6 +107,19 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const [volume, setVolume] = useState(1);
     const [fullscreen, setFullscreen] = useState(false);
     const [fullscreenMode, setFullscreenMode] = useState<FullscreenMode>("none");
+    /**
+     * The stream's own shape, read off the picture when it arrives.
+     *
+     * The frame takes it: a 16:9 feed gets a 16:9 frame, a 4:3 feed keeps
+     * its proportions. The picture is never stretched into a box it does
+     * not belong to, and it is never blown up past its own pixels — a 720p
+     * feed on a big screen stays 720p wide and sharp, and the chrome
+     * around it grows instead.
+     */
+    const [stream, setStream] = useState<{
+      width: number;
+      height: number;
+    } | null>(null);
     const [liveWindow, setLiveWindow] = useState<{
       from: number;
       to: number;
@@ -113,12 +129,47 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // The browser refused to start the picture: the visitor has to tap.
     const [blocked, setBlocked] = useState(false);
 
+    // The account decides whether the picture may play at all. The free
+    // plan has two hours a day and the server is the one that counts them,
+    // so the browser only asks what the answer is and obeys it.
+    const account = useAccount();
+    const gated = account.ready && account.gated;
+
+    // The guard the imperative handle reads: the handle is created once,
+    // and the answer may change while the picture is on screen.
+    const gatedRef = useRef(gated);
+    useEffect(() => {
+      gatedRef.current = gated;
+    }, [gated]);
+
+    // The wall goes up while the picture runs: the video stops, and it
+    // starts again on its own when the account may watch.
+    useEffect(() => {
+      if (!gated) return;
+      const video = videoRef.current;
+      if (video && !video.paused) video.pause();
+    }, [gated]);
+
     const player = usePlayer({
       channelId,
-      autoStart: autoPlay,
+      // The chain of links is only asked for when the account may watch.
+      // A visitor behind the wall does not even learn that the channel
+      // has more than one feed.
+      autoStart: autoPlay && account.ready && !gated,
       onStatusChange,
     });
     const { source, status, sources, sourceIndex, attempts, error } = player;
+
+    // The watch clock: the player knows how long it has been playing, and
+    // the server counts it.
+    useWatchClock({
+      channelId,
+      playing: playing && !gated,
+      signedIn: account.signedIn,
+      onReport: (seconds) => {
+        void account.report(channelId, seconds);
+      },
+    });
 
     const failRef = useRef(player.markFailed);
     useEffect(() => {
@@ -128,6 +179,9 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const startPlayback = useCallback(async () => {
       const video = videoRef.current;
       if (!video) return;
+      // Behind the wall, the picture does not start. Not muted, not
+      // paused later — it simply never begins.
+      if (gatedRef.current) return;
       try {
         await video.play();
         setBlocked(false);
@@ -153,6 +207,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const enableSound = useCallback(async () => {
       const video = videoRef.current;
       if (!video) return;
+      if (gatedRef.current) return;
       video.muted = false;
       setMuted(false);
       try {
@@ -169,6 +224,25 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     useEffect(() => {
       startPlaybackRef.current = startPlayback;
     }, [startPlayback]);
+
+    /**
+     * The size of the picture, when the browser knows it.
+     *
+     * It is read from the metadata, so it is the stream's real shape and
+     * not an assumption. The frame follows it; the picture is then cropped
+     * to fill the frame instead of being stretched or letterboxed.
+     */
+    const readStreamSize = useCallback(() => {
+      const video = videoRef.current;
+      if (!video || !video.videoWidth || !video.videoHeight) return;
+      setStream((prev) =>
+        prev &&
+        prev.width === video.videoWidth &&
+        prev.height === video.videoHeight
+          ? prev
+          : { width: video.videoWidth, height: video.videoHeight },
+      );
+    }, []);
 
     // Load the current link.
     const sourceUrl = source?.url ?? null;
@@ -347,6 +421,9 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       ref,
       () => ({
         play: () => {
+          // Behind the wall the parent may ask for the picture; it does
+          // not get one.
+          if (gatedRef.current) return;
           player.play();
           void startPlaybackRef.current();
         },
@@ -486,15 +563,28 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           className,
         )}
       >
-        <div className="relative aspect-video w-full bg-black max-sm:aspect-auto max-sm:min-h-[56.25vw] max-sm:flex-1">
+        <div
+          className="fx-player-frame relative w-full bg-black max-sm:min-h-[56.25vw] max-sm:flex-1"
+          style={
+            {
+              "--player-aspect": stream
+                ? `${stream.width} / ${stream.height}`
+                : "16 / 9",
+              "--player-native-width": stream ? `${stream.width}px` : "none",
+            } as CSSProperties
+          }
+        >
           <video
             ref={videoRef}
             className={cn(
-              "absolute inset-0 size-full bg-black object-contain",
+              // Cover, never contain: the picture fills the frame by
+              // cropping, so it is never stretched and never letterboxed.
+              "absolute inset-0 size-full bg-black object-cover",
               embedded && "hidden",
             )}
             playsInline
             muted={muted}
+            onLoadedMetadata={readStreamSize}
             onPlaying={() => {
               setPlaying(true);
               player.markPlaying();
@@ -595,6 +685,16 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             onEnable={() => {
               void enableSound();
             }}
+          />
+
+          {/* The wall: the account decides whether the picture may play.
+              It is the last thing over the frame, and it says nothing about
+              where the picture comes from. */}
+          <Paywall
+            visible={gated}
+            reason={account.reason}
+            minutesWatchedToday={account.minutesWatchedToday}
+            allowanceMinutes={account.allowanceMinutes}
           />
         </div>
 

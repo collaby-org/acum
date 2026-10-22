@@ -19,6 +19,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { harnessAuth } from "./harness-account.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -263,7 +264,11 @@ async function probeProxy(url) {
 async function chainFor(feed) {
   const res = await fetch(new URL("/api/player", APP), {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      // The product is account-gated, so the probe has to be signed in.
+      ...(await harnessAuth()),
+    },
     body: JSON.stringify({
       servers: [
         {

@@ -272,12 +272,30 @@ export function isPlaylist(body: string): boolean {
  *
  * Handles both bare segment lines and the `URI="..."` attribute carried by
  * `#EXT-X-KEY`, `#EXT-X-MAP` and friends.
+ *
+ * `extra` is appended to every rewritten address. It is how the channel and
+ * the viewer travel with each segment request, so the proxy can count who is
+ * watching what without the browser ever holding an upstream address.
  */
 export function rewritePlaylist(
   body: string,
   baseUrl: string,
   toProxy: (absoluteUrl: string) => string,
+  extra?: Record<string, string>,
 ): string {
+  const suffix = extra
+    ? Object.entries(extra)
+        .filter(([, value]) => Boolean(value))
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join("&")
+    : "";
+
+  const withExtra = (url: string) => {
+    const base = toProxy(url);
+    if (!suffix) return base;
+    return base.includes("?") ? `${base}&${suffix}` : `${base}?${suffix}`;
+  };
+
   return body
     .split(/\r?\n/)
     .map((line) => {
@@ -286,10 +304,10 @@ export function rewritePlaylist(
       if (trimmed.startsWith("#")) {
         return line.replace(
           /URI="([^"]*)"/g,
-          (_match, uri: string) => `URI="${toProxy(absolutize(uri, baseUrl))}"`,
+          (_match, uri: string) => `URI="${withExtra(absolutize(uri, baseUrl))}"`,
         );
       }
-      return toProxy(absolutize(trimmed, baseUrl));
+      return withExtra(absolutize(trimmed, baseUrl));
     })
     .join("\n");
 }
@@ -307,15 +325,35 @@ function sign(payload: string): string {
  *
  * The browser only ever sees `/api/stream?t=…`, so the upstream hosts stay
  * invisible to it and the proxy cannot be pointed at an arbitrary address.
+ *
+ * The token also carries the **channel** the address belongs to. That is
+ * what lets the proxy count the audience per channel: the segment requests
+ * arrive without a name, and the name is signed into the address they came
+ * from.
  */
-export function signStreamToken(url: string, ttlSeconds = TOKEN_TTL_SECONDS): string {
+export function signStreamToken(
+  url: string,
+  channelId?: string,
+  ttlSeconds = TOKEN_TTL_SECONDS,
+): string {
   const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
-  const payload = Buffer.from(`${expires}:${url}`, "utf8").toString("base64url");
+  const payload = Buffer.from(
+    `${expires}:${channelId ?? ""}:${url}`,
+    "utf8",
+  ).toString("base64url");
   return `${payload}.${sign(payload)}`;
 }
 
+/** What a token stands for. */
+export type StreamToken = {
+  /** The upstream address, still on the server. */
+  url: string;
+  /** The channel the address belongs to, when the token carries one. */
+  channelId: string | null;
+};
+
 /** Unwrap a token back into the upstream URL, or null when it is not ours. */
-export function readStreamToken(token: string): string | null {
+export function readStreamToken(token: string): StreamToken | null {
   const separator = token.indexOf(".");
   if (separator <= 0) return null;
   const payload = token.slice(0, separator);
@@ -328,14 +366,21 @@ export function readStreamToken(token: string): string | null {
   }
 
   const decoded = Buffer.from(payload, "base64url").toString("utf8");
-  const colon = decoded.indexOf(":");
-  if (colon <= 0) return null;
+  const firstColon = decoded.indexOf(":");
+  if (firstColon <= 0) return null;
 
-  const expires = Number(decoded.slice(0, colon));
-  const url = decoded.slice(colon + 1);
+  const expires = Number(decoded.slice(0, firstColon));
   if (!Number.isFinite(expires) || expires * 1000 < Date.now()) return null;
+
+  const rest = decoded.slice(firstColon + 1);
+  const secondColon = rest.indexOf(":");
+  // A token written before the channel was carried still opens: the
+  // address is what matters, and the channel is only used for the count.
+  const channelId = secondColon > 0 ? rest.slice(0, secondColon) : "";
+  const url = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
+
   if (!isAllowedMediaUrl(url)) return null;
-  return url;
+  return { url, channelId: channelId || null };
 }
 
 /* ------------------------------------------------------------------ *
