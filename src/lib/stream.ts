@@ -338,8 +338,10 @@ export function signStreamToken(
   sessionId?: string,
 ): string {
   const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
+  // The session field is only written when there is one, so a token without
+  // it has the same shape it always had.
   const payload = Buffer.from(
-    `${expires}:${channelId ?? ""}:${sessionId ?? ""}:${url}`,
+    `${expires}:${channelId ?? ""}:${sessionId ? `${sessionId}:` : ""}${url}`,
     "utf8",
   ).toString("base64url");
   return `${payload}.${sign(payload)}`;
@@ -389,12 +391,15 @@ export function readStreamToken(token: string): StreamToken | null {
   const tail = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
 
   // The session sits between the channel and the address. A tail that opens
-  // with the address itself was written before the registry, and has none.
+  // with the address itself carries none — and a token minted with an empty
+  // session field opens with its own separator, which is dropped the same way.
   let sessionId = "";
   let url = tail;
   if (!/^https?:/i.test(tail)) {
     const thirdColon = tail.indexOf(":");
-    if (thirdColon > 0) {
+    if (thirdColon === 0) {
+      url = tail.slice(1);
+    } else if (thirdColon > 0) {
       sessionId = tail.slice(0, thirdColon);
       url = tail.slice(thirdColon + 1);
     }
