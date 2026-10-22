@@ -1,0 +1,11 @@
+{
+  "prefix": "TBD",
+  "overallStatus": "specified (lowest entry status, or range when mixed)",
+  "themes": ["light", "dark"],
+  "colors": { "bg": "TBD", "surface": "TBD", "text": "TBD", "accent": "TBD", "border": "TBD" },
+  "typography": { "family": "TBD", "scale": "TBD" },
+  "spacing": { "base": "TBD", "scale": "TBD" },
+  "radius": { "scale": "TBD" },
+  "shadows": { "levels": "TBD" },
+  "motion": { "durations": "TBD", "easings": "TBD" }
+}
