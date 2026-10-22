@@ -104,7 +104,6 @@ export function Header({
         {/* Nav links — visible when signed in */}
         {account.signedIn && (
           <nav aria-label="Principal" className="hidden md:flex items-center gap-1">
-            <a href="/" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Acasă</a>
             <a href="/canale" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Catalog</a>
             <a href="/canale/toate" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Toate canalele</a>
           </nav>
