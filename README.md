@@ -146,6 +146,8 @@ docs/specs/        the load-bearing decisions
 - [docs/targets.md](docs/targets.md) — scope and quality bar
 - [docs/roadmap.md](docs/roadmap.md) — what is next
 - [docs/changelog.md](docs/changelog.md) — release history
+- [docs/admin.md](docs/admin.md) — the desk: who gets in, what it shows, how to
+  open it
 - [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) — why one
   entry per channel
 - [docs/specs/player-architecture.md](docs/specs/player-architecture.md) — how
