@@ -830,7 +830,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           ) : null}
 
           {embedded ? (
-            <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90">
+            <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90 rounded-t-2xl">
               Redarea este controlată din playerul încorporat.
             </p>
           ) : null}

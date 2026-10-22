@@ -1,0 +1,11 @@
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://localhost:3231
+- Network:       http://192.168.1.195:3231
+- Environments: .env
+✓ Ready in 606ms
+✓ Running next.config.ts took 47ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+⚠ Slow filesystem detected. The benchmark took 661ms. If \\?\D:\Work\Romanian TV Live\.next\dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development

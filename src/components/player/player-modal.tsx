@@ -90,7 +90,7 @@ export function PlayerModal({
               channelId={channel.id}
               autoPlay={open}
               onStatusChange={onStatusChange}
-              className="rounded-none border-0 max-sm:min-h-0 max-sm:flex-1"
+              className="rounded-2xl border-0 max-sm:min-h-0 max-sm:flex-1"
             />
           </div>
 
