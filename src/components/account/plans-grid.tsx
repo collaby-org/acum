@@ -59,8 +59,14 @@ export function PlanCard({
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const account = useAccount();
   const free = plan.price === null;
   const product = plan.id as Product;
+
+  const buttonLabel = account.ready && account.signedIn
+    ? (free ? "Planul tău: Gratuit" : "Planul tău: " + (plan.id === "monthly" ? "Individual" : plan.id === "household" ? "Casă" : "Viață"))
+    : (free ? "Creează un cont" : "Alege " + (plan.id === "monthly" ? "Individual" : plan.id === "household" ? "Casă" : "Viață"));
+  const buttonHref = account.ready && account.signedIn ? "/conturi" : (free ? "/conturi?intent=register" : "/conturi?intent=plan&plan=" + product);
 
   const buy = async () => {
     if (free) return;
