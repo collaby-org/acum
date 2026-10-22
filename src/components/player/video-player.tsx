@@ -32,6 +32,7 @@ import {
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
+import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import {
   usePlayer,
   type PlayerStatus,
@@ -109,6 +110,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       current: number;
     } | null>(null);
     const [behindLive, setBehindLive] = useState(false);
+    // The browser refused to start the picture: the visitor has to tap.
+    const [blocked, setBlocked] = useState(false);
 
     const player = usePlayer({
       channelId,
@@ -127,15 +130,38 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       if (!video) return;
       try {
         await video.play();
+        setBlocked(false);
       } catch {
         // The browser refused sound; the picture matters more than the audio.
         video.muted = true;
         setMuted(true);
         try {
           await video.play();
+          setBlocked(false);
         } catch {
-          /* nothing left to try here */
+          // The browser refused the picture as well. Only a tap can start
+          // it now, so the overlay goes up and waits.
+          setBlocked(true);
         }
+      }
+    }, []);
+
+    /**
+     * The tap: a gesture is what the browser asks for, so the picture
+     * starts with sound when it can.
+     */
+    const enableSound = useCallback(async () => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.muted = false;
+      setMuted(false);
+      try {
+        await video.play();
+        setBlocked(false);
+      } catch {
+        video.muted = true;
+        setMuted(true);
+        setBlocked(true);
       }
     }, []);
 
@@ -152,6 +178,10 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     useEffect(() => {
       const video = videoRef.current;
       if (!video || !sourceUrl || embedded) return;
+
+      // A new link gets a new chance: the previous refusal says nothing
+      // about this one.
+      setBlocked(false);
 
       let disposed = false;
       let destroy: (() => void) | null = null;
@@ -416,8 +446,15 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       enterNativeFullscreen();
     }, [enterNativeFullscreen]);
 
-    const canPictureInPicture =
-      typeof document !== "undefined" && "pictureInPictureEnabled" in document;
+    // Whether the browser can put the picture in a floating window is
+    // only known in the browser — and the answer has to be the same on the
+    // server and on the first client render, or the two trees disagree.
+    // The channel page renders the player on the server, so the flag waits
+    // for the mount.
+    const [canPictureInPicture, setCanPictureInPicture] = useState(false);
+    useEffect(() => {
+      setCanPictureInPicture("pictureInPictureEnabled" in document);
+    }, []);
 
     const togglePictureInPicture = useCallback(() => {
       const video = videoRef.current;
@@ -487,7 +524,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             </p>
           ) : null}
 
-          {busy && !failed && !embedded ? (
+          {busy && !failed && !embedded && !blocked ? (
             <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55">
               <div className="flex flex-col items-center gap-3 text-center">
                 <Loader2 className="size-7 animate-spin text-signal" />
@@ -539,6 +576,26 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               </div>
             </div>
           ) : null}
+
+          {/* The browser held the picture back: the visitor taps, and the
+              tap is the gesture the browser was waiting for. */}
+          <MuteOverlay
+            visible={blocked && !failed && !embedded}
+            title="Apasă pentru redare"
+            hint="Browserul a oprit pornirea automată. Un tap porneste imaginea."
+            label="Pornește redarea"
+            onStart={() => {
+              void enableSound();
+            }}
+          />
+
+          {/* The picture runs, but without sound: the pill says so. */}
+          <SoundHint
+            visible={playing && muted && !blocked && !embedded}
+            onEnable={() => {
+              void enableSound();
+            }}
+          />
         </div>
 
         {bare || embedded ? null : (

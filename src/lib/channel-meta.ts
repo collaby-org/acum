@@ -106,7 +106,7 @@ export type ServerLike = {
   hlsUrl?: string | null;
   status?: ServerStatus;
   quality?: Quality;
-  source?: "primary" | "secondary";
+  source?: "primary" | "secondary" | "canale-tv";
 };
 
 /** How many upstream feeds this channel has. */
@@ -188,18 +188,25 @@ export function byPlayability(
   return a.name.localeCompare(b.name, "ro");
 }
 
-/** True when at least one feed of this channel can play in a browser. */
+/**
+ * True when at least one feed of this channel can play in a browser.
+ *
+ * The public model in `src/data/types.ts` answers this, and it is the only
+ * answer: a second copy of the rule here would drift from it, and the rail
+ * of live channels would quietly come up empty.
+ */
 export function isPlayable(channel: {
   status: ServerStatus;
-  servers?: readonly (ServerLike & { source?: string })[];
+  servers?: readonly ServerLike[];
 }): boolean {
   if (channel.servers?.length) {
     return channel.servers.some(
       (server) =>
         server.status === "live" &&
-        (Boolean(server.embedUrl) ||
-          Boolean(server.hlsUrl) ||
-          server.source === "secondary"),
+        (server.source === "secondary" ||
+          server.source === "canale-tv" ||
+          Boolean(server.embedUrl) ||
+          Boolean(server.hlsUrl)),
     );
   }
   return channel.status === "live";

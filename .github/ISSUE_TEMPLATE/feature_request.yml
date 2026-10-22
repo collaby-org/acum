@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement to VIZOR
+description: Suggest an improvement to ACUM
 labels: ["enhancement"]
 body:
   - type: textarea
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Scope
       options:
-        - label: This keeps VIZOR account-free and ad-free.
+        - label: This keeps ACUM account-free and ad-free.
         - label: This needs no backend, no database and no analytics.
     validations:
       required: true

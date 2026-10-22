@@ -1,10 +1,18 @@
 "use client";
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { migrateStorageKey } from "@/lib/utils";
 
-const FAVOURITES_KEY = "vizor:favourites:v1";
-const RECENT_KEY = "vizor:recent:v1";
+const FAVOURITES_KEY = "acum:favourites:v1";
+const RECENT_KEY = "acum:recent:v1";
 const RECENT_LIMIT = 12;
+
+/**
+ * The shelves were called `vizor:` before the product was renamed. The
+ * visitor's pins and their history move across with them.
+ */
+migrateStorageKey("vizor:favourites:v1", FAVOURITES_KEY);
+migrateStorageKey("vizor:recent:v1", RECENT_KEY);
 
 const EMPTY: string[] = [];
 

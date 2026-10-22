@@ -46,7 +46,8 @@
           "servers": [
             {
               "slug": "protv",
-              "label": "S1"
+              "label": "S1",
+              "id": "protv-1"
             },
             {
               "slug": "protv-s2",
@@ -59,6 +60,17 @@
             {
               "slug": "protv-s4",
               "label": "S4"
+            },
+            {
+              "slug": "protv",
+              "label": "S5",
+              "source": "secondary"
+            },
+            {
+              "slug": "pr0tv",
+              "id": "canale-tv:pr0tv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -106,11 +118,17 @@
           "servers": [
             {
               "slug": "tvr1",
-              "label": "S1"
+              "label": "S1",
+              "id": "tvr1-1"
             },
             {
               "slug": "tvr1-s2",
               "label": "S2"
+            },
+            {
+              "slug": "tvr1",
+              "label": "S3",
+              "source": "secondary"
             }
           ]
         },
@@ -119,11 +137,17 @@
           "servers": [
             {
               "slug": "tvr2",
-              "label": "S1"
+              "label": "S1",
+              "id": "tvr2-1"
             },
             {
               "slug": "tvr2-s2",
               "label": "S2"
+            },
+            {
+              "slug": "tvr2",
+              "label": "S3",
+              "source": "secondary"
             }
           ]
         },
@@ -138,6 +162,12 @@
               "slug": "tvr-3",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "tvr3",
+              "id": "canale-tv:tvr3",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -147,6 +177,12 @@
             {
               "slug": "tvrsp-s1",
               "label": "S1"
+            },
+            {
+              "slug": "tvrsport",
+              "id": "canale-tv:tvrsport",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -156,6 +192,12 @@
             {
               "slug": "tvr-inter-s1",
               "label": "S1"
+            },
+            {
+              "slug": "tvrinter",
+              "id": "canale-tv:tvrinter",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -208,6 +250,12 @@
               "slug": "hbo",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "hb",
+              "id": "canale-tv:hb",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -226,6 +274,12 @@
               "slug": "hbo-2",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "hb2",
+              "id": "canale-tv:hb2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -244,6 +298,12 @@
               "slug": "hbo-3",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "hb3",
+              "id": "canale-tv:hb3",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -262,6 +322,12 @@
               "slug": "cinemax",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "cmax",
+              "id": "canale-tv:cmax",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -280,6 +346,12 @@
               "slug": "cinemax-2",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "cmax2",
+              "id": "canale-tv:cmax2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -332,6 +404,12 @@
               "slug": "kanal-d",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "canald",
+              "id": "canale-tv:canald",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -350,6 +428,12 @@
               "slug": "kanal-d2",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "canald2",
+              "id": "canale-tv:canald2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -382,6 +466,12 @@
               "slug": "antena-1",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "a1",
+              "id": "canale-tv:a1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -493,6 +583,12 @@
               "slug": "realitatea-plus",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "realitateatv",
+              "id": "canale-tv:realitateatv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -512,6 +608,12 @@
             {
               "slug": "sport1-s2",
               "label": "S2"
+            },
+            {
+              "slug": "dgsp1",
+              "id": "canale-tv:dgsp1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -525,6 +627,12 @@
             {
               "slug": "sport2-s2",
               "label": "S2"
+            },
+            {
+              "slug": "dgsp2",
+              "id": "canale-tv:dgsp2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -538,6 +646,12 @@
             {
               "slug": "sport3-s2",
               "label": "S2"
+            },
+            {
+              "slug": "dgsp3",
+              "id": "canale-tv:dgsp3",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -551,6 +665,12 @@
             {
               "slug": "sport4-s2",
               "label": "S2"
+            },
+            {
+              "slug": "dgsp4",
+              "id": "canale-tv:dgsp4",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -761,6 +881,12 @@
             {
               "slug": "tv100-s2",
               "label": "S2"
+            },
+            {
+              "slug": "tv1000",
+              "id": "canale-tv:tv1000",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -780,6 +906,12 @@
             {
               "slug": "movie-s2",
               "label": "S2"
+            },
+            {
+              "slug": "fnow",
+              "id": "canale-tv:fnow",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -804,6 +936,12 @@
               "slug": "zu-tv",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "zutv",
+              "id": "canale-tv:zutv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -824,6 +962,12 @@
               "slug": "filmbox-premium",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "fbox-premium",
+              "id": "canale-tv:fbox-premium",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -842,6 +986,12 @@
             {
               "slug": "filmbox-s3",
               "label": "S1"
+            },
+            {
+              "slug": "fbox-extra",
+              "id": "canale-tv:fbox-extra",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -851,6 +1001,12 @@
             {
               "slug": "filmbox-s4",
               "label": "S1"
+            },
+            {
+              "slug": "fbox1",
+              "id": "canale-tv:fbox1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -875,6 +1031,12 @@
               "slug": "antena-stars",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "astars",
+              "id": "canale-tv:astars",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -913,11 +1075,23 @@
           "servers": [
             {
               "slug": "film-cafe",
-              "label": "S1"
+              "label": "S1",
+              "id": "film-cafe-1"
             },
             {
               "slug": "film-cafe-s2",
               "label": "S2"
+            },
+            {
+              "slug": "film-cafe",
+              "label": "S3",
+              "source": "secondary"
+            },
+            {
+              "slug": "filmcafe",
+              "id": "canale-tv:filmcafe",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -942,6 +1116,12 @@
               "slug": "happy-channel",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "happy",
+              "id": "canale-tv:happy",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -956,11 +1136,17 @@
           "servers": [
             {
               "slug": "diva",
-              "label": "S1"
+              "label": "S1",
+              "id": "diva-1"
             },
             {
               "slug": "diva-s2",
               "label": "S2"
+            },
+            {
+              "slug": "diva",
+              "label": "S3",
+              "source": "secondary"
             }
           ]
         }
@@ -985,6 +1171,12 @@
               "slug": "disney-channel",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "disneych",
+              "id": "canale-tv:disneych",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1003,6 +1195,12 @@
               "slug": "disney-junior",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "disneyjr",
+              "id": "canale-tv:disneyjr",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1027,6 +1225,12 @@
               "slug": "cartoon-network",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "cartoonnet",
+              "id": "canale-tv:cartoonnet",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1078,11 +1282,23 @@
           "servers": [
             {
               "slug": "jim-jam",
-              "label": "S1"
+              "label": "S1",
+              "id": "jim-jam-1"
             },
             {
               "slug": "jim-jam-s2",
               "label": "S2"
+            },
+            {
+              "slug": "jim-jam",
+              "label": "S3",
+              "source": "secondary"
+            },
+            {
+              "slug": "jimjam",
+              "id": "canale-tv:jimjam",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1125,11 +1341,17 @@
           "servers": [
             {
               "slug": "nickelodeon",
-              "label": "S1"
+              "label": "S1",
+              "id": "nickelodeon-1"
             },
             {
               "slug": "nickelodeon-s2",
               "label": "S2"
+            },
+            {
+              "slug": "nickelodeon",
+              "label": "S3",
+              "source": "secondary"
             }
           ]
         },
@@ -1148,6 +1370,12 @@
               "slug": "nick-jr",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "nickjr",
+              "id": "canale-tv:nickjr",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1214,6 +1442,12 @@
               "slug": "bbc-earth",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "bbcearth",
+              "id": "canale-tv:bbcearth",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1238,6 +1472,12 @@
               "slug": "prima-news",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "primanews",
+              "id": "canale-tv:primanews",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1257,6 +1497,12 @@
             {
               "slug": "euro-news-s2",
               "label": "S2"
+            },
+            {
+              "slug": "euronewsromnia",
+              "id": "canale-tv:euronewsromnia",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1276,6 +1522,12 @@
             {
               "slug": "shut1-s2",
               "label": "S2"
+            },
+            {
+              "slug": "show1",
+              "id": "canale-tv:show1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1295,6 +1547,12 @@
             {
               "slug": "shut2-s2",
               "label": "S2"
+            },
+            {
+              "slug": "show2",
+              "id": "canale-tv:show2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1309,11 +1567,17 @@
           "servers": [
             {
               "slug": "axn",
-              "label": "S1"
+              "label": "S1",
+              "id": "axn-1"
             },
             {
               "slug": "axn-s2",
               "label": "S2"
+            },
+            {
+              "slug": "axn",
+              "label": "S3",
+              "source": "secondary"
             }
           ]
         }
@@ -1333,6 +1597,12 @@
             {
               "slug": "axn-black-s2",
               "label": "S2"
+            },
+            {
+              "slug": "axnblack",
+              "id": "canale-tv:axnblack",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1352,6 +1622,12 @@
             {
               "slug": "axn-white-s2",
               "label": "S2"
+            },
+            {
+              "slug": "axnwhite",
+              "id": "canale-tv:axnwhite",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1371,6 +1647,12 @@
             {
               "slug": "axn-spin-s2",
               "label": "S2"
+            },
+            {
+              "slug": "axnspin",
+              "id": "canale-tv:axnspin",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1414,6 +1696,12 @@
               "slug": "epicdrama",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "epdrama",
+              "id": "canale-tv:epdrama",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1428,7 +1716,19 @@
           "servers": [
             {
               "slug": "comedy-central",
-              "label": "S1"
+              "label": "S1",
+              "id": "comedy-central-1"
+            },
+            {
+              "slug": "comedy-central",
+              "label": "S2",
+              "source": "secondary"
+            },
+            {
+              "slug": "ccentral",
+              "id": "canale-tv:ccentral",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1453,6 +1753,12 @@
             {
               "slug": "via-nature",
               "label": "S1"
+            },
+            {
+              "slug": "vianature",
+              "id": "canale-tv:vianature",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1462,6 +1768,12 @@
             {
               "slug": "via-explorer",
               "label": "S1"
+            },
+            {
+              "slug": "viaexplorer",
+              "id": "canale-tv:viaexplorer",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1471,6 +1783,12 @@
             {
               "slug": "via-his",
               "label": "S1"
+            },
+            {
+              "slug": "viahist",
+              "id": "canale-tv:viahist",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1495,6 +1813,12 @@
               "slug": "duck-tv",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "ducktv",
+              "id": "canale-tv:ducktv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1519,6 +1843,12 @@
             {
               "slug": "bollywood-tv-s1",
               "label": "S1"
+            },
+            {
+              "slug": "bolywoodtv",
+              "id": "canale-tv:bolywoodtv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -1552,6 +1882,12 @@
               "slug": "crime-investigation",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "crimeinvest",
+              "id": "canale-tv:crimeinvest",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1688,6 +2024,12 @@
               "slug": "discovery",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "discoverych",
+              "id": "canale-tv:discoverych",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1712,6 +2054,12 @@
               "slug": "history-channel",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "historych",
+              "id": "canale-tv:historych",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1736,6 +2084,12 @@
               "slug": "id",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "idinvest",
+              "id": "canale-tv:idinvest",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1840,6 +2194,12 @@
               "slug": "tv-paprika",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "paprika",
+              "id": "canale-tv:paprika",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1860,6 +2220,12 @@
               "slug": "cbs-reality",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "cbsreality",
+              "id": "canale-tv:cbsreality",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1880,6 +2246,12 @@
               "slug": "fishing-and-hunting",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "fishy",
+              "id": "canale-tv:fishy",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1934,6 +2306,12 @@
               "slug": "kiss-tv",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "kisstv",
+              "id": "canale-tv:kisstv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -1994,6 +2372,12 @@
               "slug": "music-channel",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "musicch",
+              "id": "canale-tv:musicch",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -2014,6 +2398,12 @@
               "slug": "hit-music-channel",
               "label": "S2",
               "source": "secondary"
+            },
+            {
+              "slug": "hitmusic",
+              "id": "canale-tv:hitmusic",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -2029,6 +2419,18 @@
             {
               "slug": "news",
               "label": "S1"
+            },
+            {
+              "slug": "national24plus",
+              "id": "canale-tv:national24plus",
+              "label": "S3",
+              "source": "canale-tv"
+            },
+            {
+              "slug": "digi24",
+              "id": "canale-tv:digi24",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -2074,6 +2476,12 @@
             {
               "slug": "cnn-live-s1",
               "label": "S1"
+            },
+            {
+              "slug": "cnn",
+              "id": "canale-tv:cnn",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -2088,7 +2496,19 @@
           "servers": [
             {
               "slug": "etnotv",
-              "label": "S1"
+              "label": "S1",
+              "id": "etnotv-1"
+            },
+            {
+              "slug": "etnotv",
+              "label": "S2",
+              "source": "secondary"
+            },
+            {
+              "slug": "etno",
+              "id": "canale-tv:etno",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         }
@@ -2105,6 +2525,12 @@
               "slug": "acasa-gold",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "acasagold",
+              "id": "canale-tv:acasagold",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2115,6 +2541,12 @@
               "slug": "acasa-tv",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "acasatv",
+              "id": "canale-tv:acasatv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2125,6 +2557,12 @@
               "slug": "antena-3-cnn",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "a3cnn",
+              "id": "canale-tv:a3cnn",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2135,6 +2573,12 @@
               "slug": "balcan-music",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "balcanmuz",
+              "id": "canale-tv:balcanmuz",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2155,6 +2599,12 @@
               "slug": "cartoonito",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "cartonito",
+              "id": "canale-tv:cartonito",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2235,6 +2685,12 @@
               "slug": "dizi",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "dizy",
+              "id": "canale-tv:dizy",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2245,6 +2701,12 @@
               "slug": "eurosport-1",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "eurosp1",
+              "id": "canale-tv:eurosp1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2255,6 +2717,12 @@
               "slug": "eurosport-2",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "eurosp2",
+              "id": "canale-tv:eurosp2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2305,6 +2773,12 @@
               "slug": "prima-sport-1",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "primasp1",
+              "id": "canale-tv:primasp1",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2315,6 +2789,12 @@
               "slug": "prima-sport-2",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "primasp2",
+              "id": "canale-tv:primasp2",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2325,6 +2805,12 @@
               "slug": "prima-sport-3",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "primasp3",
+              "id": "canale-tv:primasp3",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2335,6 +2821,12 @@
               "slug": "pro-arena",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "proarena",
+              "id": "canale-tv:proarena",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2345,6 +2837,12 @@
               "slug": "romania-tv",
               "label": "S1",
               "source": "secondary"
+            },
+            {
+              "slug": "romaniatv",
+              "id": "canale-tv:romaniatv",
+              "label": "S3",
+              "source": "canale-tv"
             }
           ]
         },
@@ -2365,6 +2863,155 @@
               "slug": "tralala",
               "label": "S1",
               "source": "secondary"
+            }
+          ]
+        }
+      ]
+    },
+    "Alte canale (sursa 3)": {
+      "name": "Alte canale",
+      "category": "stiri",
+      "channels": [
+        {
+          "name": "BBC NEWS",
+          "servers": [
+            {
+              "slug": "bbcnews",
+              "id": "canale-tv:bbcnews",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "PRIMA SPORT 4",
+          "servers": [
+            {
+              "slug": "primasp4",
+              "id": "canale-tv:primasp4",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "PRIMA SPORT 5",
+          "servers": [
+            {
+              "slug": "primasp5",
+              "id": "canale-tv:primasp5",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "PPV 1",
+          "servers": [
+            {
+              "slug": "ppv1",
+              "id": "canale-tv:ppv1",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "PPV 2",
+          "servers": [
+            {
+              "slug": "ppv2",
+              "id": "canale-tv:ppv2",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "PPV 3",
+          "servers": [
+            {
+              "slug": "ppv3",
+              "id": "canale-tv:ppv3",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "SPORT EXTRA",
+          "servers": [
+            {
+              "slug": "sportextra",
+              "id": "canale-tv:sportextra",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "WARNER TV",
+          "servers": [
+            {
+              "slug": "wornertv",
+              "id": "canale-tv:wornertv",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "BBC FIRST",
+          "servers": [
+            {
+              "slug": "bfirst",
+              "id": "canale-tv:bfirst",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "NAT GEO PEOPLE",
+          "servers": [
+            {
+              "slug": "netgeopeople",
+              "id": "canale-tv:netgeopeople",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "TRAVEL MIX",
+          "servers": [
+            {
+              "slug": "travelmix",
+              "id": "canale-tv:travelmix",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "HGTV",
+          "servers": [
+            {
+              "slug": "hgtv",
+              "id": "canale-tv:hgtv",
+              "label": "S1",
+              "source": "canale-tv"
+            }
+          ]
+        },
+        {
+          "name": "Canal 33",
+          "servers": [
+            {
+              "slug": "canal-33",
+              "id": "canale-tv:canal-33",
+              "label": "S1",
+              "source": "canale-tv"
             }
           ]
         }

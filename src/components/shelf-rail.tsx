@@ -1,29 +1,30 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, Play, Radio, X } from "lucide-react";
-import type { CSSProperties, KeyboardEvent, MouseEvent } from "react";
-import type { Channel } from "@/data/types";
-import { STATUS_META, posterPalette } from "@/lib/channel-meta";
+import { ChevronLeft, ChevronRight, Heart, X } from "lucide-react";
+import type { KeyboardEvent, MouseEvent } from "react";
+import { ChannelScreen } from "@/components/channel-card";
+import type { EpgGuide } from "@/components/now-next";
+import { STATUS_META } from "@/lib/channel-meta";
+import type { ChannelLike } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
-export type ShelfRailProps = {
+export type ShelfRailProps<T extends ChannelLike = ChannelLike> = {
   title: string;
   eyebrow?: string;
-  channels: Channel[];
-  onPlay: (channel: Channel) => void;
+  channels: T[];
+  /** The day's guide, so every card can name what is on right now. */
+  guide?: EpgGuide | null;
+  onPlay: (channel: T) => void;
   isFavorite: (id: string) => boolean;
   onToggleFavorite: (
-    channel: Channel,
+    channel: T,
     event?: MouseEvent<HTMLButtonElement>,
   ) => void;
   /** Shows a small remove control on every card. */
-  onRemove?: (channel: Channel) => void;
+  onRemove?: (channel: T) => void;
   /** Shows the reorder controls. `delta` is -1 for earlier, +1 for later. */
-  onMove?: (channel: Channel, delta: -1 | 1) => void;
-  /** What to say when the shelf is empty. Without it the rail renders nothing. */
-  emptyHint?: string;
+  onMove?: (channel: T, delta: -1 | 1) => void;
   className?: string;
   /** Anchor id, so a deep link can target this rail. */
   id?: string;
@@ -55,19 +56,19 @@ function channelCount(count: number) {
  * strip under every poster (reorder, favourite, remove), and the strip has to
  * stay a sibling of the play button, never nested inside it.
  */
-export function ShelfRail({
+export function ShelfRail<T extends ChannelLike>({
   title,
   eyebrow,
   channels,
+  guide,
   onPlay,
   isFavorite,
   onToggleFavorite,
   onRemove,
   onMove,
-  emptyHint,
   className,
   id,
-}: ShelfRailProps) {
+}: ShelfRailProps<T>) {
   const headingId = useId();
   const scroller = useRef<HTMLUListElement>(null);
   const [edges, setEdges] = useState({ start: true, end: true, overflow: false });
@@ -109,7 +110,7 @@ export function ShelfRail({
   };
 
   const shift = useCallback(
-    (channel: Channel, delta: Direction) => {
+    (channel: T, delta: Direction) => {
       if (!onMove) return;
       const index = channels.findIndex((entry) => entry.id === channel.id);
       const target = index + delta;
@@ -199,7 +200,7 @@ export function ShelfRail({
 
   const onMoveKeyDown = (
     event: KeyboardEvent<HTMLButtonElement>,
-    channel: Channel,
+    channel: T,
   ) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
@@ -207,33 +208,10 @@ export function ShelfRail({
     shift(channel, event.key === "ArrowLeft" ? -1 : 1);
   };
 
-  if (channels.length === 0) {
-    if (!emptyHint) return null;
-    return (
-      <section
-        id={id}
-        aria-labelledby={headingId}
-        className={cn("py-7 sm:py-9", className)}
-      >
-        <div className="mb-3 px-4 sm:px-8 lg:px-12">
-          {eyebrow && (
-            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-signal/85">
-              {eyebrow}
-            </p>
-          )}
-          <h2
-            id={headingId}
-            className="font-display text-xl font-semibold tracking-tight sm:text-[26px]"
-          >
-            {title}
-          </h2>
-        </div>
-        <p className="mx-4 rounded-[var(--radius-panel)] border border-dashed border-hairline-strong bg-veil px-4 py-3 text-sm text-ink-muted sm:mx-8 lg:mx-12">
-          {emptyHint}
-        </p>
-      </section>
-    );
-  }
+  // An empty shelf is not a shelf. It shows nothing at all — no heading,
+  // no placeholder, no hint. The rail appears the moment the visitor
+  // pins or saves something.
+  if (channels.length === 0) return null;
 
   const mask = !edges.overflow
     ? "none"
@@ -283,7 +261,7 @@ export function ShelfRail({
           onScroll={sync}
           onKeyDown={onKeyDown}
           style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-3 pt-1 fx-hide-scrollbar sm:px-8 lg:px-12"
+          className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-3 pt-1 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none]"
         >
           {channels.map((channel, index) => {
             const favorite = isFavorite(channel.id);
@@ -295,7 +273,7 @@ export function ShelfRail({
                 data-shelf-id={channel.id}
                 className="relative w-[248px] shrink-0 snap-start sm:w-[272px]"
               >
-                <ShelfCard channel={channel} onPlay={onPlay} />
+                <ShelfCard channel={channel} guide={guide} onPlay={onPlay} />
 
                 <div className="mt-2 flex items-center gap-1.5">
                   {onMove && (
@@ -396,18 +374,22 @@ export function ShelfRail({
   );
 }
 
-type ShelfCardProps = {
-  channel: Channel;
-  onPlay: (channel: Channel) => void;
+type ShelfCardProps<T extends ChannelLike> = {
+  channel: T;
+  guide?: EpgGuide | null;
+  onPlay: (channel: T) => void;
 };
 
 /**
- * A 16:9 "screen" with the channel's own logo as the broadcast bug, over a
- * backdrop derived from its family colour. The whole screen is one button;
+ * A 16:9 "screen" with the channel's own logo as the broadcast bug, over
+ * the still of what is playing right now. The whole screen is one button;
  * the shelf controls live under it, never inside it.
  */
-function ShelfCard({ channel, onPlay }: ShelfCardProps) {
-  const palette = posterPalette(channel.familyKey, channel.category);
+function ShelfCard<T extends ChannelLike>({
+  channel,
+  guide,
+  onPlay,
+}: ShelfCardProps<T>) {
   const status = STATUS_META[channel.status];
   const isLive = channel.status === "live";
 
@@ -417,108 +399,13 @@ function ShelfCard({ channel, onPlay }: ShelfCardProps) {
       data-card-action="play"
       onClick={() => onPlay(channel)}
       aria-label={`Vizionează ${channel.name}${isLive ? ", live acum" : `, ${status.label.toLowerCase()}`}`}
-      className="group/shelf-card block w-full cursor-pointer rounded-[var(--radius-card)] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+      className="group/card block w-full cursor-pointer rounded-[var(--radius-card)] text-left transition-[transform,box-shadow] duration-[var(--dur-base,300ms)] hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[var(--shadow-e4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!"
+      style={{
+        transitionTimingFunction:
+          "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",
+      }}
     >
-      <div
-        className={cn(
-          "relative aspect-video w-full overflow-hidden rounded-[var(--radius-card)] bg-surface-2 fx-edge",
-          "transition-[transform,box-shadow] duration-[var(--dur-base,300ms)]",
-          "group-hover/shelf-card:-translate-y-px group-hover/shelf-card:scale-[1.02]",
-          "group-hover/shelf-card:shadow-[var(--shadow-e4)]",
-          "motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!",
-        )}
-        style={{
-          transitionTimingFunction:
-            "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",
-        }}
-      >
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background: `radial-gradient(130% 95% at 18% 0%, ${palette.from} 0%, transparent 62%), radial-gradient(100% 80% at 100% 100%, ${palette.glow} 0%, transparent 58%), linear-gradient(158deg, ${palette.via} 0%, ${palette.to} 100%)`,
-          }}
-        />
-
-        <div
-          aria-hidden
-          className="absolute inset-0 fx-scanline opacity-70 mix-blend-overlay"
-        />
-
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-0 transition-opacity duration-[var(--dur-slow,600ms)] group-hover/shelf-card:opacity-100 motion-reduce:transition-none"
-          style={{ "--fx-bloom-color": palette.glow } as CSSProperties}
-        >
-          <div className="absolute inset-0 fx-bloom" />
-        </div>
-
-        <div aria-hidden className="absolute inset-0 fx-vignette" />
-
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
-        />
-
-        {channel.logo ? (
-          <span className="absolute left-3 top-3 flex h-7 items-center rounded-[7px] bg-black/45 px-1 backdrop-blur-sm fx-edge">
-            <Image
-              src={channel.logo}
-              alt=""
-              width={40}
-              height={20}
-              className="h-5 w-10 object-contain"
-              unoptimized
-            />
-          </span>
-        ) : (
-          <span
-            aria-hidden
-            className="absolute left-3 top-3 grid h-7 min-w-10 place-items-center rounded-[7px] bg-black/45 px-1.5 font-display text-[11px] font-bold tracking-tight text-ink/80 backdrop-blur-sm fx-edge"
-          >
-            {channel.name.slice(0, 2).toUpperCase()}
-          </span>
-        )}
-
-        <span className="absolute right-3 top-3 flex h-6 items-center gap-1.5 rounded-full bg-black/45 px-2 backdrop-blur-sm fx-edge">
-          {isLive ? (
-            <>
-              <span
-                aria-hidden
-                className="relative size-1.5 rounded-full bg-live fx-live-eye"
-              />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-live-soft">
-                Live
-              </span>
-            </>
-          ) : (
-            <>
-              <Radio aria-hidden className="size-3 text-ink-faint" />
-              <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-faint">
-                {status.label}
-              </span>
-            </>
-          )}
-        </span>
-
-        <div className="absolute inset-x-0 bottom-0 p-3.5">
-          <h3 className="font-display text-[15px] font-semibold leading-[1.15] tracking-tight text-ink drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-            {channel.name}
-          </h3>
-          <p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[0.1em] text-ink-muted/80">
-            {channel.family}
-          </p>
-        </div>
-
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition-opacity duration-[var(--dur-base,300ms)] group-hover/shelf-card:opacity-100 group-focus-visible/shelf-card:opacity-100 motion-reduce:transition-none"
-        >
-          <span className="grid size-12 place-items-center rounded-full bg-signal text-signal-ink shadow-[var(--shadow-glow)] transition-transform duration-[var(--dur-base,300ms)] group-hover/shelf-card:scale-110 motion-reduce:transition-none motion-reduce:scale-100">
-            <Play className="size-5 translate-x-[1px] fill-current" />
-          </span>
-        </span>
-      </div>
+      <ChannelScreen channel={channel} guide={guide} />
     </button>
   );
 }

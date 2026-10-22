@@ -62,7 +62,7 @@ const BATCH_SIZE = 24;
 const CONCURRENCY = 6;
 
 const UA =
-  "VIZOR-logo-fetch/1.0 (https://github.com/; romanian-tv-live catalogue builder) Node/" +
+  "ACUM-logo-fetch/1.0 (https://github.com/collaby-org/acum; romanian-tv-live catalogue builder) Node/" +
   process.version;
 
 const argv = process.argv.slice(2);

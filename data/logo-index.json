@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T01:52:26.242Z",
+  "generatedAt": "2026-10-22T10:06:16.539Z",
   "naming": "public/logos/<slug>.png (base), public/logos/<slug>-hd.png (HD lockup)",
   "upstream": "https://www.cool-etv.net",
   "wikimedia": "https://commons.wikimedia.org/",
@@ -335,6 +335,46 @@
       "file": "bbc-earth.png",
       "hdFile": null
     },
+    "bbc-first": {
+      "slug": "bbc-first",
+      "name": "BBC FIRST",
+      "family": "Alte canale",
+      "servers": [
+        "bfirst"
+      ],
+      "base": "/logos/bbc-first.png",
+      "hd": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABBC_First_Logo_2014.svg",
+      "sourceFile": "File:BBC First Logo 2014.svg",
+      "origin": "wikimedia-commons",
+      "width": 1028,
+      "height": 773,
+      "transparent": true,
+      "fallback": false,
+      "dark": false,
+      "file": "bbc-first.png",
+      "hdFile": null
+    },
+    "bbc-news": {
+      "slug": "bbc-news",
+      "name": "BBC NEWS",
+      "family": "Alte canale",
+      "servers": [
+        "bbcnews"
+      ],
+      "base": "/logos/bbc-news.png",
+      "hd": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABBC_News_2022.svg",
+      "sourceFile": "File:BBC News 2022.svg",
+      "origin": "wikimedia-commons",
+      "width": 1029,
+      "height": 310,
+      "transparent": true,
+      "fallback": false,
+      "dark": true,
+      "file": "bbc-news.png",
+      "hdFile": null
+    },
     "bbc-world-news": {
       "slug": "bbc-world-news",
       "name": "BBC World News",
@@ -441,6 +481,25 @@
       "hdDark": false,
       "file": "boomerang.png",
       "hdFile": "boomerang-hd.png"
+    },
+    "canal-33": {
+      "slug": "canal-33",
+      "name": "Canal 33",
+      "family": "Alte canale",
+      "servers": [
+        "canal-33"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
     },
     "cartoon-network": {
       "slug": "cartoon-network",
@@ -1409,6 +1468,26 @@
       "file": "hbo-3.png",
       "hdFile": null
     },
+    "hgtv": {
+      "slug": "hgtv",
+      "name": "HGTV",
+      "family": "Alte canale",
+      "servers": [
+        "hgtv"
+      ],
+      "base": "/logos/hgtv.png",
+      "hd": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AHGTV_logo.svg",
+      "sourceFile": "File:HGTV logo.svg",
+      "origin": "wikimedia-commons",
+      "width": 1019,
+      "height": 618,
+      "transparent": true,
+      "fallback": false,
+      "dark": false,
+      "file": "hgtv.png",
+      "hdFile": null
+    },
     "history-channel": {
       "slug": "history-channel",
       "name": "History Channel",
@@ -1900,6 +1979,26 @@
       "file": "n24.png",
       "hdFile": "n24-hd.png"
     },
+    "nat-geo-people": {
+      "slug": "nat-geo-people",
+      "name": "NAT GEO PEOPLE",
+      "family": "Alte canale",
+      "servers": [
+        "netgeopeople"
+      ],
+      "base": "/logos/nat-geo-people.png",
+      "hd": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ANat_Geo_People_HD_logo.svg",
+      "sourceFile": "File:Nat Geo People HD logo.svg",
+      "origin": "wikimedia-commons",
+      "width": 1028,
+      "height": 258,
+      "transparent": true,
+      "fallback": false,
+      "dark": false,
+      "file": "nat-geo-people.png",
+      "hdFile": null
+    },
     "nat-geo-wild": {
       "slug": "nat-geo-wild",
       "name": "Nat Geo Wild",
@@ -2085,6 +2184,63 @@
       "file": "paprika-tv.png",
       "hdFile": null
     },
+    "ppv-1": {
+      "slug": "ppv-1",
+      "name": "PPV 1",
+      "family": "Alte canale",
+      "servers": [
+        "ppv1"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
+    "ppv-2": {
+      "slug": "ppv-2",
+      "name": "PPV 2",
+      "family": "Alte canale",
+      "servers": [
+        "ppv2"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
+    "ppv-3": {
+      "slug": "ppv-3",
+      "name": "PPV 3",
+      "family": "Alte canale",
+      "servers": [
+        "ppv3"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
     "prima-news": {
       "slug": "prima-news",
       "name": "Prima News",
@@ -2165,6 +2321,44 @@
       "fallback": false,
       "dark": false,
       "file": "prima-sport-3.png",
+      "hdFile": null
+    },
+    "prima-sport-4": {
+      "slug": "prima-sport-4",
+      "name": "PRIMA SPORT 4",
+      "family": "Alte canale",
+      "servers": [
+        "primasp4"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
+    "prima-sport-5": {
+      "slug": "prima-sport-5",
+      "name": "PRIMA SPORT 5",
+      "family": "Alte canale",
+      "servers": [
+        "primasp5"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
       "hdFile": null
     },
     "prima-tv": {
@@ -2510,6 +2704,25 @@
       "file": "show-2.png",
       "hdFile": null
     },
+    "sport-extra": {
+      "slug": "sport-extra",
+      "name": "SPORT EXTRA",
+      "family": "Alte canale",
+      "servers": [
+        "sportextra"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
     "supersport-1": {
       "slug": "supersport-1",
       "name": "SuperSport 1",
@@ -2851,6 +3064,25 @@
       "file": "travel-living.png",
       "hdFile": null
     },
+    "travel-mix": {
+      "slug": "travel-mix",
+      "name": "TRAVEL MIX",
+      "family": "Alte canale",
+      "servers": [
+        "travelmix"
+      ],
+      "base": null,
+      "hd": null,
+      "sourceUrl": null,
+      "sourceFile": null,
+      "origin": null,
+      "width": 0,
+      "height": 0,
+      "transparent": false,
+      "fallback": false,
+      "file": null,
+      "hdFile": null
+    },
     "trinitas-tv": {
       "slug": "trinitas-tv",
       "name": "Trinitas TV",
@@ -3091,6 +3323,26 @@
       "fallback": false,
       "dark": false,
       "file": "viasat-nature.png",
+      "hdFile": null
+    },
+    "warner-tv": {
+      "slug": "warner-tv",
+      "name": "WARNER TV",
+      "family": "Alte canale",
+      "servers": [
+        "wornertv"
+      ],
+      "base": "/logos/warner-tv.png",
+      "hd": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AWarner_TV_logo.svg",
+      "sourceFile": "File:Warner TV logo.svg",
+      "origin": "wikimedia-commons",
+      "width": 1012,
+      "height": 927,
+      "transparent": true,
+      "fallback": false,
+      "dark": false,
+      "file": "warner-tv.png",
       "hdFile": null
     },
     "zu-tv": {

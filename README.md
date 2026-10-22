@@ -1,11 +1,37 @@
-# VIZOR
+# ACUM
 
 **TV live românesc, fără reclame și fără cont.**
 
 A Netflix-style directory of Romanian live TV, built from the public embed
 addresses published on [cool-etv.net](https://www.cool-etv.net/).
 
-![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js) ![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss) ![License](https://img.shields.io/badge/license-MIT-10b981)
+[![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml) ![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js) ![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss) ![License](https://img.shields.io/badge/license-MIT-10b981)
+
+---
+
+## The name
+
+**ACUM** is Romanian for *now*, and *now* is the whole product: what is on
+now, what is trending now, how many people are watching now. The name carries
+no diacritics, so nothing is lost in a URL, a file name or a home-screen
+label.
+
+The mark is a capital **A** — the first letter of the name — with a bright
+**rail** running out of it to the right. The rail is the playhead: the
+position of *now* on the programme guide. The wordmark is the Romanian word
+itself, set in Space Grotesk.
+
+Every raster asset is generated from one drawing:
+
+```bash
+node scripts/build-icons.mjs       # the app icons, the maskable icons, the favicon
+node scripts/build-og.mjs          # public/brand/og.png, the link-preview card
+node scripts/build-screenshots.mjs  # the two PWA store screenshots
+```
+
+The mark itself is drawn in `scripts/build-icons.mjs`; change it there, never
+in a text editor. The full system is in
+[design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md#identity).
 
 ---
 
@@ -17,13 +43,13 @@ addresses published on [cool-etv.net](https://www.cool-etv.net/).
   scrubber, volume, Picture-in-Picture, fullscreen, and a breathing live
   indicator.
 - **No ads, and no way for an ad to open.** The upstream player calls
-  `aclib.runPop()`, which throws an ad into a new window. VIZOR serves the
+  `aclib.runPop()`, which throws an ad into a new window. ACUM serves the
   upstream page with every ad and tracker script removed, under a `sandbox`
   CSP, and streams the media through its own proxy. The network log shows
   zero ad hosts and zero popups.
 - **One entry per channel, not per feed.** The source lists the same
   broadcast once per upstream server — "Antena 1 S1", "Antena 1 S2 HD",
-  "Antena 1 S3". VIZOR folds those into one channel with a server list, and
+  "Antena 1 S3". ACUM folds those into one channel with a server list, and
   when a feed goes down it falls back to the next one automatically.
 - **Find anything, fast.** Instant ranked search, diacritic-insensitive, and
   an A→Z jump bar.
@@ -120,22 +146,25 @@ docs/specs/        the load-bearing decisions
   the player works and why
 - [design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md) — tokens,
   components, motion rules
-- [AGENTS.md](AGENTS.md) — the contract for agents and contributors
-- [CONTRIBUTING.md](CONTRIBUTING.md) — how to contribute
+- [AGENTS.md](https://github.com/collaby-org/acum/blob/main/AGENTS.md) — the contract for agents and contributors
+- [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md) — how to contribute
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Every change lands through a pull
-request, and the template asks for evidence and a `version: before → after`.
+Read [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md).
+Every change lands through a pull request, and the template asks for evidence
+and a `version: before → after`.
 
 ## Security
 
-See [.github/SECURITY.md](.github/SECURITY.md). Report vulnerabilities privately
-through GitHub's security advisory form.
+See the
+[security policy](https://github.com/collaby-org/acum/blob/main/.github/SECURITY.md).
+Report vulnerabilities privately through
+[GitHub's security advisory form](https://github.com/collaby-org/acum/security/advisories/new).
 
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
 
-The channels themselves belong to their respective owners. VIZOR indexes the
+The channels themselves belong to their respective owners. ACUM indexes the
 public embed addresses published by the source site and links back to it.

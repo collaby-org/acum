@@ -10,6 +10,8 @@
  * carry `onLoad` / `onError` handlers, or React leaves them where they are.
  */
 
+import { SITE_NAME } from "@/lib/site";
+
 /** The manifest is the install contract: name, icons, display, colours. */
 export function PwaHead() {
   return (
@@ -20,7 +22,7 @@ export function PwaHead() {
       {/* iOS home screen: the app opens without the Safari chrome. */}
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-title" content="VIZOR" />
+      <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
       <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     </>
   );

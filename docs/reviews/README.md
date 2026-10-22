@@ -78,7 +78,7 @@ Captures the screenshots in this folder and fails on any console error.
 | `06-mobile.png` | The home screen at 390×844. |
 
 ```
-[title] VIZOR — TV live românesc, fără reclame
+[title] ACUM — TV live românesc, fără reclame
 [counts] {"cards":329,"rails":11,"h1":"AMC"}
 [search] {"results":5,"body":"5 DE REZULTATE FILME 5 HBO HBO S1 · S2 LIVE HBO 2 …"}
 [console errors] none

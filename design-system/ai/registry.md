@@ -15,6 +15,26 @@ Primitives follow the shadcn contract: `cn()` from `@/lib/utils`, `cva`
 variant recipes, a `data-slot` attribute on the root element, and `asChild`
 support on `Button`.
 
+## Brand (`src/components/brand/`)
+
+| Component | File | Purpose |
+| --------- | ---- | ------- |
+| `AcumMark` | `brand/acum-mark.tsx` | The ACUM mark: a capital A with a rail running out of it — the playhead, the position of "now". |
+
+`AcumMark` is the one shape in the product that is not from lucide. It is a
+brand mark, not an icon: a hand-drawn glyph that stands for the product's
+name, reused in the header, the footer, the app icon, the favicon and the
+Open Graph card. Its geometry lives in `scripts/build-icons.mjs`, which draws
+the mark once and composes every raster asset from it — change it there, then
+run the script, never in a text editor.
+
+Props:
+
+| Prop | Type | Notes |
+| ---- | ---- | ----- |
+| `className` | `string` | Sizing and colour, as on any SVG. |
+| `id` | `string` | The id of the gradient definitions. Pass a unique one per instance so two marks on one page never collide. |
+
 ## Product components (`src/components/`)
 
 | Component | File | Server/Client | Purpose |
@@ -68,7 +88,7 @@ stays static.
 
 | Library | Used for | Rule |
 | ------- | --------- | ---- |
-| `lucide-react` | every icon | The only icon set. No inline SVG. |
+| `lucide-react` | every icon | The only icon set. No inline SVG. The brand mark is the one exception — it is a mark, not an icon. |
 | `canvas-confetti` | celebration particles | Only on a user action. Respects reduced motion. |
 | `@radix-ui/react-dialog` | player modal | Accessibility comes from Radix, not from hand-rolled key handling. |
 | `@radix-ui/react-slot` | `Button asChild` | — |

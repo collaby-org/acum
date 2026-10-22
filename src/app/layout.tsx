@@ -1,25 +1,63 @@
 import type { Metadata, Viewport } from "next";
 import { PwaRegister } from "@/components/pwa";
+import { REPO_RAW, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
+/**
+ * The Open Graph card, addressed absolutely.
+ *
+ * The app has no domain of its own yet, so the card is read from the
+ * repository, where it is committed. A scraper that receives a relative path
+ * has no way to resolve it; this one it can.
+ */
+const OG_IMAGE = `${REPO_RAW}/public/brand/og.png`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vizor.tv"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "VIZOR — TV live românesc, fără reclame",
-    template: "%s · VIZOR",
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
   },
   description:
-    "Toate canalele TV românești într-un singur loc. Fără cont, fără reclame, fără probleme. Vizionează direct, caută instant și salvează-ți favoritele.",
-  applicationName: "VIZOR",
-  keywords: ["tv live", "canale tv", "romania", "stream", "vizor", "televiziune"],
-  authors: [{ name: "VIZOR" }],
+    "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame. Vizionează direct, caută instant și salvează-ți favoritele.",
+  applicationName: SITE_NAME,
+  keywords: [
+    "tv live",
+    "canale tv",
+    "romania",
+    "stream",
+    "acum",
+    "acum tv",
+    "ce ruleaza acum",
+    "televiziune",
+    "live tv",
+  ],
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "ro_RO",
-    siteName: "VIZOR",
-    title: "VIZOR — TV live românesc, fără reclame",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
-      "Toate canalele TV românești într-un singur loc. Fără cont, fără reclame.",
+      "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame.",
+    url: SITE_URL,
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description:
+      "Ce rulează acum pe canalele din România: 143 de canale live, fără cont, fără reclame.",
+    images: [OG_IMAGE],
   },
   robots: { index: true, follow: true },
 };

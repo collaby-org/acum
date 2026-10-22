@@ -1,0 +1,538 @@
+{
+  "source": "https://canale-tv.net/",
+  "generatedAt": "2026-10-22T09:00:37.645Z",
+  "channelCount": 105,
+  "notes": [
+    "The directory publishes a table of NAME and the address of the page that carries the stream.",
+    "The pages are JavaScript-driven: the real playlist has to be resolved with the same deobfuscation the first source's player pages use.",
+    "The pages refuse to play without a Referer of their own origin, and refuse to play inside a sandboxed iframe — so the stream must be resolved and relayed by our own proxy, never framed directly.",
+    "The resolved playlists are stable: there is no expiring token, so they are stored like the first source's feeds."
+  ],
+  "channels": [
+    {
+      "name": "PROTV HD",
+      "slug": "pr0tv",
+      "page": "https://canale-tv.net/channel/pr0tv.html"
+    },
+    {
+      "name": "A1 HD",
+      "slug": "a1",
+      "page": "https://canale-tv.net/channel/a1.html"
+    },
+    {
+      "name": "TVR1",
+      "slug": "tvr1",
+      "page": "https://canale-tv.net/channel/tvr1.html"
+    },
+    {
+      "name": "TVR2",
+      "slug": "tvr2",
+      "page": "https://canale-tv.net/channel/tvr2.html"
+    },
+    {
+      "name": "CANAL D",
+      "slug": "canald",
+      "page": "https://canale-tv.net/channel/canald.html"
+    },
+    {
+      "name": "CANAL D2",
+      "slug": "canald2",
+      "page": "https://canale-tv.net/channel/canald2.html"
+    },
+    {
+      "name": "PRIMA TV",
+      "slug": "primatv",
+      "page": "https://canale-tv.net/channel/primatv.html"
+    },
+    {
+      "name": "NATIONAL TV",
+      "slug": "nationaltv",
+      "page": "https://canale-tv.net/channel/nationaltv.html"
+    },
+    {
+      "name": "TVR 3",
+      "slug": "tvr3",
+      "page": "https://canale-tv.net/channel/tvr3.html"
+    },
+    {
+      "name": "TVR INTERNATIONAL",
+      "slug": "tvrinter",
+      "page": "https://canale-tv.net/channel/tvrinter.html"
+    },
+    {
+      "name": "PROCINEMA",
+      "slug": "procinema",
+      "page": "https://canale-tv.net/channel/procinema.html"
+    },
+    {
+      "name": "ACASA TV",
+      "slug": "acasatv",
+      "page": "https://canale-tv.net/channel/acasatv.html"
+    },
+    {
+      "name": "ACASA GOLD",
+      "slug": "acasagold",
+      "page": "https://canale-tv.net/channel/acasagold.html"
+    },
+    {
+      "name": "ANTENA STARS",
+      "slug": "astars",
+      "page": "https://canale-tv.net/channel/astars.html"
+    },
+    {
+      "name": "NATIONAL 24 PLUS",
+      "slug": "national24plus",
+      "page": "https://canale-tv.net/channel/national24plus.html"
+    },
+    {
+      "name": "A3 CNN",
+      "slug": "a3cnn",
+      "page": "https://canale-tv.net/channel/a3cnn.html"
+    },
+    {
+      "name": "ROMANIA TV",
+      "slug": "romaniatv",
+      "page": "https://canale-tv.net/channel/romaniatv.html"
+    },
+    {
+      "name": "REALITATEA TV",
+      "slug": "realitateatv",
+      "page": "https://canale-tv.net/channel/realitateatv.html"
+    },
+    {
+      "name": "PRIMA NEWS",
+      "slug": "primanews",
+      "page": "https://canale-tv.net/channel/primanews.html"
+    },
+    {
+      "name": "B1 TV",
+      "slug": "b1tv",
+      "page": "https://canale-tv.net/channel/b1tv.html"
+    },
+    {
+      "name": "EURONEWS ROMANIA",
+      "slug": "euronewsromnia",
+      "page": "https://canale-tv.net/channel/euronewsromnia.html"
+    },
+    {
+      "name": "NEWS24",
+      "slug": "digi24",
+      "page": "https://canale-tv.net/channel/digi24.html"
+    },
+    {
+      "name": "CNN",
+      "slug": "cnn",
+      "page": "https://canale-tv.net/channel/cnn.html"
+    },
+    {
+      "name": "BBC NEWS",
+      "slug": "bbcnews",
+      "page": "https://canale-tv.net/channel/bbcnews.html"
+    },
+    {
+      "name": "CBS REALITY",
+      "slug": "cbsreality",
+      "page": "https://canale-tv.net/channel/cbsreality.html"
+    },
+    {
+      "name": "SUPERSPORT 1",
+      "slug": "dgsp1",
+      "page": "https://canale-tv.net/channel/dgsp1.html"
+    },
+    {
+      "name": "SUPERSPORT 2",
+      "slug": "dgsp2",
+      "page": "https://canale-tv.net/channel/dgsp2.html"
+    },
+    {
+      "name": "SUPERSPORT 3",
+      "slug": "dgsp3",
+      "page": "https://canale-tv.net/channel/dgsp3.html"
+    },
+    {
+      "name": "SUPERSPORT 4",
+      "slug": "dgsp4",
+      "page": "https://canale-tv.net/channel/dgsp4.html"
+    },
+    {
+      "name": "PRO ARENA",
+      "slug": "proarena",
+      "page": "https://canale-tv.net/channel/proarena.html"
+    },
+    {
+      "name": "TVR SPORT",
+      "slug": "tvrsport",
+      "page": "https://canale-tv.net/channel/tvrsport.html"
+    },
+    {
+      "name": "PRIMA SPORT 1",
+      "slug": "primasp1",
+      "page": "https://canale-tv.net/channel/primasp1.html"
+    },
+    {
+      "name": "PRIMA SPORT 2",
+      "slug": "primasp2",
+      "page": "https://canale-tv.net/channel/primasp2.html"
+    },
+    {
+      "name": "PRIMA SPORT 3",
+      "slug": "primasp3",
+      "page": "https://canale-tv.net/channel/primasp3.html"
+    },
+    {
+      "name": "PRIMA SPORT 4",
+      "slug": "primasp4",
+      "page": "https://canale-tv.net/channel/primasp4.html"
+    },
+    {
+      "name": "PRIMA SPORT 5",
+      "slug": "primasp5",
+      "page": "https://canale-tv.net/channel/primasp5.html"
+    },
+    {
+      "name": "PPV 1",
+      "slug": "ppv1",
+      "page": "https://canale-tv.net/channel/ppv1.html"
+    },
+    {
+      "name": "PPV 2",
+      "slug": "ppv2",
+      "page": "https://canale-tv.net/channel/ppv2.html"
+    },
+    {
+      "name": "PPV 3",
+      "slug": "ppv3",
+      "page": "https://canale-tv.net/channel/ppv3.html"
+    },
+    {
+      "name": "SPORT EXTRA",
+      "slug": "sportextra",
+      "page": "https://canale-tv.net/channel/sportextra.html"
+    },
+    {
+      "name": "EUR0SP0RT 1",
+      "slug": "eurosp1",
+      "page": "https://canale-tv.net/channel/eurosp1.html"
+    },
+    {
+      "name": "EUR0SP0RT 2",
+      "slug": "eurosp2",
+      "page": "https://canale-tv.net/channel/eurosp2.html"
+    },
+    {
+      "name": "HB0",
+      "slug": "hb",
+      "page": "https://canale-tv.net/channel/hb.html"
+    },
+    {
+      "name": "HB0 2",
+      "slug": "hb2",
+      "page": "https://canale-tv.net/channel/hb2.html"
+    },
+    {
+      "name": "HB0 3",
+      "slug": "hb3",
+      "page": "https://canale-tv.net/channel/hb3.html"
+    },
+    {
+      "name": "DIVA",
+      "slug": "diva",
+      "page": "https://canale-tv.net/channel/diva.html"
+    },
+    {
+      "name": "HAPPY TV",
+      "slug": "happy",
+      "page": "https://canale-tv.net/channel/happy.html"
+    },
+    {
+      "name": "FILM CAFE",
+      "slug": "filmcafe",
+      "page": "https://canale-tv.net/channel/filmcafe.html"
+    },
+    {
+      "name": "TV 1000",
+      "slug": "tv1000",
+      "page": "https://canale-tv.net/channel/tv1000.html"
+    },
+    {
+      "name": "FlLM N0W",
+      "slug": "fnow",
+      "page": "https://canale-tv.net/channel/fnow.html"
+    },
+    {
+      "name": "EPIC DRAMA",
+      "slug": "epdrama",
+      "page": "https://canale-tv.net/channel/epdrama.html"
+    },
+    {
+      "name": "AMC",
+      "slug": "amc",
+      "page": "https://canale-tv.net/channel/amc.html"
+    },
+    {
+      "name": "SH0WTIME 1",
+      "slug": "show1",
+      "page": "https://canale-tv.net/channel/show1.html"
+    },
+    {
+      "name": "SH0WTIME 2",
+      "slug": "show2",
+      "page": "https://canale-tv.net/channel/show2.html"
+    },
+    {
+      "name": "AXN HD",
+      "slug": "axn",
+      "page": "https://canale-tv.net/channel/axn.html"
+    },
+    {
+      "name": "AXN SPIN",
+      "slug": "axnspin",
+      "page": "https://canale-tv.net/channel/axnspin.html"
+    },
+    {
+      "name": "AXN BLACK",
+      "slug": "axnblack",
+      "page": "https://canale-tv.net/channel/axnblack.html"
+    },
+    {
+      "name": "AXN WHITE",
+      "slug": "axnwhite",
+      "page": "https://canale-tv.net/channel/axnwhite.html"
+    },
+    {
+      "name": "CINEMAX",
+      "slug": "cmax",
+      "page": "https://canale-tv.net/channel/cmax.html"
+    },
+    {
+      "name": "CINEMAX 2",
+      "slug": "cmax2",
+      "page": "https://canale-tv.net/channel/cmax2.html"
+    },
+    {
+      "name": "BOLYWOOD TV",
+      "slug": "bolywoodtv",
+      "page": "https://canale-tv.net/channel/bolywoodtv.html"
+    },
+    {
+      "name": "COMEDY CENTRAL",
+      "slug": "ccentral",
+      "page": "https://canale-tv.net/channel/ccentral.html"
+    },
+    {
+      "name": "WARNER TV",
+      "slug": "wornertv",
+      "page": "https://canale-tv.net/channel/wornertv.html"
+    },
+    {
+      "name": "BBC FIRST",
+      "slug": "bfirst",
+      "page": "https://canale-tv.net/channel/bfirst.html"
+    },
+    {
+      "name": "MINIMAX",
+      "slug": "minimax",
+      "page": "https://canale-tv.net/channel/minimax.html"
+    },
+    {
+      "name": "CARTOON NETWORK",
+      "slug": "cartoonnet",
+      "page": "https://canale-tv.net/channel/cartoonnet.html"
+    },
+    {
+      "name": "DISNEY CHANNEL",
+      "slug": "disneych",
+      "page": "https://canale-tv.net/channel/disneych.html"
+    },
+    {
+      "name": "TEEN NICK",
+      "slug": "teennick",
+      "page": "https://canale-tv.net/channel/teennick.html"
+    },
+    {
+      "name": "NICKELODEON",
+      "slug": "nickelodeon",
+      "page": "https://canale-tv.net/channel/nickelodeon.html"
+    },
+    {
+      "name": "DISNEY JR",
+      "slug": "disneyjr",
+      "page": "https://canale-tv.net/channel/disneyjr.html"
+    },
+    {
+      "name": "CARTOONITO",
+      "slug": "cartonito",
+      "page": "https://canale-tv.net/channel/cartonito.html"
+    },
+    {
+      "name": "NICKTOONS",
+      "slug": "nicktoons",
+      "page": "https://canale-tv.net/channel/nicktoons.html"
+    },
+    {
+      "name": "NICK JR",
+      "slug": "nickjr",
+      "page": "https://canale-tv.net/channel/nickjr.html"
+    },
+    {
+      "name": "JIM JAM",
+      "slug": "jimjam",
+      "page": "https://canale-tv.net/channel/jimjam.html"
+    },
+    {
+      "name": "DUCK TV",
+      "slug": "ducktv",
+      "page": "https://canale-tv.net/channel/ducktv.html"
+    },
+    {
+      "name": "DISCOVERY CH",
+      "slug": "discoverych",
+      "page": "https://canale-tv.net/channel/discoverych.html"
+    },
+    {
+      "name": "HISTORY CHANNEL",
+      "slug": "historych",
+      "page": "https://canale-tv.net/channel/historych.html"
+    },
+    {
+      "name": "NAT GEO PEOPLE",
+      "slug": "netgeopeople",
+      "page": "https://canale-tv.net/channel/netgeopeople.html"
+    },
+    {
+      "name": "NATIONAL GEOGRAPHIC",
+      "slug": "natgeo",
+      "page": "https://canale-tv.net/channel/natgeo.html"
+    },
+    {
+      "name": "ID INVESTIGATION",
+      "slug": "idinvest",
+      "page": "https://canale-tv.net/channel/idinvest.html"
+    },
+    {
+      "name": "CRIME & INVESTIGATION",
+      "slug": "crimeinvest",
+      "page": "https://canale-tv.net/channel/crimeinvest.html"
+    },
+    {
+      "name": "TLC",
+      "slug": "tlc",
+      "page": "https://canale-tv.net/channel/tlc.html"
+    },
+    {
+      "name": "NAT GEO WILD",
+      "slug": "natgeowild",
+      "page": "https://canale-tv.net/channel/natgeowild.html"
+    },
+    {
+      "name": "BBC EARTH",
+      "slug": "bbcearth",
+      "page": "https://canale-tv.net/channel/bbcearth.html"
+    },
+    {
+      "name": "VIASAT HISTORY",
+      "slug": "viahist",
+      "page": "https://canale-tv.net/channel/viahist.html"
+    },
+    {
+      "name": "VIASAT NATURE",
+      "slug": "vianature",
+      "page": "https://canale-tv.net/channel/vianature.html"
+    },
+    {
+      "name": "VIASAT EXPLORER",
+      "slug": "viaexplorer",
+      "page": "https://canale-tv.net/channel/viaexplorer.html"
+    },
+    {
+      "name": "TRAVEL MIX",
+      "slug": "travelmix",
+      "page": "https://canale-tv.net/channel/travelmix.html"
+    },
+    {
+      "name": "PAPRIKA",
+      "slug": "paprika",
+      "page": "https://canale-tv.net/channel/paprika.html"
+    },
+    {
+      "name": "HGTV",
+      "slug": "hgtv",
+      "page": "https://canale-tv.net/channel/hgtv.html"
+    },
+    {
+      "name": "TARAF TV",
+      "slug": "taraf",
+      "page": "https://canale-tv.net/channel/taraf.html"
+    },
+    {
+      "name": "FAVORIT TV",
+      "slug": "favorit",
+      "page": "https://canale-tv.net/channel/favorit.html"
+    },
+    {
+      "name": "ETNO TV",
+      "slug": "etno",
+      "page": "https://canale-tv.net/channel/etno.html"
+    },
+    {
+      "name": "HIT MUSIC",
+      "slug": "hitmusic",
+      "page": "https://canale-tv.net/channel/hitmusic.html"
+    },
+    {
+      "name": "BALCAN MUSIC",
+      "slug": "balcanmuz",
+      "page": "https://canale-tv.net/channel/balcanmuz.html"
+    },
+    {
+      "name": "UTV",
+      "slug": "utv",
+      "page": "https://canale-tv.net/channel/utv.html"
+    },
+    {
+      "name": "KISS TV",
+      "slug": "kisstv",
+      "page": "https://canale-tv.net/channel/kisstv.html"
+    },
+    {
+      "name": "MUSIC CHANNEL",
+      "slug": "musicch",
+      "page": "https://canale-tv.net/channel/musicch.html"
+    },
+    {
+      "name": "ZU TV",
+      "slug": "zutv",
+      "page": "https://canale-tv.net/channel/zutv.html"
+    },
+    {
+      "name": "Fish & Hunting TV",
+      "slug": "fishy",
+      "page": "https://canale-tv.net/channel/fishy.html"
+    },
+    {
+      "name": "F1lm B0X",
+      "slug": "fbox1",
+      "page": "https://canale-tv.net/channel/fbox1.html"
+    },
+    {
+      "name": "F1lm B0X Extra",
+      "slug": "fbox-extra",
+      "page": "https://canale-tv.net/channel/fbox-extra.html"
+    },
+    {
+      "name": "F1lm B0X Premium",
+      "slug": "fbox-premium",
+      "page": "https://canale-tv.net/channel/fbox-premium.html"
+    },
+    {
+      "name": "Canal 33",
+      "slug": "canal-33",
+      "page": "https://canale-tv.net/channel/canal-33.html"
+    },
+    {
+      "name": "Dizi",
+      "slug": "dizy",
+      "page": "https://canale-tv.net/channel/dizy.html"
+    }
+  ]
+}

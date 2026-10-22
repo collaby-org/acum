@@ -1,7 +1,5 @@
 import type { MetadataRoute } from "next";
-
-/** The one canonical origin. Mirrors `metadataBase` in `src/app/layout.tsx`. */
-const BASE_URL = "https://vizor.tv";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -13,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

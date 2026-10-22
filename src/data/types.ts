@@ -69,7 +69,7 @@ export type Server = {
    * short-lived stream addresses, so its feeds are resolved on the server at
    * the moment they are asked for.
    */
-  source: "primary" | "secondary";
+  source: "primary" | "secondary" | "canale-tv";
 };
 
 /** A real channel, with every upstream feed that carries it. */
@@ -93,6 +93,17 @@ export type Channel = {
   status: ServerStatus;
   /** The best quality across every server of this channel. */
   quality: Quality;
+  /**
+   * How many people are watching this channel right now, when a source
+   * publishes it. `null` when nobody counts — the count is a live number,
+   * not a fact about the channel.
+   */
+  views: number | null;
+  /**
+   * A still of the show that is on, used as the card's core promise. `null`
+   * until the stills are fetched.
+   */
+  poster: string | null;
   /** Upstream feeds, best first. The player walks this list. */
   servers: Server[];
 };

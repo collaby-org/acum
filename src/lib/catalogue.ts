@@ -1,5 +1,6 @@
 import { CHANNELS } from "@/data/channels";
 import { secondaryStreamUrl } from "@/lib/secondary";
+import type { SecondaryMeta } from "@/lib/secondary";
 import type {
   Channel,
   Server,
@@ -24,8 +25,39 @@ const byId = new Map(CHANNELS.map((c) => [c.id, c]));
 
 export type { Channel, UpstreamChannel, UpstreamServer };
 
+/**
+ * The slug the second source knows a channel by.
+ *
+ * A feed that came from the second source carries that source's own slug as
+ * its id, so the mapping needs no guessing: the catalogue already holds it.
+ */
+export function secondarySlug(channel: UpstreamChannel): string | null {
+  return channel.servers.find((server) => server.source === "secondary")?.id ?? null;
+}
+
+/**
+ * How many people are watching a channel, when the second source counts.
+ *
+ * The count is read from the directory rather than from the catalogue: it
+ * moves by the minute, and a number frozen at build time would be a lie
+ * within the hour.
+ */
+export function viewsOf(
+  channel: UpstreamChannel,
+  meta?: Map<string, SecondaryMeta> | null,
+): number | null {
+  if (!meta) return null;
+  const slug = secondarySlug(channel);
+  if (!slug) return null;
+  const views = meta.get(slug)?.views;
+  return typeof views === "number" ? views : null;
+}
+
 /** The server as the browser sees it: no upstream address, no source page. */
-export function toPublicChannel(channel: UpstreamChannel): Channel {
+export function toPublicChannel(
+  channel: UpstreamChannel,
+  meta?: Map<string, SecondaryMeta> | null,
+): Channel {
   return {
     id: channel.id,
     name: channel.name,
@@ -37,6 +69,8 @@ export function toPublicChannel(channel: UpstreamChannel): Channel {
     logoDark: channel.logoDark,
     status: channel.status,
     quality: channel.quality,
+    views: viewsOf(channel, meta),
+    poster: channel.poster,
     servers: channel.servers.map((server) => ({
       id: server.id,
       label: server.label,
@@ -48,8 +82,17 @@ export function toPublicChannel(channel: UpstreamChannel): Channel {
   };
 }
 
-export function toPublicChannels(channels: UpstreamChannel[]): Channel[] {
-  return channels.map(toPublicChannel);
+/**
+ * The catalogue as the browser sees it.
+ *
+ * The directory's record is optional: without it the channels simply carry
+ * no viewer count, which is honest — nobody counts them.
+ */
+export function toPublicChannels(
+  channels: UpstreamChannel[],
+  meta?: Map<string, SecondaryMeta> | null,
+): Channel[] {
+  return channels.map((channel) => toPublicChannel(channel, meta));
 }
 
 /** The full channel from the server-side catalogue. */

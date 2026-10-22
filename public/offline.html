@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#06070a" />
-    <title>VIZOR — fără conexiune</title>
+    <title>ACUM — fără conexiune</title>
     <link rel="icon" href="/icons/icon-192.png" />
     <style>
       @font-face {
@@ -53,32 +53,20 @@
       .badge {
         display: grid;
         place-items: center;
-        width: 44px;
-        height: 44px;
+        width: 52px;
+        height: 52px;
         margin: 0 auto;
-        border-radius: 14px;
-        background: linear-gradient(
-          135deg,
-          #ffc247 0%,
-          #f0a500 48%,
-          #b87900 100%
-        );
-        color: #141005;
+        border-radius: 15px;
+        background: linear-gradient(180deg, #121724 0%, #080b14 55%, #04050a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow:
-          0 12px 30px -10px rgba(240, 165, 0, 0.85),
-          inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
-        font-size: 22px;
-        line-height: 1;
+          0 14px 34px -14px rgba(242, 167, 27, 0.75),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
       }
 
       .badge svg {
-        width: 22px;
-        height: 22px;
-        stroke: currentColor;
-        stroke-width: 2.1;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        width: 26px;
+        height: 26px;
       }
 
       h1 {
@@ -118,9 +106,9 @@
       }
 
       .btn-primary {
-        background: #f0a500;
-        color: #141005;
-        box-shadow: 0 14px 34px -14px rgba(240, 165, 0, 0.9);
+        background: #f2a71b;
+        color: #1a1000;
+        box-shadow: 0 14px 34px -14px rgba(242, 167, 27, 0.9);
       }
 
       .btn-ghost {
@@ -142,20 +130,28 @@
   <body>
     <main class="card">
       <span class="badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 20h.01" />
-          <path d="M8.5 16.4a5 5 0 0 1 7 0" />
-          <path d="M5 12.9a10 10 0 0 1 3.3-2.3" />
-          <path d="M15.6 10.6A10 10 0 0 1 19 12.9" />
-          <path d="M2 8.8a15 15 0 0 1 5-3.2" />
-          <path d="M17 5.6a15 15 0 0 1 5 3.2" />
-          <path d="m2 2 20 20" />
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="acum-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFE7B0" />
+              <stop offset="0.38" stop-color="#F7B733" />
+              <stop offset="0.72" stop-color="#DE9206" />
+              <stop offset="1" stop-color="#9C6600" />
+            </linearGradient>
+            <linearGradient id="acum-rail" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#D98F04" />
+              <stop offset="0.55" stop-color="#FFC95E" />
+              <stop offset="1" stop-color="#FFF3D4" />
+            </linearGradient>
+          </defs>
+          <rect x="59" y="54" width="33" height="12" rx="6" fill="url(#acum-rail)" />
+          <path d="M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z" fill="url(#acum-gold)" />
         </svg>
       </span>
       <h1>Fără conexiune</h1>
       <p>
         Canalele TV live au nevoie de internet. Când reveniți online, apăsați
-        din nou — VIZOR reia de unde ați rămas.
+        din nou — ACUM reia de unde ați rămas.
       </p>
       <div class="actions">
         <a class="btn btn-primary" href="/">Înapoi la canale</a>
@@ -163,7 +159,7 @@
           Reîncarcă
         </button>
       </div>
-      <p class="wordmark">VIZOR</p>
+      <p class="wordmark">ACUM</p>
     </main>
   </body>
 </html>

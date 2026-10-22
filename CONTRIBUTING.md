@@ -1,8 +1,8 @@
-# Contributing to VIZOR
+# Contributing to ACUM
 
 Thanks for helping keep the channel list accurate.
 
-VIZOR is a static, account-free directory of Romanian live TV channels. It
+ACUM is a static, account-free directory of Romanian live TV channels. It
 has no backend: the channel catalogue is a generated TypeScript module
 committed to the repository, and the app is a static Next.js export.
 
@@ -69,5 +69,6 @@ and come back; the `status` field in the dataset is refreshed by
 
 ## Security
 
-Report vulnerabilities privately — see [.github/SECURITY.md](.github/SECURITY.md).
+Report vulnerabilities privately — see the
+[security policy](https://github.com/collaby-org/acum/blob/main/.github/SECURITY.md).
 Do not open a public issue for a security problem.

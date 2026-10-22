@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ArrowUp, Radio, ShieldCheck, Sparkles, Tv } from "lucide-react";
+import { ArrowUp, Radio, ShieldCheck, Sparkles } from "lucide-react";
+import { AcumMark } from "@/components/brand";
 import { Badge } from "@/components/ui/badge";
+import { SITE_NAME } from "@/lib/site";
 
 const CATEGORY_LINKS = [
   { label: "Generaliste", href: "/#categorii" },
@@ -56,11 +58,11 @@ export async function Footer() {
           {/* Statement */}
           <div className="max-w-lg">
             <div className="flex items-center gap-3">
-              <span className="grid size-9 place-items-center rounded-[11px] bg-gradient-to-br from-signal-bright via-signal to-signal-deep text-signal-ink shadow-[0_10px_30px_-10px_rgba(242,167,27,0.9),inset_0_1px_0_0_rgba(255,255,255,0.4)]">
-                <Tv className="size-4.5" strokeWidth={2.4} />
+              <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
+                <AcumMark id="acum-mark-footer" className="size-[21px]" />
               </span>
-              <span className="font-display text-[19px] font-bold tracking-[0.17em]">
-                VIZOR
+              <span className="font-display text-[19px] font-bold tracking-[0.16em]">
+                {SITE_NAME}
               </span>
             </div>
 
@@ -111,8 +113,8 @@ export async function Footer() {
 
         <div className="flex flex-col gap-4 py-7 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} VIZOR. Canalele aparțin deținătorilor lor; VIZOR indexează
-            doar adresele publice de încorporare.
+            © {year} {SITE_NAME}. Canalele aparțin deținătorilor lor; {SITE_NAME}
+            indexează doar adresele publice de încorporare.
           </p>
           <div className="flex items-center gap-3">
             <Badge variant="outline" size="xs">
@@ -132,9 +134,9 @@ export async function Footer() {
       {/* The wordmark, once more, as a watermark the page ends on. */}
       <div
         aria-hidden
-        className="pointer-events-none -mb-[0.14em] select-none overflow-hidden px-4 text-center font-display text-[clamp(76px,20vw,320px)] font-bold leading-[0.78] tracking-[-0.05em] text-white/[0.045] sm:px-8 lg:px-12"
+        className="pointer-events-none -mb-[0.14em] select-none overflow-hidden px-4 text-center font-display text-[clamp(64px,17vw,268px)] font-bold leading-[0.78] tracking-[-0.05em] text-white/[0.045] sm:px-8 lg:px-12"
       >
-        VIZOR
+        {SITE_NAME}
       </div>
     </footer>
   );

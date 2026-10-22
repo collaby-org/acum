@@ -1,0 +1,644 @@
+{
+  "source": "https://canale-tv.net/",
+  "generatedAt": "2026-10-22T09:55:56.870Z",
+  "resolved": 105,
+  "missed": 0,
+  "streams": {
+    "pr0tv": {
+      "hlsUrl": "https://ultra3.ronanx001.shop/porky/high/usergenx7240lrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/pr0tv.html",
+      "embedUrl": "https://canale-tv.net/channel/pr0tv.html",
+      "alternates": [
+        "https://epsilon1.visionxman1.cfd/porky/high/usergenx7240lrnd.m3u8",
+        "https://omega1.visionxmans1.cfd/porky/high/usergenx7240lrnd.m3u8"
+      ]
+    },
+    "a1": {
+      "hlsUrl": "https://alpha1.yozefina.cfd/ah1/usergenx304Jtlrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/a1.html",
+      "embedUrl": "https://canale-tv.net/channel/a1.html",
+      "alternates": [
+        "https://ceres1.vizionman.cfd/ah1/usergenx304Jtlrnd.m3u8",
+        "https://hulky.lozixy.cfd/ah1/usergenx304Jtlrnd.m3u8"
+      ]
+    },
+    "tvr1": {
+      "hlsUrl": "https://thor1.syndula001.cfd/tevere1/usergendxl4cjlrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tvr1.html",
+      "embedUrl": "https://canale-tv.net/channel/tvr1.html",
+      "alternates": []
+    },
+    "tvr2": {
+      "hlsUrl": "https://thor1.syndula001.cfd/tevere2/usergendxl6d4vnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tvr2.html",
+      "embedUrl": "https://canale-tv.net/channel/tvr2.html",
+      "alternates": []
+    },
+    "canald": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/canald/usergenxq0jl72l0rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/canald.html",
+      "embedUrl": "https://canale-tv.net/channel/canald.html",
+      "alternates": []
+    },
+    "canald2": {
+      "hlsUrl": "https://cronos.mangora1.cfd/canad2/usergendx92c4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/canald2.html",
+      "embedUrl": "https://canale-tv.net/channel/canald2.html",
+      "alternates": []
+    },
+    "primatv": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/prima/usergenrnd8qxl92r.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primatv.html",
+      "embedUrl": "https://canale-tv.net/channel/primatv.html",
+      "alternates": []
+    },
+    "nationaltv": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/national/usergendxl4s0rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/nationaltv.html",
+      "embedUrl": "https://canale-tv.net/channel/nationaltv.html",
+      "alternates": []
+    },
+    "tvr3": {
+      "hlsUrl": "https://thor1.syndula001.cfd/tevere3/usergenx4klq9qrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tvr3.html",
+      "embedUrl": "https://canale-tv.net/channel/tvr3.html",
+      "alternates": []
+    },
+    "tvrinter": {
+      "hlsUrl": "https://thor1.syndula001.cfd/teverei/usergenx6vkj8aqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tvrinter.html",
+      "embedUrl": "https://canale-tv.net/channel/tvrinter.html",
+      "alternates": []
+    },
+    "procinema": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/porkynema/usergenrnd0ek16an4l.m3u8",
+      "playerPage": "https://canale-tv.net/channel/procinema.html",
+      "embedUrl": "https://canale-tv.net/channel/procinema.html",
+      "alternates": []
+    },
+    "acasatv": {
+      "hlsUrl": "https://alpha1.cool-itv.com/acasa/usergenx3e7g4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/acasatv.html",
+      "embedUrl": "https://canale-tv.net/channel/acasatv.html",
+      "alternates": []
+    },
+    "acasagold": {
+      "hlsUrl": "https://thor1.syndula001.cfd/gold/usergendxt638rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/acasagold.html",
+      "embedUrl": "https://canale-tv.net/channel/acasagold.html",
+      "alternates": []
+    },
+    "astars": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/antstar/usergenrxl7m94sq.m3u8",
+      "playerPage": "https://canale-tv.net/channel/astars.html",
+      "embedUrl": "https://canale-tv.net/channel/astars.html",
+      "alternates": []
+    },
+    "national24plus": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/n24/usergendxs2tp0f0wrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/national24plus.html",
+      "embedUrl": "https://canale-tv.net/channel/national24plus.html",
+      "alternates": []
+    },
+    "a3cnn": {
+      "hlsUrl": "https://alpha1.cool-itv.com/an3/high/usergen801l41hcrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/a3cnn.html",
+      "embedUrl": "https://canale-tv.net/channel/a3cnn.html",
+      "alternates": []
+    },
+    "romaniatv": {
+      "hlsUrl": "https://cronos.mangora1.cfd/rtv/usergendx473dx9qrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/romaniatv.html",
+      "embedUrl": "https://canale-tv.net/channel/romaniatv.html",
+      "alternates": []
+    },
+    "realitateatv": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/realy/usergenrx0j3qt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/realitateatv.html",
+      "embedUrl": "https://canale-tv.net/channel/realitateatv.html",
+      "alternates": []
+    },
+    "primanews": {
+      "hlsUrl": "https://thor1.syndula001.cfd/prnews/usergenx2klq7rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primanews.html",
+      "embedUrl": "https://canale-tv.net/channel/primanews.html",
+      "alternates": []
+    },
+    "b1tv": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/b1/usergenrnd840zwl3m.m3u8",
+      "playerPage": "https://canale-tv.net/channel/b1tv.html",
+      "embedUrl": "https://canale-tv.net/channel/b1tv.html",
+      "alternates": []
+    },
+    "euronewsromnia": {
+      "hlsUrl": "https://thor1.syndula001.cfd/ernews/usergenx6vkj8aqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/euronewsromnia.html",
+      "embedUrl": "https://canale-tv.net/channel/euronewsromnia.html",
+      "alternates": []
+    },
+    "digi24": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/news/usergenrk91a4gt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/digi24.html",
+      "embedUrl": "https://canale-tv.net/channel/digi24.html",
+      "alternates": []
+    },
+    "cnn": {
+      "hlsUrl": "https://thor1.syndula001.cfd/cienen/usergenrx8ofzq1kr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cnn.html",
+      "embedUrl": "https://canale-tv.net/channel/cnn.html",
+      "alternates": []
+    },
+    "bbcnews": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/bibinews/usergenz2b0ekd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/bbcnews.html",
+      "embedUrl": "https://canale-tv.net/channel/bbcnews.html",
+      "alternates": []
+    },
+    "cbsreality": {
+      "hlsUrl": "https://iron1.jarvisx1.cfd/cbrealy/usergenrxlj5c0q.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cbsreality.html",
+      "embedUrl": "https://canale-tv.net/channel/cbsreality.html",
+      "alternates": []
+    },
+    "dgsp1": {
+      "hlsUrl": "https://kuruk1.xn--okq6e.shop/kuk1/usergendx419snx12kdgwqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/dgsp1.html",
+      "embedUrl": "https://canale-tv.net/channel/dgsp1.html",
+      "alternates": []
+    },
+    "dgsp2": {
+      "hlsUrl": "https://kuruk1.xn--okq6e.shop/kuk2/usergendx0ul1ltsDx9lgcdwqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/dgsp2.html",
+      "embedUrl": "https://canale-tv.net/channel/dgsp2.html",
+      "alternates": []
+    },
+    "dgsp3": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/kuk3/usergendxt1v7slq2rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/dgsp3.html",
+      "embedUrl": "https://canale-tv.net/channel/dgsp3.html",
+      "alternates": []
+    },
+    "dgsp4": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/kuk4/usergendk9g3ks42t3n.m3u8",
+      "playerPage": "https://canale-tv.net/channel/dgsp4.html",
+      "embedUrl": "https://canale-tv.net/channel/dgsp4.html",
+      "alternates": []
+    },
+    "proarena": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/Prx/usergenrnvdfki42man4l.m3u8",
+      "playerPage": "https://canale-tv.net/channel/proarena.html",
+      "embedUrl": "https://canale-tv.net/channel/proarena.html",
+      "alternates": []
+    },
+    "tvrsport": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/tivisp/usergendl3f9xgfm1s.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tvrsport.html",
+      "embedUrl": "https://canale-tv.net/channel/tvrsport.html",
+      "alternates": []
+    },
+    "primasp1": {
+      "hlsUrl": "https://iron1.xn--x2rw19a.space/puk1/usergenrx0cir27aq.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primasp1.html",
+      "embedUrl": "https://canale-tv.net/channel/primasp1.html",
+      "alternates": []
+    },
+    "primasp2": {
+      "hlsUrl": "https://iron1.xn--x2rw19a.space/puk2/usergenrnd0clv03fyt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primasp2.html",
+      "embedUrl": "https://canale-tv.net/channel/primasp2.html",
+      "alternates": []
+    },
+    "primasp3": {
+      "hlsUrl": "https://iron1.xn--x2rw19a.space/puk3/usergenrx4t0l8sybkr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primasp3.html",
+      "embedUrl": "https://canale-tv.net/channel/primasp3.html",
+      "alternates": []
+    },
+    "primasp4": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/puk4/usergendx3j2x4tqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primasp4.html",
+      "embedUrl": "https://canale-tv.net/channel/primasp4.html",
+      "alternates": []
+    },
+    "primasp5": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/puk5/usergen0grnd8l2y6gw.m3u8",
+      "playerPage": "https://canale-tv.net/channel/primasp5.html",
+      "embedUrl": "https://canale-tv.net/channel/primasp5.html",
+      "alternates": []
+    },
+    "ppv1": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/puki1/usergendx6kal0r2bsm.m3u8",
+      "playerPage": "https://canale-tv.net/channel/ppv1.html",
+      "embedUrl": "https://canale-tv.net/channel/ppv1.html",
+      "alternates": []
+    },
+    "ppv2": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/puki2/usergendxpk2s6utg0l.m3u8",
+      "playerPage": "https://canale-tv.net/channel/ppv2.html",
+      "embedUrl": "https://canale-tv.net/channel/ppv2.html",
+      "alternates": []
+    },
+    "ppv3": {
+      "hlsUrl": "https://pulse1.sanseny001.shop/puki2/usergendxpk2s6utg0l.m3u8",
+      "playerPage": "https://canale-tv.net/channel/ppv3.html",
+      "embedUrl": "https://canale-tv.net/channel/ppv3.html",
+      "alternates": []
+    },
+    "sportextra": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/sextra/usergenq8eo0q.m3u8",
+      "playerPage": "https://canale-tv.net/channel/sportextra.html",
+      "embedUrl": "https://canale-tv.net/channel/sportextra.html",
+      "alternates": []
+    },
+    "eurosp1": {
+      "hlsUrl": "https://kuruk1.xn--okq6e.shop/er01/usergendx07slkgx24dqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/eurosp1.html",
+      "embedUrl": "https://canale-tv.net/channel/eurosp1.html",
+      "alternates": []
+    },
+    "eurosp2": {
+      "hlsUrl": "https://kuruk1.xn--okq6e.shop/er02/usergenje03xj2dqrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/eurosp2.html",
+      "embedUrl": "https://canale-tv.net/channel/eurosp2.html",
+      "alternates": []
+    },
+    "hb": {
+      "hlsUrl": "https://thor1.syndula001.cfd/h1/usergendx172s9rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/hb.html",
+      "embedUrl": "https://canale-tv.net/channel/hb.html",
+      "alternates": []
+    },
+    "hb2": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/h2/usergendxn430rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/hb2.html",
+      "embedUrl": "https://canale-tv.net/channel/hb2.html",
+      "alternates": []
+    },
+    "hb3": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/h3/usergendx3kdg4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/hb3.html",
+      "embedUrl": "https://canale-tv.net/channel/hb3.html",
+      "alternates": []
+    },
+    "diva": {
+      "hlsUrl": "https://thor1.syndula001.cfd/diva/usergenm48Qhxrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/diva.html",
+      "embedUrl": "https://canale-tv.net/channel/diva.html",
+      "alternates": []
+    },
+    "happy": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/hap/usergenrnd2gd3ogS7bkd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/happy.html",
+      "embedUrl": "https://canale-tv.net/channel/happy.html",
+      "alternates": []
+    },
+    "filmcafe": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/cofyfilm/usergendxn8lzrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/filmcafe.html",
+      "embedUrl": "https://canale-tv.net/channel/filmcafe.html",
+      "alternates": []
+    },
+    "tv1000": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/tivi10/usergenrxs4f7zc.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tv1000.html",
+      "embedUrl": "https://canale-tv.net/channel/tv1000.html",
+      "alternates": []
+    },
+    "fnow": {
+      "hlsUrl": "https://thor1.syndula001.cfd/df/usergendlg1ks0t2n.m3u8",
+      "playerPage": "https://canale-tv.net/channel/fnow.html",
+      "embedUrl": "https://canale-tv.net/channel/fnow.html",
+      "alternates": []
+    },
+    "epdrama": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/epi/usergendxt1v8klq6rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/epdrama.html",
+      "embedUrl": "https://canale-tv.net/channel/epdrama.html",
+      "alternates": []
+    },
+    "amc": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/amece/usergenrx3oq1kr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/amc.html",
+      "embedUrl": "https://canale-tv.net/channel/amc.html",
+      "alternates": []
+    },
+    "show1": {
+      "hlsUrl": "https://thor1.syndula001.cfd/schi1/usergendxn430rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/show1.html",
+      "embedUrl": "https://canale-tv.net/channel/show1.html",
+      "alternates": []
+    },
+    "show2": {
+      "hlsUrl": "https://thor1.syndula001.cfd/schi2/usergendxj85trnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/show2.html",
+      "embedUrl": "https://canale-tv.net/channel/show2.html",
+      "alternates": []
+    },
+    "axn": {
+      "hlsUrl": "https://cronos.mangora1.cfd/axy/usergend3h5jkc9rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/axn.html",
+      "embedUrl": "https://canale-tv.net/channel/axn.html",
+      "alternates": []
+    },
+    "axnspin": {
+      "hlsUrl": "https://cronos.mangora1.cfd/spyn/usergencs85ja0j1rrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/axnspin.html",
+      "embedUrl": "https://canale-tv.net/channel/axnspin.html",
+      "alternates": []
+    },
+    "axnblack": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/axyblack/usergenrxi6s93hs2.m3u8",
+      "playerPage": "https://canale-tv.net/channel/axnblack.html",
+      "embedUrl": "https://canale-tv.net/channel/axnblack.html",
+      "alternates": []
+    },
+    "axnwhite": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/axwhite/usergenx23rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/axnwhite.html",
+      "embedUrl": "https://canale-tv.net/channel/axnwhite.html",
+      "alternates": []
+    },
+    "cmax": {
+      "hlsUrl": "https://cronos.mangora1.cfd/xmas1/usergendx27y41s0rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cmax.html",
+      "embedUrl": "https://canale-tv.net/channel/cmax.html",
+      "alternates": []
+    },
+    "cmax2": {
+      "hlsUrl": "https://cronos.mangora1.cfd/xmas2/usergendxt1v8klq6rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cmax2.html",
+      "embedUrl": "https://canale-tv.net/channel/cmax2.html",
+      "alternates": []
+    },
+    "bolywoodtv": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/boly/usergenr9j8s2t.m3u8",
+      "playerPage": "https://canale-tv.net/channel/bolywoodtv.html",
+      "embedUrl": "https://canale-tv.net/channel/bolywoodtv.html",
+      "alternates": []
+    },
+    "ccentral": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/comedi/usergenrx7zo1kr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/ccentral.html",
+      "embedUrl": "https://canale-tv.net/channel/ccentral.html",
+      "alternates": []
+    },
+    "wornertv": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/tnnt/usergendxq726jrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/wornertv.html",
+      "embedUrl": "https://canale-tv.net/channel/wornertv.html",
+      "alternates": []
+    },
+    "bfirst": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/bibi1/usergendxn09l2s6cek.m3u8",
+      "playerPage": "https://canale-tv.net/channel/bfirst.html",
+      "embedUrl": "https://canale-tv.net/channel/bfirst.html",
+      "alternates": []
+    },
+    "minimax": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/minimaxy/usergendxny9zrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/minimax.html",
+      "embedUrl": "https://canale-tv.net/channel/minimax.html",
+      "alternates": []
+    },
+    "cartoonnet": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/cartun/usergenrx2xfzol0q.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cartoonnet.html",
+      "embedUrl": "https://canale-tv.net/channel/cartoonnet.html",
+      "alternates": []
+    },
+    "disneych": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/dysnee/usergendx0k2rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/disneych.html",
+      "embedUrl": "https://canale-tv.net/channel/disneych.html",
+      "alternates": []
+    },
+    "teennick": {
+      "hlsUrl": "https://flash1.bogulus.cfd/tinnik/usergenrx8fg02rt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/teennick.html",
+      "embedUrl": "https://canale-tv.net/channel/teennick.html",
+      "alternates": []
+    },
+    "nickelodeon": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/nike/usergenm24qrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/nickelodeon.html",
+      "embedUrl": "https://canale-tv.net/channel/nickelodeon.html",
+      "alternates": []
+    },
+    "disneyjr": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/disjr/usergendxvoq4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/disneyjr.html",
+      "embedUrl": "https://canale-tv.net/channel/disneyjr.html",
+      "alternates": []
+    },
+    "cartonito": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/bomer/usergenrx2c86jey.m3u8",
+      "playerPage": "https://canale-tv.net/channel/cartonito.html",
+      "embedUrl": "https://canale-tv.net/channel/cartonito.html",
+      "alternates": []
+    },
+    "nicktoons": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/niktuun/usergendxt7r9CxGrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/nicktoons.html",
+      "embedUrl": "https://canale-tv.net/channel/nicktoons.html",
+      "alternates": []
+    },
+    "nickjr": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/nicjr/usergendxl2c8nd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/nickjr.html",
+      "embedUrl": "https://canale-tv.net/channel/nickjr.html",
+      "alternates": []
+    },
+    "jimjam": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/jimy/usergenq3n0lz7kr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/jimjam.html",
+      "embedUrl": "https://canale-tv.net/channel/jimjam.html",
+      "alternates": []
+    },
+    "ducktv": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/duk/usergenz9ak7fxt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/ducktv.html",
+      "embedUrl": "https://canale-tv.net/channel/ducktv.html",
+      "alternates": []
+    },
+    "discoverych": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/disco/usergenrxljmx9su.m3u8",
+      "playerPage": "https://canale-tv.net/channel/discoverych.html",
+      "embedUrl": "https://canale-tv.net/channel/discoverych.html",
+      "alternates": []
+    },
+    "historych": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/hystor/usergendxc9g8rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/historych.html",
+      "embedUrl": "https://canale-tv.net/channel/historych.html",
+      "alternates": []
+    },
+    "netgeopeople": {
+      "hlsUrl": "https://onyx1.mofta1.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/netgeopeople.html",
+      "embedUrl": "https://canale-tv.net/channel/netgeopeople.html",
+      "alternates": []
+    },
+    "natgeo": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/ngeo/usergenrnd84oeigt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/natgeo.html",
+      "embedUrl": "https://canale-tv.net/channel/natgeo.html",
+      "alternates": []
+    },
+    "idinvest": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/cryme/usergendxn0487rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/idinvest.html",
+      "embedUrl": "https://canale-tv.net/channel/idinvest.html",
+      "alternates": []
+    },
+    "crimeinvest": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/crymeinv2/usergen9o4n2srnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/crimeinvest.html",
+      "embedUrl": "https://canale-tv.net/channel/crimeinvest.html",
+      "alternates": []
+    },
+    "tlc": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/telece/usergendc8sxt317rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/tlc.html",
+      "embedUrl": "https://canale-tv.net/channel/tlc.html",
+      "alternates": []
+    },
+    "natgeowild": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/wild/usergenr9qsi5gt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/natgeowild.html",
+      "embedUrl": "https://canale-tv.net/channel/natgeowild.html",
+      "alternates": []
+    },
+    "bbcearth": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/ert/usergenrx8ofzq1kr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/bbcearth.html",
+      "embedUrl": "https://canale-tv.net/channel/bbcearth.html",
+      "alternates": []
+    },
+    "viahist": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/vhis/usergenrnd4v6g8eigt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/viahist.html",
+      "embedUrl": "https://canale-tv.net/channel/viahist.html",
+      "alternates": []
+    },
+    "vianature": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/vnature/usergenrnd2g9eqk.m3u8",
+      "playerPage": "https://canale-tv.net/channel/vianature.html",
+      "embedUrl": "https://canale-tv.net/channel/vianature.html",
+      "alternates": []
+    },
+    "viaexplorer": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/vexplr/usergenrnd7ke5lgt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/viaexplorer.html",
+      "embedUrl": "https://canale-tv.net/channel/viaexplorer.html",
+      "alternates": []
+    },
+    "travelmix": {
+      "hlsUrl": "https://cronos.mangora1.cfd/travil/usergenjc20r4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/travelmix.html",
+      "embedUrl": "https://canale-tv.net/channel/travelmix.html",
+      "alternates": []
+    },
+    "paprika": {
+      "hlsUrl": "https://galandriel1.thobias001.cfd/papi/usergendxs3jk0s9nd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/paprika.html",
+      "embedUrl": "https://canale-tv.net/channel/paprika.html",
+      "alternates": []
+    },
+    "hgtv": {
+      "hlsUrl": "https://thor1.syndula001.cfd/hgtivi/usergenx3kly4rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/hgtv.html",
+      "embedUrl": "https://canale-tv.net/channel/hgtv.html",
+      "alternates": []
+    },
+    "taraf": {
+      "hlsUrl": "https://flash1.bogulus1.cfd/tarafy/usergenrxgi1cla6qt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/taraf.html",
+      "embedUrl": "https://canale-tv.net/channel/taraf.html",
+      "alternates": []
+    },
+    "favorit": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/favorit/usergenrn9jn4gba.m3u8",
+      "playerPage": "https://canale-tv.net/channel/favorit.html",
+      "embedUrl": "https://canale-tv.net/channel/favorit.html",
+      "alternates": []
+    },
+    "etno": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/etno/usergenrnd7ke5lgt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/etno.html",
+      "embedUrl": "https://canale-tv.net/channel/etno.html",
+      "alternates": []
+    },
+    "hitmusic": {
+      "hlsUrl": "https://cronos.mangora1.cfd/hitivi/usergendhh62jfcs5rnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/hitmusic.html",
+      "embedUrl": "https://canale-tv.net/channel/hitmusic.html",
+      "alternates": []
+    },
+    "balcanmuz": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/balkmus/usergenko4x0g.m3u8",
+      "playerPage": "https://canale-tv.net/channel/balcanmuz.html",
+      "embedUrl": "https://canale-tv.net/channel/balcanmuz.html",
+      "alternates": []
+    },
+    "utv": {
+      "hlsUrl": "https://cronos.mangora1.cfd/utivi/usergenck9astrnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/utv.html",
+      "embedUrl": "https://canale-tv.net/channel/utv.html",
+      "alternates": []
+    },
+    "kisstv": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/kys/usergenrndgs6h1vys2n4l.m3u8",
+      "playerPage": "https://canale-tv.net/channel/kisstv.html",
+      "embedUrl": "https://canale-tv.net/channel/kisstv.html",
+      "alternates": []
+    },
+    "musicch": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/mch/usergenz7h0qdt.m3u8",
+      "playerPage": "https://canale-tv.net/channel/musicch.html",
+      "embedUrl": "https://canale-tv.net/channel/musicch.html",
+      "alternates": []
+    },
+    "zutv": {
+      "hlsUrl": "https://saruman1.tharen001.cfd/zzz/usergenrx8c0k3lkr.m3u8",
+      "playerPage": "https://canale-tv.net/channel/zutv.html",
+      "embedUrl": "https://canale-tv.net/channel/zutv.html",
+      "alternates": []
+    },
+    "fishy": {
+      "hlsUrl": "https://arwen1.panaka001.cfd/favorit/usergenrn9jn4gba.m3u8",
+      "playerPage": "https://canale-tv.net/channel/fishy.html",
+      "embedUrl": "https://canale-tv.net/channel/fishy.html",
+      "alternates": []
+    },
+    "fbox1": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/fboz/usergendx7tc9brnd.m3u8",
+      "playerPage": "https://canale-tv.net/channel/fbox1.html",
+      "embedUrl": "https://canale-tv.net/channel/fbox1.html",
+      "alternates": []
+    },
+    "fbox-extra": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/fboye/usergendlg8sl1ks0tv7sr8n.m3u8",
+      "playerPage": "https://canale-tv.net/channel/fbox-extra.html",
+      "embedUrl": "https://canale-tv.net/channel/fbox-extra.html",
+      "alternates": []
+    },
+    "fbox-premium": {
+      "hlsUrl": "https://onyx1.mofta001.cfd/fboyp/usergendl2kx0ta67js9c.m3u8",
+      "playerPage": "https://canale-tv.net/channel/fbox-premium.html",
+      "embedUrl": "https://canale-tv.net/channel/fbox-premium.html",
+      "alternates": []
+    },
+    "canal-33": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/canal33/usergendlg1ks0t2n.m3u8",
+      "playerPage": "https://canale-tv.net/channel/canal-33.html",
+      "embedUrl": "https://canale-tv.net/channel/canal-33.html",
+      "alternates": []
+    },
+    "dizy": {
+      "hlsUrl": "https://atlantida1.aquax001.shop/dizy/usergendlk0tas9c.m3u8",
+      "playerPage": "https://canale-tv.net/channel/dizy.html",
+      "embedUrl": "https://canale-tv.net/channel/dizy.html",
+      "alternates": []
+    }
+  }
+}

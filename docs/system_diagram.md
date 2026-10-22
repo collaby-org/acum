@@ -1,6 +1,6 @@
 # System diagram
 
-VIZOR is a static site with a thin server for the live stream. There is no
+ACUM is a static site with a thin server for the live stream. There is no
 database, no user account and no API of our own — the only server-side work
 is relaying the upstream media and serving the upstream player page without
 its advertising.

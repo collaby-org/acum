@@ -29,6 +29,10 @@ export type ChannelLike = {
   status: ServerStatus;
   quality?: Quality;
   servers?: readonly ServerLike[];
+  /** How many people are watching right now, when a source counts them. */
+  views?: number | null;
+  /** A still of the show on air, when the catalogue ships one. */
+  poster?: string | null;
 };
 
 /**
@@ -40,7 +44,7 @@ export type ServerLike = {
   label: string;
   status?: ServerStatus;
   quality?: Quality;
-  source?: "primary" | "secondary";
+  source?: "primary" | "secondary" | "canale-tv";
 };
 
 /* ------------------------------------------------------------------ *

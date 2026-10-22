@@ -8,7 +8,7 @@ Status: accepted · Version line: `package.json` · Owner: integrator
 viewer sees "Antena 1 S1", "Antena 1 S2 HD", "Antena 1 S3", "Antena 1 S4" in
 the mega-menu and reasonably concludes the site carries four channels.
 
-The first version of VIZOR copied that shape literally: 203 catalogue
+The first version of ACUM copied that shape literally: 203 catalogue
 entries, most of them the same channel with a different suffix. Two things
 broke.
 

@@ -1,7 +1,7 @@
 {
-  "name": "VIZOR — TV live românesc, fără reclame",
-  "short_name": "VIZOR",
-  "description": "Toate canalele TV live din România, într-un singur loc. Fără cont, fără reclame. Pentru a viziona canalele live ai nevoie de o conexiune la internet.",
+  "name": "ACUM — TV live românesc, fără reclame",
+  "short_name": "ACUM",
+  "description": "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame. Pentru a viziona canalele live ai nevoie de o conexiune la internet.",
   "lang": "ro",
   "dir": "ltr",
   "id": "/",
@@ -9,8 +9,9 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#06070a",
-  "theme_color": "#06070a",
+  "background_color": "#04050a",
+  "theme_color": "#04050a",
+  "categories": ["tv", "entertainment", "video"],
   "icons": [
     {
       "src": "/icons/icon-192.png",

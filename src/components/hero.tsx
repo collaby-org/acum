@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
+  Eye,
   Heart,
   LayoutGrid,
   Play,
@@ -14,18 +15,17 @@ import type { Channel, Quality } from "@/data/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { QualityBadge } from "@/components/channel-card";
+import { SITE_NAME } from "@/lib/site";
 import {
   NowNext,
-  WhatsOn,
   findGuideChannel,
   formatClock,
-  pickHighlights,
   referenceMoment,
   resolveSchedule,
   type EpgGuide,
 } from "@/components/now-next";
 import { posterPalette } from "@/lib/channel-meta";
-import { cn } from "@/lib/utils";
+import { cn, formatViewers } from "@/lib/utils";
 
 type HeroProps = {
   channel: Channel;
@@ -42,6 +42,12 @@ type HeroProps = {
    * Without it the hero falls back to the channel alone.
    */
   guide?: EpgGuide | null;
+  /**
+   * How many people are watching the featured channel right now. The
+   * numbers arrive after the first paint, so the hero without them is the
+   * rule rather than the exception.
+   */
+  views?: number | null;
   /**
    * The catalogue the browser knows, so the guide's channels can be
    * matched to real ones. The hero never imports the full catalogue
@@ -60,7 +66,7 @@ export function Hero({
   onToggleFavorite,
   onBrowse,
   guide,
-  channels,
+  views,
 }: HeroProps) {
   const palette = posterPalette(channel.familyKey, channel.category);
   const live = channel.status === "live";
@@ -69,7 +75,6 @@ export function Hero({
   const badge = quality ?? channel.quality;
 
   const activeGuide = guide ?? null;
-  const catalogue = useMemo(() => channels ?? [], [channels]);
 
   const guideChannel = useMemo(
     () => (activeGuide ? findGuideChannel(activeGuide, channel) : null),
@@ -83,24 +88,24 @@ export function Hero({
     [guideChannel, moment],
   );
 
-  const highlights = useMemo(
-    () =>
-      activeGuide
-        ? pickHighlights(activeGuide, catalogue, moment, {
-            excludeSlug: guideChannel?.slug ?? null,
-          })
-        : [],
-    [activeGuide, catalogue, moment, guideChannel],
-  );
-
   const onAir = schedule?.now ?? null;
   const subject = onAir?.title ?? channel.name;
-  const eyebrow = onAir
-    ? `În aer acum pe ${channel.name}`
-    : `Canalul recomandat · ${channel.family}`;
+
+  // How many people are watching the channel the hero is showing. The
+  // hero carries the most watched channel on air, so the crowd is the
+  // reason to be here.
+  const viewers = views ?? (channel as { views?: number | null }).views ?? 0;
+
+  const eyebrow =
+    viewers > 0
+      ? `Cel mai urmărit acum pe ${channel.name}`
+      : onAir
+        ? `În aer acum pe ${channel.name}`
+        : `Canalul recomandat · ${channel.family}`;
+
   const kicker =
     onAir?.description ??
-    `${channel.name} — unul dintre cele ${totalCount} canale adunate în VIZOR. Fără cont, fără reclame, fără pauze: doar canalul și un player care pornește imediat.`;
+    `${channel.name} — unul dintre cele ${totalCount} canale adunate în ${SITE_NAME}. Fără cont, fără reclame, fără pauze: doar canalul și un player care pornește imediat.`;
 
   return (
     <section
@@ -153,7 +158,10 @@ export function Hero({
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16">
+        <div
+          key={channel.id}
+          className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16"
+        >
           {/* -------------------------------------------------------- *
            * Copy — the programme is the subject, the channel the frame.
            * -------------------------------------------------------- */}
@@ -192,6 +200,15 @@ export function Hero({
                   În direct
                 </Badge>
                 <QualityBadge quality={badge} className="h-6 px-2.5 text-[11px]" />
+                {viewers > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/8 px-2.5 py-1 text-[11px] font-semibold text-ink-muted">
+                    <Eye aria-hidden className="size-3.5 text-signal/85" />
+                    <span className="tabular-nums text-ink">
+                      {formatViewers(viewers)}
+                    </span>
+                    spectatori
+                  </span>
+                )}
               </span>
             </div>
 
@@ -467,18 +484,6 @@ export function Hero({
             />
           </div>
         </div>
-
-        {/* ---------------------------------------------------------- *
-         * Ce e acum — what is on across the guide.
-         * ---------------------------------------------------------- */}
-        {highlights.length > 0 && (
-          <WhatsOn
-            highlights={highlights}
-            onPlay={onPlay}
-            date={activeGuide?.date ?? null}
-            className="animate-rise mt-14 lg:mt-20"
-          />
-        )}
       </div>
 
       {/* The hero hands the page over to the rails below it. */}

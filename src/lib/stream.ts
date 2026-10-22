@@ -51,10 +51,15 @@ export const AD_HOSTS = [
 
 /**
  * The second source: the directory that publishes the channel list, and the
- * media host its streams come from. Both are named outright rather than
- * opened by suffix.
+ * media hosts its streams come from. Both are named outright rather than
+ * opened by suffix — `rd.` is the panel's own host, `tv.` the one that
+ * serves the playlists.
  */
-export const SECONDARY_HOSTS = ["canaletvlive.online", "tv.playitforme.online"];
+export const SECONDARY_HOSTS = [
+  "canaletvlive.online",
+  "tv.playitforme.online",
+  "rd.playitforme.online",
+];
 
 /** The Referer the second source's media host accepts. */
 export const SECONDARY_REFERER = "https://canaletvlive.online/";
@@ -78,7 +83,7 @@ export const MEDIA_HOST_SUFFIXES = [
 const TOKEN_TTL_SECONDS = 60 * 60 * 6;
 
 /** Signs the proxy tokens. Server-side only; never shipped to the browser. */
-const TOKEN_SECRET = "vizor-stream-proxy-v1";
+const TOKEN_SECRET = "acum-stream-proxy-v1";
 
 /* ------------------------------------------------------------------ *
  * URL policy
@@ -227,6 +232,24 @@ export function absolutize(uri: string, baseUrl: string): string {
     return new URL(uri, baseUrl).toString();
   } catch {
     return uri;
+  }
+}
+
+/**
+ * The address of a stream, in ASCII.
+ *
+ * Some of the upstream hosts are spelled in Unicode — `kuruk1.乼亶.shop`
+ * rather than `kuruk1.xn--okq6e.shop`. A browser and the URL parser both
+ * understand it, but a signature computed over one spelling does not match
+ * the other, and a host name that looks like mojibake in a log is a host
+ * name nobody can read. The URL parser does the conversion; this is only
+ * here to make sure it happens.
+ */
+export function asciiUrl(url: string): string {
+  try {
+    return new URL(url).href;
+  } catch {
+    return url;
   }
 }
 
@@ -573,22 +596,31 @@ export async function openUpstream(url: string): Promise<UpstreamStream | null> 
   return null;
 }
 
-/** True when the URL answers with a real playlist. */
+/**
+ * True when the URL answers with a real playlist.
+ *
+ * Every Referer the host accepts is tried, not just one: the second
+ * source's media host only answers to its own directory, and a feed that
+ * plays perfectly well would be called broken otherwise.
+ */
 export async function probePlaylist(url: string): Promise<boolean> {
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "user-agent": UPSTREAM_USER_AGENT,
-        referer: UPSTREAM_REFERER,
-      },
-      cache: "no-store",
-      signal: AbortSignal.timeout(12_000),
-    });
-    if (!response.ok) return false;
-    return isPlaylist(await response.text());
-  } catch {
-    return false;
+  for (const referer of orderedReferers(url)) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "user-agent": UPSTREAM_USER_AGENT,
+          referer,
+        },
+        cache: "no-store",
+        signal: AbortSignal.timeout(12_000),
+      });
+      if (!response.ok) continue;
+      if (isPlaylist(await response.text())) return true;
+    } catch {
+      /* try the next Referer */
+    }
   }
+  return false;
 }
 
 /* ------------------------------------------------------------------ *
@@ -826,21 +858,85 @@ function readInnerSource(source: string): { payload: string; seed: number } | nu
   return { payload: decodeJsString(call[1]), seed: Number(call[2]) };
 }
 
+/** Escape a name so it can be used inside a pattern. */
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * The one-line helpers the innermost layer routes its arithmetic through.
+ *
+ * The layer used to inline the arithmetic (`b * (v + 164) + (b % 43292)`).
+ * It now calls generated helpers instead — `function x(a,b){return a% b}` and
+ * `function y(a,b){return a+ b}` — so the constants can only be read once
+ * the helper names are known.
+ */
+type Arithmetic = { mod: string | null; add: string | null };
+
+function readArithmetic(source: string): Arithmetic {
+  const mod =
+    /function\s+([\w$]+)\s*\(\s*[\w$]+\s*,\s*[\w$]+\s*\)\s*\{\s*return\s+[\w$]+\s*%\s*[\w$]+\s*;?\s*\}/.exec(
+      source,
+    );
+  const add =
+    /function\s+([\w$]+)\s*\(\s*[\w$]+\s*,\s*[\w$]+\s*\)\s*\{\s*return\s+[\w$]+\s*\+\s*[\w$]+\s*;?\s*\}/.exec(
+      source,
+    );
+  return { mod: mod?.[1] ?? null, add: add?.[1] ?? null };
+}
+
+/**
+ * The constants of the innermost transposition, in both of the shapes the
+ * upstream uses.
+ *
+ * Inlined — `b * (v + 164) + (b % 43292)`, with the seed carried on as
+ * `b = (j + t) % 5102270`.
+ *
+ * Through helpers — `add(seed * (add(i, 164)), mod(seed, 43292))`, with the
+ * seed carried on as `seed = mod((add(a, b)), 5102270)`.
+ */
 function readInnerConfig(source: string): TransposeConfig | null {
-  const multipliers = [
+  const inlined = [
     ...source.matchAll(/\*\s*\(\s*\w+\s*\+\s*(\d+)\s*\)\s*\+\s*\(\s*\w+\s*%\s*(\d+)\s*\)/g),
   ].map((match) => ({ k: Number(match[1]), mod: Number(match[2]) }));
-  if (multipliers.length < 2) return null;
+  const inlinedModulus = /=\s*\(\s*\w+\s*\+\s*\w+\s*\)\s*%\s*(\d+)/.exec(source);
+  if (inlined.length >= 2 && inlinedModulus) {
+    return {
+      seed: 0,
+      k1: inlined[0].k,
+      m1: inlined[0].mod,
+      k2: inlined[1].k,
+      m2: inlined[1].mod,
+      mod: Number(inlinedModulus[1]),
+    };
+  }
 
-  const modulus = /=\s*\(\s*\w+\s*\+\s*\w+\s*\)\s*%\s*(\d+)/.exec(source);
+  const { mod, add } = readArithmetic(source);
+  if (!mod || !add) return null;
+  const modName = escapeRegExp(mod);
+  const addName = escapeRegExp(add);
+
+  const throughHelpers = [
+    ...source.matchAll(
+      new RegExp(
+        `${addName}\\(\\s*[\\w$.]*\\s*\\*\\s*\\(\\s*${addName}\\(\\s*[\\w$.]*\\s*,\\s*(\\d+)\\s*\\)\\s*\\)\\s*,\\s*\\(\\s*${modName}\\(\\s*[\\w$.]*\\s*,\\s*(\\d+)\\s*\\)`,
+        "g",
+      ),
+    ),
+  ].map((match) => ({ k: Number(match[1]), mod: Number(match[2]) }));
+  if (throughHelpers.length < 2) return null;
+
+  const modulus = new RegExp(
+    `${modName}\\(\\s*\\(\\s*${addName}\\(\\s*[\\w$.]*\\s*,\\s*[\\w$.]*\\s*\\)\\s*\\)\\s*,\\s*(\\d+)\\s*\\)`,
+  ).exec(source);
   if (!modulus) return null;
 
   return {
     seed: 0,
-    k1: multipliers[0].k,
-    m1: multipliers[0].mod,
-    k2: multipliers[1].k,
-    m2: multipliers[1].mod,
+    k1: throughHelpers[0].k,
+    m1: throughHelpers[0].mod,
+    k2: throughHelpers[1].k,
+    m2: throughHelpers[1].mod,
     mod: Number(modulus[1]),
   };
 }
@@ -905,7 +1001,7 @@ export function resolveStreamUrls(html: string): string[] {
 
   const urls: string[] = [];
   for (const candidate of decoded) {
-    const url = candidate.trim();
+    const url = asciiUrl(candidate.trim());
     if (url.startsWith("http") && !urls.includes(url)) urls.push(url);
   }
   return urls;

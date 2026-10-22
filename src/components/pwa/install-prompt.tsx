@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Download, Share, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SITE_NAME } from "@/lib/site";
 import { useInstall, useStandalone } from "./use-pwa";
 
-const DISMISS_KEY = "vizor:install-dismissed";
+const DISMISS_KEY = "acum:install-dismissed";
 
 /** Two weeks. Long enough to be forgotten, short enough to be asked again. */
 const DISMISS_TTL = 14 * 24 * 60 * 60 * 1000;
@@ -88,7 +89,7 @@ export function InstallPrompt() {
 
         <div className="min-w-0 flex-1">
           <p className="font-display text-[15px] font-semibold tracking-tight">
-            Instalează VIZOR
+            Instalează {SITE_NAME}
           </p>
           {manual ? (
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">

@@ -1,12 +1,10 @@
 import type { MetadataRoute } from "next";
-
-/** The one canonical origin. Mirrors `metadataBase` in `src/app/layout.tsx`. */
-const BASE_URL = "https://vizor.tv";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * The sitemap.
  *
- * VIZOR is a single page: the catalogue, the search and the player all live
+ * ACUM is a single page: the catalogue, the search and the player all live
  * at `/`. There are no channel pages to list yet — `/canal/<slug>` is still
  * on the roadmap (`docs/roadmap.md`, "Shareable deep links") — so the sitemap
  * stays honest and lists only what a crawler can actually reach.
@@ -20,7 +18,7 @@ const BASE_URL = "https://vizor.tv";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: `${BASE_URL}/`,
+      url: `${SITE_URL}/`,
       changeFrequency: "weekly",
       priority: 1,
     },

@@ -54,13 +54,48 @@ const secondaryBySlug = new Map(
   (secondaryData.channels ?? []).map((c) => [c.slug, c]),
 );
 
+/**
+ * The third source directory. Its pages hide the playlist behind an
+ * obfuscation that is undone at build time, so the addresses are stable and
+ * can be stored like the first source's.
+ */
+const canaleTvData = await readJson("data/canale-tv-channels.json", { channels: [] });
+const canaleTvStreams = await readJson("data/canale-tv-streams.json", { streams: {} });
+const canaleTvBySlug = new Map(
+  (canaleTvData.channels ?? []).map((c) => [c.slug, c]),
+);
+
 const qualityData = await readJson("data/quality.json", { feeds: {} });
 const qualityByFeed = qualityData.feeds ?? {};
 
 const logoData = await readJson("data/logo-index.json", { channels: {} });
 const logoIndex = logoData.channels ?? {};
 
-const healthByUrl = new Map(health.map((h) => [h.url, h]));
+/**
+ * The stills of the shows that are on.
+ *
+ * The file is written by the capture script and keyed by the catalogue id.
+ * It is optional: a catalogue without stills is a catalogue without stills.
+ */
+const posterData = await readJson("data/posters.json", { posters: {} });
+const posterIndex = posterData.posters ?? {};
+
+/** The still of a channel, when one has been captured. */
+const posterOf = (id) => {
+  const entry = posterIndex[id];
+  return entry?.file ? `/posters/${entry.file}` : null;
+};
+
+/**
+ * The liveness probe, by feed.
+ *
+ * The probe walks the real playback path, so its answer is the truth: a feed
+ * that answers with a manifest is live, one the upstream refuses is blocked,
+ * one that does not answer is an error.
+ */
+const healthByKey = new Map(
+  (health.feeds ?? []).map((record) => [record.key, record]),
+);
 
 /* ------------------------------------------------------------------ *
  * Logos
@@ -132,29 +167,28 @@ const qualityOf = (slug) => qualityByFeed[slug]?.quality ?? "unknown";
  *
  * The index may be keyed by the channel id, the display name, or any of the
  * channel's feed slugs, so try each of them before giving up.
+ *
+ * The slugs are used rather than the feed ids: a feed of the first source
+ * may carry an id of its own when the second source lists the same channel
+ * under the same slug.
  */
-const highResLogo = (channel, servers) => {
-  const keys = [
-    channel.id,
-    slugify(channel.name),
-    ...servers.map((s) => s.id),
-    ...servers.map((s) => slugify(s.id)),
-  ];
-  for (const key of keys) {
+const logoKeys = (channel, slugs) => [
+  channel.id,
+  slugify(channel.name),
+  ...slugs,
+  ...slugs.map((slug) => slugify(slug)),
+];
+
+const highResLogo = (channel, slugs) => {
+  for (const key of logoKeys(channel, slugs)) {
     const entry = logoIndex[key];
     if (entry?.file) return `/logos/${entry.file}`;
   }
   return null;
 };
 
-const highResLogoHd = (channel, servers) => {
-  const keys = [
-    channel.id,
-    slugify(channel.name),
-    ...servers.map((s) => s.id),
-    ...servers.map((s) => slugify(s.id)),
-  ];
-  for (const key of keys) {
+const highResLogoHd = (channel, slugs) => {
+  for (const key of logoKeys(channel, slugs)) {
     const entry = logoIndex[key];
     if (entry?.hdFile) return `/logos/${entry.hdFile}`;
   }
@@ -164,14 +198,8 @@ const highResLogoHd = (channel, servers) => {
 /**
  * Dark artwork needs a light plate behind it to stay legible on a dark card.
  */
-const logoIsDark = (channel, servers) => {
-  const keys = [
-    channel.id,
-    slugify(channel.name),
-    ...servers.map((s) => s.id),
-    ...servers.map((s) => slugify(s.id)),
-  ];
-  for (const key of keys) {
+const logoIsDark = (channel, slugs) => {
+  for (const key of logoKeys(channel, slugs)) {
     const entry = logoIndex[key];
     if (entry) return Boolean(entry.dark);
   }
@@ -187,18 +215,39 @@ for (const feed of raw.channels) {
   if (!feedBySlug.has(feed.slug)) feedBySlug.set(feed.slug, feed);
 }
 
-const statusOf = (feed) => {
-  if (feed.embedUrl) {
-    const h = healthByUrl.get(feed.embedUrl);
-    if (!h) return "unknown";
-    if (h.state === "player") return "live";
-    if (h.state === "blocked" || h.state === "parked") return "blocked";
-    if (h.state === "error") return "error";
+/**
+ * The status of one feed, as measured by the liveness probe.
+ *
+ * A feed the probe never saw is "unknown" — not live. The catalogue may
+ * only claim a channel is live when the probe watched it play.
+ */
+const statusOf = (key, feed) => {
+  const record = healthByKey.get(key);
+  if (record) {
+    if (record.state === "live") return "live";
+    if (record.state === "blocked") return "blocked";
+    if (record.state === "error") return "error";
+    if (record.state === "acestream") return "acestream";
     return "unknown";
   }
-  if (feed.acestreamId) return "acestream";
-  if (feed.directStreams?.length) return "live";
+  if (feed?.embedUrl) return "unknown";
+  if (feed?.acestreamId) return "acestream";
+  if (feed?.directStreams?.length) return "live";
   return "none";
+};
+
+/**
+ * The playlist a feed plays, when the probe saw one.
+ *
+ * The address is measured, not remembered: it is what the upstream answered
+ * with at the time of the probe. A feed whose playlist did not answer keeps
+ * the one the resolver found earlier, if there is one — the upstream may
+ * have been down for a moment.
+ */
+const playlistOf = (key, feed) => {
+  const record = healthByKey.get(key);
+  if (record?.state === "live" && record.streamUrl) return record.streamUrl;
+  return streams[feed?.slug]?.hlsUrl ?? null;
 };
 
 const kindOf = (feed) => {
@@ -229,14 +278,46 @@ const QUALITY_RANK = { uhd: 6, fhd: 5, hd: 4, sd: 3, low: 2, unknown: 1 };
 const usedIds = new Set();
 const channels = [];
 const problems = [];
+/** The scraped feed behind every server, so the logo is looked up by slug. */
+const feedOfServer = new Map();
+/** The slug of every server: the feed's own name in the source. */
+const slugOfServer = new Map();
 
 for (const [familyKey, family] of Object.entries(taxonomy.families)) {
   for (const channel of family.channels) {
     const servers = [];
     for (const server of channel.servers) {
+      // The third source's pages hide the playlist behind an obfuscation; it
+      // is undone at build time and the address is stable, so it is stored.
+      if (server.source === "canale-tv") {
+        const feed = canaleTvBySlug.get(server.slug);
+        const resolved = canaleTvStreams.streams?.[server.slug];
+        if (!feed || !resolved) {
+          problems.push(
+            `third-source slug "${server.slug}" has no resolved playlist (${familyKey})`,
+          );
+          continue;
+        }
+        const key = `canale-tv:${server.slug}`;
+        const entry = {
+          id: server.id ?? `canale-tv:${server.slug}`,
+          label: server.label,
+          embedUrl: null,
+          sourcePage: feed.page,
+          status: statusOf(key, { embedUrl: resolved.hlsUrl }),
+          kind: "iframe",
+          hlsUrl: resolved.hlsUrl,
+          quality: qualityOf(server.slug),
+          source: "canale-tv",
+        };
+        servers.push(entry);
+        feedOfServer.set(entry, { icon: null, logo: null });
+        slugOfServer.set(entry, server.slug);
+        continue;
+      }
+
       // A feed may come from the second source rather than the first scrape.
-      if (server.source === "secondary") {
-        const feed = secondaryBySlug.get(server.slug);
+      if (server.source === "secondary") {        const feed = secondaryBySlug.get(server.slug);
         if (!feed) {
           problems.push(
             `secondary slug "${server.slug}" is not in data/secondary-sources.json (${familyKey})`,
@@ -246,18 +327,23 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
         // The second source's playlist address carries a token that expires in
         // minutes, so it is never stored: the server asks for a fresh one
         // when the feed is played.
-        const direct = feed.kind === "hls";
-        servers.push({
+        const key = `secondary:${server.slug}`;
+        const entry = {
+          // The second source knows its channel by this slug, and the server
+          // asks it for a fresh address under this id — so it stays the slug.
           id: server.slug,
           label: server.label,
-          embedUrl: direct ? null : (feed.stream ?? null),
+          embedUrl: feed.kind === "hls" ? null : (feed.stream ?? null),
           sourcePage: feed.sourcePage ?? feed.playerPage ?? null,
-          status: direct ? "live" : "unknown",
+          status: statusOf(key, feed),
           kind: "iframe",
           hlsUrl: null,
-          quality: direct ? (feed.hd ? "hd" : "sd") : "unknown",
+          quality: feed.hd ? "hd" : "sd",
           source: "secondary",
-        });
+        };
+        servers.push(entry);
+        feedOfServer.set(entry, feed);
+        slugOfServer.set(entry, server.slug);
         continue;
       }
 
@@ -266,21 +352,24 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
         problems.push(`taxonomy slug "${server.slug}" is not in the scrape (${familyKey})`);
         continue;
       }
-      const resolved = streams[server.slug] ?? null;
-      servers.push({
-        id: server.slug,
+      const key = `primary:${server.slug}`;
+      const entry = {
+        // The first source's feed may need an id of its own: the second
+        // source uses the same slug for the same channel, and a channel
+        // cannot carry two feeds under one id.
+        id: server.id ?? server.slug,
         label: server.label,
         embedUrl: feed.embedUrl ?? null,
         sourcePage: feed.sourcePage,
-        // A resolved playlist is a live feed, even when the embed page the
-        // source ships for it is dead — the playlist came from the same
-        // upstream, through another panel.
-        status: resolved?.hlsUrl ? "live" : statusOf(feed),
+        status: statusOf(key, feed),
         kind: kindOf(feed),
-        hlsUrl: resolved?.hlsUrl ?? null,
+        hlsUrl: playlistOf(key, feed),
         quality: qualityOf(server.slug),
         source: "primary",
-      });
+      };
+      servers.push(entry);
+      feedOfServer.set(entry, feed);
+      slugOfServer.set(entry, server.slug);
     }
 
     if (!servers.length) {
@@ -290,12 +379,12 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
 
     // The logo comes from the first feed the source lists for the channel,
     // unless the high-resolution library has a better one.
-    const firstFeed = feedBySlug.get(servers[0].id);
-    const firstSecondary = secondaryBySlug.get(servers[0].id);
-    const logoRemote = firstFeed?.icon ?? firstSecondary?.logo ?? null;
-    const logo = highResLogo(channel, servers) ?? localLogo(logoRemote);
-    const logoHd = highResLogoHd(channel, servers);
-    const logoDark = logoIsDark(channel, servers);
+    const firstFeed = feedOfServer.get(servers[0]) ?? null;
+    const logoRemote = firstFeed?.icon ?? firstFeed?.logo ?? null;
+    const slugs = servers.map((server) => slugOfServer.get(server) ?? server.id);
+    const logo = highResLogo(channel, slugs) ?? localLogo(logoRemote);
+    const logoHd = highResLogoHd(channel, slugs);
+    const logoDark = logoIsDark(channel, slugs);
 
     // Best first: a resolved playlist, then the highest quality, then a live
     // embed, then the rest. The player walks this list, so the order is the
@@ -336,6 +425,10 @@ for (const [familyKey, family] of Object.entries(taxonomy.families)) {
         (best, s) => (QUALITY_RANK[s.quality] > QUALITY_RANK[best] ? s.quality : best),
         "unknown",
       ),
+      // How many people watch a channel is a live number: it is read from
+      // the source when the page is rendered, never frozen into the build.
+      views: null,
+      poster: posterOf(id),
       servers,
     });
   }
@@ -374,6 +467,27 @@ const withHls = channels.filter((ch) => ch.servers.some((s) => s.hlsUrl)).length
 console.log(
   `[dataset] servers ${serverCount}, channels with a direct playlist ${withHls}, channels with more than one server ${channels.filter((ch) => ch.servers.length > 1).length}`,
 );
+
+/**
+ * The counts the release notes are written from: what plays, what does not,
+ * and how much of it is in high definition.
+ */
+const liveChannels = channels.filter((ch) => ch.status === "live");
+const deadChannels = channels.filter((ch) => ch.status !== "live");
+const hdChannels = channels.filter((ch) =>
+  ["hd", "fhd", "uhd"].includes(ch.quality),
+);
+console.log(
+  `[dataset] live ${liveChannels.length}, not live ${deadChannels.length}, HD ${hdChannels.length}`,
+);
+if (deadChannels.length) {
+  console.log("[dataset] channels with no live feed:");
+  for (const ch of deadChannels) {
+    console.log(
+      `   ${ch.name.padEnd(24)} ${ch.status.padEnd(8)} ${ch.servers.map((s) => `${s.id}:${s.status}`).join(", ")}`,
+    );
+  }
+}
 
 const ts = `// AUTO-GENERATED by scripts/build-dataset.mjs — do not edit by hand.
 //

@@ -1,6 +1,6 @@
 # Project doc
 
-VIZOR — a Netflix-style directory of Romanian live TV channels.
+ACUM — a Netflix-style directory of Romanian live TV channels.
 
 ## The problem
 
@@ -11,7 +11,7 @@ the same channel appears under two names, half the family labels are
 obfuscated ("HB0 R0", "PR0 - X", "L00K Tv"), and most of the upstream embed
 hosts are parked or behind a bot wall.
 
-## What VIZOR is
+## What ACUM is
 
 A static web app that:
 
@@ -46,18 +46,16 @@ design-system/   tokens, components, motion rules
 
 | Fact | Value |
 | ---- | ----- |
-| Channel families | 74 + 1 (the second source) |
-| Feeds (servers) | 274 |
-| Channels | 143 — one per real broadcast, S1/S2/S3 folded in |
-| Channels with more than one server | 84 |
-| Feeds resolved to a direct playlist | 163 |
-| Channels playing a direct playlist | 92 |
-| Live channels | 117 |
-| HD channels (measured) | 36 — 30 at 720p, 6 at 1080p |
-| AceStream-only channels | 10 |
-| Genuinely dead channels | 8 |
+| Channel families | 74 + 2 (the second and the third source) |
+| Feeds (servers) | 370 |
+| Channels | 156 — one per real broadcast, S1/S2/S3 folded in |
+| Channels with more than one server | 109 |
+| Feeds that answer right now | 289 of 370 |
+| Channels that play right now | 112 |
+| HD channels (measured) | 44 |
 | Channels in the programme guide | 77 |
 | Programmes in the guide | 1958 |
+| Sources | 3 — 203 feeds, 83 feeds, 105 feeds |
 | Categories | 7 — Generaliste, Știri, Sport, Filme, Copii, Documentare, Muzică |
 
 `src/data/channels.ts` is generated. Edit `scripts/channel-taxonomy.json`
@@ -149,31 +147,34 @@ byte-identical to the global blueprint at `~/.config/opencode/AGENTS.md`.
 
 The channel dataset is generated, never hand-edited.
 
-```bash
+\ash
 node scripts/scrape-channels.mjs         # the first source  -> data/channels.raw.json
 node scripts/check-embeds.mjs            # liveness probe   -> data/embed-health.json
 node scripts/resolve-streams.mjs          # headless Edge   -> data/resolved-streams.json
 node scripts/scrape-secondary.mjs        # the second source-> data/secondary-sources.json
 node scripts/scrape-epg.mjs              # the guide        -> data/epg.json
+node scripts/scrape-canale-tv.mjs        # the third source -> data/canale-tv-channels.json
+node scripts/resolve-canale-tv.mjs       # its playlists   -> data/canale-tv-streams.json
 node scripts/measure-quality.mjs         # the resolution  -> data/quality.json
 node scripts/measure-secondary-quality.mjs
+node scripts/measure-canale-tv-quality.mjs
 node scripts/fetch-logos-hd.mjs           # the logo library-> data/logo-index.json
 node scripts/merge-secondary.mjs         # fold it in      -> scripts/channel-taxonomy.json
+node scripts/merge-canale-tv.mjs         # and the third
+node scripts/probe-feeds.mjs              # the honest probe -> data/embed-health.json
 node scripts/build-dataset.mjs           # everything      -> src/data/channels.ts
-node scripts/fetch-fonts.mjs             # self-host the brand fonts
-node scripts/verify-ui.mjs <url>         # headless UI verification -> docs/reviews/
-```
-
-`scripts/channel-taxonomy.json` is the hand-written editorial layer. Edit
-that, never the generated module. The `data/*.json` snapshots are committed
+node scripts/capture-posters.mjs         # the stills      -> public/posters/
+\\n
+scripts/channel-taxonomy.json is the hand-written editorial layer. Edit
+that, never the generated module. The data/*.json snapshots are committed
 so the build is reproducible without network access.
 
 ## Where the data comes from
 
-Two public Romanian TV directories, and nothing else. Their channel lists and
-their embed addresses are indexed, the streams are relayed through our own
-proxy, and the visitor is never told where they came from. The channels
-themselves belong to their respective owners.
+Three public Romanian TV directories, and nothing else. Their channel
+lists and their embed addresses are indexed, the streams are relayed through
+our own proxy, and the visitor is never told where they came from. The
+channels themselves belong to their respective owners.
 
 ## Running it
 

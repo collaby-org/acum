@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { CategoryId, ServerStatus } from "@/data/types";
 import { familyHue } from "@/lib/channel-meta";
+import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ *
@@ -385,7 +386,7 @@ export function normalizeGuide(raw: unknown): EpgGuide {
  * ------------------------------------------------------------------ */
 
 /** Fold a name or a slug down to comparable letters and digits. */
-function foldKey(value: string): string {
+export function foldKey(value: string): string {
   return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -398,7 +399,7 @@ function foldKey(value: string): string {
 }
 
 /** The same key without the quality suffix or the feed number. */
-function baseKey(value: string): string {
+export function baseKey(value: string): string {
   return foldKey(value)
     .replace(/(?:fhd|uhd|hd|sd)$/, "")
     .replace(/\d+$/, "");
@@ -926,7 +927,7 @@ export function WhatsOn<C extends GuideChannelLike = GuideChannelLike>({
             )}
           </p>
           <h2 className="mt-1.5 font-display text-xl font-semibold tracking-tight text-ink sm:text-[26px]">
-            Ce rulează acum pe canalele VIZOR
+            Ce rulează acum pe canalele {SITE_NAME}
           </h2>
         </div>
         <p className="text-[13px] text-ink-faint">

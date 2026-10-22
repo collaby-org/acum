@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Heart, Search, Tv, X } from "lucide-react";
+import { Heart, Search, X } from "lucide-react";
+import { AcumMark } from "@/components/brand";
 import { Button } from "@/components/ui/button";
+import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type HeaderProps = {
@@ -68,13 +70,13 @@ export function Header({
         <a
           href="#top"
           className="group flex shrink-0 items-center gap-3"
-          aria-label="VIZOR — începutul paginii"
+          aria-label={`${SITE_NAME} — începutul paginii`}
         >
-          <span className="relative grid size-9 place-items-center rounded-[11px] bg-gradient-to-br from-signal-bright via-signal to-signal-deep text-signal-ink shadow-[0_10px_30px_-8px_rgba(242,167,27,0.95),inset_0_1px_0_0_rgba(255,255,255,0.45)] transition-transform duration-500 ease-spring group-hover:scale-105">
-            <Tv className="size-4.5" strokeWidth={2.4} />
+          <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)] transition-transform duration-500 ease-spring group-hover:scale-105">
+            <AcumMark id="acum-mark-header" className="size-[21px]" />
           </span>
-          <span className="font-display text-[19px] font-bold tracking-[0.17em] text-ink">
-            VIZOR
+          <span className="font-display text-[19px] font-bold tracking-[0.16em] text-ink">
+            {SITE_NAME}
           </span>
           <span className="hidden h-4 w-px bg-white/12 lg:block" />
           <span className="hidden text-[10px] font-medium uppercase tracking-[0.22em] text-ink-faint lg:block">

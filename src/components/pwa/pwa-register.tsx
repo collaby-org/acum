@@ -5,6 +5,8 @@ import { OfflineBadge } from "./offline-badge";
 import { PwaHead } from "./pwa-head";
 import { UpdateToast } from "./update-toast";
 import { useServiceWorker } from "./use-pwa";
+import { MOBILE_NAV_SPACE } from "@/components/mobile-nav";
+import { cn } from "@/lib/utils";
 
 type PwaRegisterProps = {
   /**
@@ -39,7 +41,17 @@ export function PwaRegister({ head = true }: PwaRegisterProps = {}) {
     <>
       {head && <PwaHead />}
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2.5 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-start sm:px-6">
+      {/* The prompt sits above the bottom bar of the phone layout, not under
+          it: the bar is fixed, so anything anchored to the bottom of the
+          viewport has to clear it or its own buttons end up behind it. */}
+      <div
+        className={cn(
+          "pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2.5 px-4",
+          "pb-[max(1rem,env(safe-area-inset-bottom))]",
+          "sm:items-start sm:px-6 sm:pb-[max(1rem,env(safe-area-inset-bottom))]",
+          MOBILE_NAV_SPACE,
+        )}
+      >
         <InstallPrompt />
         <UpdateToast updateReady={updateReady} onUpdate={applyUpdate} />
         <OfflineBadge />

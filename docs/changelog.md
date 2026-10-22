@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to VIZOR are recorded here.
+All notable changes to ACUM are recorded here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -9,7 +9,108 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+
+- **The product is now ACUM.** The name was VIZOR; it is now **ACUM** — Romanian
+  for *now*, which is what the product is about: what is on now, what is
+  trending now, how many people are watching now. The name carries no
+  diacritics, so nothing is lost in a URL, a file name or a home-screen label.
+- **A new identity, built from scratch.** The mark is a capital **A** — the
+  first letter of the name — with a bright rail running out of it to the
+  right: the playhead, the position of *now* on the programme guide. The old
+  gold rounded square with the television glyph is gone, everywhere: the
+  header, the footer, the app icon, the maskable icon, the Apple touch icon,
+  the favicon and the Open Graph card.
+- **The wordmark is type, not a picture.** The Romanian word, set in Space
+  Grotesk 700, tracked `0.16em`. The A in the wordmark is the A in the mark.
+- **The manifest, the service worker and the metadata carry the new name.**
+  The service worker's caches are namespaced `acum-*`, the iOS home-screen
+  title is `ACUM`, and the title, description and keywords are rewritten
+  around *acum* rather than around the old name.
+- **Favourites, history, pins and watch-later move across.** The shelves are
+  read from their old `vizor:` keys once and written to the new `acum:` keys,
+  so nothing a visitor had saved disappears because of the rename.
+- **The repository is now `collaby-org/acum`.** The package name, the
+  repository and homepage URLs, the security advisories, the contributor
+  documents and the CI badge all point at the new path. The canonical origin
+  is still the project's own home — the app has no domain of its own yet, so
+  `metadataBase` points at `https://collaby-org.github.io/acum` and the
+  canonical link is `/`.
+- The canonical origin, the robots file, the sitemap, the README, the licence
+  and the contributor documents all say ACUM.
+
+### Added
+
+- `scripts/build-icons.mjs` draws the mark once and composes every raster
+  asset from it — the app icons, the maskable icons, the Apple touch icon and
+  the multi-size favicon. Change the geometry there, not in a text editor.
+- `public/brand/og.png`, the 1200 × 630 Open Graph card.
+
+### Added
+
+- **A third source.** `canale-tv.net` publishes a channel directory of 105
+  channels. Every one of them resolves to a real playlist, and the resolver
+  that undoes the obfuscation was written for that site long ago — we had
+  simply never read its index. **73 of them are a second or third feed on
+  channels we already had, which is the fallback the player needs, and 13
+  are new**: BBC NEWS, PRIMA SPORT 4, PRIMA SPORT 5, PPV 1–3, SPORT EXTRA,
+  WARNER TV, BBC FIRST, NAT GEO PEOPLE, TRAVEL MIX, HGTV and Canal 33.
+- **The catalogue is 156 channels and 370 feeds**, of which **112 play
+  right now** and **109 have more than one feed**. The count of live
+  channels was wrong before — it said 71 while 130 answered — because the
+  catalogue's status field had gone stale. It is now re-probed from scratch
+  through the real playback path.
+- **An audience we measure ourselves.** The proxy sees every segment
+  request of every viewer, so it counts the distinct browsers watching each
+  channel over the last ninety seconds. That is a real crowd. The
+  directories' own counter is cumulative — sampled twice, seventy seconds
+  apart, only 2 of 83 channels moved — so it is kept, and labelled
+  *popularitate*, and never dressed up as a live count.
+- **A channel panel** under the player: the viewer count, the current
+  programme with the times it started and ends, the category, what follows
+  and a short description of the channel.
+- **A channel route** at `/canal/<id>` — the phone's player. A dialog on a
+  390 pixel screen is a picture with a caption under it and no way out; this
+  is a page with a visible *Înapoi* control that works inside an installed
+  app, where there is no browser chrome to fall back on.
+- **A bottom bar** on the phone layout, safe-area aware, with *Acasă*,
+  *Categorii*, *Favorite* and *Caută*.
+- **An unmute affordance**: a large target over the picture and a pill that
+  stays on the transport bar, so a muted channel never looks broken.
+- **A still of the show on air** as the card's backdrop, taken from the
+  broadcast itself.
+
+### Changed
+
+- **The hero is a programme guide.** It leads with the most trending channel
+  at that moment, names the show that is on, says when it started and ends,
+  and lists what follows.
+- **The trending rail is a ranking, not a timetable.** It is ordered by who
+  is watching, and it carries the count.
+- **The card** reads *name + quality* on the first line and *what is on now*
+  on the second, over a beam of the channel's own colour, with the still
+  behind it.
+- **Empty shelves are invisible.** *Fixate* and *Mai târziu* appear only
+  once there is something in them.
+- **156 channels**, 44 of them measured as HD.
+
+### Fixed
+
+- **The source is nowhere in the browser.** The framed fallback is gone. It
+  never worked — the upstream hosts answer a request that does not carry
+  their own Referer with a redirect to Google, so a frame from our own
+  origin showed Google's page — and the page it pointed at carried the name
+  of the site we relay. Every byte that reaches the browser now goes through
+  the stream proxy.
+- **A poster could photograph the upstream's page.** The capture fell back
+  to a page screenshot when the player was an embedded frame, which put the
+  directory's own words into a card's backdrop. A poster is now only ever
+  the pixels of our own `<video>`.
+- **Two counts for "live", and two rules for "playable".** The interface
+  had two copies of the second, and the one in use emptied the rail of live
+  channels.
+- **Some upstream hosts are spelled in Unicode**, and a signature computed
+  over one spelling does not match the other.
 
 ## [1.2.0] — 2026-10-22
 
@@ -35,7 +136,7 @@ More channels, HD first, and the source kept out of sight.
   so it stays legible on a dark card.
 - **Today's programme guide.** 77 channels, 1958 programmes, Europe/Bucharest.
   The hero now leads with what is on — "acum", "până la", and what follows —
-  and a "Ce rulează acum pe canale VIZOR" rail puts the best of it in front
+  and a "Ce rulează acum pe canale ACUM" rail puts the best of it in front
   of the visitor.
 - **Pinned channels and watch later**, local-only shelves. The pins are
   ordered, and reordering is done with real buttons and arrow keys rather than
@@ -181,8 +282,9 @@ First public release.
 - Two channels (Moldova 1, Publika TV) publish a plain HLS playlist on the
   source site; both were unreachable at release time.
 
-[Unreleased]: https://github.com/collaby-org/vizor/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/collaby-org/vizor/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/collaby-org/vizor/compare/v1.0.1...v1.1.0
-[1.0.1]: https://github.com/collaby-org/vizor/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/collaby-org/vizor/releases/tag/v1.0.0
+[Unreleased]: https://github.com/collaby-org/acum/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/collaby-org/acum/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/collaby-org/acum/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/collaby-org/acum/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/collaby-org/acum/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/collaby-org/acum/releases/tag/v1.0.0

@@ -1,4 +1,4 @@
-# VIZOR design system
+# ACUM design system
 
 The implemented system, as it exists in the code. Tokens live in
 `src/app/globals.css` under `@theme`; this document explains them and the
@@ -15,9 +15,64 @@ Three rules carry the whole system:
    cool. Separation is made by translucency, a specular top edge and a
    coloured bloom. A 1px grey frame around every box is the thing to avoid.
 2. **Motion is physical.** Springs, not linear easing. Things lift, settle and
-   overshoot by a hair. Nothing bounces cartoonishly; nothing is instant.
+   overshoot by a hair. Nothing bounces cartoonously; nothing is instant.
 3. **Colour belongs to the channel.** The one warm accent is the brand; every
    other colour in a scene is derived from the channel's own family hue.
+
+## Identity
+
+**ACUM** is Romanian for *now*, and *now* is the whole premise: what is on
+now, what is trending now, how many people are watching now. The name has no
+diacritics, so the identity survives the strip that English keyboards apply.
+
+### The mark
+
+A capital **A** — the first letter of the name — with a bright **rail** running
+out of it to the right. The rail is the playhead: the position of *now* on the
+programme guide. The A stays intact; the rail passes behind it and emerges.
+
+| Property | Value |
+| -------- | ----- |
+| Shape | `M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z` — a 16-unit chevron on a 100 grid |
+| Rail | `x 59, y 54, 33 × 12, r 6`, drawn *behind* the A so the letter is never cut |
+| Gold | `#FFE7B0 → #F7B733 → #DE9206 → #9C6600` down the A, `#D98F04 → #FFF3D4` along the rail |
+| Component | `AcumMark` in `src/components/brand/acum-mark.tsx` |
+| Source of truth | `scripts/build-icons.mjs` — the mark is drawn once, everything else composes it |
+
+The mark is the one hand-drawn shape in the product. It is a brand mark, not
+an icon, so it does not come from lucide — every other icon does.
+
+### The wordmark
+
+The Romanian word, set in the display face (Space Grotesk 700), tracked
+`0.16em`, in `--color-ink`. It is type, not a picture: it is never redrawn,
+never outlined and never given a gradient.
+
+The mark and the wordmark are the same letter. The mark is the A, drawn; the
+wordmark is the A, set.
+
+### Where it appears
+
+| Surface | Treatment |
+| ------- | --------- |
+| Header | The mark in a 36px dark glass tile, the wordmark beside it |
+| Footer | The same tile and wordmark, then a giant watermark the page ends on |
+| App icon | The mark alone on a near-black rounded tile, 60% of the canvas |
+| Maskable icon | The same, at 46%, inside the 80% safe zone, full bleed |
+| Apple touch icon | The same, at 56%, square — iOS applies its own mask |
+| Favicon | A flatter variant, the mark at 76%, no bloom — it is read at 16 pixels |
+| Open Graph card | `public/brand/og.png`, 1200 × 630 |
+
+The old identity — a gold rounded square with a television glyph — is gone.
+Nothing in the product uses it.
+
+### The rules
+
+1. The wordmark is set in the display face, never drawn.
+2. The mark is never redrawn by hand; `scripts/build-icons.mjs` is the source.
+3. The mark is always gold, on a dark field. Never the other way round.
+4. The name is written **ACUM**, in caps, in every surface that shows it.
+5. One accent colour. Gold is the brand. Red means "live" and nothing else.
 
 ## Colour
 
@@ -209,6 +264,7 @@ Every animation is disabled under `prefers-reduced-motion: reduce`.
 | Component | File | Notes |
 | --------- | ---- | ----- |
 | Button | `src/components/ui/button.tsx` | `cva` variants: primary, secondary, ghost, outline, live. Supports `asChild`. |
+| AcumMark | `src/components/brand/acum-mark.tsx` | The brand mark. The only hand-drawn shape in the product. |
 | Badge | `src/components/ui/badge.tsx` | Variants: default, live, signal, solid, outline. |
 | Dialog | `src/components/ui/dialog.tsx` | Radix-backed. Focus trap, escape, scroll lock. |
 | Header | `src/components/header.tsx` | Glass bar that solidifies on scroll, wordmark, growing search field, favourites with a live count. |
@@ -248,6 +304,10 @@ The signature surface. A 16:9 panel of glass:
 
 `lucide-react` only. Icons sit at 16px in controls and 24px+ in feature
 slots, with a stroke width that matches the type weight.
+
+The one exception is the brand mark, `AcumMark`, which is a hand-drawn shape
+and not an icon. It is the product's name reduced to one gesture; it is drawn
+once, in `src/components/brand/acum-mark.tsx`, and reused everywhere.
 
 ## Rules of thumb
 

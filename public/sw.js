@@ -1,5 +1,5 @@
 /**
- * VIZOR service worker.
+ * ACUM service worker.
  *
  * The rules, in one place:
  *
@@ -18,9 +18,9 @@
 
 const VERSION = "v1";
 
-const SHELL_CACHE = `vizor-shell-${VERSION}`;
-const PAGE_CACHE = `vizor-pages-${VERSION}`;
-const ASSET_CACHE = `vizor-assets-${VERSION}`;
+const SHELL_CACHE = `acum-shell-${VERSION}`;
+const PAGE_CACHE = `acum-pages-${VERSION}`;
+const ASSET_CACHE = `acum-assets-${VERSION}`;
 const CURRENT_CACHES = [SHELL_CACHE, PAGE_CACHE, ASSET_CACHE];
 
 /** The files the app needs before the network says anything. */

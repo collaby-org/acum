@@ -7,42 +7,91 @@ import type { EpgGuide } from "@/components/now-next";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { ChannelRail } from "@/components/channel-rail";
+import { TrendingRail } from "@/components/trending-rail";
 import { ChannelCard } from "@/components/channel-card";
 import { ChannelIndex } from "@/components/channel-index";
 import { SearchPanel } from "@/components/search-panel";
 import { ShelfRail } from "@/components/shelf-rail";
 import { PlayerModal } from "@/components/player";
+import { MobileNav, MOBILE_NAV_SPACE } from "@/components/mobile-nav";
 import { Button } from "@/components/ui/button";
 import { useFavourites, useRecentlyWatched } from "@/hooks/use-favorites";
 import { resolveShelf, useShelves } from "@/hooks/use-shelves";
+import { useChannelLauncher } from "@/hooks/use-channel-launcher";
+import { useLiveAudience } from "@/hooks/use-audience";
 import { celebrate, dismiss } from "@/lib/confetti";
 import { byPlayability, isPlayable } from "@/lib/channel-meta";
 import { CATEGORY_ORDER } from "@/lib/navigation";
-import { plural } from "@/lib/utils";
+import { cn, plural } from "@/lib/utils";
 
 type BrowseProps = {
   channels: Channel[];
   categories: Category[];
   /** Today's programme guide, prepared on the server. */
   guide?: EpgGuide | null;
+  /**
+   * Our own audience, counted at the proxy: how many browsers are
+   * watching each channel here, right now.
+   */
+  live?: Record<string, number>;
+  /**
+   * The channel the hero shows — the most watched one that is on air.
+   * The server decides it, so the first paint already carries it.
+   */
+  featured?: Channel | null;
 };
 
 type View = "home" | "favorites" | "recent";
 
-export function Browse({ channels, categories, guide }: BrowseProps) {
+/** No audience of our own yet. */
+const EMPTY_LIVE: Record<string, number> = {};
+
+export function Browse({
+  channels,
+  categories,
+  guide,
+  live: liveFromServer = EMPTY_LIVE,
+  featured = null,
+}: BrowseProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("home");
-  const [active, setActive] = useState<Channel | null>(null);
-  const [playerOpen, setPlayerOpen] = useState(false);
   const favourites = useFavourites();
   const recent = useRecentlyWatched();
   const shelves = useShelves();
+  const launcher = useChannelLauncher();
   const railRefs = useRef(new Map<string, HTMLElement>());
+
+  /**
+   * Our own audience, counted at the proxy.
+   *
+   * The server measures it when the page is rendered, and the hook keeps it
+   * fresh afterwards — the crowd moves while the page is open, and a number
+   * that stopped counting would be a number that started lying.
+   */
+  const { live } = useLiveAudience();
+  const audience = useMemo(
+    () => ({ ...liveFromServer, ...live }),
+    [liveFromServer, live],
+  );
 
   const liveChannels = useMemo(
     () => channels.filter(isPlayable).sort(byPlayability),
     [channels],
   );
+
+  /**
+   * The channel the hero shows: the most watched one that is on air right
+   * now. A fixed favourite would be a lie by the second the page is open —
+   * the crowd moves, and so does the hero. The server has already picked
+   * one; the fallback only matters if it could not.
+   */
+  const trendingChannel = useMemo(() => {
+    if (featured) return featured;
+    const count = (channel: Channel) =>
+      audience[channel.id] ?? channel.views ?? 0;
+    const pool = liveChannels.length > 0 ? liveChannels : channels;
+    return [...pool].sort((a, b) => count(b) - count(a))[0] ?? channels[0];
+  }, [channels, liveChannels, audience, featured]);
 
   const byCategory = useMemo(() => {
     const map = new Map<string, Channel[]>();
@@ -69,10 +118,8 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
   );
 
   const openPlayer = useCallback((channel: Channel) => {
-    setActive(channel);
-    setPlayerOpen(true);
-    recent.remember(channel.id);
-  }, [recent]);
+    launcher.open(channel);
+  }, [launcher]);
 
   const toggleFavourite = useCallback(
     (channel: Channel, event?: React.MouseEvent<HTMLButtonElement>) => {
@@ -98,7 +145,9 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
   }, []);
 
   return (
-    <div id="top" className="min-h-screen">
+    // The bottom bar of the phone layout is fixed, so the page leaves room
+    // for it — otherwise the last rail sits under the bar.
+    <div id="top" className={cn("min-h-screen", MOBILE_NAV_SPACE)}>
       <Header
         query={query}
         onQueryChange={(value) => {
@@ -166,6 +215,7 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                     onPlay={openPlayer}
                     isFavorite={isFavourite(channel.id)}
                     onToggleFavorite={toggleFavourite}
+                    guide={guide ?? null}
                     className="w-full"
                     index={index}
                   />
@@ -179,13 +229,14 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
            * ------------------------------------------------------ */
           <>
             <Hero
-              channel={liveChannels[0] ?? channels[0]}
+              channel={trendingChannel}
               liveCount={liveChannels.length}
               totalCount={channels.length}
-              isFavorite={isFavourite((liveChannels[0] ?? channels[0]).id)}
+              isFavorite={isFavourite(trendingChannel.id)}
               onPlay={openPlayer}
               onToggleFavorite={toggleFavourite}
               guide={guide ?? null}
+              views={audience[trendingChannel.id] ?? trendingChannel.views}
               channels={channels}
               onBrowse={() =>
                 document
@@ -200,12 +251,12 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                 title="Fixate"
                 eyebrow="Scurtăturile tale"
                 channels={resolveShelf(shelves.pinned.ids, channels)}
+                guide={guide ?? null}
                 onPlay={openPlayer}
                 isFavorite={isFavourite}
                 onToggleFavorite={toggleFavourite}
                 onRemove={(channel) => shelves.pinned.unpin(channel.id)}
                 onMove={(channel, delta) => shelves.pinned.move(channel.id, delta)}
-                emptyHint="Fixează un canal ca să-l ai mereu la îndemână."
               />
 
               {/* Watch later */}
@@ -213,11 +264,11 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                 title="Mai târziu"
                 eyebrow="Pentru când ai timp"
                 channels={resolveShelf(shelves.watchLater.ids, channels)}
+                guide={guide ?? null}
                 onPlay={openPlayer}
                 isFavorite={isFavourite}
                 onToggleFavorite={toggleFavourite}
                 onRemove={(channel) => shelves.watchLater.toggle(channel.id)}
-                emptyHint="Adaugă un canal aici ca să-l vezi mai târziu."
               />
 
               {/* Recently watched */}
@@ -226,23 +277,22 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                   eyebrow="Continuă de unde ai rămas"
                   title="Vizionate recent"
                   channels={recentChannels}
+                  guide={guide ?? null}
                   onPlay={openPlayer}
                   isFavorite={isFavourite}
                   onToggleFavorite={toggleFavourite}
                 />
               )}
 
-              {/* Live now */}
-              {liveChannels.length > 0 && (
-                <ChannelRail
-                  eyebrow="Player verificat"
-                  title="În direct acum"
-                  channels={liveChannels}
-                  onPlay={openPlayer}
-                  isFavorite={isFavourite}
-                  onToggleFavorite={toggleFavourite}
-                />
-              )}
+              {/* Trending — what people are watching right now */}
+              <TrendingRail
+                channels={channels}
+                guide={guide ?? null}
+                live={audience}
+                onPlay={openPlayer}
+                isFavorite={isFavourite}
+                onToggleFavorite={toggleFavourite}
+              />
 
               {/* A → Z */}
               <div className="px-4 pt-2 sm:px-8 lg:px-12">
@@ -266,6 +316,7 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                       eyebrow={category.tagline}
                       title={category.label}
                       channels={list}
+                      guide={guide ?? null}
                       onPlay={openPlayer}
                       isFavorite={isFavourite}
                       onToggleFavorite={toggleFavourite}
@@ -301,6 +352,7 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
                       onPlay={openPlayer}
                       isFavorite={isFavourite(channel.id)}
                       onToggleFavorite={toggleFavourite}
+                      guide={guide ?? null}
                       className="w-full"
                       index={index}
                     />
@@ -313,9 +365,36 @@ export function Browse({ channels, categories, guide }: BrowseProps) {
       </main>
 
       <PlayerModal
-        channel={active}
-        open={playerOpen}
-        onOpenChange={setPlayerOpen}
+        channel={launcher.active}
+        open={launcher.isOpen}
+        onOpenChange={(open) => {
+          if (!open) launcher.close();
+        }}
+      />
+
+      {/* The bar of the phone layout — the way out of an installed app,
+          where the browser's own chrome is gone. */}
+      <MobileNav
+        active={view === "favorites" ? "favorites" : "home"}
+        onHome={() => {
+          setView("home");
+          setQuery("");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        onCategories={() =>
+          document
+            .getElementById("categorii")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+        onFavorites={() => setView("favorites")}
+        onSearch={() => {
+          setView("home");
+          const input = document.querySelector<HTMLInputElement>(
+            'input[type="search"]',
+          );
+          input?.focus();
+          input?.scrollIntoView({ block: "center", behavior: "smooth" });
+        }}
       />
     </div>
   );

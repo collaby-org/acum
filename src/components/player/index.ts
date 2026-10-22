@@ -1,6 +1,12 @@
 export { PlayerControls, type PlayerControlsProps } from "@/components/player/player-controls";
 export { PlayerModal, type PlayerModalProps } from "@/components/player/player-modal";
 export {
+  MuteOverlay,
+  SoundHint,
+  type MuteOverlayProps,
+  type SoundHintProps,
+} from "@/components/player/mute-overlay";
+export {
   VideoPlayer,
   type PlayerHandle,
   type VideoPlayerProps,

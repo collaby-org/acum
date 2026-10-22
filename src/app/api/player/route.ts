@@ -1,12 +1,5 @@
 /**
- * The player endpoint, in two shapes.
- *
- * `GET /api/player?s=<channelId>.<serverId>` — the last resort. The server
- * fetches the upstream player page, strips every ad script and tracker out of
- * it, injects a script that presses the upstream's own poster and closes the
- * `window.open` escape hatch, and serves the result with a sandboxed
- * content-security policy. The visitor sees the upstream's chrome, but no ad
- * window and no tracker.
+ * The player endpoint.
  *
  * `POST /api/player { channel }` — the manifest. The server resolves every
  * feed of the channel into a playlist URL, checks that each one answers, and
@@ -15,20 +8,24 @@
  *
  * The client names a channel; it never names an upstream address. The
  * catalogue that holds those addresses stays on the server.
+ *
+ * There is deliberately no way to ask this endpoint for an upstream page.
+ * It used to serve one, framed, as a last resort — and that was wrong twice
+ * over: the upstream hosts answer a request that does not carry their own
+ * Referer with a redirect to Google, so the frame never played anything, and
+ * the directory page it pointed at carried the name of the site we relay.
+ * Every byte that reaches the browser now goes through the stream proxy,
+ * which checks the address against an allowlist first.
  */
 import {
-  fetchEmbedPage,
   fetchPlayerPage,
-  isAllowedEmbedUrl,
   isAllowedMediaUrl,
-  isAllowedSourceUrl,
   isResolvablePageUrl,
   probePlaylist,
   resolveStreamUrls,
-  sanitizeUpstreamPage,
   signStreamToken,
 } from "@/lib/stream";
-import { catalogueChannel, resolveServerRef } from "@/lib/catalogue";
+import { catalogueChannel } from "@/lib/catalogue";
 import { secondaryStreamUrl } from "@/lib/secondary";
 import type { Server } from "@/data/types";
 
@@ -47,7 +44,7 @@ type ResolvedServer = {
   embedUrl: string | null;
   sourcePage: string | null;
   hlsUrl: string | null;
-  source: "primary" | "secondary";
+  source: "primary" | "secondary" | "canale-tv";
 };
 
 function readServer(value: ServerInput): ResolvedServer {
@@ -57,7 +54,10 @@ function readServer(value: ServerInput): ResolvedServer {
     embedUrl: typeof value.embedUrl === "string" ? value.embedUrl : null,
     sourcePage: typeof value.sourcePage === "string" ? value.sourcePage : null,
     hlsUrl: typeof value.hlsUrl === "string" ? value.hlsUrl : null,
-    source: value.source === "secondary" ? "secondary" : "primary",
+    source:
+      value.source === "secondary" || value.source === "canale-tv"
+        ? value.source
+        : "primary",
   };
 }
 
@@ -87,74 +87,18 @@ async function candidatesOf(server: ResolvedServer): Promise<string[]> {
 }
 
 /**
- * The frame to fall back to when a feed has no playlist at all.
+ * A feed that has no playlist is a feed that does not play.
  *
- * The channel page on the site that publishes the feeds is framed directly:
- * the panel inside it then sees the Referer it needs, which is the whole
- * reason that path works at all. It is sandboxed without `allow-popups`, so
- * no ad window can open.
+ * There used to be a frame as a last resort — the page on the site that
+ * publishes the feeds. It was wrong twice over: it shows the visitor the
+ * name of the site we relay, which is the one thing this product must never
+ * do, and it does not even work. The upstream hosts answer a request that
+ * does not carry their own Referer with a redirect to Google, and a browser
+ * can only send our address, so the panel inside the frame never gets its
+ * picture. What rendered was Google's page.
+ *
+ * So the catalogue says a dead feed is dead, instead of dressing it up.
  */
-function fallbackFrame(server: ResolvedServer): string | null {
-  if (isAllowedSourceUrl(server.sourcePage)) return server.sourcePage;
-  if (isAllowedEmbedUrl(server.embedUrl)) {
-    return `/api/player?u=${encodeURIComponent(server.embedUrl)}`;
-  }
-  return null;
-}
-
-export async function GET(request: Request) {
-  const params = new URL(request.url).searchParams;
-  const u = params.get("u");
-  const reference = params.get("s");
-
-  // A reference to a feed of the catalogue: the upstream page is fetched
-  // here, so the browser never holds its address.
-  if (!u && reference) {
-    const resolved = await resolveServerRef(reference);
-    if (!resolved) {
-      return new Response("Canal necunoscut.", { status: 404 });
-    }
-    if (resolved.kind === "embed") {
-      const html = await fetchEmbedPage(resolved.url);
-      if (!html) {
-        return new Response("Pagina sursă nu a putut fi citită.", {
-          status: 502,
-        });
-      }
-      return new Response(sanitizeUpstreamPage(html, resolved.url), {
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "content-security-policy":
-            "sandbox allow-scripts allow-same-origin allow-presentation",
-          "cache-control": "no-store",
-        },
-      });
-    }
-    return Response.json(
-      { error: "Acest flux nu are o pagină de rezervă." },
-      { status: 400 },
-    );
-  }
-
-  if (!isAllowedEmbedUrl(u)) {
-    return new Response("Adresă nepermisă.", { status: 400 });
-  }
-
-  const html = await fetchEmbedPage(u);
-  if (!html) {
-    return new Response("Pagina sursă nu a putut fi citită.", { status: 502 });
-  }
-
-  return new Response(sanitizeUpstreamPage(html, u), {
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "content-security-policy":
-        "sandbox allow-scripts allow-same-origin allow-presentation",
-      "cache-control": "no-store",
-    },
-  });
-}
-
 export async function POST(request: Request) {
   let payload: { channel?: unknown; servers?: ServerInput[] };
   try {
@@ -193,19 +137,12 @@ export async function POST(request: Request) {
 
   const seen = new Set<string>();
   const links: { server: ResolvedServer; candidate: string }[] = [];
-  const frames: { server: ResolvedServer; url: string }[] = [];
 
   for (const entry of perServer) {
-    let resolved = false;
     for (const candidate of entry.candidates) {
       if (seen.has(candidate)) continue;
       seen.add(candidate);
       links.push({ server: entry.server, candidate });
-      resolved = true;
-    }
-    if (!resolved) {
-      const frame = fallbackFrame(entry.server);
-      if (frame) frames.push({ server: entry.server, url: frame });
     }
   }
 
@@ -219,18 +156,11 @@ export async function POST(request: Request) {
     })),
   );
 
-  const embedded = frames.map(({ server, url }) => ({
-    id: server.id,
-    label: server.label,
-    kind: "embed" as const,
-    url,
-    playable: true,
-  }));
-
+  // The playable links come first, so the player starts on a feed that is
+  // answering and only walks further down the list when one of them dies.
   const ordered = [
     ...sources.filter((source) => source.playable),
     ...sources.filter((source) => !source.playable),
-    ...embedded,
   ];
 
   return Response.json({ sources: ordered });

@@ -8,7 +8,13 @@
  *
  *   node scripts/check-embeds.mjs
  *
- * Writes data/embed-health.json.
+ * Writes data/embed-pages.json — the state of every embed *page*.
+ *
+ * The catalogue is built from the *feed* probe instead
+ * (`scripts/probe-feeds.mjs` → `data/embed-health.json`): it walks the real
+ * playback path and records whether the stream itself arrives, which is the
+ * only thing the app may advertise. This file is the finer grain — the page
+ * behind a feed — and it never overwrites the build input.
  */
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -174,7 +180,7 @@ for (const [h, v] of Object.entries(hosts).sort((a, b) => b[1].total - a[1].tota
   );
 }
 
-const target = resolve(ROOT, "data/embed-health.json");
+const target = resolve(ROOT, "data/embed-pages.json");
 await mkdir(dirname(target), { recursive: true });
 await writeFile(target, JSON.stringify(results, null, 2), "utf8");
-console.log(`[probe] wrote data/embed-health.json`);
+console.log(`[probe] wrote data/embed-pages.json`);

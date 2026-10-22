@@ -1,9 +1,17 @@
 "use client";
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { migrateStorageKey } from "@/lib/utils";
 
-const PINNED_KEY = "vizor:pinned:v1";
-const WATCH_LATER_KEY = "vizor:watch-later:v1";
+const PINNED_KEY = "acum:pinned:v1";
+const WATCH_LATER_KEY = "acum:watch-later:v1";
+
+/**
+ * The shelves were called `vizor:` before the product was renamed. Whatever
+ * the visitor had pinned moves across with them.
+ */
+migrateStorageKey("vizor:pinned:v1", PINNED_KEY);
+migrateStorageKey("vizor:watch-later:v1", WATCH_LATER_KEY);
 
 /**
  * A pinned shelf is a row of shortcuts, not a library. A dozen is plenty —

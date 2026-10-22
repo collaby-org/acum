@@ -15,7 +15,7 @@ import { mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
 
-const OUT = resolve(tmpdir(), "vizor-verify-player");
+const OUT = resolve(tmpdir(), "acum-verify-player");
 const EDGE =
   process.env.EDGE_PATH ??
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";

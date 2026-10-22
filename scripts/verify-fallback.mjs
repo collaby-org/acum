@@ -17,7 +17,7 @@ import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT = resolve(tmpdir(), "vizor-verify-fallback");
+const OUT = resolve(tmpdir(), "acum-verify-fallback");
 const EDGE =
   process.env.EDGE_PATH ??
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";

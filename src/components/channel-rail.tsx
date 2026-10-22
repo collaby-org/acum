@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { FocusEvent, KeyboardEvent, MouseEvent } from "react";
+import type { FocusEvent, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { ChannelCard } from "@/components/channel-card";
+import type { EpgGuide } from "@/components/now-next";
 import type { Quality } from "@/data/types";
 import type { ChannelLike } from "@/lib/navigation";
 import { cn, plural } from "@/lib/utils";
@@ -12,6 +13,8 @@ type ChannelRailProps<T extends ChannelLike> = {
   title: string;
   eyebrow?: string;
   channels: T[];
+  /** The day's guide, so every card can name what is on right now. */
+  guide?: EpgGuide | null;
   onPlay: (channel: T) => void;
   isFavorite: (id: string) => boolean;
   onToggleFavorite: (
@@ -20,6 +23,15 @@ type ChannelRailProps<T extends ChannelLike> = {
   ) => void;
   /** The picture quality of a channel, when the caller knows it. */
   qualityOf?: (channel: T) => Quality | null | undefined;
+  /** How many people are watching a channel right now, when the caller knows. */
+  viewsOf?: (channel: T) => number | null | undefined;
+  /**
+   * The source's cumulative popularity counter, when the caller knows it. It
+   * is a ranking, and the card marks it differently from the live count.
+   */
+  popularityOf?: (channel: T) => number | null | undefined;
+  /** Replaces the channel count on the right of the heading. */
+  aside?: ReactNode;
   className?: string;
   /** Anchor id, so a deep link or the A→Z index can target this rail. */
   id?: string;
@@ -47,10 +59,14 @@ export function ChannelRail<T extends ChannelLike>({
   title,
   eyebrow,
   channels,
+  guide,
   onPlay,
   isFavorite,
   onToggleFavorite,
   qualityOf,
+  viewsOf,
+  popularityOf,
+  aside,
   className,
   id,
 }: ChannelRailProps<T>) {
@@ -203,10 +219,12 @@ export function ChannelRail<T extends ChannelLike>({
           </h2>
         </div>
 
-        <p className="shrink-0 text-xs tabular-nums text-ink-faint">
-          {channels.length}{" "}
-          {plural(channels.length, "canal", "canale", "de canale")}
-        </p>
+        {aside ?? (
+          <p className="shrink-0 text-xs tabular-nums text-ink-faint">
+            {channels.length}{" "}
+            {plural(channels.length, "canal", "canale", "de canale")}
+          </p>
+        )}
       </div>
 
       <div className="relative">
@@ -219,7 +237,7 @@ export function ChannelRail<T extends ChannelLike>({
           onFocus={onFocusWithin}
           onPointerLeave={() => setActiveIndex(null)}
           style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className="flex snap-x snap-mandatory gap-0.5 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-5 pt-6 fx-hide-scrollbar sm:px-8 lg:px-12"
+          className="flex snap-x snap-mandatory gap-0.5 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-5 pt-6 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none]"
         >
           {channels.map((channel, index) => (
             <li
@@ -242,6 +260,9 @@ export function ChannelRail<T extends ChannelLike>({
                 isFavorite={isFavorite(channel.id)}
                 onToggleFavorite={onToggleFavorite}
                 quality={qualityOf?.(channel)}
+                views={viewsOf?.(channel)}
+                popularity={popularityOf?.(channel)}
+                guide={guide}
                 index={index}
               />
             </li>

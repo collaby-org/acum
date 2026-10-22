@@ -1,6 +1,6 @@
 # Targets
 
-What VIZOR is, what it is not, and how success is measured.
+What ACUM is, what it is not, and how success is measured.
 
 ## The one-line promise
 

@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in VIZOR is broken or wrong
+description: Something in ACUM is broken or wrong
 labels: ["bug"]
 body:
   - type: markdown
@@ -41,7 +41,7 @@ body:
     id: url
     attributes:
       label: Page URL
-      placeholder: https://vizor.example/
+      placeholder: https://acum.example/
     validations:
       required: false
 
