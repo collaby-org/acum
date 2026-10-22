@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Fără autorizare." }, { status: 401 });
   }
   try {
-    const token = await bearerToken();
+    const token = bearerToken(req);
     // Minimal validation: the token decodes; the TV session cookie is set.
     const res = NextResponse.json({ ok: true });
     res.cookies.set("tv-session", token ?? "1", {
