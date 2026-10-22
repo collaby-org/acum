@@ -3,23 +3,21 @@
 import { useEffect, useState } from "react";
 
 export default function InstallBanner() {
-  const [show, setShow] = useState(false);
+  const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
-    const standalone = window.matchMedia("(display-mode: standalone)").matches;
-    const nativeApp = (window.navigator as { standalone?: boolean }).standalone === true ||
-                      (window.navigator as { mozStanalone?: boolean }).mozStanalone === true;
-    if (!standalone && !nativeApp && document.referrer.indexOf(window.location.host) === -1) {
-      setShow(true);
-    }
+    const s = window.matchMedia("(display-mode: standalone)").matches;
+    const n = (navigator as { standalone?: boolean }).standalone === true ||
+              (navigator as { mozStanalone?: boolean }).mozStanalone === true;
+    setInstalled(s || n);
   }, []);
 
-  if (!show) return null;
+  if (installed) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-[70] md:left-auto md:right-6 md:bottom-6 md:max-w-md rounded-2xl border border-signal/40 bg-surface/95 backdrop-blur-2xl px-5 py-4 shadow-[0_20px_60px_-16px_rgba(242,167,27,0.35)] text-sm leading-relaxed text-ink flex flex-col md:flex-row md:items-center gap-3">
-      <span className="font-display text-base font-semibold tracking-tight">Adaugă ACUM pe ecranul principal</span>
-      <p className="text-[13px] text-ink-muted">Apasă ⋮ → „Instalează aplicația" (Sony / Samsung / LG / Google TV) pentru acces instant.</p>
+    <div className="fixed bottom-4 left-4 right-4 z-[70] md:bottom-6 md:left-auto md:right-6 md:max-w-lg rounded-2xl border border-signal/40 bg-surface/95 backdrop-blur-2xl px-5 py-4 shadow-[0_20px_60px_-16px_rgba(242,167,27,0.35)] text-sm leading-relaxed text-ink">
+      <div className="font-display text-base font-semibold tracking-tight">Adaugă ACUM pe ecranul principal</div>
+      <p className="text-[13px] text-ink-muted mt-1">Pe TV: menu ⋮ → „Adaugă la ecranul principal” (Sony / Samsung / LG / Google TV). După instalare, /tv se deschide direct.</p>
     </div>
   );
 }

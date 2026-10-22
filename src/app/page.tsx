@@ -17,6 +17,7 @@ import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { LandingGate } from "@/components/landing-gate";
+import { InstallBanner } from "@/components/install-banner";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
@@ -298,6 +299,8 @@ export default async function LandingPage() {
       </section>
 
       {/* The end of the page. */}
+      <InstallBanner />
+
       <footer className="border-t border-white/[0.06] bg-canvas-raised/50">
         <div className="mx-auto flex max-w-[1800px] flex-col gap-4 px-4 py-8 text-[12px] text-ink-faint sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
           <p>
