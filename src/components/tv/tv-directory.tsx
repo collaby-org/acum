@@ -13,7 +13,7 @@
  * - All states visible; no hover-only interaction
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye } from "lucide-react";
 import { VideoPlayer } from "@/components/player/video-player";
 import { TVPlayer } from "./tv-player";
@@ -49,7 +49,17 @@ export type TVDirectoryProps = {
 
 export function TVDirectory({ channels, liveCount = 0 }: TVDirectoryProps) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [installable, setInstallable] = useState(false);
   const openChannel = channels.find((c) => c.id === openId) ?? null;
+
+  useEffect(() => {
+    const onBack = (e: KeyboardEvent) => {
+      if (e.key === "Back" || (e.key === "Escape" && !e.shiftKey)) setOpenId(null);
+    };
+    window.addEventListener("keydown", onBack);
+    window.addEventListener("beforeinstallprompt", (e: Event) => { (e as Event & { preventDefault: () => void }).preventDefault(); setInstallable(true); });
+    return () => { window.removeEventListener("keydown", onBack); window.removeEventListener("beforeinstallprompt", () => {}); };
+  }, []);
 
   return (
     <div className="min-h-dvh bg-[#0a0a0c] text-white">

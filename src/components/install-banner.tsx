@@ -22,19 +22,17 @@ export default function InstallBanner() {
           <Monitor className="size-8 text-signal" aria-hidden />
         </div>
         <h2 className="font-display text-2xl font-bold tracking-tight text-ink">Adaugă ACUM pe ecranul principal</h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">Pe TV deschide meniul (⋮) și alege <strong>„Instalează aplicația”</strong> — Sony / Samsung / LG / Google TV. După instalare, deschide /tv direct.</p>
+        <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">Pe TV: meniu ⋮ → „Instalează aplicația” (Sony / Samsung / LG / Google TV). După instalare, /tv se deschide direct.</p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
-            onClick={() => {
-              if (navigator.share) navigator.share({ title: "ACUM TV", text: "Canale live din România — fără reclame", url: window.location.href });
-            }}
+            onClick={() => alert("Pe TV: meniu ⋮ → 'Instalează aplicația' (Sony / Samsung / LG / Google TV). După instalare, /tv se deschide direct.")}
             className="inline-flex h-12 items-center gap-2 rounded-full bg-signal px-7 text-[15px] font-semibold text-[#141005] shadow-[0_8px_30px_-10px_rgba(242,167,27,0.7)] transition hover:bg-signal-bright"
           >
             <Plus className="size-4" aria-hidden />
             Adaugă pe ecran
           </button>
-          <a href="/tv" className="inline-flex h-12 items-center rounded-full border border-white/12 px-7 text-sm font-medium text-ink transition hover:bg-white/[0.05] hover:border-white/25">Deschide /tv direct</a>
+          <a href="/tv" className="inline-flex h-11 items-center rounded-full border border-white/12 px-6 text-sm font-medium text-ink transition hover:bg-white/[0.05] hover:border-white/25">Deschide /tv direct</a>
         </div>
         <p className="mt-5 text-[11px] text-ink-faint/70">Dacă apare „Instalează”, apasă pe el. Dacă nu, deschide /tv din browser.</p>
       </div>
