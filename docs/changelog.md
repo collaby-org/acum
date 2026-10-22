@@ -9,7 +9,25 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+
+- **Every key lives in the environment.** The Supabase URL, the publishable
+  key, the service role key, the Stripe keys and the harness account are read
+  from the environment and nowhere else — no fallback is compiled into the
+  bundle or baked into a script. Locally that is the gitignored `.env`
+  (template: `.env.example`); on Vercel it is Settings → Environment
+  Variables, set **before** the build, because the `NEXT_PUBLIC_*` values are
+  inlined at build time. The capture workflow reads the same names from the
+  repository's secrets.
+
+### Added
+
+- **The signup email is ACUM's.** The confirmation a new account receives is
+  no longer Supabase's default mail: `supabase/email-templates/` holds a
+  branded template — the mark, the dark canvas, the gold confirm button,
+  Romanian copy — with the exact paste steps for the dashboard, which is the
+  only place hosted projects can set it. The sender stays Supabase's until a
+  custom SMTP is configured; the README says where and why.
 
 ## [1.4.0] — 2026-10-22
 

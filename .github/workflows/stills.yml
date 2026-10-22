@@ -31,6 +31,15 @@ jobs:
     name: Capture the stills of the shows that are on
     runs-on: self-hosted
     timeout-minutes: 90
+    # The checkout is fresh, so there is no .env on the runner: the keys and
+    # the harness account come from the repository's secrets. The app is
+    # built with the publishable key inlined and the capture signs in with
+    # the harness account — the same pair a local .env carries.
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      ACUM_HARNESS_EMAIL: ${{ secrets.ACUM_HARNESS_EMAIL }}
+      ACUM_HARNESS_PASSWORD: ${{ secrets.ACUM_HARNESS_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -7,21 +7,39 @@
  * module that touched `window` on import would break the server render, so
  * nothing is built until a browser actually asks for it.
  *
- * The keys are the project's publishable ones. They are safe to ship — the
- * row level policies are what keep the data apart — and they are the only
- * Supabase credentials that ever reach the browser.
+ * The keys come from the environment and nowhere else — there is no
+ * fallback baked into the bundle. `NEXT_PUBLIC_*` values are inlined at
+ * build time, so on Vercel they must be set before the build runs. The
+ * publishable key is safe to ship: the row level policies are what keep
+ * the data apart, and it is the only Supabase credential that ever reaches
+ * the browser.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /** The project's address. */
-export const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ??
-  "https://xmmftuxbvzpdbnsypbbz.supabase.co";
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 
 /** The project's publishable key. */
-export const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  "sb_publishable_jJgnvA1G4a_oE6SCrJS7hQ_pPTrYOeB";
+export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+
+/**
+ * The configuration, or a thrown error that says exactly what is missing.
+ *
+ * Every path into Supabase — the browser client, the visitor's server
+ * client, the auth calls — goes through here, so a deployment without the
+ * environment fails with one readable sentence instead of an opaque
+ * `createClient` crash or a fetch to "undefined".
+ */
+export function requireSupabaseConfig(): { url: string; key: string } {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error(
+      "NEXT_PUBLIC_SUPABASE_URL și NEXT_PUBLIC_SUPABASE_ANON_KEY nu sunt setate. " +
+        "Local: copiază .env.example în .env și completează-l. " +
+        "Pe Vercel: Settings → Environment Variables, înainte de build.",
+    );
+  }
+  return { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
+}
 
 let cached: SupabaseClient | null = null;
 
@@ -41,7 +59,9 @@ export function getSupabaseClient(): SupabaseClient {
     );
   }
 
-  cached = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  const { url, key } = requireSupabaseConfig();
+
+  cached = createClient(url, key, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,

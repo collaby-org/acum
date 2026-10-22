@@ -17,12 +17,23 @@
  *   ACUM_HARNESS_PASSWORD  its password
  */
 import { harnessToken } from "./harness-account.mjs";
+import {
+  HARNESS_EMAIL as EMAIL,
+  HARNESS_PASSWORD as PASSWORD,
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+  SUPABASE_SESSION_KEY,
+} from "./supabase-config.mjs";
 
-const EMAIL = process.env.ACUM_HARNESS_EMAIL ?? "harness@acum.test";
-const PASSWORD = process.env.ACUM_HARNESS_PASSWORD ?? "acum-harness-2026";
+if (!EMAIL || !PASSWORD) {
+  throw new Error(
+    "ACUM_HARNESS_EMAIL and ACUM_HARNESS_PASSWORD are not set. " +
+      "Copy .env.example to .env and fill in the harness account.",
+  );
+}
 
 /** The key the Supabase client keeps the session under. */
-export const SESSION_KEY = "sb-xmmftuxbvzpdbnsypbbz-auth-token";
+export const SESSION_KEY = SUPABASE_SESSION_KEY;
 
 /**
  * The script that puts the session in place.
@@ -47,14 +58,12 @@ export function sessionScript() {
  */
 export async function installSession(send) {
   const response = await fetch(
-    "https://xmmftuxbvzpdbnsypbbz.supabase.co/auth/v1/token?grant_type=password",
+    `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
     {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        apikey:
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-          "sb_publishable_jJgnvA1G4a_oE6SCrJS7hQ_pPTrYOeB",
+        apikey: SUPABASE_PUBLISHABLE_KEY,
       },
       body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
     },
@@ -105,12 +114,12 @@ export async function installSession(send) {
 export async function signInThroughTheForm(evaluate, sleep) {
   await evaluate(`(async () => {
     const response = await fetch(
-      "https://xmmftuxbvzpdbnsypbbz.supabase.co/auth/v1/token?grant_type=password",
+      ${JSON.stringify(`${SUPABASE_URL}/auth/v1/token?grant_type=password`)},
       {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          apikey: "sb_publishable_jJgnvA1G4a_oE6SCrJS7hQ_pPTrYOeB",
+          apikey: ${JSON.stringify(SUPABASE_PUBLISHABLE_KEY)},
         },
         body: JSON.stringify({
           email: ${JSON.stringify(EMAIL)},

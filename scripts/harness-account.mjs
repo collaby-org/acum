@@ -10,15 +10,20 @@
  * The credentials come from the environment, so nothing secret is written
  * down here.
  */
-const URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ??
-  "https://xmmftuxbvzpdbnsypbbz.supabase.co";
-const KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  "sb_publishable_jJgnvA1G4a_oE6SCrJS7hQ_pPTrYOeB";
+import { HARNESS_EMAIL, HARNESS_PASSWORD, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./supabase-config.mjs";
 
-const EMAIL = process.env.ACUM_HARNESS_EMAIL ?? "harness@acum.test";
-const PASSWORD = process.env.ACUM_HARNESS_PASSWORD ?? "acum-harness-2026";
+const URL = SUPABASE_URL;
+const KEY = SUPABASE_PUBLISHABLE_KEY;
+
+const EMAIL = HARNESS_EMAIL;
+const PASSWORD = HARNESS_PASSWORD;
+
+if (!EMAIL || !PASSWORD) {
+  throw new Error(
+    "ACUM_HARNESS_EMAIL and ACUM_HARNESS_PASSWORD are not set. " +
+      "Copy .env.example to .env and fill in the harness account.",
+  );
+}
 
 let cached = null;
 
