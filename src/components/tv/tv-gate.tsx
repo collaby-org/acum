@@ -1,12 +1,11 @@
 "use client";
 
 import { useAccount } from "@/hooks/use-account";
-import { TVDirectory, type TVDirectoryChannel } from "./tv-directory";
-import { TVLoginQR } from "./tv-login-qr";
+import { TVDirectory, type TVDirectoryChannel, TVLandingPage } from "./tv-directory";
 
 /**
- * Netflix-style TV gate: unsigned visitors get the QR login screen,
- * signed-in visitors get the channel directory. Loading stays dark.
+ * Netflix-style TV gate: unsigned visitors get the landing page with
+ * Sign In / Register options, signed-in visitors get the catalog.
  */
 export function TVGate({
   channels,
@@ -25,7 +24,7 @@ export function TVGate({
     );
   }
 
-  if (!signedIn) return <TVLoginQR />;
+  if (!signedIn) return <TVLandingPage />;
 
   return <TVDirectory channels={channels} liveCount={liveCount} />;
 }
