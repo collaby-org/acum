@@ -1,0 +1,10 @@
+{
+  "id": "com.collaby.acumtv",
+  "title": "ACUM TV",
+  "main": "https://acum-weld.vercel.app/tv",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "type": "web",
+  "vendor": "Collaby",
+  "version": "1.0.0"
+}
