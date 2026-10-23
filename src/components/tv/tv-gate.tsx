@@ -1,11 +1,13 @@
 "use client";
 
 import { useAccount } from "@/hooks/use-account";
-import { TVDirectory, type TVDirectoryChannel, TVLandingPage } from "./tv-directory";
+import { TVDirectory, type TVDirectoryChannel } from "./tv-directory";
 
 /**
- * Netflix-style TV gate: unsigned visitors get the landing page with
- * Sign In / Register options, signed-in visitors get the catalog.
+ * Netflix-style TV gate: 
+ * 1. Signed out → Landing page with Sign In / Register
+ * 2. After auth → Profile picker ("Who's watching?")
+ * 3. Profile selected → Netflix-style home with rows
  */
 export function TVGate({
   channels,
@@ -24,7 +26,7 @@ export function TVGate({
     );
   }
 
-  if (!signedIn) return <TVLandingPage />;
+  if (!signedIn) return <TVDirectory channels={channels} liveCount={liveCount} />;
 
   return <TVDirectory channels={channels} liveCount={liveCount} />;
 }

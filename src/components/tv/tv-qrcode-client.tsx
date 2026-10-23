@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { QrCode, Smartphone, Mail, Lock, Eye, EyeOff, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useAccount } from "@/hooks/use-account";
 
 export function TVQRCodeClient() {
@@ -10,7 +10,6 @@ export function TVQRCodeClient() {
   const mode = searchParams.get("mode");
   const { signedIn, ready } = useAccount();
 
-  // If already signed in, redirect to /tv
   useEffect(() => {
     if (ready && signedIn) {
       window.location.href = "/tv";
@@ -19,25 +18,23 @@ export function TVQRCodeClient() {
 
   if (!ready) {
     return (
-      <main className="min-h-dvh bg-[#0a0a0c] grid place-items-center">
-        <p className="text-white/40">Se încarcă…</p>
+      <main className="min-h-dvh bg-black grid place-items-center">
+        <p className="text-white/40">Se incarca...</p>
       </main>
     );
   }
 
-  // If mode=phone, show mobile login/register page (not QR)
   if (mode === "phone") {
     return <MobileAuthPage />;
   }
 
-  // Default: show QR for TV scanning
   return <TVAuthQR />;
 }
 
 function TVAuthQR() {
   const [poll, setPoll] = useState(false);
   const url = typeof window !== "undefined"
-    ? `${window.location.origin}/auth/qrcode`
+    ? window.location.origin + "/auth/qrcode"
     : "/auth/qrcode";
 
   useEffect(() => {
@@ -59,20 +56,20 @@ function TVAuthQR() {
   }, []);
 
   return (
-    <main className="min-h-dvh bg-[#0a0a0c] flex flex-col items-center justify-center px-6 text-center gap-8">
-      <h1 className="font-display text-4xl font-bold tracking-tight text-white">Autentificare TV</h1>
+    <main className="min-h-dvh bg-black flex flex-col items-center justify-center px-6 text-center gap-8">
+      <h1 className="font-display text-4xl font-bold tracking-tight text-white">Autentificare pe TV</h1>
       <p className="text-base text-white/50 max-w-md leading-relaxed">
-        Scanează cu telefonul pentru a autoriza acest ecran. Contul se va conecta automat.
+        Scanear codul QR cu telefonul pentru a te autentifica pe acest dispozitiv.
       </p>
-      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_20px_60px_-16px_rgba(0,0,0,1)] backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_20px_60px_-16px_rgba(0,0,0,1)] backdrop-blur-xl inline-block">
         <img
-          src={`https://api.qrserver.com/v1/create-qr-code/?size=340x340&data=${encodeURIComponent(url)}`}
-          alt="Cod QR — conectare ACUM pe TV"
-          className="rounded-2xl w-80 h-80 mx-auto"
+          src={"https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=" + encodeURIComponent(url)}
+          alt="Cod QR - conectare ACUM pe TV"
+          className="rounded-xl w-96 h-96 mx-auto"
         />
       </div>
-      <p className="text-xs text-white/30 tracking-wide uppercase font-medium">Scanează cu aplicația camerei</p>
-      {poll && <p className="text-sm text-lime-400 font-medium">Autentificat. Redirecționare…</p>}
+      <p className="text-xs text-white/30 tracking-wide uppercase font-medium">Scaneaza cu camera telefonului</p>
+      {poll && <p className="text-sm text-green-400 font-medium">Autentificat. Redirectionare...</p>}
     </main>
   );
 }
@@ -99,39 +96,37 @@ function MobileAuthPage() {
       if (!res.ok) throw new Error(data.message || "Eroare");
       window.location.href = "/tv";
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Eroare necunoscută");
+      setError(err instanceof Error ? err.message : "Eroare necunoscuta");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-dvh bg-[#0a0a0c] flex items-center justify-center px-6 py-12">
+    <main className="min-h-dvh bg-black flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="mb-8 text-center">
           <button
-            onClick={() => window.location.href = "/tv"}
+            onClick={() => { window.location.href = "/tv"; }}
             className="self-start inline-flex items-center gap-2 text-white/60 hover:text-white transition mb-6"
           >
-            <ArrowLeft className="size-5" aria-hidden />
-            Înapoi la TV
+            <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
+            Inapoi la TV
           </button>
           <h1 className="font-display text-3xl font-bold tracking-tight text-white">
             {isLogin ? "Autentificare" : "Creare cont"}
           </h1>
           <p className="mt-2 text-white/50">
             {isLogin
-              ? "Introdu datele contului tău ACUM"
-              : "Creează-ți contul gratuit în câteva secunde"}
+              ? "Introdu datele contului tau ACUM"
+              : "Creaza-ti contul gratuit in cateva secunde"}
           </p>
         </div>
 
-        {/* Auth Form */}
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-[0_20px_60px_-16px_rgba(0,0,0,1)] backdrop-blur-xl">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-[0_20px_60px_-16px_rgba(0,0,0,1)] backdrop-blur-xl">
           {error && (
             <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
-              <span className="flex-shrink-0">⚠</span>
+              <span className="flex-shrink-0">!</span>
               {error}
             </div>
           )}
@@ -148,14 +143,14 @@ function MobileAuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="w-full h-12 px-4 rounded-xl border border-white/10 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-signal focus:border-signal transition"
+                className="w-full h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition"
                 placeholder="email@exemplu.com"
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-white/70 mb-2">
-                Parolă
+                Parola
               </label>
               <div className="relative">
                 <input
@@ -165,15 +160,18 @@ function MobileAuthPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete={isLogin ? "current-password" : "new-password"}
-                  className="w-full h-12 px-4 pr-12 rounded-xl border border-white/10 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-signal focus:border-signal transition"
-                  placeholder="••••••••"
+                  className="w-full h-12 px-4 pr-12 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition"
+                  placeholder="........"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition"
                 >
-                  {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                  <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -181,9 +179,9 @@ function MobileAuthPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 rounded-xl bg-signal px-6 text-base font-bold text-[#141005] shadow-[0_8px_30px_-10px_rgba(242,167,27,0.7)] transition hover:bg-signal-bright disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-base transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Se procesează…" : (isLogin ? "Autentificare" : "Creează cont")}
+              {loading ? "Se proceseaza..." : (isLogin ? "Autentificare" : "Creaza cont")}
             </button>
           </form>
 
@@ -192,30 +190,25 @@ function MobileAuthPage() {
               {isLogin ? "Nu ai cont?" : "Ai deja cont?"}{" "}
               <button
                 onClick={() => { setIsLogin(!isLogin); setError(""); }}
-                className="text-signal font-medium hover:underline"
+                className="text-red-600 font-medium hover:underline"
               >
-                {isLogin ? "Creează cont" : "Autentificare"}
+                {isLogin ? "Creaza cont" : "Autentificare"}
               </button>
             </p>
           </div>
 
           <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-center text-xs text-white/30 mb-4">Sau continuă direct pe TV</p>
+            <p className="text-center text-xs text-white/30 mb-4">Sau continua direct pe TV</p>
             <a
               href="/tv"
-              className="block w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-white/12 bg-white/[0.06] text-white/80 transition hover:bg-white/[0.12]"
+              className="block w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 text-white/80 transition hover:bg-white/10"
             >
-              <Smartphone className="size-5" aria-hidden />
-              <span className="font-medium">Merg înapoi la TV</span>
+              <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2-2v14a2 2 0 002 2z"/></svg>
+              <span className="font-medium">Merg inapoi la TV</span>
             </a>
           </div>
         </div>
       </div>
     </main>
   );
-}
-
-function handleSubmit(e: React.FormEvent) {
-  // placeholder - actual handler is in MobileAuthPage
-  e.preventDefault();
 }
