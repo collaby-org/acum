@@ -17,6 +17,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AcumMark } from "@/components/brand";
 import { CallbackExchange } from "./exchange";
+import { readSearchParams } from "@/lib/export-safe";
+import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "Autentificare",
@@ -24,7 +29,6 @@ export const metadata: Metadata = {
 };
 
 // The answer arrives in the query string, so the page is read per request.
-export const instant = false;
 
 /** What the provider's error code means, in the visitor's language. */
 const REASONS: Record<string, string> = {
@@ -42,7 +46,7 @@ export default async function AuthCallbackPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = await searchParams;
+  const params = await readSearchParams(searchParams);
   const failed = params.error;
   const code = typeof failed === "string" ? failed : null;
 

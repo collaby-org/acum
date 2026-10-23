@@ -9,10 +9,13 @@ import { loadGuide } from "@/lib/guide";
 import { liveAudienceMap } from "@/lib/audience";
 import { pickTrending } from "@/lib/popularity";
 
+export const dynamic = "force-dynamic";
+
+
+
 /**
  * The guide is about now, so the page is rendered per request.
  */
-export const instant = false;
 
 /**
  * The catalogue.
@@ -32,7 +35,7 @@ export const instant = false;
  * own page — `/canale/toate`.
  */
 export default async function Home() {
-  await connection();
+  // connection() omitted for static export
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

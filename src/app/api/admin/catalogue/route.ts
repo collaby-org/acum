@@ -12,6 +12,7 @@
 import { liveAudienceMap, totalAudience } from "@/lib/audience";
 import { catalogueRows, catalogueSummary, deskGuard } from "@/lib/admin";
 
+
 export async function GET(request: Request) {
   const guard = await deskGuard(request);
   if (!guard.ok) return guard.response;

@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { CataloguePanel } from "@/components/admin/catalogue";
 import { deskState } from "@/lib/admin";
+
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "Catalog",
 };
 
 // The desk reads the session on every request; it is never prerendered.
-export const instant = false;
 
 /**
  * The catalogue, in the same shape the browser is allowed to see it.

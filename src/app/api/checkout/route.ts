@@ -19,6 +19,7 @@
 import { bearerToken, readUser } from "@/lib/supabase/server";
 import { isProduct, type Product } from "@/lib/supabase/plans";
 
+
 /** The Stripe API. The version is pinned so the shape of the answer is. */
 const STRIPE_API = "https://api.stripe.com/v1";
 

@@ -8,6 +8,7 @@
  */
 import { deskGuard, listMessages, type MessageState } from "@/lib/admin";
 
+
 const STATES: readonly MessageState[] = ["inbox", "unread", "archived"];
 
 export async function GET(request: Request) {

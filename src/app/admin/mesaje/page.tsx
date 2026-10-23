@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { MessagesPanel } from "@/components/admin/messages";
 import { deskState } from "@/lib/admin";
+
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "Mesaje",
 };
 
 // The desk reads the session on every request; it is never prerendered.
-export const instant = false;
 
 /**
  * The messages the contact form wrote.

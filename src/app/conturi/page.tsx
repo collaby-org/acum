@@ -19,6 +19,11 @@ import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { AccountPanel } from "@/components/account/account-panel";
 import { freeHours } from "@/lib/supabase/plans";
+import { readSearchParams } from "@/lib/export-safe";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   SITE_NAME,
   SITE_PROMISE,
@@ -38,7 +43,6 @@ const FREE_HOURS = freeHours();
  * The page is rendered per request: the form that opens depends on where
  * the visitor came from.
  */
-export const instant = false;
 
 type AccountsProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -61,9 +65,9 @@ function safeNext(value: string | string[] | undefined): string {
 }
 
 export default async function AccountsPage({ searchParams }: AccountsProps) {
-  await connection();
+  // connection() omitted for static export
 
-  const params = await searchParams;
+  const params = await readSearchParams(searchParams);
   const intent = params.intent;
   const mode =
     (Array.isArray(intent) ? intent[0] : intent) === "register"

@@ -7,11 +7,14 @@ import { CATEGORIES, CHANNELS } from "@/data/channels";
 import { toPublicChannels } from "@/lib/catalogue";
 import { getSecondaryMeta } from "@/lib/secondary";
 
-export const instant = false;
+export const dynamic = "force-dynamic";
+
+
+
 export const metadata: Metadata = { title: "TV Live — ACUM", robots: { index: true, follow: true } };
 
 export default async function TVPage() {
-  await connection();
+  // connection() omitted for static export
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);
   const live = channels.filter((c) => c.status === "live").length;

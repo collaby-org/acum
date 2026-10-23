@@ -16,6 +16,7 @@
 import { bearerToken, readUser } from "@/lib/supabase/server";
 import { rebindHousehold } from "@/lib/stream-sessions";
 
+
 const DEVICE = /^[A-Za-z0-9._-]{8,128}$/;
 
 export async function POST(request: Request) {

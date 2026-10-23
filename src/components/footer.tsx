@@ -72,8 +72,7 @@ const PROMISES = [
  * value still refreshes on the next cache lifetime instead of on every render.
  */
 async function copyrightYear() {
-  "use cache";
-  return new Date().getFullYear();
+    return new Date().getFullYear();
 }
 
 export async function Footer() {

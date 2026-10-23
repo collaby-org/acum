@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { AccountsPanel } from "@/components/admin/accounts";
 import { deskState } from "@/lib/admin";
+
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "Conturi",
 };
 
 // The desk reads the session on every request; it is never prerendered.
-export const instant = false;
 
 /**
  * The accounts, and the panel where access is granted by hand.

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -28,11 +32,14 @@ import { SITE_NAME } from "@/lib/site";
  * („filme”, „divertisment”).
  */
 
-export const instant = false;
 
 type Props = {
   params: Promise<{ categorie: string }>;
 };
+
+export function generateStaticParams() {
+  return CATEGORIES.map((category) => ({ categorie: category.id }));
+}
 
 export async function generateMetadata({
   params,
@@ -52,7 +59,7 @@ export async function generateMetadata({
 }
 
 export default async function Categorie({ params }: Props) {
-  await connection();
+  // connection() omitted for static export
 
   const { categorie } = await params;
   const resolved = resolveCategory(categorie);

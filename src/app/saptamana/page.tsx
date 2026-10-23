@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -31,7 +35,6 @@ import { SITE_NAME } from "@/lib/site";
  * programmes.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Programul săptămânii",
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Saptamana() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const guide = await getGuide();

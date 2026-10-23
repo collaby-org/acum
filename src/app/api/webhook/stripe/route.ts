@@ -18,6 +18,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { getServiceClient } from "@/lib/supabase/server";
 import { planDefinition, type Product } from "@/lib/supabase/plans";
 
+
 /** How old a webhook may be, in seconds. */
 const TOLERANCE_SECONDS = 300;
 

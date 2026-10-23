@@ -22,6 +22,7 @@
  * trigger in the schema throws if a signed-in visitor tries to change it.
  */
 import { bearerToken, getUserClient, readUser } from "@/lib/supabase/server";
+
 import {
   allowanceMinutes,
   FREE_ALLOWANCE_SECONDS,

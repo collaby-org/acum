@@ -7,6 +7,7 @@
  */
 import { liveAudience, liveAudienceMap, totalAudience } from "@/lib/audience";
 
+
 // A route that reads the request is dynamic on its own; the cache
 // components build does not take a `dynamic` segment config.
 export async function GET(request: Request) {

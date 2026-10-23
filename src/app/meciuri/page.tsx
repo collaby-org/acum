@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -36,7 +40,6 @@ import { SITE_NAME, SITE_PROMISE_SHORT } from "@/lib/site";
  * page, so nobody has to guess why a fixture is or is not in the list.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Meciuri live la TV",
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Meciuri() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

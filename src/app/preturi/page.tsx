@@ -18,6 +18,10 @@ import { PlansGrid } from "@/components/account/plans-grid";
 import { EntrySection } from "@/components/preturi/entry-section";
 import { Button } from "@/components/ui/button";
 import { PLANS, freeHours } from "@/lib/supabase/plans";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   formatPrice,
   SITE_NAME,
@@ -44,7 +48,6 @@ export async function generateMetadata(): Promise<Metadata> {
  * The page is rendered per request: it says whether the payments are ready,
  * and that answer changes with the keys.
  */
-export const instant = false;
 
 /**
  * The reasons behind the prices, written from the prices themselves.
@@ -119,7 +122,7 @@ export default async function PricingPage() {
   // The page says whether the payments are ready, so it is rendered per
   // request. The key is the same one the checkout route reads; when it is
   // missing, the button explains it instead of failing quietly.
-  await connection();
+  // connection() omitted for static export
 
   const paymentsReady = Boolean(process.env.STRIPE_SECRET_KEY);
   const individual = PLANS.find((plan) => plan.id === "monthly");

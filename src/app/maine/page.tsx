@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -35,7 +39,6 @@ import { SITE_NAME, SITE_PROMISE_SHORT } from "@/lib/site";
  * republishing today under a different name.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Program de mâine",
@@ -44,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Maine() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

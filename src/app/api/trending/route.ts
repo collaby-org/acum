@@ -16,6 +16,7 @@ import { CHANNELS } from "@/data/channels";
 import { secondarySlug } from "@/lib/catalogue";
 import { getSecondaryMeta } from "@/lib/secondary";
 
+
 /** The list is about now, so it is never rendered ahead of time. */
 export async function GET() {
   const meta = await getSecondaryMeta();

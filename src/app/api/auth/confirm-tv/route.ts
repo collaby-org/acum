@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bearerToken } from "@/lib/supabase/server";
 
+
 export async function POST(req: NextRequest) {
   const auth = req.headers.get("authorization");
   if (!auth || !auth.startsWith("Bearer ")) {

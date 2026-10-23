@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -31,7 +35,6 @@ import { SITE_NAME } from "@/lib/site";
  * because nobody types ş when they mean ș.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Caută o emisiune",
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CautaOEmisiune() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

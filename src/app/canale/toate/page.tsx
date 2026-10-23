@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   ChannelDirectory,
   type DirectoryCategory,
@@ -41,7 +45,6 @@ import { plural } from "@/lib/utils";
  * the request, so the row and the channel page agree.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Toate canalele, în ordine alfabetică",
@@ -52,7 +55,7 @@ export const metadata: Metadata = {
 const NO_GUIDE: EpgGuide = { date: null, reference: null, channels: [] };
 
 export default async function ToateCanalele() {
-  await connection();
+  // connection() omitted for static export
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

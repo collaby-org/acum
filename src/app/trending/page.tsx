@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -28,7 +32,6 @@ import { SITE_NAME } from "@/lib/site";
  * second is a ranking. Each is labelled with its own mark.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Top canale live acum",
@@ -37,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Trending() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

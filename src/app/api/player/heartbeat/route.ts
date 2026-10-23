@@ -16,6 +16,7 @@
 import { bearerToken, readUser } from "@/lib/supabase/server";
 import { endStreamSession, touchStreamSession } from "@/lib/stream-sessions";
 
+
 type Body = { session?: unknown };
 
 /** The caller, or null. */

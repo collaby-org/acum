@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -31,7 +35,6 @@ import { SITE_NAME, SITE_PROMISE_SHORT } from "@/lib/site";
  * the hour.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Ce rulează acum",
@@ -42,7 +45,7 @@ export const metadata: Metadata = {
 const HORIZON_MS = 3 * 60 * 60 * 1000;
 
 export default async function Azi() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

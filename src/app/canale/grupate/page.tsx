@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -31,7 +35,6 @@ import { SITE_NAME } from "@/lib/site";
  * this one is the list, the other is the product.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Toate canalele",
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CanaleGrupate() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

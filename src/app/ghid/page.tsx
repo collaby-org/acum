@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -22,6 +26,7 @@ import {
   weekdayLabel,
 } from "@/lib/guide-pages";
 import { getSecondaryMeta } from "@/lib/secondary";
+import { readSearchParams } from "@/lib/export-safe";
 import { SITE_NAME } from "@/lib/site";
 
 /**
@@ -35,7 +40,6 @@ import { SITE_NAME } from "@/lib/site";
  * an end per slot — and never the file.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Ghid TV interactiv",
@@ -48,13 +52,13 @@ type Props = {
 };
 
 export default async function Ghid({ searchParams }: Props) {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);
   const guide = await getGuide();
-  const params = await searchParams;
+  const params = await readSearchParams(searchParams);
 
   const days = guideDays(guide, now);
   const ranges = days.map((day) => ({
@@ -73,13 +77,13 @@ export default async function Ghid({ searchParams }: Props) {
     catalogue[guideChannel.slug] = id;
   }
 
-  const wanted = params.canal ?? null;
+  const wanted = (params.canal as string | undefined) ?? null;
   const slug =
     wanted && guide.channels.some((channel) => channel.slug === wanted)
       ? wanted
       : (guide.channels[0]?.slug ?? null);
 
-  const wantedDay = params.zi ?? null;
+  const wantedDay = (params.zi as string | undefined) ?? null;
   const day =
     wantedDay && days.some((entry) => entry.date === wantedDay)
       ? wantedDay

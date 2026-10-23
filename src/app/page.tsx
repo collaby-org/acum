@@ -21,6 +21,10 @@ import InstallBanner from "@/components/install-banner";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
+import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
 import {
   SITE_NAME,
   SITE_PROMISE,
@@ -72,8 +76,7 @@ const PROMISES = [
  * still refreshes on the next cache lifetime instead of on every render.
  */
 async function copyrightYear() {
-  "use cache";
-  return new Date().getFullYear();
+    return new Date().getFullYear();
 }
 
 export default async function LandingPage() {

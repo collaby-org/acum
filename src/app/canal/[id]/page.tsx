@@ -15,6 +15,10 @@ import { CHANNELS } from "@/data/channels";
 import { toPublicChannel } from "@/lib/catalogue";
 import { CanalScreen } from "@/components/channel/canal-screen";
 
+export const dynamic = "force-dynamic";
+
+
+
 type CanalProps = {
   params: Promise<{ id: string }>;
 };
@@ -22,7 +26,6 @@ type CanalProps = {
 /**
  * The player is live, so the page is rendered per request.
  */
-export const instant = false;
 
 /** The channel of a link, or null when the catalogue has no such channel. */
 function findChannel(id: string) {
@@ -30,6 +33,10 @@ function findChannel(id: string) {
   return (
     CHANNELS.find((channel) => channel.id.toLowerCase() === wanted) ?? null
   );
+}
+
+export function generateStaticParams() {
+  return CHANNELS.map((channel) => ({ id: channel.id }));
 }
 
 export async function generateMetadata({
@@ -46,7 +53,7 @@ export async function generateMetadata({
 
 export default async function CanalPage({ params }: CanalProps) {
   // The player is live, so the page is rendered per request.
-  await connection();
+  // connection() omitted for static export
 
   const { id } = await params;
   const upstream = findChannel(id);

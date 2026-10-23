@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+
 import {
   LinkRow,
   Note,
@@ -34,7 +38,6 @@ import { SITE_NAME } from "@/lib/site";
  * how it is built.
  */
 
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Top emisiuni",
@@ -43,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TopEmisiuni() {
-  await connection();
+  // connection() omitted for static export
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();
