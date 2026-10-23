@@ -114,6 +114,29 @@ export function TVDirectory({ channels, liveCount = 0 }: TVDirectoryProps) {
 
   /* Catalog — the start page, built like the Netflix app home */
   const featured = channels.find((c) => c.status === "live") ?? null;
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(0);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (openId || full) return;
+      const last = channels.length - 1;
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        setFocusedIndex((i) => (i == null || i >= last ? 0 : i + 1));
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        setFocusedIndex((i) => (i == null || i <= 0 ? last : i - 1));
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        if (focusedIndex != null) setOpenId(channels[focusedIndex]!.id);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [channels, openId, full, focusedIndex]);
+
+  const FOCUSED_CARD =
+    "ring-2 ring-signal ring-offset-2 ring-offset-[#0a0a0c] bg-white/[0.08] scale-[1.03] shadow-[0_0_0_4px_rgba(242,167,27,0.25)]";
 
   return (
     <div className="tv-root min-h-dvh bg-[#0a0a0c] text-white">
@@ -154,26 +177,33 @@ export function TVDirectory({ channels, liveCount = 0 }: TVDirectoryProps) {
         </header>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {channels.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => setOpenId(c.id)}
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] hover:bg-white/[0.07]"
-            >
-              <div className="grid size-14 place-items-center overflow-hidden rounded-xl border border-white/10 bg-black shadow-md">
-                {c.logoHd ? (
-                  <img src={c.logoHd} alt={c.name} className="max-h-10 max-w-[72px] object-contain" loading="lazy" />
-                ) : (
-                  <span className="text-xs font-bold text-white/70">{c.name.slice(0, 2).toUpperCase()}</span>
-                )}
-              </div>
-              <div>
-                <h3 className="font-display text-base font-semibold leading-snug">{c.name}</h3>
-                <span className="text-xs text-white/40">{c.status === "live" ? "Live" : c.status}</span>
-              </div>
-            </button>
-          ))}
+          {channels.map((c, i) => {
+            const focused = focusedIndex === i;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                tabIndex={-1}
+                onClick={() => {
+                  setFocusedIndex(i);
+                  setOpenId(c.id);
+                }}
+                className={`group flex flex-col items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] hover:bg-white/[0.07] ${focused ? FOCUSED_CARD : ""}`}
+              >
+                <div className="grid size-14 place-items-center overflow-hidden rounded-xl border border-white/10 bg-black shadow-md">
+                  {c.logoHd ? (
+                    <img src={c.logoHd} alt={c.name} className="max-h-10 max-w-[72px] object-contain" loading="lazy" />
+                  ) : (
+                    <span className="text-xs font-bold text-white/70">{c.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-semibold leading-snug">{c.name}</h3>
+                  <span className="text-xs text-white/40">{c.status === "live" ? "Live" : c.status}</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </main>
     </div>
