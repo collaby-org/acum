@@ -13,7 +13,11 @@
 ![Build](https://img.shields.io/badge/Build-passing-brightgreen)
 ![PWA](https://img.shields.io/badge/PWA-ready-blue)
 
-**ACUM Frontend** — Romanian live TV web app, ad-free, no account required for viewing.  
+---
+
+## 1. What is ACUM Frontend
+
+ACUM is a Romanian live TV streaming platform — no ads. Free tier: 120 minutes daily. Paid plans remove the limit.  
 Deployed at: **https://acum-weld.vercel.app/**  
 Includes the `/tv` route (Netflix-style TV-native experience).
 
@@ -21,7 +25,7 @@ Includes the `/tv` route (Netflix-style TV-native experience).
 
 ## 1. What is this package
 
-This is the Next.js frontend of ACUM — a Romanian live TV streaming platform, no ads, no account required for viewing. Includes:
+This is the Next.js frontend of ACUM — a Romanian live TV streaming platform, no ads, free tier: 120 minutes daily. Includes:
 
 - **Homepage** — hero live channel + channel grid + search + favorites
 - **`/canale`** — hero + categorical rails
@@ -33,92 +37,79 @@ This is the Next.js frontend of ACUM — a Romanian live TV streaming platform, 
 
 ---
 
-## 1. What is this package
+## 2. Architecture (Data Flow)
 
-This is the Next.js frontend of ACUM — a Romanian live TV streaming platform, no ads, no account required for viewing. Includes:
-
-- **Homepage** — hero live channel + channel grid + search + favorites
-- **`/canale`** — hero + categorical rails
-- **`/canale/toate`** — full directory of all channels
-- **`/canal/[id]`** — channel panel (live preview, info, play)
-- **`/tv`** — TV-native interface (Netflix-style): D-pad, cursor hiding, full-screen player, QR login
-- **`/auth/qrcode`** — TV QR login page (phone scans, authenticates, TV auto-logs in)
-- **`/preturi`, `/conturi`, `/ghid`, `/azi`, `/maine`, `/trending`, …**
-
----
-
-## 2. QR Auth Flow (TV ↔ Phone ↔ TV)
-
+```mermaid
+graph TB
+    subgraph "Build Time (Node, no server at runtime)"
+        direction TB
+        
+        A[cool-etv.net<br/>menu + channels] -->|scrape-channels.mjs<br/>74 families / 203 pages| B[data/channels.raw.json<br/>committed]
+        
+        C[embed hosts<br/>105 unique URLs] -->|check-embeds.mjs<br/>Referer-gated, serial| D[data/embed-health.json<br/>committed]
+        
+        E[player panels] -->|resolve-streams.mjs<br/>headless Edge| F[data/resolved-streams.json<br/>committed]
+        
+        G[taxonomy] -->|channel-taxonomy.json<br/>names, groups| G2[scripts/build-dataset.mjs]
+        
+        B --> G2
+        D --> G2
+        F --> G2
+        
+        G2 --> I[src/data/channels.ts<br/>203 feeds → N channels<br/>each with server list]
+        
+        H[public/logos/<br/>194 PNG logos]
+    end
+    
+    subgraph "Runtime (browser)"
+        direction TB
+        
+        J[Browser] -->|can play| K[src/app/page.tsx<br/>server]
+        K -->|props| L[<Browse><br/>client island]
+        
+        L -->|props| M[<Hero>]
+        L -->|props| N[<Rail>]
+        L -->|props| O[<ChannelIndex>]
+        L -->|props| P[<SearchPanel>]
+        
+        M --> Q[<ChannelCard>]
+        N --> Q
+        
+        Q -->|click| R[<Player><br/>modal]
+        
+        R -->|GET /api/stream?t=…| S[<api/stream><br/>upstream relay]
+        R -->|GET /api/player?u=…| T[<api/player><br/>upstream page]
+        
+        S --> U[cool-etv.net<br/>HLS manifests]
+        T --> U
+    end
+    
+    style A fill:#e1f5e1
+    style B fill:#e1f5e1
+    style J fill:#fff3e0
+    style K fill:#fff3e0
+    style L fill:#fff3e0
+    style R fill:#ffe0e0
+    style S fill:#ffebee
+    style T fill:#ffebee
+    style U fill:#ffebee
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                      TV APP  →  Scan QR  →  FRONTEND                         │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-   STEP 1: TV shows QR code
-   ┌─────────────────────────────────────────────────────────────────┐
-   │                                                                 │
-   │              Sign in to TV                                      │
-   │                                                                 │
-   │   Scan the QR code with your phone to authenticate              │
-   │   on this device.                                               │
-   │                                                                 │
-   │           ┌─────────────────┐                                   │
-   │           │   [ QR CODE ]   │                                   │
-   │           └─────────────────┘                                   │
-   │                                                                 │
-   │   Session expires in 5:00                                       │
-   │                                                                 │
-   └─────────────────────────────────────────────────────────────────┘
-                                     │
-                                     │ Scan with phone
-                                     ▼
-   ┌─────────────────────────────────────────────────────────────────┐
-   │                      PHONE (browser)                            │
-   │                                                                 │
-   │   https://acum-weld.vercel.app/tv-link?code=ACUM-XXXXXX         │
-   │                                                                 │
-   │   Sign in to TV                                                 │
-   │   Confirm you want to sign in to this TV.                       │
-   │                                                                 │
-   │   [Sign In]   [Create Account]                                  │
-   │                                                                 │
-   │   ✅ Connected! TV will sign in automatically.                 │
-   └─────────────────────────────────────────────────────────────────┘
-                                     │
-                                     │ Backend sets tv-session cookie
-                                     ▼
-   ┌─────────────────────────────────────────────────────────────────┐
-   │                      TV (polling /api/auth/confirm-tv)          │
-   │                                                                 │
-   │   Auto-connects → redirects to /tv                              │
-   │                                                                 │
-   └─────────────────────────────────────────────────────────────────┘
-```
-
-### TV Auth Routes
-
-| Route | Purpose |
-|-------|---------|
-| `/auth/qrcode` | QR screen on TV (code + polling) |
-| `/auth/qrcode?mode=phone` | Mobile login/register form |
-| `/api/auth/confirm-tv` (POST) | Phone confirms TV session |
-| `/api/auth/confirm-tv` (GET) | TV polls, detects session |
-
-**Cookie:** `tv-session` (HttpOnly, Secure, SameSite=lax, 30 days)
 
 ---
 
 ## 2. Technology Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Framework | Next.js | 16.4.2 |
-| Interface | React | 19.3.0 |
-| Styling | Tailwind CSS | 4 |
-| Types | TypeScript | 5 |
-| Icons | Lucide React | 1.60.0 |
-| Player | hls.js | 1.7.3 |
-| Fonts | Space Grotesk + Inter | — |
+| Layer | Technology | Version | Role |
+|-------|-----------|---------|------|
+| Framework | Next.js | 16.4.2 | App Router, Turbopack |
+| Interface | React | 19.3.0 | Client island + server components |
+| Styling | Tailwind CSS | 4 | Design tokens, utilities |
+| Types | TypeScript | 5 | Strict type safety |
+| Icons | Lucide React | 1.60.0 | Lucide icons only |
+| Player | hls.js | 1.7.3 | HLS streams, failover |
+| Base UI | shadcn/ui | — | Primitive components |
+| Fonts | Space Grotesk + Inter | — | Self-hosted, no CDN |
+| Auth | Supabase | — | Auth, plans, limits |
 
 ---
 
@@ -131,29 +122,32 @@ This is the Next.js frontend of ACUM — a Romanian live TV streaming platform, 
 | `/canale/toate` | Full channel directory (grid) |
 | `/canale/grupate` | Channels grouped by family |
 | `/canal/[id]` | Channel panel (live preview, info, play) |
-| `/tv` | TV-native: directory, sticky video, QR login, D-pad |
-| `/auth/qrcode` | QR login (TV scans) |
-| `/auth/qrcode?mode=phone` | Mobile login/register form |
+| `/tv` | TV-native interface (Netflix-style): D-pad, cursor hiding, full-screen player, QR login |
+| `/auth/qrcode` | TV QR login page (phone scans, authenticates, TV auto-logs in) |
+| `/preturi` | Subscriptions (your plan if signed in) |
+| `/conturi` | Sign in / account |
 | `/ghid` | Interactive TV guide |
 | `/azi` | Today's program |
 | `/maine` | Tomorrow's program |
-| `/trending` | Trending now |
+| `/trending` | What's trending now |
 | `/preturi` | Subscriptions |
 | `/conturi` | Sign in / account |
 
 ---
 
-## 3. Technology Stack
+## 2. Technology Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Framework | Next.js | 16.4.2 |
-| Interface | React | 19.3.0 |
-| Styling | Tailwind CSS | 4 |
-| Types | TypeScript | 5 |
-| Icons | Lucide React | 1.60.0 |
-| Player | hls.js | 1.7.3 |
-| Fonts | Space Grotesk + Inter | — |
+| Layer | Technology | Version | Role |
+|-------|-----------|---------|------|
+| Framework | Next.js | 16.4.2 | App Router, Turbopack |
+| Interface | React | 19.3.0 | Client island + server components |
+| Styling | Tailwind CSS | 4 | Design tokens, utilities |
+| Types | TypeScript | 5 | Strict type safety |
+| Icons | Lucide React | 1.60.0 | Lucide icons only |
+| Player | hls.js | 1.7.3 | HLS streams, failover |
+| Base UI | shadcn/ui | — | Primitive components |
+| Fonts | Space Grotesk + Inter | — | Self-hosted, no CDN |
+| Auth | Supabase | — | Auth, plans, limits |
 
 ---
 
@@ -171,12 +165,12 @@ npm install
 cp .env.example .env
 
 # 4. Development
-npm run dev          # http://localhost:3000
+npm run dev            # http://localhost:3000
 
 # 4. Checks
-npm run lint         # ESLint (flat config)
-npm run typecheck    # next typegen && tsc --noEmit
-npm run build        # Turbopack production build
+npm run lint           # ESLint (flat config)
+npm run typecheck      # next typegen && tsc --noEmit
+npm run build          # Turbopack production build
 
 # 5. Runtime checks
 npm run verify:player    # one click → moving image, no popup, no ad host
@@ -187,6 +181,8 @@ npm run verify:ui        # walk the app, capture docs/reviews/
 ---
 
 ## 4. How the Catalog is Built
+
+The pipeline runs at build time, with no external dependencies at runtime:
 
 ```bash
 npm run data:scrape    # cool-etv.net  → data/channels.raw.json
@@ -207,7 +203,7 @@ Upstream media hosts sit behind a Cloudflare `Referer` allowlist. With the corre
 
 ---
 
-## 5. Pages and Routes
+## 4. Pages and Routes
 
 | Route | Purpose |
 |-------|---------|
@@ -228,7 +224,7 @@ Upstream media hosts sit behind a Cloudflare `Referer` allowlist. With the corre
 
 ---
 
-## 5. Installation (PWA — Mobile Only)
+## 3. Installation (PWA — Mobile Only)
 
 ACUM is a PWA **for mobile phones only**:
 
@@ -261,7 +257,7 @@ ACUM is a PWA **for mobile phones only**:
 
 ---
 
-## 10. Contributing
+## 6. Contributing
 
 Every change goes through a pull request. The PR template asks for evidence and `version: before → after`.
 
@@ -270,18 +266,18 @@ Rules:
 - **Romanian copy**, serious, no emoji
 - **`.env` only via env tools**, never in git
 - **PWA only** (no APK / store)
-- **Desktop/mobile untouched by `/tv`**
+- **Desktop / mobile untouched by `/tv`**
 
 ---
 
-## 12. Security
+## 7. Security
 
 See the [security policy](.github/SECURITY.md).  
 Report vulnerabilities privately via [GitHub's security advisory form](https://github.com/collaby-org/acum/security/advisories/new).
 
 ---
 
-## 13. License
+## 8. License
 
 MIT — see [LICENSE](LICENSE).
 
@@ -289,4 +285,4 @@ The channels belong to their respective owners. ACUM indexes public embed addres
 
 ---
 
-> **ACUM** — now is now. No ads. No account. Just TV.
+> **ACUM** — Now is now. No ads. 120 minutes free daily. Paid plans unlimited.
