@@ -1,4 +1,4 @@
-# CI — ACUM Frontend (Next.js 16)
+# CI — ACUM Monorepo
 
 name: CI
 
@@ -17,8 +17,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: Lint, type-check and build
+  # Frontend CI - runs from monorepo/frontend
+  frontend:
+    name: Frontend - Lint, type-check and build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -34,6 +35,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: monorepo/frontend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -46,3 +48,31 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # TV App CI - placeholder for future implementation
+  # TV app will be deployed separately on Vercel as a native TV app
+  # QR auth flow: TV shows QR -> phone scans -> opens frontend on mobile to authenticate
+  tv:
+    name: TV App - Build check (placeholder)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: monorepo/tv
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: monorepo/tv/package-lock.json
+
+      - name: Check TV app structure
+        run: |
+          echo "TV app CI placeholder - will be implemented when TV app is ready"
+          echo "QR Auth flow: TV shows QR -> phone scans -> opens frontend on mobile to authenticate"
+          ls -la
