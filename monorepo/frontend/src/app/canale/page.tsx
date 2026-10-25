@@ -8,8 +8,7 @@ import { getSecondaryMeta } from "@/lib/secondary";
 import { loadGuide } from "@/lib/guide";
 import { liveAudienceMap } from "@/lib/audience";
 import { pickTrending } from "@/lib/popularity";
-import { useAccount } from "@/hooks/use-account";
-import { redirect } from "next/navigation";
+import { requireSignedIn } from "@/lib/session";
 
 /**
  * The guide is about now, so the page is rendered per request.
@@ -36,10 +35,9 @@ export const instant = false;
 export default async function Home() {
   await connection();
 
-  const account = await useAccount();
-  if (!account.signedIn) {
-    redirect("/conturi");
-  }
+  // A signed-out visitor never sees the catalogue or the error that would
+  // follow — the accounts page is where the way in lives.
+  await requireSignedIn();
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

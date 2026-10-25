@@ -19,6 +19,7 @@ import { matchGuideChannels, resolveSchedule } from "@/components/now-next";
 import { getGuide, requestMoment } from "@/lib/guide-pages";
 import { getSecondaryMeta } from "@/lib/secondary";
 import { SITE_NAME } from "@/lib/site";
+import { requireSignedIn } from "@/lib/session";
 
 /**
  * One category.
@@ -53,6 +54,7 @@ export async function generateMetadata({
 
 export default async function Categorie({ params }: Props) {
   await connection();
+  await requireSignedIn();
 
   const { categorie } = await params;
   const resolved = resolveCategory(categorie);

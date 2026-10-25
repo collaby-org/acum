@@ -11,6 +11,11 @@
  * page, the paywall and the payment route cannot drift apart.
  */
 import { FREE_DAILY_MINUTES, PLANS as SITE_PLANS } from "@/lib/site";
+import {
+  getRegionalPricing,
+  type RegionCode,
+  type RegionalPrice,
+} from "@/lib/shared/pricing-utils";
 
 /** The plans an account can be on. `comp` is what the desk grants by hand. */
 export type Plan = "free" | "monthly" | "lifetime" | "household" | "comp";
@@ -33,8 +38,8 @@ export type PlanDefinition = {
   name: string;
   /** One line under the name. */
   tagline: string;
-  /** The price in pounds. `null` for the free plan. */
-  price: number | null;
+  /** The price in minor units (cents, bani, yen) for each plan tier. */
+  regionalPrice: Record<string, RegionalPrice>;
   /** `per month` or `once` — how the price is charged. */
   cadence: "free" | "month" | "once";
   /** How many people share the plan. */
@@ -48,23 +53,32 @@ export type PlanDefinition = {
 };
 
 /**
- * The plans, in the order the product shows them.
- *
- * The household plan is the one that makes the product work: four seats for
- * the price of less than two individual plans.
+ * Get the regional pricing for all plans.
  */
-export const PLANS: PlanDefinition[] = SITE_PLANS.map((plan) => ({
-  id: plan.id as Plan,
-  name: plan.name,
-  tagline: plan.blurb,
-  price: plan.price,
-  cadence:
-    plan.price === null ? "free" : plan.period === "o dată" ? "once" : "month",
-  seats: SEATS[plan.id] ?? 1,
-  allowanceSeconds: plan.minutes === null ? null : plan.minutes * 60,
-  features: [...plan.features],
-  featured: plan.id === "household",
-}));
+export function getPlansWithRegionalPricing(regionCode?: RegionCode): PlanDefinition[] {
+  const pricing = getRegionalPricing(regionCode);
+  
+  return SITE_PLANS.map((plan) => ({
+    id: plan.id as Plan,
+    name: plan.name,
+    tagline: plan.blurb,
+    regionalPrice: {
+      free: pricing.free,
+      monthly: pricing.monthly,
+      household: pricing.household,
+      lifetime: pricing.lifetime,
+    },
+    cadence:
+      plan.price === null ? "free" : plan.period === "o dată" ? "once" : "month",
+    seats: SEATS[plan.id] ?? 1,
+    allowanceSeconds: plan.minutes === null ? null : plan.minutes * 60,
+    features: [...plan.features],
+    featured: plan.id === "household",
+  }));
+}
+
+/** The plans, in the order the product shows them. */
+export const PLANS: PlanDefinition[] = getPlansWithRegionalPricing();
 
 /** The plan a visitor starts on. */
 export const DEFAULT_PLAN: Plan = "free";

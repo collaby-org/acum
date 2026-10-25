@@ -305,12 +305,6 @@ export default async function LandingPage() {
           </p>
           <div className="flex items-center gap-5">
             <Link
-              href="/canale"
-              className="transition-colors duration-300 hover:text-ink"
-            >
-              Catalog
-            </Link>
-            <Link
               href="/preturi"
               className="transition-colors duration-300 hover:text-ink"
             >
@@ -340,9 +334,9 @@ function LandingBar() {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.06] bg-canvas/70 backdrop-blur-2xl">
       <div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-4 sm:h-[72px] sm:gap-6 sm:px-8 lg:px-12">
         <Link
-          href="/canale"
+          href="/"
           className="group flex shrink-0 items-center gap-3"
-          aria-label={`${SITE_NAME} — catalogul`}
+          aria-label={`${SITE_NAME} — acasă`}
         >
           <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
             <AcumMark id="acum-mark-landing" className="size-[21px]" />
@@ -353,12 +347,6 @@ function LandingBar() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-[13px] text-ink-muted md:flex">
-          <Link
-            href="/canale"
-            className="transition-colors duration-300 hover:text-ink"
-          >
-            Catalog
-          </Link>
           <Link
             href="#planuri"
             className="transition-colors duration-300 hover:text-ink"

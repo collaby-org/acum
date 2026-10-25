@@ -5,9 +5,9 @@
  *
  * An error thrown while rendering a route lands here instead of on the
  * framework's own screen: the visitor gets ACUM's mark, one plain sentence
- * about what happened and the two ways out — try again, or go back to the
- * catalogue. The digest is kept in the note because it is the only thing that
- * ties this screen to the server's log.
+ * about what happened and the two ways out — try again, or go back home.
+ * The digest is kept in the note because it is the only thing that ties
+ * this screen to the server's log.
  */
 import Link from "next/link";
 import { useEffect } from "react";
@@ -34,7 +34,8 @@ export default function ErrorPage({
           Ceva nu a mers
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-          Pagina nu a putut fi încărcată. Canalele sunt în continuare aici.
+          Pagina nu a putut fi încărcată. Încearcă din nou sau întoarce-te
+          acasă.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <button
@@ -45,10 +46,10 @@ export default function ErrorPage({
             Reîncearcă
           </button>
           <Link
-            href="/canale"
+            href="/"
             className="inline-flex h-11 items-center rounded-full border border-white/12 px-6 text-sm text-ink transition hover:border-white/25 hover:bg-white/[0.04]"
           >
-            Înapoi la canale
+            Înapoi acasă
           </Link>
         </div>
       </div>

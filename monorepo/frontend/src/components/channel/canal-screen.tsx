@@ -41,7 +41,7 @@ export function CanalScreen({ channel }: CanalScreenProps) {
         <button
           type="button"
           onClick={() => router.push("/")}
-          aria-label="Înapoi la catalog"
+          aria-label="Înapoi acasă"
           className={cn(
             "inline-flex min-h-11 items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-4",
             "text-[13px] font-semibold text-ink backdrop-blur-md transition-colors duration-300",

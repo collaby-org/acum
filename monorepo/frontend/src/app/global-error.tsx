@@ -46,7 +46,8 @@ export default function GlobalError({
               margin: "12px 0 28px",
             }}
           >
-            Pagina nu a putut fi încărcată. Canalele sunt în continuare aici.
+            Pagina nu a putut fi încărcată. Încearcă din nou sau întoarce-te
+            acasă.
           </p>
           <div
             style={{
@@ -74,7 +75,7 @@ export default function GlobalError({
               Reîncearcă
             </button>
             <Link
-              href="/canale"
+              href="/"
               style={{
                 height: 44,
                 display: "inline-flex",
@@ -87,7 +88,7 @@ export default function GlobalError({
                 textDecoration: "none",
               }}
             >
-              Înapoi la canale
+              Înapoi acasă
             </Link>
           </div>
           {error.digest ? (

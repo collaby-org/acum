@@ -19,6 +19,7 @@ import { getGuide, requestMoment } from "@/lib/guide-pages";
 import { CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/navigation";
 import { getSecondaryMeta } from "@/lib/secondary";
 import { SITE_NAME } from "@/lib/site";
+import { requireSignedIn } from "@/lib/session";
 
 /**
  * Every channel, grouped by category.
@@ -41,6 +42,7 @@ export const metadata: Metadata = {
 
 export default async function CanaleGrupate() {
   await connection();
+  await requireSignedIn();
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

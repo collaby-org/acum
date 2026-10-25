@@ -23,7 +23,7 @@ import {
   type PlanDefinition,
   type Product,
 } from "@/lib/supabase/plans";
-import { formatPrice } from "@/lib/site";
+import { formatRegionalPrice, useRegionalPricing } from "@/lib/pricing-client";
 import { cn } from "@/lib/utils";
 
 export type PlansGridProps = {
@@ -60,7 +60,14 @@ export function PlanCard({
   const [error, setError] = useState<string | null>(null);
 
   const account = useAccount();
-  const free = plan.price === null;
+  // The visitor's own region: the server can only guess, so the card shows
+  // the regional price as soon as the browser answers. Before that the
+  // server's default (euro) is painted — the same first-paint tradeoff the
+  // pricing hook documents.
+  const { pricing } = useRegionalPricing();
+  const free = plan.id === "free";
+  // The plan's own tier: monthly → monthly, household → household, …
+  const ownPrice = pricing[plan.id] ?? pricing.monthly;
   const product = plan.id as Product;
 
   const buttonLabel = account.ready && account.signedIn
@@ -153,23 +160,28 @@ export function PlanCard({
       </div>
 
       <div className="mt-5 flex items-baseline gap-2">
-        {plan.price === null ? (
+        {free ? (
           <p className="font-display text-[24px] font-bold leading-none tracking-[-0.03em] text-ink">
-            Fără plată
+            Gratuit
           </p>
         ) : (
           <>
             <p className="font-display text-[30px] font-bold leading-none tracking-[-0.03em] text-ink">
-              {formatPrice(plan.price)}
+              {formatRegionalPrice(ownPrice)}
             </p>
             <p className="text-[13px] text-ink-faint">{cadenceLabel(plan)}</p>
           </>
         )}
       </div>
 
-      {plan.seats > 1 && plan.price !== null ? (
+      {plan.seats > 1 && !free ? (
         <p className="mt-2 text-[12px] text-ink-faint">
-          {plan.seats} locuri · {formatPrice(plan.price / plan.seats)} pe loc
+          {plan.seats} locuri · {formatRegionalPrice({
+            amount: Math.round(ownPrice.amount / plan.seats),
+            currency: ownPrice.currency,
+            symbol: ownPrice.symbol,
+            locale: ownPrice.locale,
+          })} pe loc
           {plan.cadence === "month" ? " pe lună" : ""}
         </p>
       ) : null}

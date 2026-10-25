@@ -93,9 +93,9 @@ export default async function AccountsPage({ searchParams }: AccountsProps) {
       {/* The bar: the wordmark and the way back. */}
       <header className="mx-auto flex h-16 max-w-[1120px] items-center gap-4 px-4 sm:h-[72px] sm:px-8">
         <Link
-          href="/canale"
+          href="/"
           className="group flex shrink-0 items-center gap-3"
-          aria-label={`${SITE_NAME} — catalogul`}
+          aria-label={`${SITE_NAME} — acasă`}
         >
           <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
             <AcumMark id="acum-mark-conturi" className="size-[21px]" />
@@ -108,11 +108,11 @@ export default async function AccountsPage({ searchParams }: AccountsProps) {
         <div className="flex-1" />
 
         <Link
-          href="/canale"
+          href="/"
           className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.1]"
         >
           <ArrowLeft className="size-4" aria-hidden />
-          Înapoi la catalog
+          Înapoi acasă
         </Link>
       </header>
 

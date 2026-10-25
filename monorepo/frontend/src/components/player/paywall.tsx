@@ -21,7 +21,7 @@ import { ArrowRight, Clock, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignInForm, type AuthMode } from "@/components/account/sign-in-form";
 import { PLANS } from "@/lib/supabase/plans";
-import { formatPrice } from "@/lib/site";
+import { getRegionalPricing, formatRegionalPrice, getUserRegionClient } from "@/lib/pricing-client";
 import { cn } from "@/lib/utils";
 
 export type PaywallReason = "signed_out" | "allowance_spent";
@@ -143,6 +143,9 @@ function SpentPanel({
   minutesWatchedToday: number;
   allowanceMinutes: number | null;
 }) {
+  const region = getUserRegionClient();
+  const pricing = getRegionalPricing(region);
+  
   const hours = Math.round((allowanceMinutes ?? 120) / 60);
 
   return (
@@ -162,7 +165,7 @@ function SpentPanel({
       </p>
 
       <ul className="mt-4 space-y-2">
-        {PLANS.filter((plan) => plan.price !== null).map((plan) => (
+        {PLANS.filter((plan) => plan.id !== "free").map((plan) => (
           <li
             key={plan.id}
             className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.07] bg-white/[0.03] px-3.5 py-2.5"
@@ -177,7 +180,7 @@ function SpentPanel({
               ) : null}
             </span>
             <span className="shrink-0 font-display text-[13px] font-semibold text-ink">
-              {formatPrice(plan.price ?? 0)}
+              {formatRegionalPrice(pricing[plan.id] ?? pricing.monthly)}
               {plan.cadence === "month" ? " / lună" : ""}
             </span>
           </li>

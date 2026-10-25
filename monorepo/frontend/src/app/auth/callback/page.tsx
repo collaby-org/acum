@@ -64,16 +64,16 @@ export default async function AuthCallbackPage({
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/conturi"
+              href="/"
               className="inline-flex h-11 items-center rounded-full bg-signal px-6 text-sm font-medium text-[#141005] transition hover:bg-signal-bright"
             >
-              Înapoi la conectare
+              Începe acum
             </Link>
             <Link
-              href="/canale"
+              href="/conturi"
               className="inline-flex h-11 items-center rounded-full border border-white/12 px-6 text-sm text-ink transition hover:border-white/25 hover:bg-white/[0.04]"
             >
-              Vezi canalele
+              Autentificare
             </Link>
           </div>
         </div>
