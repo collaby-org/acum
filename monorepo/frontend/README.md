@@ -1,178 +1,229 @@
-# ACUM
+# ACUM — Frontend (monorepo/frontend)
 
-**TV live românesc, fără reclame și fără cont.**
+[![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml)
+![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js)
+![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss)
+![Lucide](https://img.shields.io/badge/Icons-Lucide-red)
+![License](https://img.shields.io/badge/license-MIT-10b981)
+![Channels](https://img.shields.io/badge/Channels-156-red)
+![Families](https://img.shields.io/badge/Families-74-red)
+![Feeds](https://img.shields.io/badge/Feeds-370-red)
+![Build](https://img.shields.io/badge/Build-passing-brightgreen)
 
-A Netflix-style directory of Romanian live TV, built from the public embed
-addresses published on [cool-etv.net](https://www.cool-etv.net/).
-
-[![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml) ![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js) ![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss) ![License](https://img.shields.io/badge/license-MIT-10b981)
+**ACUM — TV live românesc, fără reclame și fără cont.**  
+Frontend-ul web al platformei ACUM, deschis la `https://acum-weld.vercel.app/`.  
+Încludesc și pagina TV-native `/tv` (design inspirat de Netflix pentru televiizoare smart).
 
 ---
 
-## The name
+## 1. Ce este acest pachet
 
-**ACUM** is Romanian for *now*, and *now* is the whole product: what is on
-now, what is trending now, how many people are watching now. The name carries
-no diacritics, so nothing is lost in a URL, a file name or a home-screen
-label.
+Acesta este frontend-ul Next.js al ACUM — un directory de televiziune live românească, fără reclame și fără cont necesar pentru vizionare. Include:
 
-The mark is a capital **A** — the first letter of the name — with a bright
-**rail** running out of it to the right. The rail is the playhead: the
-position of *now* on the programme guide. The wordmark is the Romanian word
-itself, set in Space Grotesk.
+- **Homepage** — hero canal live + grilă de canale + căutare + favorite
+- **`/canale`** — hero + rails categorice
+- **`/canale/toate`** — director complet al tuturor canalelor
+- **`/canal/[id]`** — panoul propriu-zis al fiecărui canal (preview live, info, play)
+- **`/tv`** — interfață TV-native (Netflix-style): D-pad, cursor ascuns, ecran plin, QR login
+- **`/auth/qrcode`** — ecran de autentificare TV prin cod QR (telefon scanează, confirmează, TV se loghează)
+- **`/preturi`, `/conturi`, `/ghid`, `/azi`, `/maine`, `/trending`, …**
 
-Every raster asset is generated from one drawing:
+---
 
-```bash
-node scripts/build-icons.mjs       # the app icons, the maskable icons, the favicon
-node scripts/build-og.mjs          # public/brand/og.png, the link-preview card
-node scripts/build-screenshots.mjs  # the two PWA store screenshots
+## 2. Fluxul QR (TV ←→ Telefoane ←→ TV)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      TV APP  →  mongolez  →  FRONTEND                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+   PASUL 1: TV arată codul QR
+   ┌─────────────────────────────────────────────────────────────────┐
+   │                                                                 │
+   │              Autentificare pe TV                                │
+   │                                                                 │
+   │   Scanează codul QR cu telefonul pentru a te                    │
+   │   autentifica pe acest dispozitiv.                              │
+   │                                                                 │
+   │           ┌─────────────────┐                                   │
+   │           │   [ QR CODE ]   │                                   │
+   │           └─────────────────┘                                   │
+   │                                                                 │
+   │   Sesiune expiră în 5:00                                        │
+   │                                                                 │
+   └─────────────────────────────────────────────────────────────────┘
+                                     │
+                                     │ Scanează cu telefonul
+                                     ▼
+   ┌─────────────────────────────────────────────────────────────────┐
+   │                      TELEFON (browser)                          │
+   │                                                                 │
+   │   https://acum-weld.vercel.app/tv-link?code=ACUM-XXXXXX         │
+   │                                                                 │
+   │   Autentificare pe TV                                           │
+   │   Confirmă că dorești să te autentific pe acest TV.             │
+   │                                                                 │
+   │   [Autentificare]   [Crează cont]                               │
+   │                                                                 │
+   │   ✅ Conectat! TV-ul se va autentifica automat.                │
+   └─────────────────────────────────────────────────────────────────┘
+                                     │
+                                     │ Backend setează tv-session cookie
+                                     ▼
+   ┌─────────────────────────────────────────────────────────────────┐
+   │                      TV (polling /api/auth/confirm-tv)          │
+   │                                                                 │
+   │   Se conectează automat → redirect către /tv                    │
+   │                                                                 │
+   └─────────────────────────────────────────────────────────────────┘
 ```
 
-The mark itself is drawn in `scripts/build-icons.mjs`; change it there, never
-in a text editor. The full system is in
-[design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md#identity).
+### Rutele de autentificare TV
+
+| Rută | Ce face |
+|------|---------|
+| `/auth/qrcode` | Ecran QR pe TV (code + polling) |
+| `/auth/qrcode?mode=phone` | Formular de login / înregistrare pe telefon |
+| `/api/auth/confirm-tv` (POST) | Telefonul confirmă sesiunea TV |
+| `/api/auth/confirm-tv` (GET) | TV-ul poll-ează și detectează sesiunea |
+
+**Cookie:** `tv-session` (HttpOnly, Secure, SameSite=lax, 30 de zile)
 
 ---
 
-## What it is
+## 3. Tehnologie
 
-- **One click to play.** Click a channel, the picture starts. No poster, no
-  second press, no "click to start" round trip.
-- **Our own player.** Not the upstream's chrome — a live-edge-locked
-  scrubber, volume, Picture-in-Picture, fullscreen, and a breathing live
-  indicator.
-- **No ads, and no way for an ad to open.** The upstream player calls
-  `aclib.runPop()`, which throws an ad into a new window. ACUM serves the
-  upstream page with every ad and tracker script removed, under a `sandbox`
-  CSP, and streams the media through its own proxy. The network log shows
-  zero ad hosts and zero popups.
-- **One entry per channel, not per feed.** The source lists the same
-  broadcast once per upstream server — "Antena 1 S1", "Antena 1 S2 HD",
-  "Antena 1 S3". ACUM folds those into one channel with a server list, and
-  when a feed goes down it falls back to the next one automatically.
-- **Find anything, fast.** Instant ranked search, diacritic-insensitive, and
-  an A→Z jump bar.
-- **No account.** Favourites and recently-watched live in `localStorage`.
-- **Installable.** A PWA with an offline shell, real icons and safe-area
-  chrome, so it behaves like an app on a phone.
-- **No analytics, no trackers, no ad scripts of our own.** The interface
-  says "0 reclame" because it is true.
+| Stratură | Tehnologie | Versiune |
+|----------|-----------|----------|
+| Framework | Next.js | 16.4.2 |
+| Interfață | React | 19.3.0 |
+| Stil | Tailwind CSS | 4 |
+| Tipare | TypeScript | 5 |
+| Pictograme | Lucide React | 1.60.0 |
+| Player | hls.js | 1.7.3 |
+| Fonturi | Space Grotesk + Inter | — |
 
-## Getting started
+---
+
+## 4. Rute
+
+| Rută | Ce face |
+|------|---------|
+| `/` | Hero + rails + grid (pagina principală) |
+| `/canale` | Hero + rails categorice |
+| `/canale/toate` | Director complet (grilă) |
+| `/canale/grupate` | Canale grupate după familie |
+| `/canal/[id]` | Panoul canalului (preview live) |
+| `/tv` | TV-native: directory, sticky video, QR login, D-pad |
+| `/auth/qrcode` | QR login (TV) |
+| `/ghid` | Ghidul TV interactiv |
+| `/azi` | Programul de astăzi |
+| `/maine` | Programul de mâine |
+| `/trending` | Ce este popular acum |
+| `/preturi` | Abonamente |
+| `/conturi` | Autentificare / cont |
+
+---
+
+## 5. Dezvoltare
 
 ```bash
+# Clone
+git clone https://github.com/collaby-org/acum.git
+cd acum/monorepo/frontend
+
+# Dependențe
 npm install
-npm run dev
+
+# Variabile de mediu (opțional, pentru Admin / desk)
+cp .env.example .env
+
+# Dezvoltare
+npm run dev          # http://localhost:3000
+
+# Verificări
+npm run lint         # ESLint (flat config)
+npm run typecheck    # next typegen && tsc --noEmit
+npm run build        # Turbopack production build
+
+# Verificări runtime
+npm run verify:player    # un clic → imagine în mișcare, fără popup, fără gazdă de reclamă
+npm run verify:fallback  # omrești primul server → următorul ia relay-ul
+npm run verify:ui        # walk the app, capture docs/reviews/
 ```
 
-Open <http://localhost:3000>. Node.js 20.9 or newer.
+---
 
-Copy `.env.example` to `.env` and fill it in — the Supabase URL and
-publishable key at minimum; the app fails with a readable error, not a broken
-client, when they are missing. Nothing secret is committed: `.env` is
-gitignored, and on Vercel the same names go in Settings → Environment
-Variables before the build.
-
-```bash
-npm run lint        # ESLint (flat config)
-npm run typecheck   # next typegen && tsc --noEmit
-npm run build       # Turbopack production build
-```
-
-## How the catalogue is built
-
-The channel list is generated, not hand-written. The pipeline lives in
-`scripts/` and uses only Node built-ins:
-
-```bash
-npm run data:scrape    # cool-etv.net           -> data/channels.raw.json
-npm run data:probe     # liveness probe         -> data/embed-health.json
-npm run data:resolve   # headless Edge, HLS URLs-> data/resolved-streams.json
-npm run data:build     # merge + logos          -> src/data/channels.ts
-```
-
-`scripts/channel-taxonomy.json` is the editorial layer: the source obfuscates
-its labels (`HB0 R0` is HBO, `Ant 1` is Antena 1, `L00K Tv` is LOOK TV), so
-every family and feed gets a corrected Romanian display name and a category.
-
-`src/data/channels.ts` is generated — do not edit it by hand.
-
-## The referer gate
-
-The upstream media hosts sit behind a Cloudflare allowlist on the `Referer`
-header. With the right referer they serve a real player; with any other they
-answer `301 → google.com`. A browser cannot set a `Referer`, so the stream is
-relayed through `/api/stream`. The full measurement, and what it forces on
-the architecture, is in [docs/specs/player-architecture.md](docs/specs/player-architecture.md).
-
-## Verifying it
-
-```bash
-npm run verify:player     # one click -> moving picture, no popup, no ad host
-npm run verify:fallback   # kill the first server -> the next one takes over
-npm run verify:ui         # walk the app, capture docs/reviews/
-```
-
-`verify:player` drives headless Edge over the DevTools protocol, dispatches a
-real mouse click on a channel card, and fails unless the picture advances and
-no ad host or new window appears.
-
-## Project layout
+## 6. Pipeline-ul datelor
 
 ```
-scripts/           build-time pipeline + the verification harness
-data/              committed snapshots of the scrape, the probe and the resolve
-src/app/           routes, layout, API handlers, design tokens
-src/components/    the UI
-src/components/ui/ shadcn-style primitives
-src/data/          the catalogue contract and the generated catalogue
-src/lib/           status metadata, palette, navigation, stream, particles
-src/hooks/         favourites, recently watched, the playback state machine
-public/logos/      194 channel logos
-public/fonts/      self-hosted Space Grotesk + Inter
-public/icons/      the PWA icons
-design-system/     tokens, components, motion rules
-docs/              living docs
-docs/specs/        the load-bearing decisions
+scripts/           →  build-time pipeline (Node, fără dep. externe)
+data/              →  committed snapshots (channels.raw.json, embed-health.json, ...)
+src/app/           →  route-uri, layout, API handlers, design tokens
+src/components/    →  UI (client island + server components)
+src/components/ui/ →  shadcn-style primitives
+src/data/          →  catalogul generat (canale.ts)
+src/lib/           →  status metadata, paletă, navigare, stream
+src/hooks/         →  favorite, recentmente văzute, player state machine
+public/logos/      →  194 logo-uri canal
+public/fonts/      →  Space Grotesk + Inter (self-hostate)
+public/icons/      →  PWA icons
+design-system/     →  tokeni, componente, mișcare
+docs/              →  living docs
+docs/specs/        →  decizii de arhitectură
 ```
 
-## Documentation
+---
 
-- [docs/project-doc.md](docs/project-doc.md) — what the project is and how it
-  is built
-- [docs/system_diagram.md](docs/system_diagram.md) — architecture
-- [docs/tech_stack.md](docs/tech_stack.md) — pinned versions
-- [docs/targets.md](docs/targets.md) — scope and quality bar
-- [docs/roadmap.md](docs/roadmap.md) — what is next
-- [docs/changelog.md](docs/changelog.md) — release history
-- [docs/admin.md](docs/admin.md) — the desk: who gets in, what it shows, how to
-  open it
-- [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) — why one
-  entry per channel
-- [docs/specs/player-architecture.md](docs/specs/player-architecture.md) — how
-  the player works and why
-- [design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md) — tokens,
-  components, motion rules
-- [AGENTS.md](https://github.com/collaby-org/acum/blob/main/AGENTS.md) — the contract for agents and contributors
-- [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md) — how to contribute
+## 7. Documentație
 
-## Contributing
+- [docs/project-doc.md](docs/project-doc.md) — ce este proiectul și cum e construit
+- [docs/system_diagram.md](docs/system_diagram.md) — diagrama de arhitectură
+- [docs/tech_stack.md](docs/tech_stack.md) — pinerile versiunilor
+- [docs/targets.md](docs/targets.md) — scop și bară de calitate
+- [docs/roadmap.md](docs/roadmap.md) — ce urmează
+- [docs/changelog.md](docs/changelog.md) — istoricul lansărilor
+- [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) — de ce o singură intrare pe canal
+- [docs/specs/player-architecture.md](docs/specs/player-architecture.md) — cum funcționează playerul
+- [design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md) — tokeni, componente, mișcare
+- [docs/tv/NETFLIX_TV_APP_FLOW.md](docs/tv/NETFLIX_TV_APP_FLOW.md) — fluxul TV (Netflix-style)
+- [docs/tv/QR_AUTH_FLOW.md](docs/tv/QR_AUTH_FLOW.md) — fluxul de autentificare QR A-to-Z
+- [prompts/frontend/ACUM_UI_UX_MASTER.md](prompts/frontend/ACUM_UI_UX_MASTER.md) — master spec UI/UX
+- [prompts/frontend/ACUM_UI_UX_PROMPTS.md](prompts/frontend/ACUM_UI_UX_PROMPTS.md) — 7 prompt-uri de implementare
+- [prompts/frontend/FRONTEND_QA_PROMPT.md](prompts/frontend/FRONTEND_QA_PROMPT.md) — checklist QA / bug-uri
+- [prompts/tv/TV_FRONTEND_PROMPT.md](prompts/tv/TV_FRONTEND_PROMPT.md) — prompt industrial pentru TV app
+- [prompts/tv/TV_QA_PROMPT.md](prompts/tv/TV_QA_PROMPT.md) — checklist QA pentru TV
+- [AGENTS.md](AGENTS.md) — contractul pentru agenți și contribuitori
+- [CONTRIBUTING.md](CONTRIBUTING.md) — cum contributi
 
-Read [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md).
-Every change lands through a pull request, and the template asks for evidence
-and a `version: before → after`.
+---
 
-## Security
+## 8. Reguli de UI / design
 
-See the
-[security policy](https://github.com/collaby-org/acum/blob/main/.github/SECURITY.md).
-Report vulnerabilities privately through
-[GitHub's security advisory form](https://github.com/collaby-org/acum/security/advisories/new).
+- **Lucide doar** pentru pictograme — niciun emoji în interfață
+- **Copie română**, serioasă, fără emoji
+- Apple / Netflix-clean: dark, spațiu, tipografie, contrast
+- `.env` numai prin unelte de env, niciodată în git
+- PWA numai (fără APK / magazin de aplicații)
+- Desktop / mobil nedevățați de `/tv`
 
-## Licence
+---
 
-MIT — see [LICENSE](LICENSE).
+## 9. Securitate
 
-The channels themselves belong to their respective owners. ACUM indexes the
-public embed addresses published by the source site and links back to it.
+Vezi [politica de securitate](.github/SECURITY.md).  
+Rapportezi vulnerabilități privat prin [formularul GitHub](https://github.com/collaby-org/acum/security/advisories/new).
+
+---
+
+## 10. Licență
+
+MIT — vezi [LICENSE](LICENSE).
+
+Canalele aparțin respectivei deținătoare. ACUM indexează adresele publice de embed publicate de sursă și reîntoarce linkuri spre ea.
+
+---
+
+> **ACUM** — TV live românesc, fără reclame, fără cont. Doar TV.

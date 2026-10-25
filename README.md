@@ -1,170 +1,305 @@
-# ACUM
+# ACUM — TV live românesc, fără reclame și fără cont
 
-**TV live românesc, fără reclame și fără cont.**
+[![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml)
+![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js)
+![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss)
+![Lucide](https://img.shields.io/badge/Icons-Lucide-red)
+![License](https://img.shields.io/badge/license-MIT-10b981)
+![Channels](https://img.shields.io/badge/Channels-156%20live-red)
+![Families](https://img.shields.io/badge/Families-74-red)
+![Build](https://img.shields.io/badge/Build-passing-brightgreen)
 
-A Netflix-style directory of Romanian live TV, built from the public embed
-addresses published on [cool-etv.net](https://www.cool-etv.net/).
-
-[![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml) ![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js) ![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss) ![License](https://img.shields.io/badge/license-MIT-10b981)
+**TV live românesc — fără reclame, fără cont, fără tracking.**  
+A Netflix-style directory of Romanian live TV, built from the public embed addresses published by Romanian TV directories.
 
 ---
 
-## The name
+## 1. Ce este ACUM (într-un ochi)
 
-**ACUM** is Romanian for *now*, and *now* is the whole product: what is on
-now, what is trending now, how many people are watching now. The name carries
-no diacritics, so nothing is lost in a URL, a file name or a home-screen
-label.
-
-The mark is a capital **A** — the first letter of the name — with a bright
-**rail** running out of it to the right. The rail is the playhead: the
-position of *now* on the programme guide. The wordmark is the Romanian word
-itself, set in Space Grotesk.
-
-Every raster asset is generated from one drawing:
-
-```bash
-node scripts/build-icons.mjs       # the app icons, the maskable icons, the favicon
-node scripts/build-og.mjs          # public/brand/og.png, the link-preview card
-node scripts/build-screenshots.mjs  # the two PWA store screenshots
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            ACUM — TV LIVE ROMÂNESC                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
+│   │   📺 HERO    │  │   📡 LIVE    │  │   🔍 CAUTĂ   │  │   ❤️ FAVORIT   │   │
+│   │   (Acum la   │  │   CANALE     │  │   (canale,   │  │   (favorite    │   │
+│   │    TV)       │  │   (sticky)   │  │   categorii) │  │   recente)     │   │
+│   └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘   │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+    │                    PLAYER: 0 reclame, 0 popupuri                     │
+    │   HLS stream → proxy propriu → video direct, fără ad-uri           │
+    └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│   🇷🇴 Română  •  📱 Responsive  •  📺 PWA (instalabil pe telefon/TV)   │
+│   ⚡ Sub-șoaptă  •  🔒 Fără cont  •  🚫 Zero reclame                    │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-The mark itself is drawn in `scripts/build-icons.mjs`; change it there, never
-in a text editor. The full system is in
-[design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md#identity).
+### Ce face ACUM
+
+- **Un click și vezi.** Apasă pe un canal — imaginea pornește. Fără poster, fără "click to start", fără tour de două ecrane.
+- **Player propriu.** Nu e chrome-ul sursei. Scrubber live-edge-locked, volum, Picture-in-Picture, fullscreen, indicator de "LIVE" care respira.
+- **Zero reclame.** Sursele sursă apelează `aclib.runPop()` și încărcă reclamă în ferestre noi. ACUM servește pagina sursă cu toate scripturile de reclamă și urmăritoare eliminate, sub un `sandbox` CSP, și redirectionează media prin proxy propriu. În logurile de rețea: zero gazde de reclamă, zero popupuri.
+- **Un singur intrare pe canal.** Sursa listează același difuzor pe mai multe servere ("Antena 1 S1", "Antena 1 S2 HD", "Antena 1 S3"). ACUM le împarte într-un singur canal cu o listă de servere, și când un feed moare, trece automat la următorul.
+- **Găsești orice, repede.** Cautare clasată, insensibilă la diacritice, și bară A→Z.
+- **Niciun cont.** Favoritele și ultimele văzute rămân în `localStorage`.
+- **Instalabil.** PWA cu shell offline, icoane reale și chrome de siguranță pentru ecranuri — se comporță ca o aplicație pe telefon și TV.
+- **Niciun analytics, niciun tracker, niciun script de reclamă propriu.** Interfața spune "0 reclame" pentru că este adevărat.
 
 ---
 
-## What it is
+## 2. Arhitectura (fluxuri de date)
 
-- **One click to play.** Click a channel, the picture starts. No poster, no
-  second press, no "click to start" round trip.
-- **Our own player.** Not the upstream's chrome — a live-edge-locked
-  scrubber, volume, Picture-in-Picture, fullscreen, and a breathing live
-  indicator.
-- **No ads, and no way for an ad to open.** The upstream player calls
-  `aclib.runPop()`, which throws an ad into a new window. ACUM serves the
-  upstream page with every ad and tracker script removed, under a `sandbox`
-  CSP, and streams the media through its own proxy. The network log shows
-  zero ad hosts and zero popups.
-- **One entry per channel, not per feed.** The source lists the same
-  broadcast once per upstream server — "Antena 1 S1", "Antena 1 S2 HD",
-  "Antena 1 S3". ACUM folds those into one channel with a server list, and
-  when a feed goes down it falls back to the next one automatically.
-- **Find anything, fast.** Instant ranked search, diacritic-insensitive, and
-  an A→Z jump bar.
-- **No account.** Favourites and recently-watched live in `localStorage`.
-- **Installable.** A PWA with an offline shell, real icons and safe-area
-  chrome, so it behaves like an app on a phone.
-- **No analytics, no trackers, no ad scripts of our own.** The interface
-  says "0 reclame" because it is true.
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     BUILD TIME (fără server la runtime)                    │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-## Getting started
+   ┌──────────────────┐   scrape-channels.mjs   ┌────────────────────────┐
+   │ cool-etv.net     │ ───────────────────────▶│ data/channels.raw.json│
+   │ meniu + canale     │  74 familii / 203 pagini  │ (comisă)            │
+   └──────────────────┘                         └───────────┬────────────┘
+                                                            │
+   ┌──────────────────┐   check-embeds.mjs      ┌───────────▼────────────┐
+   │ gazde embed      │ ───────────────────────▶│ data/embed-health.json│
+   │ (105 URL-uri unice)│  Referer-gated, seriat │ (comisă)              │
+   └──────────────────┘                         └───────────┬────────────┘
+                                                            │
+   ┌──────────────────┐   resolve-streams.mjs   ┌───────────▼────────────┐
+   │ panouri player     │  (headless Edge)       │ data/resolved-streams  │
+   └──────────────────┘    capture HLS playlist   │ .json (comisă)       │
+                                                    └───────────┬────────────┘
+   ┌──────────────────┐   channel-taxonomy.json   │                 │
+   │ taxonomia          │─────────────────────────▶│                 │
+   │ (nume, grupe)      │                           ▼                 │
+   └──────────────────┘                         build-dataset.mjs       │
+                                                                            │
+                                                   ┌──────────────▼──────────────┐
+                                                   │ src/data/channels.ts        │
+                                                   │ 203 feeduri → N canale,   │
+                                                   │ fiecare cu lista de       │
+                                                   │ servere                   │
+                                                   └──────────────┬──────────────┘
+                                                                    │
+   ┌──────────────────┐   mirror-at-build-time                │
+   │ public/logos/    │◀──────────────────────────────────────┘
+   │ 194 logo-uri PNG │
+   └──────────────────┘
+
+
+                          ┌───────────────────────────────────────────┐
+                          │  RUNTIME (browser)                          │
+                          └───────────────────────────────────────────┘
+
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │  Browser                                                             │
+   │                                                                      │
+   │   ┌──────────────────┐        ┌──────────────────┐                  │
+   │   │ src/app/page.tsx │───────▶│ <Browse>          │ client island   │
+   │   │ (server)         │  props │ (client)         │                  │
+   │   └──────────────────┘        └────────┬─────────┘                  │
+   │         ┌──────────────────────────────┼──────────────────────┐     │
+   │         ▼              ▼               ▼                      ▼     │
+   │   ┌──────────┐  ┌───────────┐   ┌────────────┐          ┌────────┐  │
+   │   │ <Hero>   │  │ <Rail>    │   │ <Player>   │          │ local  │  │
+   │   │          │  │ <Card>    │   │  Modal>    │          │Storage │  │
+   │   └──────────┘  └───────────┘   └─────┬──────┘          │fav.    │  │
+   │                                        │                 │recente.│  │
+   │   ┌──────────────────┐                │                 └────────┘  │
+   │   │ <SearchPanel>    │                │                            │
+   │   │ <ChannelIndex>   │                │                            │
+   │   └──────────────────┘                │                            │
+   └────────────────────────────────────────┼────────────────────────────┘
+                                           │
+               ┌─────────────────────────────┴──────────────────────┐
+               │  (un clic pe un card — fără a doua apăsare)        │
+               ▼                                                     ▼
+   ┌────────────────────────┐                    ┌──────────────────────────┐
+   │ GET /api/stream?t=…     │                    │ GET /api/player?u=…      │
+   │                        │                    │                          │
+   │ semnul → gazda sursă   │                    │ pagina upstream cu       │
+   │ Referer: propria orig. │                    │ fiecare script de reclamă│
+   │ → canale-tv.net →      │                    │ eliminat, window.open    │
+   │ cool-etv.net           │                    │ neutralizat, servit cu   │
+   │ (câștigător cachez/host)│                    │ un sandbox CSP           │
+   │                        │                    └───────────┬──────────────┘
+   │ playlisturi reînnoiți   │                                │
+   │ astfel încât fiecare    │                                │ frame-uri imbricate
+   │ segment rămâne          │                                             │ (Referer =
+   │ în spatele proxy-ului │                                             │  cool-etv)
+   └───────────┬────────────┘                                             │
+               │                                                         │
+               ▼                                                         ▼
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │  Gazde media upstream — manifesturi HLS, playlisturi variante, segmente│
+   │  Portaria Referer este întregul motiv pentru care proxy-ul există:   │
+   │  un browser nu poate seta un Referer, deci biții au nevoie să        │
+   │  călătorească prin propriul nostru proxy.                            │
+   └──────────────────────────────────────────────────────────────────────┘
+
+   Nimic în aplicație nu deschide o fereastră, și nimic în aplicație nu     │
+   încărcă un script al treia parte, un tracker sau o reclamă.              │
+   └──────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 3. Straturile (cele 156 de canale)
+
+| Stratură | Ce face |
+|----------|---------|
+| **Hero** | Canalul "Acum la TV" — preview live, buton "Redă acum" |
+| **Rail-uri** | "În direct acum" — canale live cu badge roșu LIVE; "Toate canalele" — grilă completă |
+| **Căutare** | Clasată, insensibilă la diacritice, A→Z |
+| **Player** | Video direct, fără reclame, failover între servere, sticla LIVE |
+| **Favorite / Recente** | `localStorage`, sincronizate pe dispozitiv |
+
+---
+
+## 4. Tehnologie (stivă reală)
+
+| Stratură | Tehnologie | Versiune | Rol |
+|----------|-----------|----------|-----|
+| Framework | Next.js | 16.4.2 | App Router, Turbopack |
+| Interfață | React | 19.3.0 | Client island + server components |
+| Stil | Tailwind CSS | 4 | Tokene de design, utilitare |
+| Tipare | TypeScript | 5 | Siguranță de tip strict |
+| Pictograme | Lucide React | 1.60.0 | Doar pictograme Lucide |
+| Player | hls.js | 1.7.3 | Fluxuri HLS, failover |
+| Stil bază | shadcn/ui | — | Componente primitive |
+| Fonturi | Space Grotesk + Inter | — | Self-hostate, fără CDN |
+
+---
+
+## 5. Cum rulezi
 
 ```bash
+# 1. Clone
+git clone https://github.com/collaby-org/acum.git
+cd acum
+
+# 2. Dependențe
 npm install
-npm run dev
+
+# 3. Variabile de mediu (doar dacă vrei Admin / desk)
+cp .env.example .env   # completar: SUPABASE_URL, SUPABASE_ANON_KEY, etc.
+
+# 4. Dezvoltare
+npm run dev            # http://localhost:3000
+
+# 5. Verificări
+npm run lint           # ESLint (flat config)
+npm run typecheck      # next typegen && tsc --noEmit
+npm run build          # Turbopack production build
+
+# 6. Verificări runtime
+npm run verify:player    # un clic → imagine în mișcare, fără popup, fără gazdă de reclamă
+npm run verify:fallback  # omrești primul server → următorul ia relay-ul
+npm run verify:ui        # walk the app, capture docs/reviews/
 ```
 
-Open <http://localhost:3000>. Node.js 20.9 or newer.
+---
+
+## 6. Cum e construit catalogul (pipeline)
+
+Pipeline-ulRulează în build time, fără dependențe externe la runtime:
 
 ```bash
-npm run lint        # ESLint (flat config)
-npm run typecheck   # next typegen && tsc --noEmit
-npm run build       # Turbopack production build
+npm run data:scrape    # cool-etv.net  → data/channels.raw.json
+npm run data:probe     # probă de viață  → data/embed-health.json
+npm run data:resolve   # Edge headless, URL-uri HLS → data/resolved-streams.json
+npm run data:build     # merge + logo-uri   → src/data/channels.ts
 ```
 
-## How the catalogue is built
+`scripts/channel-taxonomy.json` este stratul editorial: sursa obfuscă etichetele (`HB0 R0` = HBO, `Ant 1` = Antena 1, `L00K Tv` = LOOK TV), astfel fiecare familie și feed primește un nume românesc corect și o categorie.
 
-The channel list is generated, not hand-written. The pipeline lives in
-`scripts/` and uses only Node built-ins:
+`src/data/channels.ts` este generat — **nu editați cu mâna**.
 
-```bash
-npm run data:scrape    # cool-etv.net           -> data/channels.raw.json
-npm run data:probe     # liveness probe         -> data/embed-health.json
-npm run data:resolve   # headless Edge, HLS URLs-> data/resolved-streams.json
-npm run data:build     # merge + logos          -> src/data/channels.ts
-```
+---
 
-`scripts/channel-taxonomy.json` is the editorial layer: the source obfuscates
-its labels (`HB0 R0` is HBO, `Ant 1` is Antena 1, `L00K Tv` is LOOK TV), so
-every family and feed gets a corrected Romanian display name and a category.
+## 7. Portaria Referer (de ce există proxy-ul)
 
-`src/data/channels.ts` is generated — do not edit it by hand.
+Gazdele media upstream se află în spatele unei liste `Referer` pe Cloudflare. Cu refererul corect servesc un player real; cu orice altul răspund `301 → google.com`. Un browser nu poate seta un `Referer`, deci fluxul este relayat prin `/api/stream`. Măsura completă este în [docs/specs/player-architecture.md](docs/specs/player-architecture.md).
 
-## The referer gate
+---
 
-The upstream media hosts sit behind a Cloudflare allowlist on the `Referer`
-header. With the right referer they serve a real player; with any other they
-answer `301 → google.com`. A browser cannot set a `Referer`, so the stream is
-relayed through `/api/stream`. The full measurement, and what it forces on
-the architecture, is in [docs/specs/player-architecture.md](docs/specs/player-architecture.md).
+## 8. Paginile și rutele
 
-## Verifying it
+| Rută | Ce face |
+|------|---------|
+| `/` | Hero + rails + grid (pagina principală) |
+| `/canale/[categorie]` | Canal după categorie |
+| `/canale/toate` | Toate canalele (director complet) |
+| `/canal/[id]` | Pagina propriu-zisă a canalului (panou, live) |
+| `/ghid` | Ghidul TV interactiv |
+| `/azi` | Programul de astăzi |
+| `/maine` | Programul de mâine |
+| `/trending` | Ce este popular acum |
+| `/preturi` | Abonamente (planul tău dacă ești autentificat) |
+| `/conturi` | Autentificare / cont |
+| `/admin` | Panoul admin (desk) |
 
-```bash
-npm run verify:player     # one click -> moving picture, no popup, no ad host
-npm run verify:fallback   # kill the first server -> the next one takes over
-npm run verify:ui         # walk the app, capture docs/reviews/
-```
+---
 
-`verify:player` drives headless Edge over the DevTools protocol, dispatches a
-real mouse click on a channel card, and fails unless the picture advances and
-no ad host or new window appears.
+## 6. Instalare (PWA)
 
-## Project layout
+ACUM este o PWA:
 
-```
-scripts/           build-time pipeline + the verification harness
-data/              committed snapshots of the scrape, the probe and the resolve
-src/app/           routes, layout, API handlers, design tokens
-src/components/    the UI
-src/components/ui/ shadcn-style primitives
-src/data/          the catalogue contract and the generated catalogue
-src/lib/           status metadata, palette, navigation, stream, particles
-src/hooks/         favourites, recently watched, the playback state machine
-public/logos/      194 channel logos
-public/fonts/      self-hosted Space Grotesk + Inter
-public/icons/      the PWA icons
-design-system/     tokens, components, motion rules
-docs/              living docs
-docs/specs/        the load-bearing decisions
-```
+- Deschide în browser pe telefon sau TV
+- Meniu browser → "Instalează aplicația" / "Adaugă la ecranul principal"
+- Se deschide ca o aplicație nativă, fără bara de browsă
+- Pe TV: `/tv` se deschide ca aplicație nativă (dacă browserul TV suportă instalare)
 
-## Documentation
+---
 
-- [docs/project-doc.md](docs/project-doc.md) — what the project is and how it
-  is built
-- [docs/system_diagram.md](docs/system_diagram.md) — architecture
-- [docs/tech_stack.md](docs/tech_stack.md) — pinned versions
-- [docs/targets.md](docs/targets.md) — scope and quality bar
-- [docs/roadmap.md](docs/roadmap.md) — what is next
-- [docs/changelog.md](docs/changelog.md) — release history
-- [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) — why one
-  entry per channel
-- [docs/specs/player-architecture.md](docs/specs/player-architecture.md) — how
-  the player works and why
-- [design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md) — tokens,
-  components, motion rules
-- [AGENTS.md](https://github.com/collaby-org/acum/blob/main/AGENTS.md) — the contract for agents and contributors
-- [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md) — how to contribute
+## 7. Documentație
 
-## Contributing
+| Document | Ce conține |
+|----------|------------|
+| [docs/project-doc.md](docs/project-doc.md) | Ce este proiectul și cum e construit |
+| [docs/system_diagram.md](docs/system_diagram.md) | Arhitectura (diagrame) |
+| [docs/tech_stack.md](docs/tech_stack.md) | Pinerile versiunilor |
+| [docs/targets.md](docs/targets.md) | Scop și bară de calitate |
+| [docs/roadmap.md](docs/roadmap.md) | Ce urmează |
+| [docs/changelog.md](docs/changelog.md) | Istoricul lansărilor |
+| [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) | De ce o singură intrare pe canal |
+| [docs/specs/player-architecture.md](docs/specs/player-architecture.md) | Cum funcționează playerul |
+| [design-system/DESIGN_SYSTEM.md](design-system/DESIGN_SYSTEM.md) | Tokene, componente, mișcare |
+| [AGENTS.md](AGENTS.md) | Contractul pentru agenți și contribuitori |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Cum contributi |
 
-Read [CONTRIBUTING.md](https://github.com/collaby-org/acum/blob/main/CONTRIBUTING.md).
-Every change lands through a pull request, and the template asks for evidence
-and a `version: before → after`.
+---
 
-## Security
+## 8. Contribuire
 
-See the
-[security policy](https://github.com/collaby-org/acum/blob/main/.github/SECURITY.md).
-Report vulnerabilities privately through
-[GitHub's security advisory form](https://github.com/collaby-org/acum/security/advisories/new).
+Fiecare modificare trece printr-un pull request. Șablonul PR cere dovezi și `version: before → after`.
 
-## Licence
+Reguli:
+- **Lucide doar** pentru pictograme (niciun emoji în interfață)
+- Copie română, serioasă, fără emoji
+- `.env` numai prin unelte de env, niciodată în git
+- PWA numai (fără APK / magazin de aplicații)
+- Desktop / mobil nedevățați de `/tv`
 
-MIT — see [LICENSE](LICENSE).
+---
 
-The channels themselves belong to their respective owners. ACUM indexes the
-public embed addresses published by the source site and links back to it.
+## 9. Securitate
+
+Vezi [politica de securitate](.github/SECURITY.md).  
+Rapportezi vulnerabilități privat prin [formularul GitHub](https://github.com/collaby-org/acum/security/advisories/new).
+
+---
+
+## 10. Licență
+
+MIT — vezi [LICENSE](LICENSE).
+
+Canalele aparțin respectivei deținătoare. ACUM indexează adresele publice de embed publicate de sursă și reîntoarce linkuri spre ea.
+
+---
+
+> **ACUM** — acum este acum. Fără reclame. Fără cont. Doar TV.
