@@ -1,0 +1,68 @@
+name: Bug report
+description: Something in ACUM is broken or wrong
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. If a channel does not play, that is usually the
+        upstream host refusing the request — please mention the channel name
+        so we can check its recorded status.
+
+  - type: input
+    id: channel
+    attributes:
+      label: Which channel?
+      description: The channel name, or "n/a" for a general bug.
+      placeholder: Antena 1
+    validations:
+      required: false
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you expected, and what you saw instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: https://acum.example/
+    validations:
+      required: false
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: Browser console errors, if you have them.
+      render: shell
+    validations:
+      required: false

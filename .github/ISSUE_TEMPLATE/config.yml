@@ -1,8 +1,11 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: Security vulnerability
-    url: https://github.com/collaby-org/acum/security/advisories/new
-    about: Report privately. Please do not open a public issue.
-  - name: Channel out of date
-    url: https://www.cool-etv.net/
-    about: The catalogue is scraped from this source; check it first.
+  - name: Documentation
+    url: https://github.com/OWNER/REPO/tree/main/docs
+    about: Start with the project docs (setup, tech stack, changelog).
+  - name: Security policy
+    url: https://github.com/OWNER/REPO/blob/main/.github/SECURITY.md
+    about: How to report vulnerabilities privately (do not file public issues).
+  - name: Discussions
+    url: https://github.com/OWNER/REPO/discussions
+    about: Ask questions and discuss ideas with maintainers and the community.

@@ -1,9 +1,8 @@
-# CodeQL config for this repository
+# CodeQL config for Obsidian Exchange
 
 paths-ignore:
+  - "v1/Obsidian-Documentation/**"
+  - "**/vendor/**"
   - "**/node_modules/**"
-  - ".next/**"
-  - "public/**"
-  - "data/**"
-  - "docs/**"
-  - ".agents/**"
+  - "**/design-system/**"
+  - "**/docs-html/**"

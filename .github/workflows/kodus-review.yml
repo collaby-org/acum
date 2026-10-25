@@ -10,12 +10,12 @@
 # Model routing is dashboard-only: Kodus Cloud CLI models are configured on the
 # BYOK page, NOT via model/base_url env vars in this workflow.
 #
-# Required dashboard BYOK routing (to keep primaries distinct across bots):
-#   primary  = z-ai/glm-5.3        (NVIDIA base https://integrate.api.nvidia.com/v1)
+# Required dashboard BYOK routing (all bots now on the NVIDIA endpoint):
+#   primary  = z-ai/glm-5.3-flash  (NVIDIA base https://integrate.api.nvidia.com/v1)
 #   fallback = deepseek-ai/deepseek-v4.1-flash
-#   fallback = gemini-3.8-flash
-# PR-Agent primary is Gemini — Kodus GitHub primary MUST stay GLM so the two
-# bots never share a primary provider. Local self-hosted Kodus uses DeepSeek
+#   fallback = stepfun-ai/step-5-preview
+# PR-Agent primary is DeepSeek V4.1 Flash - Kodus GitHub primary stays GLM so
+# the two bots never share a primary. Local self-hosted Kodus uses DeepSeek
 # (see docs/kodus-providers.md).
 name: Kodus Review
 

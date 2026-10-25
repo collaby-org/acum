@@ -1,29 +1,66 @@
+# Dependabot
+#
+# Dependencies for ACUM (Next.js 16 frontend in monorepo/frontend)
+# Supabase schema in /supabase
+# GitHub Actions in .github/workflows
+
 version: 2
-
 updates:
-  - package-ecosystem: npm
+  # GitHub Actions - pinned by commit SHA in workflows
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    labels:
+      - "dependencies"
     groups:
-      next:
+      actions:
         patterns:
-          - "next"
-          - "@next/*"
-          - "eslint-config-next"
-      react:
-        patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-    commit-message:
-      prefix: "chore(deps)"
+          - "*"
 
-  - package-ecosystem: github-actions
+  # Frontend (Next.js 16 + React 19) - monorepo/frontend
+  - package-ecosystem: "npm"
+    directory: "/monorepo/frontend"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "frontend"
+    groups:
+      minor-patch:
+        patterns:
+          - "*"
+    # Next.js / React major bumps rewrite App Router, i18n, route segments
+    # Must be deliberate, tested migrations — not unattended patches.
+    ignore:
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+  # Supabase migrations (SQL)
+  - package-ecosystem: "npm"
+    directory: "/supabase"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "supabase"
+    groups:
+      minor-patch:
+        patterns:
+          - "*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: monthly
-    commit-message:
-      prefix: "chore(ci)"
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    groups:
+      actions:
+        patterns:
+          - "*"

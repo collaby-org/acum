@@ -1,35 +1,57 @@
 name: Feature request
-description: Suggest an improvement to ACUM
-labels: ["enhancement"]
+description: Suggest a new feature or enhancement for Obsidian Exchange
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest an idea. Check `docs/` and existing issues first to avoid duplicates.
+        **Never include secrets, `.env` contents, or private keys.**
   - type: textarea
     id: problem
     attributes:
-      label: What problem does this solve?
-      description: The pain point, not the solution.
+      label: Problem statement
+      description: What problem does this solve? Who is affected?
+      placeholder: As a ... I need ... because ...
     validations:
       required: true
-
   - type: textarea
-    id: proposal
+    id: solution
     attributes:
-      label: What would you like to happen?
+      label: Proposed solution
+      description: Describe the solution you would like.
+      placeholder: Proposed behavior / API / UI ...
     validations:
       required: true
-
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the stack would this touch?
+      options:
+        - Backend/Core (v1/Obsidian-Core, Laravel 8)
+        - Client/Frontend (v1/Obsidian-Client, Next.js 12)
+        - Vault/Gateway (v1/Obsidian-Vault, Express)
+        - Docs (docs/, v1/Obsidian-Documentation)
+        - Multiple / Other
+    validations:
+      required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives you considered
+      label: Alternatives considered
+      description: Any alternative solutions or workarounds?
+      placeholder: Alternative approaches, existing workarounds ...
     validations:
       required: false
-
-  - type: checkboxes
-    id: scope
+  - type: textarea
+    id: acceptance
     attributes:
-      label: Scope
-      options:
-        - label: This keeps ACUM account-free and ad-free.
-        - label: This needs no backend, no database and no analytics.
+      label: Acceptance criteria
+      description: How do we know this is done?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
     validations:
       required: true

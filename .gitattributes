@@ -1,6 +1,2 @@
-# Normalise line endings in the repository, keep them native in the worktree.
-* text=auto eol=lf
-
-*.png binary
-*.woff2 binary
-*.ico binary
+# Auto detect text files and perform LF normalization
+* text=auto

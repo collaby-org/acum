@@ -5,9 +5,11 @@
 # blocks a developer (continue-on-error). Credential-gated: without
 # GEMINI_API_KEY the job is SKIPPED (green, zero runner minutes).
 #
-# Provider: Gemini only. The previous NVIDIA fallback lane was removed — it is
-# metered spend and the free Gemini tier is sufficient on its own. Do not
-# reintroduce OPENAI.KEY / OPENAI.API_BASE without re-checking the cost rule.
+# Provider: NVIDIA NIM over the OpenAI-compatible base (secrets.LLM_API_KEY +
+# LLM_API_BASE = https://integrate.api.nvidia.com/v1). Primary DeepSeek V4.1
+# Flash, fallbacks GLM 5.3 Flash + Step 5 Preview. The Gemini lane was retired
+# along with the rest of the fleet onto one key - do not reintroduce a second
+# provider key without re-checking the cost rule.
 name: PR Agent (custom endpoint)
 
 on:
@@ -25,7 +27,7 @@ jobs:
     # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
     # an empty string, so this evaluates false instead of erroring.
     if: >-
-      secrets.GEMINI_API_KEY != '' &&
+      secrets.LLM_API_KEY != '' &&
       github.event.sender.type != 'Bot' &&
       (github.event_name != 'issue_comment' || contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/improve') || contains(github.event.comment.body, '/ask'))
     runs-on: ubuntu-latest
@@ -45,12 +47,12 @@ jobs:
         uses: the-pr-agent/pr-agent@5a50bf1e00438268374e77c1a947c4ef7ba4a5cf # v0.48.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          config.model: "gemini/gemini-3.8-flash"
-          # Empty fallback list: the NVIDIA lane was dropped, so there is no
-          # second provider to fail over to. Empty (the PR-Agent default) keeps
-          # the run on the free Gemini tier instead of a metered one.
-          config.fallback_models: '[]'
+          OPENAI.KEY: ${{ secrets.LLM_API_KEY }}
+          OPENAI.API_BASE: ${{ secrets.LLM_API_BASE }}
+          config.model: "openai/deepseek-ai/deepseek-v4.1-flash"
+          # NVIDIA ladder: every bot now shares the one NVIDIA key, so the
+          # fallback chain is GLM 5.3 Flash then Step 5 Preview.
+          config.fallback_models: '["openai/z-ai/glm-5.3-flash", "openai/stepfun-ai/step-5-preview"]'
           config.custom_model_max_tokens: "200000"
           config.max_model_tokens: "200000"
           config.enable_large_pr_chunking: "true"

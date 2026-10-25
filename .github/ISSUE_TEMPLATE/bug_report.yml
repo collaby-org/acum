@@ -1,68 +1,84 @@
 name: Bug report
-description: Something in ACUM is broken or wrong
-labels: ["bug"]
+description: Report a reproducible bug in Obsidian Exchange
+title: "[Bug]: "
+labels: ["bug", "triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. If a channel does not play, that is usually the
-        upstream host refusing the request — please mention the channel name
-        so we can check its recorded status.
-
-  - type: input
-    id: channel
-    attributes:
-      label: Which channel?
-      description: The channel name, or "n/a" for a general bug.
-      placeholder: Antena 1
-    validations:
-      required: false
-
+        Thanks for reporting a bug. Please fill this out so we can reproduce it.
+        **Never paste `.env` contents, JWTs, private keys, or API secrets.**
   - type: textarea
-    id: what-happened
+    id: summary
     attributes:
-      label: What happened?
-      description: What you expected, and what you saw instead.
+      label: Summary
+      description: A clear, concise description of the bug.
+      placeholder: What broke?
     validations:
       required: true
-
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the stack is affected?
+      options:
+        - Backend/Core (v1/Obsidian-Core, Laravel 8)
+        - Client/Frontend (v1/Obsidian-Client, Next.js 12)
+        - Vault/Gateway (v1/Obsidian-Vault, Express)
+        - Docs (docs/, v1/Obsidian-Documentation)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: PHP / Node versions, browser, deployment type.
+      placeholder: |
+        PHP: 8.1 / Node: 16.x
+        Browser: Chrome 120 (frontend bugs only)
+        Deployment: local docker / self-hosted VPS / other
+        Core commit/branch:
+    validations:
+      required: true
   - type: textarea
     id: steps
     attributes:
       label: Steps to reproduce
-      value: |
-        1.
-        2.
-        3.
+      description: Minimal steps to trigger the bug.
+      placeholder: |
+        1. Go to ...
+        2. Run ...
+        3. See error ...
     validations:
       required: true
-
-  - type: input
-    id: url
-    attributes:
-      label: Page URL
-      placeholder: https://acum.example/
-    validations:
-      required: false
-
-  - type: dropdown
-    id: browser
-    attributes:
-      label: Browser
-      options:
-        - Chrome
-        - Edge
-        - Firefox
-        - Safari
-        - Other
-    validations:
-      required: false
-
   - type: textarea
-    id: console
+    id: expected-actual
     attributes:
-      label: Console output
-      description: Browser console errors, if you have them.
-      render: shell
+      label: Expected vs actual behavior
+      description: What did you expect, and what happened instead?
+      placeholder: |
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Redact all secrets. Never paste `.env` contents or tokens.
+      placeholder: Paste redacted logs or attach screenshots here.
     validations:
       required: false
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How badly does this impact usage?
+      options:
+        - Low (cosmetic / minor)
+        - Medium (workaround exists)
+        - High (major feature broken)
+        - Critical (funds at risk / data loss / outage)
+    validations:
+      required: true

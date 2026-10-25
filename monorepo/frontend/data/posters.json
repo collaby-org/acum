@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-10-22T09:20:48.546Z",
+  "posters": {
+    "pro-tv": {
+      "file": "pro-tv.jpg",
+      "capturedAt": "2026-10-22T08:05:13.943Z",
+      "width": 640,
+      "height": 360
+    },
+    "tvr-1": {
+      "file": "tvr-1.jpg",
+      "capturedAt": "2026-10-22T08:05:38.868Z",
+      "width": 640,
+      "height": 360
+    },
+    "tvr-2": {
+      "file": "tvr-2.jpg",
+      "capturedAt": "2026-10-22T08:05:46.202Z",
+      "width": 640,
+      "height": 360
+    },
+    "tvr-3": {
+      "file": "tvr-3.jpg",
+      "capturedAt": "2026-10-22T08:05:51.623Z",
+      "width": 640,
+      "height": 360
+    },
+    "tvr-sport": {
+      "file": "tvr-sport.jpg",
+      "capturedAt": "2026-10-22T08:06:01.912Z",
+      "width": 640,
+      "height": 360
+    },
+    "prima-tv": {
+      "file": "prima-tv.jpg",
+      "capturedAt": "2026-10-22T08:06:14.184Z",
+      "width": 640,
+      "height": 360
+    },
+    "hbo": {
+      "file": "hbo.jpg",
+      "capturedAt": "2026-10-22T08:06:20.578Z",
+      "width": 640,
+      "height": 360
+    },
+    "hbo-2": {
+      "file": "hbo-2.jpg",
+      "capturedAt": "2026-10-22T08:06:27.004Z",
+      "width": 640,
+      "height": 360
+    },
+    "hbo-3": {
+      "file": "hbo-3.jpg",
+      "capturedAt": "2026-10-22T08:06:35.458Z",
+      "width": 640,
+      "height": 360
+    },
+    "cinemax-1": {
+      "file": "cinemax-1.jpg",
+      "capturedAt": "2026-10-22T08:06:46.852Z",
+      "width": 640,
+      "height": 360
+    },
+    "cinemax-2": {
+      "file": "cinemax-2.jpg",
+      "capturedAt": "2026-10-22T08:16:26.486Z",
+      "width": 640,
+      "height": 360
+    },
+    "national-tv": {
+      "file": "national-tv.jpg",
+      "capturedAt": "2026-10-22T08:07:48.761Z",
+      "width": 640,
+      "height": 360
+    },
+    "kanal-d": {
+      "file": "kanal-d.jpg",
+      "capturedAt": "2026-10-22T08:07:54.848Z",
+      "width": 640,
+      "height": 360
+    },
+    "kanal-d-2": {
+      "file": "kanal-d-2.jpg",
+      "capturedAt": "2026-10-22T08:08:04.584Z",
+      "width": 640,
+      "height": 360
+    },
+    "antena-1": {
+      "file": "antena-1.jpg",
+      "capturedAt": "2026-10-22T08:08:10.616Z",
+      "width": 640,
+      "height": 360
+    },
+    "antena-3": {
+      "file": "antena-3.jpg",
+      "capturedAt": "2026-10-22T08:41:14.723Z",
+      "width": 640,
+      "height": 360
+    },
+    "realitatea": {
+      "file": "realitatea.jpg",
+      "capturedAt": "2026-10-22T08:41:20.868Z",
+      "width": 640,
+      "height": 360
+    },
+    "supersport-1": {
+      "file": "supersport-1.jpg",
+      "capturedAt": "2026-10-22T08:17:02.639Z",
+      "width": 640,
+      "height": 360
+    },
+    "pro-cinema": {
+      "file": "pro-cinema.jpg",
+      "capturedAt": "2026-10-22T08:05:32.517Z",
+      "width": 640,
+      "height": 360
+    },
+    "pro-tv-news": {
+      "file": "pro-tv-news.jpg",
+      "capturedAt": "2026-10-22T08:05:21.371Z",
+      "width": 640,
+      "height": 360
+    }
+  }
+}

@@ -37,24 +37,27 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    # Cost cap; keeps a stuck autobuild from burning minutes.
+    # Cost cap per matrix leg; keeps a stuck autobuild from burning minutes.
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript]
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # Single language: this repository is TypeScript only (no PHP).
       - name: Initialize CodeQL
         uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
-          languages: javascript-typescript
+          languages: ${{ matrix.language }}
           config-file: .github/codeql-config.yml
 
-      # The JS/TS extractor needs a build to discover sources.
+      # The JS/TS leg genuinely needs a build to discover sources.
       - name: Autobuild
         uses: github/codeql-action/autobuild@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
-          category: "/language:javascript-typescript"
+          category: "/language:${{ matrix.language }}"

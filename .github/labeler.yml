@@ -1,19 +1,29 @@
-# Labeler rules.
+# Labeler rules for ACUM
 #
-# Written for this repository's layout (Next.js app in `src/`, content data
-# and build scripts in `data/` and `scripts/`). Only labels that exist in
-# this repository are referenced.
+# Automatically applies labels based on changed files.
 
 frontend:
   - changed-files:
-      - "src/**"
+      - "monorepo/frontend/**"
 
-data:
+tv:
   - changed-files:
-      - "data/**"
-      - "scripts/**"
+      - "monorepo/tv/**"
+      - "tizen-tv/**"
+      - "webos-tv/**"
+      - "android-tv/**"
 
-documentation:
+supabase:
+  - changed-files:
+      - "supabase/**"
+
+scripts:
+  - changed-files:
+      - "scripts/**"
+      - "data/**"
+      - "src/data/**"
+
+docs:
   - changed-files:
       - "docs/**"
       - "*.md"
@@ -22,3 +32,13 @@ documentation:
 ci:
   - changed-files:
       - ".github/**"
+
+design-system:
+  - changed-files:
+      - "design-system/**"
+
+tv-apps:
+  - changed-files:
+      - "tizen-tv/**"
+      - "webos-tv/**"
+      - "android-tv/**"

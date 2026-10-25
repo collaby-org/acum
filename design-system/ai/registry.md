@@ -35,10 +35,6 @@ Props:
 | `className` | `string` | Sizing and colour, as on any SVG. |
 | `id` | `string` | The id of the gradient definitions. Pass a unique one per instance so two marks on one page never collide. |
 
-The module also exports `ACUM_MARK_PATH` — the geometry of the A in the
-mark's own 100-unit grid. The intro traces that same path with light, so the
-letter the sting draws and the letter the product ships cannot drift apart.
-
 ## Product components (`src/components/`)
 
 | Component | File | Server/Client | Purpose |
@@ -50,7 +46,6 @@ letter the sting draws and the letter the product ships cannot drift apart.
 | `ChannelCard` | `channel-card.tsx` | client | Poster card with logo bug and favourite toggle |
 | `PlayerModal` | `player-modal.tsx` | client | Iframe player dialog |
 | `Footer` | `footer.tsx` | server | Statement, navigation, wordmark watermark |
-| `FirstVisitIntro` | `intro/first-visit-intro.tsx` | client | The sting: the mark draws itself, once, on a device's first visit |
 
 ## Shell contracts
 
@@ -88,22 +83,6 @@ No new props were added.
 
 Takes no props. The copyright year is cached with `"use cache"`, so the page
 stays static.
-
-### `FirstVisitIntro`
-
-The sting. It is placed once, in the root layout, and it decides for itself
-whether it is seen.
-
-| Prop | Type | Notes |
-| ---- | ---- | ----- |
-| `enabled` | `boolean` | Defaults to `true`. Set false to hold the sting back. |
-| `onFinish` | `(reason: "played" \| "skipped") => void` | Called when the sting is over. Not called when it never appeared. |
-
-The flag lives in `localStorage` under `acum:intro:v1`, namespaced like the
-rest of the product's storage. The decision is taken by an inline script
-before the first paint, so a visitor who has been here before never sees the
-field — not even for a frame — and the catalogue underneath is never
-mis-aligned by it.
 
 ## Libraries
 

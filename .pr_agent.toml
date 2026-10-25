@@ -1,0 +1,24 @@
+[config]
+model = "openai/deepseek-ai/deepseek-v4.1-flash"
+# NVIDIA NIM ladder, mirroring pr-agent.yml: locally reachable only when
+# OPENAI.API_BASE points at https://integrate.api.nvidia.com/v1 (this toml's
+# [openai] api_base is ignored - set the env vars for local runs). CI supplies
+# both from secrets. Re-add another provider only with the cost rule checked.
+fallback_models = ["openai/z-ai/glm-5.3-flash", "openai/stepfun-ai/step-5-preview"]
+# Unknown ids outside PR-Agent's token table — set to endpoint's published
+# window (operator placeholder; lower if the primary model is smaller).
+custom_model_max_tokens = 200000
+max_model_tokens = 200000
+enable_large_pr_chunking = true
+publish_error_details = true
+
+[openai]
+# Host-only: openai.api_base in a repo-local .pr_agent.toml is IGNORED by
+# PR-Agent — set OPENAI.API_BASE via the workflow env instead.
+# Key NEVER lands in a file (comes from OPENAI.KEY env).
+
+[github_action_config]
+auto_review = true
+auto_describe = true
+auto_improve = true
+pr_actions = ["opened", "synchronize", "reopened"]

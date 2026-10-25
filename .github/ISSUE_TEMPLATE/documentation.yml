@@ -1,39 +1,33 @@
-name: Documentation
-description: The documentation is wrong, missing or unclear
-labels: ["documentation"]
+name: Documentation issue
+description: Report a gap, error, or improvement in the docs
+title: "[Docs]: "
+labels: ["documentation", "triage"]
 body:
-  - type: dropdown
-    id: area
+  - type: markdown
     attributes:
-      label: Which document?
-      options:
-        - README.md
-        - CONTRIBUTING.md
-        - SECURITY.md
-        - docs/project-doc.md
-        - docs/system_diagram.md
-        - docs/tech_stack.md
-        - docs/targets.md
-        - docs/roadmap.md
-        - docs/changelog.md
-        - design-system/DESIGN_SYSTEM.md
-        - The interface itself (copy, labels, layout)
-        - Other
+      value: |
+        Help us fix the docs. Reference the exact page or file where possible.
+  - type: input
+    id: page
+    attributes:
+      label: Page reference
+      description: File path or URL of the docs page (e.g. docs/project-doc.md, v1/Obsidian-Documentation/...).
+      placeholder: docs/... or URL
     validations:
       required: true
-
   - type: textarea
-    id: what-is-wrong
+    id: wrong
     attributes:
-      label: What should it say instead?
-      description: The current text and the text you expect, if you can.
+      label: What is wrong or missing?
+      description: Describe the gap, error, or outdated content.
+      placeholder: This section says X but should say Y / page Z is missing ...
     validations:
       required: true
-
   - type: textarea
-    id: why
+    id: suggestion
     attributes:
-      label: Why does it matter?
-      description: What did you try to do that the documentation made hard?
+      label: Suggested improvement
+      description: Proposed wording, structure, or content.
+      placeholder: Suggested text or outline ...
     validations:
       required: false

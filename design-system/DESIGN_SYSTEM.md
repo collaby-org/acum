@@ -273,7 +273,6 @@ Every animation is disabled under `prefers-reduced-motion: reduce`.
 | Card | `src/components/channel-card.tsx` | Poster, logo bug, status chip, favourite toggle. |
 | Rail | `src/components/channel-rail.tsx` | Horizontal scroller with edge arrows that hide at the ends. |
 | Player | `src/components/player-modal.tsx` | Iframe stage, status notice, copy-link and source actions. |
-| Intro | `src/components/intro/first-visit-intro.tsx` | The first-visit sting: the mark draws itself in light, the wordmark resolves under it, the field lifts. 2500 ms, once per device. |
 
 ### The hero screen
 

@@ -1,0 +1,39 @@
+name: Documentation
+description: The documentation is wrong, missing or unclear
+labels: ["documentation"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which document?
+      options:
+        - README.md
+        - CONTRIBUTING.md
+        - SECURITY.md
+        - docs/project-doc.md
+        - docs/system_diagram.md
+        - docs/tech_stack.md
+        - docs/targets.md
+        - docs/roadmap.md
+        - docs/changelog.md
+        - design-system/DESIGN_SYSTEM.md
+        - The interface itself (copy, labels, layout)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-is-wrong
+    attributes:
+      label: What should it say instead?
+      description: The current text and the text you expect, if you can.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+      description: What did you try to do that the documentation made hard?
+    validations:
+      required: false

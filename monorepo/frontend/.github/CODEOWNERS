@@ -1,0 +1,13 @@
+# Owners for every path in this repository.
+# Order matters: the last matching entry wins.
+
+*                       @collaby-org
+
+# Generated channel data — only the maintainer of the pipeline changes it.
+/src/data/              @collaby-org
+/scripts/               @collaby-org
+/data/                  @collaby-org
+
+# Design system and living docs.
+/design-system/         @collaby-org
+/docs/                  @collaby-org

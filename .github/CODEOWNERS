@@ -3,6 +3,17 @@
 
 *                       @collaby-org
 
+# Frontend application
+/monorepo/frontend/     @collaby-org
+
+# TV application
+/monorepo/tv/           @collaby-org
+
+# TV applications (Tizen, webOS, Android TV)
+/tizen-tv/              @collaby-org
+/webos-tv/              @collaby-org
+/android-tv/            @collaby-org
+
 # Generated channel data — only the maintainer of the pipeline changes it.
 /src/data/              @collaby-org
 /scripts/               @collaby-org
@@ -11,3 +22,14 @@
 # Design system and living docs.
 /design-system/         @collaby-org
 /docs/                  @collaby-org
+
+# Supabase backend
+/supabase/              @collaby-org
+
+# CI/CD workflows
+/.github/workflows/     @collaby-org
+
+# Documentation
+/README.md              @collaby-org
+/docs/                  @collaby-org
+/design-system/         @collaby-org

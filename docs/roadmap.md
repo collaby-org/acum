@@ -40,22 +40,6 @@ ships or changes shape.
       something has to keep them fresh.
 - [ ] A "last checked" timestamp per channel, shown in the player modal.
 
-### The stills
-
-- [x] **The clock is one clock.** "Acum" is resolved against the real clock,
-      corrected by the server's stamp, and re-read every minute. The cards,
-      the hero and the channel panel all read it.
-- [x] **A still belongs to a programme.** The capture pipeline files every
-      frame under the programme that was on air when it was taken, and the
-      card picks the still of the slot on air.
-- [x] **The stills refresh on a schedule** — `stills.yml`, twice an hour,
-      on a self-hosted runner that can reach the upstreams.
-- [ ] **A still for every channel that plays.** 20 of 156 channels carry a
-      picture today; a full cycle of the catalogue takes about half an hour
-      and needs a runner that is not rate-limited.
-- [ ] The stills refresh without a pull request — the catalogue is baked
-      into the build, so a new picture waits for a deploy.
-
 ### Deeper discovery
 
 - [ ] A channel detail view with the family, the sibling feeds and the

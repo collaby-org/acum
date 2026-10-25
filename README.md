@@ -68,12 +68,6 @@ npm run dev
 
 Open <http://localhost:3000>. Node.js 20.9 or newer.
 
-Copy `.env.example` to `.env` and fill it in — the Supabase URL and
-publishable key at minimum; the app fails with a readable error, not a broken
-client, when they are missing. Nothing secret is committed: `.env` is
-gitignored, and on Vercel the same names go in Settings → Environment
-Variables before the build.
-
 ```bash
 npm run lint        # ESLint (flat config)
 npm run typecheck   # next typegen && tsc --noEmit
@@ -146,8 +140,6 @@ docs/specs/        the load-bearing decisions
 - [docs/targets.md](docs/targets.md) — scope and quality bar
 - [docs/roadmap.md](docs/roadmap.md) — what is next
 - [docs/changelog.md](docs/changelog.md) — release history
-- [docs/admin.md](docs/admin.md) — the desk: who gets in, what it shows, how to
-  open it
 - [docs/specs/catalogue-model.md](docs/specs/catalogue-model.md) — why one
   entry per channel
 - [docs/specs/player-architecture.md](docs/specs/player-architecture.md) — how

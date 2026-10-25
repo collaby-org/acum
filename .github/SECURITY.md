@@ -1,49 +1,33 @@
-# Security Policy
+# Security Policy — Obsidian Exchange
 
-## Supported versions
+## Supported scope
 
-| Version | Supported |
-| ------- | --------- |
-| 1.0.x   | ✅        |
+We provide security fixes for the current `main` branch:
 
-ACUM is a static site with no backend, no database and no accounts, so the
-attack surface is small: the app itself, and the third-party players it
-embeds.
+- `v1/Obsidian-Core` (Laravel 8 backend)
+- `v1/Obsidian-Client` (Next.js 12 frontend)
+- `v1/Obsidian-Vault` (Express chain gateway)
 
-## Reporting a vulnerability
+Self-hosted deployments should track `main` and apply updates promptly.
+Fresh installs seed demo/launchpad/futures data — never use seed credentials in production.
 
-Please **do not** open a public issue. Use GitHub's private reporting form:
+## Reporting a vulnerability (responsible disclosure)
 
-**[Security → Report a vulnerability](https://github.com/collaby-org/acum/security/advisories/new)**
-on the repository page.
+**Do NOT file a public GitHub issue for a suspected vulnerability.**
+Public disclosure puts all self-hosted operators at risk.
 
-Include the affected version, a description, and reproduction steps if you have
-them. You can expect an acknowledgement within 72 hours and a fix or a
-mitigation plan within 14 days.
+1. Contact the maintainers privately: `SECURITY-CONTACT-PLACEHOLDER` (replace with a real security contact email before going public).
+2. Include: affected component + version/commit, impact, and minimal reproduction steps (redacted).
+3. Allow reasonable time for a fix before any public disclosure.
+4. We will acknowledge receipt, coordinate a fix, and credit reporters who wish to be credited.
 
-## Scope
+## Secret handling
 
-In scope:
+- Never paste `.env` contents, JWTs, API secrets, or private keys in issues, PRs, discussions, or logs.
+- Redact tokens and credentials from all reports and screenshots.
+- If you accidentally commit a secret, rotate it immediately and notify maintainers.
 
-- Anything that lets a visitor run code in the ACUM origin.
-- Stored or reflected XSS through the channel dataset, the taxonomy file, or
-  any query string the app reads.
-- Path traversal or injection in the build scripts under `scripts/`.
-- A compromised or tampered dependency that ships malicious code.
+## Out of scope
 
-Out of scope:
-
-- Third-party players and their own scripts. ACUM embeds them in a
-  sandboxed `<iframe>`; we do not control their code, their cookies or their
-  ad behaviour.
-- Denial of service against the source site or the embed hosts.
-- Missing security headers on a personal deployment.
-
-## Hardening already in place
-
-- No analytics, no trackers, no third-party scripts of our own.
-- No `dangerouslySetInnerHTML` anywhere in the app.
-- Favourites are read from `localStorage` and validated as a string array
-  before use.
-- The dataset is a static module — no runtime fetch, no injection surface.
-- CI runs a secret scan on every push and pull request.
+- Social engineering, physical attacks, or third-party hosted infrastructure outside this repo.
+- Vulnerabilities in end-of-life dependencies reported without a reproduction against `main`.
