@@ -22,7 +22,7 @@ Build a Netflix-quality native-feel TV application in `monorepo/tv/` by copying 
 
 ### TV-Specific Design System
 
-Create `design-system/` with:
+Create `monorepo/tv/src/design-system/` with:
 
 **Colours:**
 - Background: `#000000` (pure black)
@@ -77,7 +77,7 @@ Create `design-system/` with:
 - Video fills entire viewport.
 - Controls overlay on bottom, semi-transparent black gradient.
 - Info overlay top-left: channel name, "Live" indicator.
-- Controls auto-hide after 3 seconds of no input.
+- Controls auto-hide after 3 seconds of inactivity.
 - Volume slider, quality selector (Auto, 1080p, 720p, 480p), captions toggle.
 - Skip back 10s, skip forward 30s buttons.
 
@@ -102,7 +102,7 @@ Create `design-system/` with:
 - QR contains: `https://acum-weld.vercel.app/tv-link?code=<unique_code>&tv_id=<device_id>`
 - Code is 8 characters, expires after 5 minutes.
 - TV polls `/api/auth/confirm-tv` every 1.5 seconds.
-- When code is confirmed, TV redirects to home directory.
+- When code is confirmed, TV redirects to channel directory.
 
 ### Phone Side (Frontend Website)
 
@@ -136,7 +136,7 @@ Create `design-system/` with:
 
 - Initial load: hero + first row visible in < 1s.
 - Channel switch: < 300ms to show new channel info.
-- Video start: < 2s from click to playing.
+- Video start: < 2s from channel selection.
 - Lighthouse score: 90+ on mobile, 95+ on desktop.
 
 ## Phase 5: Testing Checklist
@@ -151,7 +151,7 @@ Create `design-system/` with:
 - [ ] Auto-hide controls after 3s inactivity
 - [ ] No layout shifts during loading
 - [ ] Build passes with zero errors
-- [ ] Lighthouse score 90+ mobile, 95+ desktop
+- [ ] Lighthouse score 90+ on mobile, 95+ on desktop
 
 ## Deliverables
 

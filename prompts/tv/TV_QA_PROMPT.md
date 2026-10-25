@@ -36,13 +36,13 @@ npm run lint
 - [ ] **Focus loops**: Last item in row → first item, first item → last item.
 - [ ] **No focus traps**: User cannot get stuck on any element.
 - [ ] **Enter key**: Activates focused element (plays channel, opens menu, etc.).
-- [ ] **Back key**: Exits current page/layer, returns to previous screen.
+- [ ] **Back key**: Exits current page/layer.
 - [ ] **Focus persistence**: Focus returns to correct element when navigating back.
 
 ### Cursor Management
 
 - [ ] **Cursor hidden on TV**: When screen width > 1024px AND pointer is coarse, cursor must be hidden.
-- [ ] **Cursor visible on desktop/mobile**: When pointer is fine, cursor must be visible.
+- [ ] **Cursor visible on desktop/mobile browsers**: When pointer is fine, cursor must be visible.
 - [ ] **Cursor reappears**: On any mouse movement, cursor must reappear immediately.
 
 ### Layout & Overscan
@@ -56,7 +56,7 @@ npm run lint
 
 - [ ] **Auto-play**: Video must start automatically when channel selected.
 - [ ] **Full-screen**: Video must fill entire viewport.
-- [ ] **Controls overlay**: Play/pause, volume, skip back/forward, quality selector.
+- [ ] **Controls overlay**: Play/pause, skip back/forward 10s, volume, quality selector.
 - [ ] **Controls auto-hide**: After 3 seconds of no input, controls fade out.
 - [ ] **Controls reappear**: On any remote input, controls must reappear.
 - [ ] **Stream failover**: When source dies, must switch to next available source automatically.
@@ -68,7 +68,7 @@ npm run lint
 
 - [ ] **Hero banner**: Featured channel with background image, title, play button.
 - [ ] **Horizontal rows**: Channels in scrollable horizontal rows.
-- [ ] **Row categories**: "Live Now", "News", "Sports", "Movies", etc.
+- [ ] **Row categories**: "Live Now", "News", "Sports", "Movies", "Series", etc.
 - [ ] **Card scaling**: Cards scale up (1.15x) on focus.
 - [ ] **Edge fade**: Cards fade at row edges to indicate scrollable content.
 - [ ] **Live badges**: Red "LIVE" indicator on live channels.

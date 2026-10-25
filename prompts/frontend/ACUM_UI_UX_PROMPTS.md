@@ -1,4 +1,4 @@
-# ACUM — OpenCode Orchestrator Prompt Library (Frontend UI/UX)
+# ACUM — OpenCode Orchestrator Prompt Library (Frontend — Mobile & Desktop Browsers Only)
 
 ## How to use these prompts
 
@@ -6,28 +6,28 @@ Before every step:
 
 1. Open the existing ACUM repository in OpenCode.
 2. Confirm the working directory is the repository root.
-3. Make sure `ACUM_UI_UX_MASTER.md` exists.
+3. Make sure `prompts/frontend/ACUM_UI_UX_MASTER.md` exists.
 4. Paste only the prompt for the step you are authorising.
 5. Review the orchestrator's report and inspect the actual changes.
 6. Do not run the next prompt until the current step passes its acceptance gate.
 
-The master specification is mandatory for every step.
+The master specification (`prompts/frontend/ACUM_UI_UX_MASTER.md`) is mandatory for every step.
 
 ---
 
 # PROMPT 1 — READ-ONLY REPOSITORY AUDIT
 
-Read and follow `ACUM_UI_UX_MASTER.md` completely.
+Read and follow `prompts/frontend/ACUM_UI_UX_MASTER.md` completely.
 
 You are authorised to perform **Step 1 only: the read-only repository audit**.
 
-My existing Next.js Romanian live TV platform works, but the frontend looks outdated and doesn't feel like a Netflix-style TV app. The visual system, consistency, UX and component architecture need a complete redesign focused on mobile and TV browsers.
+My existing Next.js Romanian live TV platform works, but the frontend looks outdated and doesn't feel like a modern streaming app. The visual system, consistency, UX and component architecture need a complete redesign focused on **mobile and desktop browsers only** (TV is a separate app in `monorepo/tv/`).
 
 Before making any changes, I need you to understand the real application.
 
 ## Your task
 
-Inspect the repository and map the complete frontend (`monorepo/frontend/`), including all discovered routes, layouts, shared components, CSS dependencies, forms, tables, pagination, data fetching, authentication, WebSockets, API integrations, tests and user journeys.
+Inspect the repository (`monorepo/frontend/`) and map the complete frontend, including all discovered routes, layouts, shared components, CSS dependencies, forms, tables, pagination, data fetching, authentication, WebSockets, API integrations, tests and user journeys.
 
 Identify the actual responsibilities of the existing components. In particular, determine which parts are presentation-only and which contain behaviour or integration logic.
 
@@ -46,6 +46,7 @@ Identify the areas most likely to break if redesigned carelessly.
 - Do not redesign any page.
 - Do not replace working components.
 - Do not guess about architecture that you cannot verify.
+- Do not reference TV, smart TV, Tizen, webOS, Android TV or any TV-specific concerns. This frontend is for mobile and desktop browsers only.
 
 You may create the audit documentation required by the master specification.
 
@@ -61,7 +62,7 @@ Create and populate:
 - `docs/ui-ux/RISK_REGISTER.md`
 - `docs/ui-ux/MIGRATION_LOG.md`
 
-Update `ACUM_UI_UX_MASTER.md` only if an actual repository fact requires a documented clarification. Do not change its core safeguards.
+Update `prompts/frontend/ACUM_UI_UX_MASTER.md` only if an actual repository fact requires a documented clarification. Do not change its core safeguards.
 
 ## Finish by reporting
 
@@ -80,11 +81,11 @@ Stop after the audit. Wait for my approval before implementing anything.
 
 # PROMPT 2 — CREATE THE IMPLEMENTABLE ACUM DESIGN SYSTEM
 
-Read `ACUM_UI_UX_MASTER.md` and all relevant outputs from Step 1.
+Read `prompts/frontend/ACUM_UI_UX_MASTER.md` and all relevant outputs from Step 1.
 
 You are authorised to perform **Step 2 only: define the new design system and implementation plan**.
 
-The goal is to replace the outdated visual system with a coherent ACUM interface built primarily with Tailwind CSS, shadcn/ui and Lucide React, while retaining the existing application architecture where appropriate.
+The goal is to replace the outdated visual system with a coherent ACUM interface built primarily with Tailwind CSS, shadcn/ui and Lucide React, while retaining the existing application architecture where appropriate. This is for **mobile and desktop browsers only**.
 
 ## First, establish the source of truth
 
@@ -99,8 +100,8 @@ Create a concrete specification for:
 - Brand, semantic and surface colour tokens.
 - Typography, spacing, responsive containers and breakpoints.
 - Buttons, inputs, selects, forms and validation.
-- Tables, pagination, sorting, filters and financial data.
-- Cards, tabs, menus, dialogs, drawers and tooltips.
+- Tables, pagination, sorting, filters and data.
+- Cards, tabs, dropdowns, dialogs, drawers and tooltips.
 - Navigation and the shared application shell.
 - Loading skeletons, errors, empty states and notifications.
 - Icons and consistent Lucide usage.
@@ -108,7 +109,7 @@ Create a concrete specification for:
 - Animation duration, easing and allowed interaction patterns.
 - Trading, Launchpad, onboarding and wallet-specific UX patterns.
 
-Do not use a generic design system that makes every page look like the same card grid. Trading must remain information-dense; onboarding must be guided; Launchpad can be more expressive where appropriate.
+Do not use a generic design system that makes every page look like the same card grid. Directory pages must remain information-dense; onboarding must be guided.
 
 ## Plan the component architecture
 
@@ -270,7 +271,7 @@ Do not invent missing features or silently omit existing ones.
 
 ## Channel directory design requirements
 
-Channel directory screens must be fast, readable and TV-friendly.
+Channel directory screens must be fast, readable and browser-friendly.
 
 - Keep channel data visible and easy to compare.
 - Use clear numeric alignment and consistent formatting.
@@ -283,13 +284,13 @@ Channel directory screens must be fast, readable and TV-friendly.
 
 ## Player design requirements
 
-The player must be immersive and TV-optimised.
+The player must be immersive and browser-optimized.
 
 - Keep video playback prominent and distraction-free.
 - Make channel name, status, quality and current show legible.
 - Preserve live updates and make changes understandable.
 - Use clear play/pause, volume, quality and fullscreen controls.
-- Keep playback controls immediately usable with a remote.
+- Keep playback controls immediately usable with mouse/touch.
 - Never delay playback controls for transitions.
 - Preserve the existing stream and player behaviour unless a separately approved change is necessary.
 

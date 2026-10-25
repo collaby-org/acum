@@ -16,7 +16,7 @@ Do not treat this as a simple global find-and-replace operation. Audit the entir
 
 ## 2. Scope of the migration (frontend only)
 
-Inspect and update all relevant brand and language references throughout the **frontend** including:
+Inspect and update all relevant brand and language references throughout the **frontend** (`monorepo/frontend/`) including:
 
 - Frontend page titles, headings, labels, buttons, descriptions and other visible text.
 - Login, registration, account recovery and onboarding copy.
@@ -31,10 +31,12 @@ Inspect and update all relevant brand and language references throughout the **f
 - Page titles, metadata, descriptions, Open Graph content and social sharing text.
 - Favicons, manifests and other assets that contain the old brand name, where changing them does not alter the visual design.
 - Help pages, FAQs, support content and onboarding instructions.
+- API documentation, SDK descriptions, developer portal text and integration guides.
+- README files, product documentation, configuration examples and other relevant project documentation.
 - Tests, snapshots, fixtures and mock responses that contain outdated branding.
 - Seed data and templates containing brand-specific text, where safe and appropriate.
 
-**Do not touch:** TV app (`monorepo/tv`), TV apps (`tizen-tv/`, `webos-tv/`, `android-tv/`), Supabase backend (`supabase/`), or any files outside `monorepo/frontend/`.
+**Do not touch:** TV app (`monorepo/tv/`), TV apps (`tizen-tv/`, `webos-tv/`, `android-tv/`), Supabase backend (`supabase/`), or any files outside `monorepo/frontend/`.
 
 Discover the actual repository structure before implementation. Do not assume every category exists, and do not omit a category simply because it is outside the main frontend.
 

@@ -1,14 +1,16 @@
-# ACUM — Master UI/UX Redesign Specification (Frontend Only)
+# ACUM — Master UI/UX Redesign Specification (Frontend Only — Mobile & Desktop Browsers)
 
 ## 1. Mission
 
-Completely redesign the existing **ACUM** Next.js frontend into a premium, modern, award-worthy Netflix-style TV streaming experience for mobile and TV browsers.
+Completely redesign the existing **ACUM** Next.js frontend into a premium, modern, award-worthy TV streaming experience for **mobile and desktop browsers**.
 
-The existing application works, but its visual design and CSS architecture need improvement. It needs a coherent design system and a deliberately engineered user experience that feels like a native TV app.
+The existing application works, but its visual design and CSS architecture need improvement. It needs a coherent design system and a deliberately engineered user experience that works on mobile phones and desktop/laptop browsers.
 
 The objective is not to put a new coat of paint on every old component. The objective is to replace the legacy presentation layer with a coherent, modern design system and a deliberately engineered user experience.
 
 The finished platform must feel fast, precise, elegant, responsive and trustworthy. Every page must feel like part of the same product.
+
+**Important:** This spec covers mobile and desktop browsers only. TV (smart TV, Tizen, webOS, Android TV) is a separate app (`monorepo/tv/`) with its own spec. Do not mix TV concerns into frontend browser work.
 
 ## 2. The central rule: replace the presentation, preserve the product
 
@@ -86,7 +88,7 @@ Establish one authoritative system for:
 - Notifications, confirmations, loading skeletons and empty states.
 - Navigation, application shell and mobile menus.
 - Animation duration, easing and reduced-motion behaviour.
-- TV-specific patterns: D-pad navigation, cursor hiding, overscan safe areas, remote focus loops.
+- Browser-specific patterns: touch gestures, hover states, scroll behaviour, mobile-first layout.
 
 Use consistent component APIs and variants. Do not build a different button, input, table or modal for every page.
 
@@ -96,7 +98,7 @@ Do not force every screen into the same generic card layout. Choose the most app
 
 ### Channel directory and catalogue
 
-The directory must prioritise discovery, scanability and TV navigation.
+The directory must prioritise discovery, scanability and browser navigation.
 
 - Keep channel data easy to scan.
 - Make channel name, status, quality, family and current show legible.
@@ -110,13 +112,13 @@ The directory must prioritise discovery, scanability and TV navigation.
 
 ### Player page
 
-The player must prioritise immersion, TV controls and clear information.
+The player must prioritise immersion, browser controls and clear information.
 
 - Keep video playback prominent and distraction-free.
 - Make channel name, status, quality and current show legible.
 - Preserve live updates and make changes understandable.
 - Use clear play/pause, volume, quality and fullscreen controls.
-- Keep playback controls immediately usable with a remote.
+- Keep playback controls immediately usable with mouse/touch.
 - Never make users wait for an animation before playing or pausing.
 - Avoid excessive motion, decorative effects and unnecessary layout shifts.
 - Preserve accurate numeric formatting and stream information.
@@ -133,32 +135,33 @@ The player must prioritise immersion, TV controls and clear information.
 - Provide confirmation when an action is actually completed.
 - Avoid unnecessary steps, confusing navigation and unexplained redirects.
 
-## 7. TV-specific design patterns
+## 7. Browser-specific design patterns
 
-### Remote-first navigation
+### Mouse and touch navigation
 
-- All interactive elements must be reachable via D-pad arrow keys.
-- Focus rings must be visible and high-contrast on all focusable elements.
-- Enter/Back keys must work consistently throughout the app.
-- Focus must not get trapped or lost when navigating between pages.
-- Focus loops must be implemented at list edges (last → first, first → last).
+- All interactive elements must be reachable via mouse click and touch tap.
+- Hover states for desktop, touch states for mobile.
+- All interactive elements must have visible focus states (keyboard navigation).
+- Focus rings must be visible and high-contrast for keyboard users.
+- Touch targets must be at least 44px for touch targets on mobile.
 
-### Cursor hiding
+### Cursor management
 
-- Hide mouse cursor on TV-sized screens (coarse pointer).
-- Show cursor on desktop/mobile browsers.
-- The cursor should reappear when the user moves the mouse.
+- Show cursor on desktop/mobile browsers (default behaviour).
+- Do NOT hide cursor on browser views (cursor hiding is TV-only).
 
-### Safe areas
+### Layout
 
-- Add safe-area padding for TV overscan (5-10% of edges).
-- Ensure critical content is not cut off on TV screens.
+- Mobile-first responsive design.
+- Desktop layout: wider containers, sidebars where appropriate.
+- Mobile layout: stacked columns, bottom navigation where appropriate.
+- Safe areas: account for browser chrome, address bars, notch areas.
 
-### Focus loops
+### Browser navigation
 
-- Implement focus loops at row/list edges.
-- When focus reaches the last item in a row, wrap to the first.
-- When focus reaches the first item, wrap to the last.
+- Browser back/forward buttons must work correctly.
+- Deep links must resolve to correct pages.
+- URL query parameters must be preserved on navigation.
 
 ## 8. Micro-interactions and motion
 
@@ -321,7 +324,7 @@ ACUM frontend is ready only when:
 - Existing functionality and important user journeys remain intact.
 - Pagination, filtering, sorting and live updates behave correctly.
 - Forms, errors, loading states and confirmations work.
-- The responsive experience is verified (mobile + TV).
+- The responsive experience is verified (mobile + desktop).
 - Motion is purposeful, accessible and non-blocking.
 - Performance is measured rather than guessed.
 - Obsolete CSS is removed only when proven safe.

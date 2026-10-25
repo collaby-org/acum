@@ -2,7 +2,7 @@
 
 ## Objective
 
-Perform a complete audit of the ACUM frontend (`monorepo/frontend/`) to find and fix all errors, bugs, mistakes, and UX flow issues. Match Netflix-style quality for mobile and TV browsers.
+Perform a complete audit of the ACUM frontend (`monorepo/frontend/`) to find and fix all errors, bugs, mistakes, and UX flow issues. Match Netflix-style quality for **mobile and desktop browsers** (not TV).
 
 ## Scope
 
@@ -27,7 +27,7 @@ npm run lint
 - Build failures (zero tolerance).
 - Warnings should be reviewed and fixed where they indicate real issues.
 
-## Part B: UI/UX Bugs (Netflix-Style Standard)
+## Part B: UI/UX Bugs (Modern Web Standard)
 
 ### Layout & Styling
 
@@ -36,7 +36,7 @@ npm run lint
 - [ ] **Misaligned elements**: Buttons, inputs, cards must align to grid.
 - [ ] **Colour inconsistencies**: Text colours must match design system (primary `#FFFFFF`, secondary `#B3B3B3`, accent red `#E50914`).
 - [ ] **Missing focus rings**: All focusable elements must show visible focus rings.
-- [ ] **Hover states missing**: Interactive elements must have hover states (desktop) or focus states (TV/remote).
+- [ ] **Hover states missing**: Interactive elements must have hover states (desktop).
 
 ### Navigation & Routing
 
@@ -80,17 +80,7 @@ npm run lint
 - [ ] **Success states**: Must show confirmation after successful action.
 - [ ] **Loading states**: Must show spinner/skeleton during async operations.
 
-## Part C: TV-Specific Issues (Frontend Viewed on TV)
-
-- [ ] **Cursor visibility**: Cursor must be hidden on TV-sized screens (coarse pointer).
-- [ ] **D-pad navigation**: All focusable elements must be reachable via arrow keys.
-- [ ] **Focus rings**: Must be visible and high-contrast on TV screens.
-- [ ] **Overscan**: Critical content must not be cut off on TV edges.
-- [ ] **Remote controls**: Enter/Back keys must work correctly.
-- [ ] **Text size**: Must be readable from 3 meters away (TV viewing distance).
-- [ ] **Touch targets**: Minimum 44px for touch targets on mobile.
-
-## Part D: Performance
+## Part C: Performance
 
 - [ ] **Initial load**: Home page must load in < 2s on 3G.
 - [ ] **Channel switch**: Must switch channels in < 500ms.
@@ -98,7 +88,7 @@ npm run lint
 - [ ] **Bundle size**: JavaScript bundle must be reasonable (< 500KB gzipped).
 - [ ] **Unused dependencies**: Remove unused packages.
 
-## Part E: Accessibility
+## Part F: Accessibility
 
 - [ ] **Screen readers**: All interactive elements must have aria-labels.
 - [ ] **Keyboard navigation**: All functions must be reachable via keyboard.
@@ -106,7 +96,7 @@ npm run lint
 - [ ] **Reduced motion**: Must respect `prefers-reduced-motion`.
 - [ ] **Language**: All user-facing text must be in Romanian.
 
-## Part E: Content & Copy
+## Part G: Content & Copy
 
 - [ ] **Romanian copy**: All user-facing text must be in Romanian.
 - [ ] **No emojis**: User-facing copy must not contain emojis.
@@ -114,7 +104,7 @@ npm run lint
 - [ ] **Consistent terminology**: Same terms used throughout (canal, live, categorie, etc.).
 - [ ] **No placeholder text**: No "Lorem ipsum", "Coming soon", or unfinished copy.
 
-## Part F: Assets & Media
+## Part H: Assets & Media
 
 - [ ] **Logos**: All channel logos must exist and load.
 - [ ] **Posters**: All programme posters must exist and load.
@@ -122,7 +112,7 @@ npm run lint
 - [ ] **PWA icons**: Must exist for installable PWA.
 - [ ] **OG image**: Must exist for social sharing.
 
-## Part G: Errors to Fix Immediately
+## Part I: Errors to Fix Immediately
 
 List each error found with:
 1. File path and line number.
