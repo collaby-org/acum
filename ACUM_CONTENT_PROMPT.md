@@ -135,7 +135,7 @@ Use terminology that matches the existing business logic and backend state model
 
 Create a documented glossary in:
 
-`monorepo/frontend/docs/brand/ACUM_TERMINOLOGY.md`
+`docs/brand/ACUM_TERMINOLOGY.md`
 
 Include the preferred term, meaning, context, disallowed alternatives where appropriate and relevant translation guidance.
 
@@ -202,7 +202,7 @@ Use contextual inspection rather than blind replacement.
 
 Create:
 
-`monorepo/frontend/docs/brand/ACUM_BRAND_INVENTORY.md`
+`docs/brand/ACUM_BRAND_INVENTORY.md`
 
 For each significant finding, record its location, classification, intended action and migration status.
 
@@ -231,7 +231,7 @@ Use the existing localization tooling and architecture.
 
 Create:
 
-`monorepo/frontend/docs/brand/ACUM_LOCALIZATION_AUDIT.md`
+`docs/brand/ACUM_LOCALIZATION_AUDIT.md`
 
 Record supported locales, files reviewed, terminology changes, missing translations and verification results.
 

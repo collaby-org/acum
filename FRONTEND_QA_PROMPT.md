@@ -133,9 +133,9 @@ List each error found with:
 
 ## Deliverables
 
-1. `monorepo/frontend/docs/qa/FRONTEND_BUG_REPORT.md` — Complete list of all bugs found and fixed.
-2. `monorepo/frontend/docs/qa/FRONTEND_CHECKLIST.md` — Checklist with pass/fail for each item above.
-3. `monorepo/frontend/docs/qa/FRONTEND_TEST_RESULTS.md` — Build, typecheck, lint results.
+1. `docs/qa/FRONTEND_BUG_REPORT.md` — Complete list of all bugs found and fixed.
+2. `docs/qa/FRONTEND_CHECKLIST.md` — Checklist with pass/fail for each item above.
+3. `docs/qa/FRONTEND_TEST_RESULTS.md` — Build, typecheck, lint results.
 4. All fixes committed to `monorepo/frontend/`.
 
 ## Success Criteria

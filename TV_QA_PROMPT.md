@@ -108,9 +108,9 @@ List each error found with:
 
 ## Deliverables
 
-1. `monorepo/tv/docs/qa/TV_BUG_REPORT.md` — Complete list of all bugs found and fixed.
-2. `monorepo/tv/docs/qa/TV_CHECKLIST.md` — Checklist with pass/fail for each item above.
-3. `monorepo/tv/docs/qa/TV_TEST_RESULTS.md` — Build, typecheck, lint results.
+1. `docs/qa/TV_BUG_REPORT.md` — Complete list of all bugs found and fixed.
+2. `docs/qa/TV_CHECKLIST.md` — Checklist with pass/fail for each item above.
+3. `docs/qa/TV_TEST_RESULTS.md` — Build, typecheck, lint results.
 4. All fixes committed to `monorepo/tv/`.
 
 ## Success Criteria

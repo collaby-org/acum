@@ -22,7 +22,7 @@ Build a Netflix-quality native-feel TV application in `monorepo/tv/` by copying 
 
 ### TV-Specific Design System
 
-Create `monorepo/tv/src/design-system/` with:
+Create `design-system/` with:
 
 **Colours:**
 - Background: `#000000` (pure black)
