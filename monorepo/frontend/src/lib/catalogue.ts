@@ -71,6 +71,7 @@ export function toPublicChannel(
     quality: channel.quality,
     views: viewsOf(channel, meta),
     poster: channel.poster,
+    stills: channel.stills ?? [],
     servers: channel.servers.map((server) => ({
       id: server.id,
       label: server.label,

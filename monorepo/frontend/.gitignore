@@ -30,8 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — never committed. The committed template is `.env.example`.
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -43,3 +44,7 @@ next-env.d.ts
 # verification artifacts
 docs/reviews/.edge-profile/
 
+
+# local run logs
+dev-smoke.log
+stills-run.log

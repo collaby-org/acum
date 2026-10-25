@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Heart, X } from "lucide-react";
 import type { KeyboardEvent, MouseEvent } from "react";
 import { ChannelScreen } from "@/components/channel-card";
+import { nearestRest, useRailWheel } from "@/components/channel-rail";
 import type { EpgGuide } from "@/components/now-next";
 import { STATUS_META } from "@/lib/channel-meta";
 import type { ChannelLike } from "@/lib/navigation";
@@ -74,6 +75,10 @@ export function ShelfRail<T extends ChannelLike>({
   const [edges, setEdges] = useState({ start: true, end: true, overflow: false });
   const [announcement, setAnnouncement] = useState("");
 
+  // The wheel over the shelf moves the shelf, and gives the page the
+  // gesture only when the shelf has reached its end.
+  useRailWheel(scroller, "[data-shelf-id]");
+
   /** The channel that changed place, so focus can follow it. */
   const pendingFocus = useRef<{ id: string; direction: Direction } | null>(null);
 
@@ -103,9 +108,12 @@ export function ShelfRail<T extends ChannelLike>({
   const nudge = (direction: Direction) => {
     const el = scroller.current;
     if (!el) return;
-    el.scrollBy({
-      left: direction * Math.round(el.clientWidth * 0.82),
-      behavior: reducedMotion() ? "auto" : "smooth",
+    // The shelf moves most of a screen and lands on a card.
+    const want = el.scrollLeft + direction * Math.round(el.clientWidth * 0.82);
+    const { point } = nearestRest(el, want, "[data-shelf-id]");
+    el.scrollTo({
+      left: point,
+      behavior: reducedMotion() ? "instant" : "smooth",
     });
   };
 
@@ -261,7 +269,9 @@ export function ShelfRail<T extends ChannelLike>({
           onScroll={sync}
           onKeyDown={onKeyDown}
           style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-3 pt-1 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none]"
+          // No CSS snap: a snap would pull the shelf back after every
+          // small turn of the wheel. It settles on a card by itself.
+          className="flex gap-3.5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-3 pt-1 scroll-pl-4 fx-hide-scrollbar sm:px-8 sm:scroll-pl-8 lg:px-12 lg:scroll-pl-12 [overflow-anchor:none] [contain:paint]"
         >
           {channels.map((channel, index) => {
             const favorite = isFavorite(channel.id);
@@ -271,7 +281,7 @@ export function ShelfRail<T extends ChannelLike>({
               <li
                 key={channel.id}
                 data-shelf-id={channel.id}
-                className="relative w-[248px] shrink-0 snap-start sm:w-[272px]"
+                className="relative w-[248px] shrink-0 sm:w-[272px]"
               >
                 <ShelfCard channel={channel} guide={guide} onPlay={onPlay} />
 
@@ -399,7 +409,7 @@ function ShelfCard<T extends ChannelLike>({
       data-card-action="play"
       onClick={() => onPlay(channel)}
       aria-label={`Vizionează ${channel.name}${isLive ? ", live acum" : `, ${status.label.toLowerCase()}`}`}
-      className="group/card block w-full cursor-pointer rounded-[var(--radius-card)] text-left transition-[transform,box-shadow] duration-[var(--dur-base,300ms)] hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[var(--shadow-e4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!"
+      className="group/card block w-full cursor-pointer rounded-[var(--radius-card)] text-left transition-transform duration-[var(--dur-base,300ms)] hover:-translate-y-0.5 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100! [contain:layout_paint]"
       style={{
         transitionTimingFunction:
           "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",

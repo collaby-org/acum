@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Compass, Heart, Radio, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
+import { ArrowRight, Compass, Heart, Sparkles } from "lucide-react";
 import type { Category, Channel } from "@/data/types";
 import type { EpgGuide } from "@/components/now-next";
 import { Header } from "@/components/header";
@@ -9,7 +10,6 @@ import { Hero } from "@/components/hero";
 import { ChannelRail } from "@/components/channel-rail";
 import { TrendingRail } from "@/components/trending-rail";
 import { ChannelCard } from "@/components/channel-card";
-import { ChannelIndex } from "@/components/channel-index";
 import { SearchPanel } from "@/components/search-panel";
 import { ShelfRail } from "@/components/shelf-rail";
 import { PlayerModal } from "@/components/player";
@@ -22,7 +22,7 @@ import { useLiveAudience } from "@/hooks/use-audience";
 import { celebrate, dismiss } from "@/lib/confetti";
 import { byPlayability, isPlayable } from "@/lib/channel-meta";
 import { CATEGORY_ORDER } from "@/lib/navigation";
-import { cn, plural } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type BrowseProps = {
   channels: Channel[];
@@ -59,7 +59,6 @@ export function Browse({
   const recent = useRecentlyWatched();
   const shelves = useShelves();
   const launcher = useChannelLauncher();
-  const railRefs = useRef(new Map<string, HTMLElement>());
 
   /**
    * Our own audience, counted at the proxy.
@@ -139,11 +138,6 @@ export function Browse({
 
   const searching = query.trim().length > 0;
 
-  const jumpTo = useCallback((channel: Channel) => {
-    const node = railRefs.current.get(channel.category);
-    node?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
-
   return (
     // The bottom bar of the phone layout is fixed, so the page leaves room
     // for it — otherwise the last rail sits under the bar.
@@ -191,7 +185,7 @@ export function Browse({
                 Favorite
               </h1>
               <p className="mt-2 text-sm text-ink-muted">
-                Salvate pe acest dispozitiv. Fără cont, fără sincronizare.
+                Salvate pe acest dispozitiv. Fără sincronizare între dispozitive.
               </p>
             </div>
 
@@ -294,9 +288,22 @@ export function Browse({
                 onToggleFavorite={toggleFavourite}
               />
 
-              {/* A → Z */}
-              <div className="px-4 pt-2 sm:px-8 lg:px-12">
-                <ChannelIndex channels={channels} onJumpTo={jumpTo} />
+              {/* A → Z lives on its own page now. A rail is a shelf: it
+                  shows a dozen channels and hides the rest, and an index
+                  squeezed between two shelves was neither. The way there
+                  stays here, where the index used to sit. */}
+              <div className="mt-6 px-4 sm:px-8 lg:px-12">
+                <Link
+                  href="/canale/toate"
+                  className="group inline-flex items-center gap-2 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:text-ink"
+                >
+                  <span className="h-px w-0 bg-signal transition-[width] duration-300 ease-spring group-hover:w-4" />
+                  Toate canalele, A–Z
+                  <ArrowRight
+                    aria-hidden
+                    className="size-3.5 transition-transform duration-300 ease-spring group-hover:translate-x-0.5"
+                  />
+                </Link>
               </div>
 
               {/* One rail per category */}
@@ -304,61 +311,18 @@ export function Browse({
                 const list = byCategory.get(category.id) ?? [];
                 if (list.length === 0) return null;
                 return (
-                  <div
+                  <ChannelRail
                     key={category.id}
-                    ref={(node) => {
-                      if (node) railRefs.current.set(category.id, node);
-                      else railRefs.current.delete(category.id);
-                    }}
-                    className="scroll-mt-24"
-                  >
-                    <ChannelRail
-                      eyebrow={category.tagline}
-                      title={category.label}
-                      channels={list}
-                      guide={guide ?? null}
-                      onPlay={openPlayer}
-                      isFavorite={isFavourite}
-                      onToggleFavorite={toggleFavourite}
-                    />
-                  </div>
+                    eyebrow={category.tagline}
+                    title={category.label}
+                    channels={list}
+                    guide={guide ?? null}
+                    onPlay={openPlayer}
+                    isFavorite={isFavourite}
+                    onToggleFavorite={toggleFavourite}
+                  />
                 );
               })}
-
-              {/* Everything */}
-              <section className="px-4 pt-6 sm:px-8 lg:px-12">
-                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-                  <div>
-                    <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-signal/85">
-                      <Radio className="size-3.5" />
-                      Cuprins complet
-                    </p>
-                    <h2 className="font-display text-xl font-semibold tracking-tight sm:text-[26px]">
-                      Toate canalele
-                    </h2>
-                    <p className="mt-1 text-sm text-ink-muted">
-                      {channels.length}{" "}
-                      {plural(channels.length, "canal", "canale", "de canale")},
-                      verificate unul cu unul.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                  {channels.map((channel, index) => (
-                    <ChannelCard
-                      key={channel.id}
-                      channel={channel}
-                      onPlay={openPlayer}
-                      isFavorite={isFavourite(channel.id)}
-                      onToggleFavorite={toggleFavourite}
-                      guide={guide ?? null}
-                      className="w-full"
-                      index={index}
-                    />
-                  ))}
-                </div>
-              </section>
             </div>
           </>
         )}

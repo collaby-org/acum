@@ -15,16 +15,17 @@ import type { Channel, Quality } from "@/data/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { QualityBadge } from "@/components/channel-card";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_PROMISE } from "@/lib/site";
 import {
   NowNext,
   findGuideChannel,
   formatClock,
-  referenceMoment,
   resolveSchedule,
   type EpgGuide,
 } from "@/components/now-next";
+import { useGuideMoment } from "@/hooks/use-guide-clock";
 import { posterPalette } from "@/lib/channel-meta";
+import { pictureFor } from "@/lib/stills";
 import { cn, formatViewers } from "@/lib/utils";
 
 type HeroProps = {
@@ -81,7 +82,7 @@ export function Hero({
     [activeGuide, channel],
   );
 
-  const moment = useGuideClock(activeGuide);
+  const moment = useGuideMoment(activeGuide?.reference);
 
   const schedule = useMemo(
     () => (guideChannel ? resolveSchedule(guideChannel, moment) : null),
@@ -90,6 +91,18 @@ export function Hero({
 
   const onAir = schedule?.now ?? null;
   const subject = onAir?.title ?? channel.name;
+
+  /**
+   * The still of the show on air, by the same rule the cards follow: the
+   * frame captured for the slot on air, or — while the pipeline catches
+   * up — the newest still of the channel. When there is none at all the
+   * screen keeps its pure gradient look.
+   */
+  const picture = useMemo(
+    () => pictureFor(channel.stills, onAir, moment),
+    [channel.stills, onAir, moment],
+  );
+  const poster = picture.still?.file ?? null;
 
   // How many people are watching the channel the hero is showing. The
   // hero carries the most watched channel on air, so the crowd is the
@@ -103,9 +116,12 @@ export function Hero({
         ? `În aer acum pe ${channel.name}`
         : `Canalul recomandat · ${channel.family}`;
 
+  // The promise the hero makes. The account is not part of it any more:
+  // what survives is that the picture comes through our own proxy, so
+  // there is nothing else on the page to run, and it starts at once.
   const kicker =
     onAir?.description ??
-    `${channel.name} — unul dintre cele ${totalCount} canale adunate în ${SITE_NAME}. Fără cont, fără reclame, fără pauze: doar canalul și un player care pornește imediat.`;
+    `${channel.name} — unul dintre cele ${totalCount} canale adunate în ${SITE_NAME}. ${SITE_PROMISE} Streamul trece prin proxy-ul nostru: în pagină nu rulează niciun script al altui site, iar playerul pornește imediat.`;
 
   return (
     <section
@@ -178,7 +194,12 @@ export function Hero({
                     alt=""
                     width={44}
                     height={24}
-                    className="h-6 w-11 shrink-0 rounded-[6px] object-cover opacity-95"
+                    /* Contain, not cover: a station wordmark spans a wide
+                       range of proportions (1:1 to 10:1 here), and cover
+                       crops it to the middle of its own name. The full
+                       mark, letterboxed in the same fixed box every other
+                       surface uses. */
+                    className="h-6 w-11 shrink-0 rounded-[6px] object-contain opacity-95"
                     unoptimized
                   />
                 )}
@@ -355,6 +376,43 @@ export function Hero({
                 }}
               />
 
+              {/* The still of the show on air — the picture the channel is
+                  actually broadcasting, laid over the colour wash. The wash
+                  stays underneath as the floor and as the fallback: a still
+                  the catalogue points at but does not ship fades out and
+                  the gradients take the screen back. */}
+              {poster ? (
+                <Image
+                  src={poster}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 600px, 640px"
+                  className="object-cover"
+                  unoptimized
+                  onError={(event) => {
+                    event.currentTarget.style.opacity = "0";
+                  }}
+                />
+              ) : null}
+
+              {/* The scrim — the picture is held back so the lockup and
+                  the info bar read over it, and the scanlines, grain and
+                  vignette laid on top still read as a screen rather than
+                  a photograph. */}
+              {poster ? (
+                <div
+                  aria-hidden
+                  className="absolute inset-0"
+                  style={{
+                    background: [
+                      `radial-gradient(58% 50% at 50% 44%, rgba(0,0,0,0.58) 0%, transparent 74%)`,
+                      `linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.06) 26%, rgba(0,0,0,0.06) 44%, rgba(0,0,0,0.68) 100%)`,
+                      `rgba(0,0,0,0.26)`,
+                    ].join(", "),
+                  }}
+                />
+              ) : null}
+
               {/* The key light raking across the glass. */}
               <div
                 aria-hidden
@@ -391,7 +449,7 @@ export function Hero({
               <div className="absolute inset-x-4 top-4 z-[2] flex items-start justify-between">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/45 px-2.5 py-1.5 backdrop-blur-xl">
                   <span className="relative grid size-2 place-items-center">
-                    <span aria-hidden className="fx-live-eye absolute inset-0" />
+                    <span aria-hidden className="fx-live-eye fx-live-eye-pulse absolute inset-0" />
                     <span
                       aria-hidden
                       className="relative size-2 rounded-full bg-live"
@@ -427,7 +485,7 @@ export function Hero({
                         alt=""
                         width={40}
                         height={20}
-                        className="h-10 w-20 rounded-[6px] object-cover opacity-95"
+                        className="h-10 w-20 rounded-[6px] object-contain opacity-95"
                         unoptimized
                       />
                     </div>
@@ -542,23 +600,4 @@ function useClock() {
   }, []);
 
   return time;
-}
-
-/**
- * The moment the guide is read against. Before the page hydrates the
- * guide's own reference time is used, so the server and the client
- * agree on what "now" means.
- */
-function useGuideClock(guide: EpgGuide | null | undefined) {
-  const reference = referenceMoment(guide);
-  const [moment, setMoment] = useState(reference);
-
-  useEffect(() => {
-    const tick = () => setMoment(Date.now());
-    tick();
-    const id = window.setInterval(tick, 30_000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return moment;
 }

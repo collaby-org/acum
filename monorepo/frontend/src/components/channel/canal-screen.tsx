@@ -53,8 +53,8 @@ export function CanalScreen({ channel }: CanalScreenProps) {
         </button>
       </header>
 
-      {/* The picture. */}
-      <div className="bg-black">
+      {/* The picture — pinned; only the panel scrolls. */}
+      <div className="sticky top-0 z-30 bg-black">
         <VideoPlayer
           channelName={channel.name}
           channelId={channel.id}

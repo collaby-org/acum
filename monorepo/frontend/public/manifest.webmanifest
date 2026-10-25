@@ -1,11 +1,11 @@
 {
   "name": "ACUM — TV live românesc, fără reclame",
   "short_name": "ACUM",
-  "description": "Ce rulează acum pe canalele din România: 143 de canale live într-un singur loc. Fără cont, fără reclame. Pentru a viziona canalele live ai nevoie de o conexiune la internet.",
+  "description": "Ce rulează acum pe canalele din România: 156 de canale live într-un singur loc, cu ghid de programe și cifre de audiență în timp real. Fără reclame, fără urmărire. Plan gratuit cu două ore pe zi. Pentru a viziona canalele live ai nevoie de o conexiune la internet.",
   "lang": "ro",
   "dir": "ltr",
   "id": "/",
-  "start_url": "/",
+  "start_url": "/canale",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",

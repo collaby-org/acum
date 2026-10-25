@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Eye, Radio, TrendingUp } from "lucide-react";
 import { formatClock } from "@/components/now-next";
+import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
 
 /** One slot of the guide, as the endpoint prints it. */
@@ -100,6 +101,14 @@ export function ChannelPanel({
     failed: boolean;
   }>({ id: channelId, sheet: null, failed: false });
 
+  /**
+   * The sheet is read from the server, so it is the server's clock that
+   * decides what is on. The minute tick is what makes it move: once a
+   * minute the panel asks again, and the answer is the programme that is on
+   * air now — not the one that was on when the panel was opened.
+   */
+  const tick = useMinuteTick();
+
   useEffect(() => {
     let live = true;
 
@@ -118,7 +127,7 @@ export function ChannelPanel({
     return () => {
       live = false;
     };
-  }, [channelId]);
+  }, [channelId, tick]);
 
   const sheet = state.id === channelId ? state.sheet : null;
   const failed = state.id === channelId ? state.failed : false;
@@ -138,14 +147,14 @@ export function ChannelPanel({
       {showIdentity ? (
         <div className="flex items-start gap-3">
           {logo ? (
-            <span className="relative grid h-11 w-[60px] shrink-0 place-items-center overflow-hidden rounded-[9px] border border-white/12 bg-white/[0.06]">
+            <span className="relative grid h-11 w-14 shrink-0 max-w-[4.5rem] place-items-center overflow-hidden rounded-[9px] border border-white/12 bg-white/[0.06] sm:w-[60px] sm:max-w-none">
               <Image
                 src={logo}
                 alt=""
                 width={60}
                 height={44}
                 unoptimized
-                className="size-full object-contain p-1 opacity-95"
+                className="h-11 w-full object-contain p-1 opacity-95"
               />
             </span>
           ) : (

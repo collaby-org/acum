@@ -8,6 +8,12 @@
  * in, which is also the only way to get a frame that matches what a visitor
  * would see.
  *
+ * A still is a photograph of one broadcast, so it is filed under the
+ * programme that was on air when it was taken: the guide says which one that
+ * was, and the file is named after it. That is what makes the card's picture
+ * follow the schedule instead of sitting still — and it is what tells the
+ * next run that a still has gone stale and wants to be taken again.
+ *
  *   node scripts/capture-posters.mjs [options]
  *
  *     --app=<url>            the running app (default http://127.0.0.1:3115/)
@@ -20,15 +26,17 @@
  *     --timeout=<ms>         how long one channel may take (default 45000)
  *     --settle=<ms>          how long to wait past the first frame (default 2500)
  *     --sheet-only           only rebuild the contact sheet
+ *     --plan                 only print what the run would shoot
  *
  * A channel whose stream is dead simply produces no frame: it is written down
  * as a miss and the run moves on. One dead channel never ends the run.
  */
 import { spawn } from "node:child_process";
-import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
+import { mkdir, readFile, writeFile, stat, rm } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
+import { installSession } from "./harness-signin.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -57,6 +65,7 @@ const options = {
   timeout: 45000,
   settle: 2500,
   sheetOnly: false,
+  plan: false,
 };
 
 for (const raw of process.argv.slice(2)) {
@@ -96,6 +105,9 @@ for (const raw of process.argv.slice(2)) {
     case "sheet-only":
       options.sheetOnly = true;
       break;
+    case "plan":
+      options.plan = true;
+      break;
     default:
       console.log(`unknown option --${key}`);
       break;
@@ -127,6 +139,105 @@ async function readCatalogue() {
   const open = source.indexOf("= [", marker) + 2;
   const close = source.lastIndexOf("];");
   return JSON.parse(source.slice(open, close + 1));
+}
+
+/* ------------------------------------------------------------------ *
+ * The guide
+ * ------------------------------------------------------------------ */
+
+/**
+ * The programme guide, read once.
+ *
+ * It is the only thing that knows which programme was on air at the moment
+ * a frame was taken, and a still without that link cannot be told apart
+ * from a picture of the channel.
+ */
+async function readGuide() {
+  try {
+    return JSON.parse(
+      await readFile(resolve(ROOT, "data/epg.json"), "utf8"),
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Fold a name down to comparable letters and digits. */
+function foldKey(value) {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[șş]/g, "s")
+    .replace(/[țţ]/g, "t")
+    .replace(/[ăâ]/g, "a")
+    .replace(/[î]/g, "i")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+/** The same key without the quality suffix or the feed number. */
+function baseKey(value) {
+  return foldKey(value)
+    .replace(/(?:fhd|uhd|hd|sd)$/, "")
+    .replace(/\d+$/, "");
+}
+
+/** The guide's channels, by the keys a catalogue channel can match. */
+function guideIndex(guide) {
+  const index = new Map();
+  for (const [slug, channel] of Object.entries(guide?.channels ?? {})) {
+    for (const key of [foldKey(slug), foldKey(channel?.name)]) {
+      if (key && !index.has(key)) index.set(key, channel);
+    }
+  }
+  return index;
+}
+
+/**
+ * The programme on air on a channel, at a moment.
+ *
+ * The same rule the app uses to match a catalogue channel to a guide
+ * channel: the exact name first, and the loose one only when the exact one
+ * is not there.
+ */
+function programmeOnAir(index, channel, moment) {
+  const candidates = [
+    channel.id,
+    channel.name,
+    channel.family,
+    channel.familyKey,
+  ];
+
+  let guideChannel = null;
+  for (const candidate of candidates) {
+    const hit = index.get(foldKey(candidate));
+    if (hit) {
+      guideChannel = hit;
+      break;
+    }
+  }
+  if (!guideChannel) {
+    for (const candidate of candidates) {
+      const key = baseKey(candidate);
+      if (!key) continue;
+      const hit = index.get(key);
+      if (hit) {
+        guideChannel = hit;
+        break;
+      }
+    }
+  }
+  if (!guideChannel) return null;
+
+  for (const programme of guideChannel.programmes ?? []) {
+    const start = Date.parse(programme.startsAt);
+    const end = Date.parse(programme.endsAt);
+    if (!Number.isFinite(start) || !Number.isFinite(end)) continue;
+    if (moment >= start && moment < end) {
+      return { title: programme.title, startsAt: start, endsAt: end };
+    }
+  }
+  return null;
 }
 
 /* ------------------------------------------------------------------ *
@@ -233,6 +344,10 @@ class Browser {
       waitForDebuggerOnStart: false,
       flatten: true,
     });
+
+    // The product is account-gated: without a session the player shows a
+    // wall, and there is no frame to photograph.
+    await installSession((method, params) => this.send(method, params));
   }
 
   send(method, params = {}, sessionId) {
@@ -330,8 +445,9 @@ async function waitFor(browser, expression, deadline, step = 400, sessionId) {
 
 /** Type into the header search field, the way a visitor does. */
 const TYPE_QUERY = (query) => `(() => {
-  const input = document.querySelector('header input[type="search"]');
+  const input = document.querySelector('header input[type="search"]') ?? document.querySelector('input[type="search"]');
   if (!input) return false;
+  input.focus();
   const setter = Object.getOwnPropertyDescriptor(
     window.HTMLInputElement.prototype,
     "value",
@@ -370,7 +486,10 @@ const CLICK_RESULT = (index) => `(() => {
 
 /** What the player is showing right now. */
 const READ_PLAYER = `(() => {
-  const dialog = document.querySelector('[role="dialog"]');
+  // More than one element can carry role="dialog" — the first-visit intro
+  // keeps its shell in the document — so the player is the one that holds a
+  // picture, not simply the first one in the tree.
+  const dialog = document.querySelector('[role="dialog"]:has(video), [role="dialog"]:has(iframe)');
   if (!dialog) return { state: "no-dialog" };
   const video = dialog.querySelector("video");
   const frame = dialog.querySelector("iframe");
@@ -400,7 +519,7 @@ const READ_PLAYER = `(() => {
  */
 const DRAW_FRAME = `(() => {
   try {
-    const video = document.querySelector('[role="dialog"] video');
+    const video = document.querySelector('[role="dialog"]:has(video) video');
     if (!video || !video.videoWidth || !video.videoHeight) {
       return { ok: false, reason: "no picture" };
     }
@@ -657,7 +776,7 @@ async function shoot(browser, channel) {
   // presses it.
   if (live.hasFrame && !live.hasVideoPlaying) {
     const src = await browser.evaluate(
-      `(() => { const f = document.querySelector('[role="dialog"] iframe'); return f ? f.src : null; })()`,
+      `(() => { const f = document.querySelector('[role="dialog"]:has(iframe) iframe'); return f ? f.src : null; })()`,
     );
     const session = await frameSession(browser, src);
     if (session) {
@@ -730,6 +849,45 @@ async function readManifest(path) {
   } catch {
     return { generatedAt: null, posters: {} };
   }
+}
+
+/**
+ * The stills of a channel, newest first.
+ *
+ * The manifest used to hold one still per channel. It now holds one per
+ * programme, so the old shape is read as a list of one.
+ */
+function stillsOf(manifest, id) {
+  const entry = manifest.posters?.[id];
+  if (!entry) return [];
+  const list = Array.isArray(entry) ? entry : [entry];
+  return [...list].sort(
+    (a, b) => (b.programme?.startsAt ?? 0) - (a.programme?.startsAt ?? 0),
+  );
+}
+
+/**
+ * How long a still is kept after its programme has ended.
+ *
+ * A still of a programme that finished days ago is nothing but weight: the
+ * card can only use the still of the programme on air, and the one before
+ * it. Anything older goes, file and all.
+ */
+const STILL_LIFETIME_MS = 12 * 60 * 60_000;
+
+/** The stills that are still worth keeping, and the files that go with them. */
+function pruneStills(stills, moment) {
+  const kept = [];
+  const dropped = [];
+  for (const still of stills) {
+    const programme = still.programme;
+    if (programme && moment - programme.endsAt > STILL_LIFETIME_MS) {
+      dropped.push(still);
+    } else {
+      kept.push(still);
+    }
+  }
+  return { kept, dropped };
 }
 
 /**
@@ -844,6 +1002,7 @@ async function main() {
 
   await mkdir(options.out, { recursive: true });
   const manifest = await readManifest(options.manifest);
+  const index = guideIndex(await readGuide());
 
   console.log(
     `catalogue: ${catalogue.length} channels, ${wanted.length} to shoot, app ${options.app}`,
@@ -854,15 +1013,15 @@ async function main() {
   if (options.sheetOnly) {
     const entries = [];
     for (const channel of catalogue) {
-      const known = manifest.posters?.[channel.id];
-      if (!known) continue;
-      const path = join(options.out, known.file);
-      try {
-        await stat(path);
-      } catch {
-        continue;
+      for (const known of stillsOf(manifest, channel.id)) {
+        const path = join(options.out, known.file);
+        try {
+          await stat(path);
+        } catch {
+          continue;
+        }
+        entries.push({ id: channel.id, name: channel.name, path, ...known });
       }
-      entries.push({ id: channel.id, name: channel.name, path, ...known });
     }
     const sheet = await writeContactSheet(options.contactSheet, entries);
     console.log(
@@ -871,11 +1030,37 @@ async function main() {
     return;
   }
 
+  /**
+   * The plan: what the run would shoot, and under which programme.
+   *
+   * It costs nothing and it answers the question the operator actually
+   * has — "which picture belongs to the show that is on right now?" —
+   * without opening a browser.
+   */
+  if (options.plan) {
+    const now = Date.now();
+    for (const channel of wanted) {
+      const programme = programmeOnAir(index, channel, now);
+      const file = programme
+        ? `${channel.id}-${programme.startsAt}.jpg`
+        : `${channel.id}.jpg`;
+      const known = stillsOf(manifest, channel.id).find(
+        (still) => still.file === file,
+      );
+      console.log(
+        `${channel.id} (${channel.name}) — ${
+          programme ? programme.title : "no programme on air"
+        } → ${file}${known ? " (already there)" : ""}`,
+      );
+    }
+    return;
+  }
+
   await ensureApp();
 
   const browser = await Browser.launch(EDGE, CDP_PORT);
   console.log("browser up; loading the app…");
-  await browser.navigate(options.app);
+  await browser.navigate(new URL("/canale", options.app).href);
   // The app has to be alive before it can be typed at: a search field that
   // is not hydrated yet throws its input away.
   await waitFor(
@@ -896,28 +1081,52 @@ async function main() {
 
   for (let i = 0; i < wanted.length; i++) {
     const channel = wanted[i];
-    const file = `${channel.id}.jpg`;
-    const path = join(options.out, file);
     const label = `[${i + 1}/${wanted.length}] ${channel.id} (${channel.name})`;
 
+    /**
+     * The programme on air right now, and the file the still belongs in.
+     *
+     * The file is named after the programme, so two runs an hour apart do
+     * not fight over the same name, and the catalogue can hold the still of
+     * the programme on air and the one before it.
+     */
+    const programme = programmeOnAir(index, channel, Date.now());
+    const file = programme
+      ? `${channel.id}-${programme.startsAt}.jpg`
+      : `${channel.id}.jpg`;
+    const path = join(options.out, file);
+
+    /**
+     * A still that is already there is kept only when it is the still of
+     * the programme on air. One that shows a programme which has ended is
+     * stale: the card cannot use it for the show that is on now, so the run
+     * takes it again.
+     */
     if (!options.force) {
-      try {
-        const info = await stat(path);
-        const known = manifest.posters?.[channel.id];
-        if (known) {
-          console.log(`${label} — already there, kept`);
+      const known = stillsOf(manifest, channel.id).find(
+        (still) =>
+          still.file === file ||
+          (programme &&
+            still.programme?.startsAt === programme.startsAt),
+      );
+      if (known) {
+        try {
+          const info = await stat(join(options.out, known.file));
+          console.log(
+            `${label} — already there (${known.programme?.title ?? "no programme"}), kept`,
+          );
           captured.push({
             id: channel.id,
             name: channel.name,
-            path,
+            path: join(options.out, known.file),
             ...known,
             bytes: info.size,
             how: "kept",
           });
           continue;
+        } catch {
+          /* the file is gone: take it again */
         }
-      } catch {
-        /* no poster yet */
       }
     }
 
@@ -931,12 +1140,36 @@ async function main() {
     if (result.ok && result.bytes?.length) {
       await writeFile(path, result.bytes);
       const capturedAt = new Date().toISOString();
-      manifest.posters[channel.id] = {
+      // The programme is read again, at the moment the frame was taken: a
+      // capture that straddles a changeover belongs to the show that was
+      // on screen.
+      const shot = programmeOnAir(index, channel, Date.now()) ?? programme;
+      const still = {
         file,
         capturedAt,
         width: result.width,
         height: result.height,
+        programme: shot,
       };
+
+      const { kept, dropped } = pruneStills(
+        [
+          still,
+          ...stillsOf(manifest, channel.id).filter(
+            (entry) => entry.file !== file,
+          ),
+        ],
+        Date.now(),
+      );
+
+      // The files of the stills that went are removed with them.
+      for (const gone of dropped) {
+        await rm(join(options.out, gone.file), { force: true }).catch(
+          () => undefined,
+        );
+      }
+
+      manifest.posters[channel.id] = kept;
       captured.push({
         id: channel.id,
         name: channel.name,
@@ -944,11 +1177,12 @@ async function main() {
         capturedAt,
         width: result.width,
         height: result.height,
+        programme: shot,
         bytes: result.bytes.length,
         how: result.how,
       });
       console.log(
-        `${label} — ok ${result.width}x${result.height}, ${(result.bytes.length / 1024).toFixed(1)} kB, ${result.how}`,
+        `${label} — ok ${result.width}x${result.height}, ${(result.bytes.length / 1024).toFixed(1)} kB, ${result.how}${shot ? `, „${shot.title}"` : ""}`,
       );
     } else {
       misses.push({ id: channel.id, name: channel.name, reason: result.reason });

@@ -45,7 +45,7 @@ export const MOBILE_NAV_SPACE = "pb-[calc(4.5rem+env(safe-area-inset-bottom))]";
 
 const TABS: { id: MobileNavAction; label: string; icon: LucideIcon }[] = [
   { id: "home", label: "Acasă", icon: House },
-  { id: "categories", label: "Categorii", icon: LayoutGrid },
+  { id: "categories", label: "Toate canalele", icon: LayoutGrid },
   { id: "favorites", label: "Favorite", icon: Heart },
   { id: "search", label: "Caută", icon: Search },
 ];
@@ -95,7 +95,7 @@ export function MobileNav({
   const actions: Record<MobileNavAction, () => void> = {
     home: () => (onHome ? onHome() : router.push("/")),
     categories: () =>
-      onCategories ? onCategories() : router.push("/#categorii"),
+      onCategories ? onCategories() : router.push("/canale/toate"),
     favorites: () =>
       onFavorites ? onFavorites() : router.push("/?view=favorite"),
     search: () => (onSearch ? onSearch() : focusSearch()),

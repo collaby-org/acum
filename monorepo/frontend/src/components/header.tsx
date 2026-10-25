@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Heart, Search, X } from "lucide-react";
 import { AcumMark } from "@/components/brand";
+import { AccountButton } from "@/components/account/account-button";
 import { Button } from "@/components/ui/button";
+import { useAccount } from "@/hooks/use-account";
 import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +28,8 @@ export function Header({
   const [scrolled, setScrolled] = useState(false);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
+  const account = useAccount();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -66,9 +71,19 @@ export function Header({
         />
       )}
       <div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-4 sm:h-[72px] sm:gap-5 sm:px-8 lg:px-12">
-        {/* Wordmark */}
+        {/* Wordmark — the front door for a visitor, the catalogue for a
+            signed-in account: the landing page is not for somebody who
+            already has an account. At the top of the catalogue when
+            already there. Until the account has answered, the visitor's
+            side is assumed. */}
         <a
-          href="#top"
+          href={
+            account.signedIn
+              ? pathname === "/canale"
+                ? "#top"
+                : "/canale"
+              : "/"
+          }
           className="group flex shrink-0 items-center gap-3"
           aria-label={`${SITE_NAME} — începutul paginii`}
         >
@@ -85,6 +100,14 @@ export function Header({
         </a>
 
         <div className="flex-1" />
+
+        {/* Nav links — visible when signed in */}
+        {account.signedIn && (
+          <nav aria-label="Principal" className="hidden md:flex items-center gap-1">
+            <a href="/canale" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Catalog</a>
+            <a href="/canale/toate" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Toate canalele</a>
+          </nav>
+        )}
 
         {/* Search */}
         <div
@@ -129,6 +152,9 @@ export function Header({
             </kbd>
           )}
         </div>
+
+        {/* The account: the way in, and what the plan is. */}
+        <AccountButton />
 
         {/* Favourites */}
         <Button

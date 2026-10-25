@@ -6,7 +6,7 @@
  * the shape declared in `src/data/types.ts` and knows nothing about React.
  */
 
-import type { CategoryId, Quality, ServerStatus } from "@/data/types";
+import type { CategoryId, Quality, ServerStatus, Still } from "@/data/types";
 import { normalize } from "@/lib/utils";
 
 /**
@@ -33,6 +33,11 @@ export type ChannelLike = {
   views?: number | null;
   /** A still of the show on air, when the catalogue ships one. */
   poster?: string | null;
+  /**
+   * The stills of the programmes in the guide's window, newest first. The
+   * card picks the one that belongs to the programme on air right now.
+   */
+  stills?: readonly Still[];
 };
 
 /**
@@ -254,19 +259,4 @@ function bucketRank(key: string): number {
   if (key === "0-9") return -1;
   if (key === "#") return 99;
   return key.charCodeAt(0) - 64;
-}
-
-/**
- * The position of the first channel of every bucket, keyed by bucket.
- * Useful to jump straight to a letter inside an already sorted list.
- */
-export function channelIndex<T extends ChannelLike>(
-  channels: readonly T[],
-): Map<string, number> {
-  const index = new Map<string, number>();
-  channels.forEach((channel, position) => {
-    const key = bucketKey(channel.name);
-    if (!index.has(key)) index.set(key, position);
-  });
-  return index;
 }

@@ -24,9 +24,13 @@ import {
   probePlaylist,
   resolveStreamUrls,
   signStreamToken,
+  pickServer,
 } from "@/lib/stream";
 import { catalogueChannel } from "@/lib/catalogue";
 import { secondaryStreamUrl } from "@/lib/secondary";
+import { gate } from "@/lib/account-gate";
+import { claimStream, deviceFrom } from "@/lib/stream-sessions";
+import { bearerToken } from "@/lib/supabase/server";
 import type { Server } from "@/data/types";
 
 type ServerInput = {
@@ -100,11 +104,33 @@ async function candidatesOf(server: ResolvedServer): Promise<string[]> {
  * So the catalogue says a dead feed is dead, instead of dressing it up.
  */
 export async function POST(request: Request) {
-  let payload: { channel?: unknown; servers?: ServerInput[] };
+  /**
+   * The gate.
+   *
+   * This route mints the signed address of a stream, so it is the place the
+   * allowance is enforced. A visitor whose two hours are spent gets no
+   * address at all — there is nothing to pull and nothing to bypass. The
+   * client is told why, so it can show the wall.
+   */
+  const verdict = await gate(request);
+  if (!verdict.allowed) {
+    return Response.json(
+      { error: "paywall", reason: verdict.reason },
+      { status: 403 },
+    );
+  }
+
+  let payload: {
+    channel?: unknown;
+    servers?: ServerInput[];
+    viewer?: unknown;
+  };
   try {
     payload = (await request.json()) as {
       channel?: unknown;
       servers?: ServerInput[];
+      /** The viewer, as the browser named them. */
+      viewer?: unknown;
     };
   } catch {
     return Response.json({ error: "Cerere invalidă." }, { status: 400 });
@@ -112,12 +138,19 @@ export async function POST(request: Request) {
 
   // The catalogue is the source of truth for the feeds.
   let servers: ResolvedServer[];
+  let channelId: string | null = null;
   if (typeof payload.channel === "string") {
     const channel = catalogueChannel(payload.channel);
     if (!channel) {
       return Response.json({ error: "Canal necunoscut." }, { status: 404 });
     }
-    servers = channel.servers.map(readServer);
+    // The catalogue's feeds, ordered by how likely they are to play: a
+    // resolved playlist first, then the directory's own address, then the
+    // pages whose obfuscation we can undo. Feeds that cannot produce a URL
+    // (an acestream id, a dead page) are dropped here rather than shipped to
+    // the browser to fail on.
+    servers = pickServer(channel).map(readServer);
+    channelId = channel.id;
   } else {
     servers = (payload.servers ?? [])
       .filter(
@@ -127,6 +160,63 @@ export async function POST(request: Request) {
       .map(readServer)
       .slice(0, 12);
   }
+
+  /**
+   * The stream itself.
+   *
+   * The gate has already decided that the allowance is not spent. This is
+   * the second question, and the one a plan is about: how many screens may
+   * run at once, and is this the house's own device. A refusal here is not
+   * a wall over the picture — it is a sentence the player can act on.
+   */
+  const authorization = bearerToken(request);
+  const claim =
+    authorization && verdict.userId
+      ? await claimStream({
+          token: authorization,
+          userId: verdict.userId,
+          device: deviceFrom(request),
+          channelId,
+        })
+      : null;
+
+  if (claim && !claim.allowed) {
+    if (claim.reason === "stream_limit") {
+      const one = claim.limit === 1;
+      return Response.json(
+        {
+          error: `Ai atins limita de ${claim.limit} ${one ? "flux" : "fluxuri"} simultane din planul tău. Închide un alt ecran și reîncearcă.`,
+          reason: claim.reason,
+          limit: claim.limit,
+          active: claim.active,
+        },
+        { status: 429, headers: { "cache-control": "no-store" } },
+      );
+    }
+
+    return Response.json(
+      {
+        error:
+          "Acest dispozitiv nu este cel înregistrat pentru casă. Confirmă dispozitivul și reluăm.",
+        reason: claim.reason,
+      },
+      { status: 403, headers: { "cache-control": "no-store" } },
+    );
+  }
+
+  const sessionId = claim?.allowed ? claim.sessionId : null;
+
+  /**
+   * The viewer.
+   *
+   * It is a random value the browser keeps for the session. It identifies a
+   * browser, not a person, and it is the only thing the audience count is
+   * built from — which is why it travels with every segment request.
+   */
+  const viewer =
+    typeof payload.viewer === "string" && payload.viewer.length <= 64
+      ? payload.viewer
+      : null;
 
   const perServer = await Promise.all(
     servers.map(async (server) => ({
@@ -147,23 +237,35 @@ export async function POST(request: Request) {
   }
 
   const sources = await Promise.all(
-    links.map(async ({ server, candidate }) => ({
-      id: server.id,
-      label: server.label,
-      kind: "hls" as const,
-      url: `/api/stream?t=${signStreamToken(candidate)}`,
-      playable: await probePlaylist(candidate),
-    })),
+    links.map(async ({ server, candidate }) => {
+      const url = `/api/stream?t=${signStreamToken(
+        candidate,
+        channelId ?? undefined,
+        undefined,
+        sessionId ?? undefined,
+      )}`;
+      return {
+        id: server.id,
+        label: server.label,
+        kind: "hls" as const,
+        // The channel and the viewer travel with the address, so the proxy
+        // can count the audience per channel as the segments arrive.
+        url: viewer ? `${url}&v=${encodeURIComponent(viewer)}` : url,
+        playable: await probePlaylist(candidate, 6_000),
+      };
+    }),
   );
 
-  // The playable links come first, so the player starts on a feed that is
-  // answering and only walks further down the list when one of them dies.
-  const ordered = [
-    ...sources.filter((source) => source.playable),
-    ...sources.filter((source) => !source.playable),
-  ];
+  // Only answering links are handed over when there is at least one: the
+  // player would otherwise sit eight seconds on a dead address before it
+  // moved on. When nothing answered, the whole list still goes out — a probe
+  // can be wrong, and the browser is the better judge.
+  const playable = sources.filter((source) => source.playable);
 
-  return Response.json({ sources: ordered });
+  return Response.json({
+    sources: playable.length > 0 ? playable : sources,
+    session: sessionId,
+  });
 }
 
 export type { Server };

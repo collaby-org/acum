@@ -15,6 +15,7 @@ import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
+import { installSession } from "./harness-signin.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(tmpdir(), "acum-verify-fallback");
@@ -136,6 +137,9 @@ const send = (method, params = {}) =>
 
 await send("Network.enable");
 await send("Page.enable");
+
+// The product is account-gated: the harness has to be signed in.
+await installSession(send);
 await send("Runtime.enable");
 // Intercept only this app's stream requests, whatever port it runs on.
 const APP_ORIGIN = new URL(APP).origin;

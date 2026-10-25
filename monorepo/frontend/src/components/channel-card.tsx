@@ -3,13 +3,19 @@
 import Image from "next/image";
 import { Eye, Heart, Play, Radio, TrendingUp } from "lucide-react";
 import { useMemo } from "react";
-import type { CSSProperties, MouseEvent } from "react";
+import Link from "next/link";
+import type { MouseEvent } from "react";
 import type { EpgGuide } from "@/components/now-next";
 import type { Quality } from "@/data/types";
 import { QUALITY_META, STATUS_META, posterPalette } from "@/lib/channel-meta";
-import { nowShowing } from "@/lib/now-showing";
+import { nowProgramme } from "@/lib/now-showing";
+import { useGuideMoment } from "@/hooks/use-guide-clock";
+import { pictureFor } from "@/lib/stills";
 import type { ChannelLike } from "@/lib/navigation";
 import { cn, formatViewers } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { useAccount } from "@/hooks/use-account";
+import { isAdmin } from "@/lib/admin-access";
 
 /* ------------------------------------------------------------------ *
  * Quality
@@ -71,25 +77,35 @@ export function QualityBadge({
  * ------------------------------------------------------------------ */
 
 /**
- * The family's own light, as a beam around the frame.
+ * The family's own light, as a luminous edge.
  *
- * The colour stops filling the card and starts rimming it. The sweep stays
- * inside the family's own hue — a shaft of light travelling around the
- * frame — and it fades out as it goes, so the card is lit on one side and
- * dark on the other. A rail of cards reads as a row of lit screens, not as
- * a row of outlines.
+ * The colour does not fill the card and it does not blur out of it. It
+ * runs along the edge as a ring of light — brightest at the top, where the
+ * light comes from, and fading as it goes down — and it is painted only
+ * when the card is hovered or focused. An idle card costs nothing.
  */
-function beamGradient(hue: number) {
+function rimGradient(hue: number) {
   return [
-    "conic-gradient(from 200deg at 50% 50%,",
-    `hsl(${hue} 98% 74% / 1) 0%,`,
-    `hsl(${hue} 95% 60% / 0.72) 10%,`,
-    `hsl(${hue} 90% 50% / 0.42) 24%,`,
-    `hsl(${hue} 86% 42% / 0.22) 42%,`,
-    `hsl(${hue} 84% 36% / 0.12) 60%,`,
-    `hsl(${hue} 88% 44% / 0.24) 78%,`,
-    `hsl(${hue} 95% 62% / 0.78) 92%,`,
-    `hsl(${hue} 98% 74% / 1) 100%)`,
+    "linear-gradient(180deg,",
+    `hsl(${hue} 85% 82% / 0.9) 0%,`,
+    `hsl(${hue} 70% 60% / 0.45) 40%,`,
+    `hsl(${hue} 60% 48% / 0.14) 100%)`,
+  ].join(" ");
+}
+
+/**
+ * The one soft source of light on the card.
+ *
+ * It sits inside the frame, so it cannot reach the neighbour, and it is
+ * anchored above the top edge — the picture catches the light, the way a
+ * screen does in a dark room. One source, one falloff, no overlap.
+ */
+function pictureLight(hue: number) {
+  return [
+    "radial-gradient(120% 88% at 50% -8%,",
+    `hsl(${hue} 96% 76% / 0.48) 0%,`,
+    `hsl(${hue} 90% 62% / 0.18) 38%,`,
+    "transparent 70%)",
   ].join(" ");
 }
 
@@ -145,17 +161,42 @@ export function ChannelScreen({
   const palette = posterPalette(channel.familyKey, channel.category);
   const isLive = channel.status === "live";
   const quality = badge ?? channelQuality(channel);
-  const poster = channel.poster ?? null;
 
-  // What is on right now, read off the guide.
-  const show = useMemo(() => nowShowing(guide, channel), [guide, channel]);
+  /**
+   * The moment the guide is read against. It is the real clock, corrected
+   * by the server's stamp, and it turns over once a minute — so the show
+   * named here is the show that is on now, and it stops being that show
+   * when another one starts.
+   */
+  const moment = useGuideMoment(guide?.reference);
+
+  /**
+   * What is on right now, read off the guide, and the picture that belongs
+   * to it. The still is the one captured for the slot on air; when there is
+   * none yet, the newest still of the channel stands in until the capture
+   * pipeline has caught up.
+   */
+  const programme = useMemo(
+    () => nowProgramme(guide, channel, moment),
+    [guide, channel, moment],
+  );
+  const picture = useMemo(
+    () => pictureFor(channel.stills, programme, moment),
+    [channel.stills, programme, moment],
+  );
+  const poster = picture.still?.file ?? null;
+
+  const account = useAccount();
+  const showUpgrade =
+    account.ready &&
+    account.plan === "free" &&
+    !isAdmin(account.email, account.plan);
 
   const viewers = views ?? 0;
   const popularity = popularityProp ?? channel.views ?? 0;
   // The source counts viewers for a channel only while it is on air, so a
   // count is a live signal even when our own probe could not confirm it.
   const onAir = isLive || viewers > 0 || popularity > 0;
-  const beam = beamGradient(palette.hue);
 
   return (
     <div
@@ -163,7 +204,8 @@ export function ChannelScreen({
         "relative aspect-video w-full rounded-[var(--radius-card)] p-px",
         className,
       )}
-      style={{ background: beam }}
+      // A hairline at rest. The family's colour arrives with the light.
+      style={{ background: "rgb(255 255 255 / 0.08)" }}
     >
       <div className="relative h-full w-full overflow-hidden rounded-[calc(var(--radius-card)_-_1px)] bg-surface-2">
         {/* The family's wash — the floor under everything else. */}
@@ -193,21 +235,23 @@ export function ChannelScreen({
         {/* The still is dimmed, so the type always reads over it. */}
         <div aria-hidden className="absolute inset-0 bg-black/20" />
 
-        {/* Broadcast scanlines */}
-        <div
-          aria-hidden
-          className="absolute inset-0 fx-scanline opacity-60 mix-blend-overlay"
-        />
-
-        {/* Light bloom, on hover only */}
-        <div
-          aria-hidden
-          className="absolute inset-0 fx-bloom opacity-0 transition-opacity duration-[var(--dur-slow,600ms)] group-hover/card:opacity-100 motion-reduce:transition-none"
-          style={{ "--fx-bloom-color": palette.glow } as CSSProperties}
-        />
+        {/* Broadcast scanlines. No blend mode: a blend here would drag
+            every card out of the compositor's fast path, and the lines are
+            faint enough to read the same laid over the still. */}
+        <div aria-hidden className="absolute inset-0 fx-scanline opacity-50" />
 
         {/* Vignette */}
         <div aria-hidden className="absolute inset-0 fx-vignette" />
+
+        {/* The light the picture throws. One source, anchored above the
+            top edge, clipped by the frame so it never reaches the card
+            next to it. It is painted only when the card is hovered or
+            focused — an idle card paints nothing. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-0 transition-opacity duration-[var(--dur-base,300ms)] group-hover/card:opacity-100 group-focus-within/card:opacity-100 motion-reduce:transition-none"
+          style={{ background: pictureLight(palette.hue) }}
+        />
 
         {/* Scrim under the title block */}
         <div
@@ -221,8 +265,8 @@ export function ChannelScreen({
         {channel.logo ? (
           <span
             className={cn(
-              "absolute left-3 top-3 flex h-8 items-center rounded-[7px] px-1.5 backdrop-blur-md fx-edge",
-              channel.logoDark ? "bg-white/92" : "bg-black/55",
+              "absolute left-3 top-3 flex h-8 items-center rounded-[7px] px-1.5 fx-edge",
+              channel.logoDark ? "bg-white/92" : "bg-black/72",
             )}
           >
             <Image
@@ -241,7 +285,7 @@ export function ChannelScreen({
         ) : (
           <span
             aria-hidden
-            className="absolute left-3 top-3 grid h-7 min-w-10 place-items-center rounded-[7px] bg-black/55 px-1.5 font-display text-[11px] font-bold tracking-tight text-ink/80 backdrop-blur-md fx-edge"
+            className="absolute left-3 top-3 grid h-7 min-w-10 place-items-center rounded-[7px] bg-black/72 px-1.5 font-display text-[11px] font-bold tracking-tight text-ink/80 fx-edge"
           >
             {channel.name.slice(0, 2).toUpperCase()}
           </span>
@@ -253,7 +297,7 @@ export function ChannelScreen({
             the eye; the source's **popularity** counter is cumulative, so it
             carries a chart and a dimmer tone. A visitor should never read a
             ranking as a crowd. */}
-        <span className="absolute right-3 top-3 flex h-6 items-center gap-1.5 rounded-full bg-black/55 px-2 backdrop-blur-md fx-edge">
+        <span className="absolute right-3 top-3 flex h-6 items-center gap-1.5 rounded-full bg-black/72 px-2 fx-edge">
           {onAir ? (
             <span
               aria-hidden
@@ -303,7 +347,7 @@ export function ChannelScreen({
           </div>
 
           <p className="mt-1 flex min-w-0 items-center gap-1.5">
-            {show ? (
+            {programme ? (
               <>
                 <span
                   className="shrink-0 text-[9px] font-bold uppercase tracking-[0.16em]"
@@ -312,7 +356,7 @@ export function ChannelScreen({
                   Acum
                 </span>
                 <span className="min-w-0 truncate text-[11.5px] leading-tight text-ink-muted/90">
-                  {show}
+                  {programme.title}
                 </span>
               </>
             ) : (
@@ -321,6 +365,22 @@ export function ChannelScreen({
               </span>
             )}
           </p>
+
+          {showUpgrade ? (
+            <Link
+              href="/preturi"
+              className="mt-1.5 inline-block shrink-0"
+              aria-label="Planuri și abonamente"
+            >
+              <Badge
+                variant="signal"
+                size="xs"
+                className="h-5 px-2 text-[10px] font-semibold tracking-[0.1em] text-signal-ink"
+              >
+                Upgradează
+              </Badge>
+            </Link>
+          ) : null}
         </div>
 
         {/* Play affordance */}
@@ -333,6 +393,16 @@ export function ChannelScreen({
           </span>
         </span>
       </div>
+
+      {/* The luminous edge. A ring of light in the family's own colour,
+          one pixel wide, brightest at the top where the light comes from.
+          It is drawn over the frame and clipped to it, so it lights the
+          card and nothing else. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[var(--radius-card)] fx-rim opacity-0 transition-opacity duration-[var(--dur-base,300ms)] group-hover/card:opacity-100 group-focus-within/card:opacity-100 motion-reduce:transition-none"
+        style={{ background: rimGradient(palette.hue) }}
+      />
     </div>
   );
 }
@@ -368,13 +438,17 @@ type ChannelCardProps<T extends ChannelLike> = {
 
 /**
  * A 16:9 "screen" with the channel's own logo as the broadcast bug, over
- * the still of what is playing right now, rimmed by a beam of the family's
- * colour. The whole screen is one button; the favourite control is a
- * sibling, never nested inside it.
+ * the still of what is playing right now, rimmed by a ring of light in the
+ * family's colour. The whole screen is one button; the favourite control
+ * is a sibling, never nested inside it.
  *
  * The card grows on hover, so it needs room on every side: the rail keeps
  * that room inside the scroller, and the card itself lifts above its
  * neighbours instead of sliding under them.
+ *
+ * What the hover changes is the light, not the geometry of the page: the
+ * rim and the picture's own glow fade in, the card lifts, and only the
+ * transform is animated.
  */
 export function ChannelCard<T extends ChannelLike>({
   channel,
@@ -388,7 +462,6 @@ export function ChannelCard<T extends ChannelLike>({
   className,
   index,
 }: ChannelCardProps<T>) {
-  const palette = posterPalette(channel.familyKey, channel.category);
   const status = STATUS_META[channel.status];
   const viewers = views ?? 0;
   const popular = popularity ?? channel.views ?? 0;
@@ -410,10 +483,16 @@ export function ChannelCard<T extends ChannelLike>({
       data-card-index={index}
       className={cn(
         "group/card relative z-0 w-[248px] shrink-0 sm:w-[272px]",
-        "transition-[transform,box-shadow] duration-[var(--dur-base,300ms)]",
-        "hover:z-10 hover:-translate-y-1 hover:scale-[1.035] hover:shadow-[var(--shadow-e3)]",
+        // Only the transform is animated. A shadow that changes is a
+        // repaint of a large area on every frame of the hover, and the
+        // light on the card is already carried by the rim.
+        "transition-transform duration-[var(--dur-base,300ms)]",
+        "hover:z-10 hover:-translate-y-1 hover:scale-[1.035]",
         "focus-within:z-10 focus-within:-translate-y-1 focus-within:scale-[1.035]",
         "motion-reduce:transition-none motion-reduce:translate-y-0! motion-reduce:scale-100!",
+        // The card paints on its own: a hover here cannot repaint the
+        // page around it.
+        "[contain:layout_paint]",
         className,
       )}
       style={{
@@ -421,13 +500,6 @@ export function ChannelCard<T extends ChannelLike>({
           "var(--ease-spring, var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)))",
       }}
     >
-      {/* The light that leaks out of the frame. */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -inset-1 z-0 rounded-[calc(var(--radius-card)_+_4px)] opacity-45 blur-[14px] transition-opacity duration-[var(--dur-slow,600ms)] group-hover/card:opacity-85 motion-reduce:transition-none"
-        style={{ background: beamGradient(palette.hue) }}
-      />
-
       <button
         type="button"
         data-card-action="play"
@@ -459,7 +531,7 @@ export function ChannelCard<T extends ChannelLike>({
         }
         aria-pressed={isFavorite}
         className={cn(
-          "absolute bottom-2.5 right-2.5 z-10 grid size-11 place-items-center rounded-full bg-black/55 text-ink-faint backdrop-blur-md fx-edge fx-press",
+          "absolute bottom-2.5 right-2.5 z-10 grid size-11 place-items-center rounded-full bg-black/72 text-ink-faint fx-edge fx-press",
           "transition-[transform,color,background-color] duration-[var(--dur-fast,150ms)]",
           "hover:scale-105 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
           "motion-reduce:transition-none motion-reduce:scale-100",

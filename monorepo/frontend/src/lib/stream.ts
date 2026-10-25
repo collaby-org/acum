@@ -79,6 +79,16 @@ export const MEDIA_HOST_SUFFIXES = [
   ".stream",
 ];
 
+/**
+ * Hosts that do not sit under a shared suffix but are ours to relay.
+ *
+ * Two upstream media hosts are named this way — one on a `.com`, one on a
+ * punycode `.space` label. They are listed whole on purpose: allowing the
+ * whole suffix would turn the proxy into an egress for any host on a
+ * general-purpose TLD.
+ */
+const MEDIA_HOSTS = ["alpha1.cool-itv.com", "iron1.xn--x2rw19a.space"];
+
 /** How long a proxy token stays usable. */
 const TOKEN_TTL_SECONDS = 60 * 60 * 6;
 
@@ -111,6 +121,7 @@ export function isAllowedMediaUrl(url: string | null | undefined): boolean {
     if (parsed.protocol !== "https:") return false;
     const host = parsed.hostname.toLowerCase();
     if (SECONDARY_HOSTS.includes(host)) return true;
+    if (MEDIA_HOSTS.includes(host)) return true;
     return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
   } catch {
     return false;
@@ -272,12 +283,30 @@ export function isPlaylist(body: string): boolean {
  *
  * Handles both bare segment lines and the `URI="..."` attribute carried by
  * `#EXT-X-KEY`, `#EXT-X-MAP` and friends.
+ *
+ * `extra` is appended to every rewritten address. It is how the channel and
+ * the viewer travel with each segment request, so the proxy can count who is
+ * watching what without the browser ever holding an upstream address.
  */
 export function rewritePlaylist(
   body: string,
   baseUrl: string,
   toProxy: (absoluteUrl: string) => string,
+  extra?: Record<string, string>,
 ): string {
+  const suffix = extra
+    ? Object.entries(extra)
+        .filter(([, value]) => Boolean(value))
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join("&")
+    : "";
+
+  const withExtra = (url: string) => {
+    const base = toProxy(url);
+    if (!suffix) return base;
+    return base.includes("?") ? `${base}&${suffix}` : `${base}?${suffix}`;
+  };
+
   return body
     .split(/\r?\n/)
     .map((line) => {
@@ -286,10 +315,10 @@ export function rewritePlaylist(
       if (trimmed.startsWith("#")) {
         return line.replace(
           /URI="([^"]*)"/g,
-          (_match, uri: string) => `URI="${toProxy(absolutize(uri, baseUrl))}"`,
+          (_match, uri: string) => `URI="${withExtra(absolutize(uri, baseUrl))}"`,
         );
       }
-      return toProxy(absolutize(trimmed, baseUrl));
+      return withExtra(absolutize(trimmed, baseUrl));
     })
     .join("\n");
 }
@@ -307,15 +336,46 @@ function sign(payload: string): string {
  *
  * The browser only ever sees `/api/stream?t=…`, so the upstream hosts stay
  * invisible to it and the proxy cannot be pointed at an arbitrary address.
+ *
+ * The token also carries the **channel** the address belongs to. That is
+ * what lets the proxy count the audience per channel: the segment requests
+ * arrive without a name, and the name is signed into the address they came
+ * from.
  */
-export function signStreamToken(url: string, ttlSeconds = TOKEN_TTL_SECONDS): string {
+export function signStreamToken(
+  url: string,
+  channelId?: string,
+  ttlSeconds = TOKEN_TTL_SECONDS,
+  sessionId?: string,
+): string {
   const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
-  const payload = Buffer.from(`${expires}:${url}`, "utf8").toString("base64url");
+  // The session field is only written when there is one, so a token without
+  // it has the same shape it always had.
+  const payload = Buffer.from(
+    `${expires}:${channelId ?? ""}:${sessionId ? `${sessionId}:` : ""}${url}`,
+    "utf8",
+  ).toString("base64url");
   return `${payload}.${sign(payload)}`;
 }
 
+/** What a token stands for. */
+export type StreamToken = {
+  /** The upstream address, still on the server. */
+  url: string;
+  /** The channel the address belongs to, when the token carries one. */
+  channelId: string | null;
+  /**
+   * The registered stream this token belongs to, when it has one.
+   *
+   * It is what the player's heartbeat keeps alive, and what a second screen
+   * is counted against. Tokens minted before the registry existed do not
+   * carry one, and they still open — the address is what matters.
+   */
+  sessionId: string | null;
+};
+
 /** Unwrap a token back into the upstream URL, or null when it is not ours. */
-export function readStreamToken(token: string): string | null {
+export function readStreamToken(token: string): StreamToken | null {
   const separator = token.indexOf(".");
   if (separator <= 0) return null;
   const payload = token.slice(0, separator);
@@ -328,14 +388,36 @@ export function readStreamToken(token: string): string | null {
   }
 
   const decoded = Buffer.from(payload, "base64url").toString("utf8");
-  const colon = decoded.indexOf(":");
-  if (colon <= 0) return null;
+  const firstColon = decoded.indexOf(":");
+  if (firstColon <= 0) return null;
 
-  const expires = Number(decoded.slice(0, colon));
-  const url = decoded.slice(colon + 1);
+  const expires = Number(decoded.slice(0, firstColon));
   if (!Number.isFinite(expires) || expires * 1000 < Date.now()) return null;
+
+  const rest = decoded.slice(firstColon + 1);
+  const secondColon = rest.indexOf(":");
+  // A token written before the channel was carried still opens: the
+  // address is what matters, and the channel is only used for the count.
+  const channelId = secondColon > 0 ? rest.slice(0, secondColon) : "";
+  const tail = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
+
+  // The session sits between the channel and the address. A tail that opens
+  // with the address itself carries none — and a token minted with an empty
+  // session field opens with its own separator, which is dropped the same way.
+  let sessionId = "";
+  let url = tail;
+  if (!/^https?:/i.test(tail)) {
+    const thirdColon = tail.indexOf(":");
+    if (thirdColon === 0) {
+      url = tail.slice(1);
+    } else if (thirdColon > 0) {
+      sessionId = tail.slice(0, thirdColon);
+      url = tail.slice(thirdColon + 1);
+    }
+  }
+
   if (!isAllowedMediaUrl(url)) return null;
-  return url;
+  return { url, channelId: channelId || null, sessionId: sessionId || null };
 }
 
 /* ------------------------------------------------------------------ *
@@ -602,9 +684,21 @@ export async function openUpstream(url: string): Promise<UpstreamStream | null> 
  * Every Referer the host accepts is tried, not just one: the second
  * source's media host only answers to its own directory, and a feed that
  * plays perfectly well would be called broken otherwise.
+ *
+ * `budgetMs` is the deadline for **all** of those attempts together, not for
+ * each one. The player endpoint asks for an answer in a few seconds; a feed
+ * that has not spoken by then is demoted, not refused, and a dead channel
+ * cannot hold the request open for the sum of its Referers.
  */
-export async function probePlaylist(url: string): Promise<boolean> {
+export async function probePlaylist(
+  url: string,
+  budgetMs = 12_000,
+): Promise<boolean> {
+  const deadline = Date.now() + budgetMs;
+
   for (const referer of orderedReferers(url)) {
+    const left = deadline - Date.now();
+    if (left <= 0) return false;
     try {
       const response = await fetch(url, {
         headers: {
@@ -612,7 +706,7 @@ export async function probePlaylist(url: string): Promise<boolean> {
           referer,
         },
         cache: "no-store",
-        signal: AbortSignal.timeout(12_000),
+        signal: AbortSignal.timeout(Math.min(left, 8_000)),
       });
       if (!response.ok) continue;
       if (isPlaylist(await response.text())) return true;
@@ -632,21 +726,39 @@ export async function probePlaylist(url: string): Promise<boolean> {
  *
  * A feed with a playlist already resolved comes first; then the feeds whose
  * page we know how to read, live ones before unknown ones; the rest last.
+ * A feed that cannot produce an address at all — an acestream id, a player
+ * the catalogue never resolved — is dropped rather than handed to the
+ * browser to fail on.
+ *
+ * Only the feed list is read, so the caller may pass anything that has one:
+ * the two catalogue shapes in this repo differ in which fields they type.
  */
-export function pickServer(channel: UpstreamChannel): UpstreamServer[] {
+type FeedLike = {
+  hlsUrl?: string | null;
+  embedUrl?: string | null;
+  source?: string | null;
+  kind?: string | null;
+  status?: string | null;
+};
+
+export function pickServer<T extends FeedLike>(channel: {
+  servers: T[];
+}): T[] {
   const usable = channel.servers.filter(
     (server) =>
-      server.hlsUrl !== null ||
+      Boolean(server.hlsUrl) ||
       server.source === "secondary" ||
-      (server.embedUrl !== null &&
+      (Boolean(server.embedUrl) &&
         server.kind !== "acestream" &&
         server.kind !== "none"),
   );
 
-  const rank = (server: UpstreamServer): number => {
+  const rank = (server: T): number => {
     if (server.hlsUrl) return 0;
     if (server.source === "secondary") return 1;
-    if (isAllowedPlayerUrl(server.embedUrl)) return server.status === "live" ? 2 : 4;
+    if (isAllowedPlayerUrl(server.embedUrl)) {
+      return server.status === "live" ? 2 : 4;
+    }
     return server.status === "live" ? 3 : 5;
   };
 

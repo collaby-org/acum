@@ -29,14 +29,19 @@ import {
   useRef,
   useState,
 } from "react";
+import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
+import { MinutesWarning } from "@/components/player/minutes-warning";
+import { StreamNotice } from "@/components/player/stream-notice";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
+import { Paywall } from "@/components/player/paywall";
 import {
   usePlayer,
   type PlayerStatus,
 } from "@/hooks/use-player";
+import { useAccount, useWatchClock } from "@/hooks/use-account";
 import { cn } from "@/lib/utils";
 
 /**
@@ -53,6 +58,15 @@ type WebkitVideoElement = HTMLVideoElement & {
 
 /** How this browser can go full screen. */
 type FullscreenMode = "element" | "video" | "none";
+
+/**
+ * The hls.js instance as TypeScript sees it.
+ *
+ * The library itself is only ever imported inside the browser; here
+ * nothing but its type is needed — for the ref the recovery paths reach
+ * for while the picture is on screen.
+ */
+type HlsInstance = import("hls.js").default;
 
 export type PlayerHandle = {
   /** Resolve the feed and start the picture. */
@@ -99,11 +113,30 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
   ) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const shellRef = useRef<HTMLDivElement>(null);
+    /** The hls.js instance driving the picture right now, if any. */
+    const hlsRef = useRef<HlsInstance | null>(null);
     const [playing, setPlaying] = useState(false);
     const [muted, setMuted] = useState(true);
     const [volume, setVolume] = useState(1);
     const [fullscreen, setFullscreen] = useState(false);
     const [fullscreenMode, setFullscreenMode] = useState<FullscreenMode>("none");
+    // Fullscreen only: the transport bar steps aside while the picture
+    // runs, and comes back at the first move of the pointer.
+    const [controlsAsleep, setControlsAsleep] = useState(false);
+    /**
+     * The stream's own shape, read off the picture when it arrives.
+     *
+     * The frame takes it: a 16:9 feed gets a 16:9 frame, a 4:3 feed keeps
+     * its proportions. The picture is never stretched into a box it does
+     * not belong to, and in the window it is never blown up past its own
+     * pixels — a 720p feed on a big screen stays 720p wide and sharp, and
+     * the chrome around it grows instead. Fullscreen is the one exception:
+     * there the cap drops and the picture fills the screen.
+     */
+    const [stream, setStream] = useState<{
+      width: number;
+      height: number;
+    } | null>(null);
     const [liveWindow, setLiveWindow] = useState<{
       from: number;
       to: number;
@@ -113,12 +146,48 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // The browser refused to start the picture: the visitor has to tap.
     const [blocked, setBlocked] = useState(false);
 
+    // The account decides whether the picture may play at all. The free
+    // plan has two hours a day and the server is the one that counts them,
+    // so the browser only asks what the answer is and obeys it.
+    const account = useAccount();
+    const gated = account.ready && account.gated;
+
+    // The guard the imperative handle reads: the handle is created once,
+    // and the answer may change while the picture is on screen.
+    const gatedRef = useRef(gated);
+    useEffect(() => {
+      gatedRef.current = gated;
+    }, [gated]);
+
+    // The wall goes up while the picture runs: the video stops, and it
+    // starts again on its own when the account may watch.
+    useEffect(() => {
+      if (!gated) return;
+      const video = videoRef.current;
+      if (video && !video.paused) video.pause();
+    }, [gated]);
+
     const player = usePlayer({
       channelId,
-      autoStart: autoPlay,
+      // The chain of links is only asked for when the account may watch.
+      // A visitor behind the wall does not even learn that the channel
+      // has more than one feed.
+      autoStart: autoPlay && account.ready && !gated,
       onStatusChange,
     });
-    const { source, status, sources, sourceIndex, attempts, error } = player;
+    const { source, status, sources, sourceIndex, attempts, error, block, confirmDevice, retry } =
+      player;
+
+    // The watch clock: the player knows how long it has been playing, and
+    // the server counts it.
+    useWatchClock({
+      channelId,
+      playing: playing && !gated,
+      signedIn: account.signedIn,
+      onReport: (seconds) => {
+        void account.report(channelId, seconds);
+      },
+    });
 
     const failRef = useRef(player.markFailed);
     useEffect(() => {
@@ -128,6 +197,9 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const startPlayback = useCallback(async () => {
       const video = videoRef.current;
       if (!video) return;
+      // Behind the wall, the picture does not start. Not muted, not
+      // paused later — it simply never begins.
+      if (gatedRef.current) return;
       try {
         await video.play();
         setBlocked(false);
@@ -153,6 +225,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const enableSound = useCallback(async () => {
       const video = videoRef.current;
       if (!video) return;
+      if (gatedRef.current) return;
       video.muted = false;
       setMuted(false);
       try {
@@ -169,6 +242,35 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     useEffect(() => {
       startPlaybackRef.current = startPlayback;
     }, [startPlayback]);
+
+    /**
+     * The size of the picture, when the browser knows it.
+     *
+     * It is read from the metadata, so it is the stream's real shape and
+     * not an assumption. The frame follows it; the picture is then cropped
+     * to fill the frame instead of being stretched or letterboxed.
+     */
+    const readStreamSize = useCallback(() => {
+      const video = videoRef.current;
+      if (!video || !video.videoWidth || !video.videoHeight) return;
+      setStream((prev) =>
+        prev &&
+        prev.width === video.videoWidth &&
+        prev.height === video.videoHeight
+          ? prev
+          : { width: video.videoWidth, height: video.videoHeight },
+      );
+    }, []);
+
+    // The stream may change its own shape in flight: a quality switch
+    // rewrites videoWidth/videoHeight, and the frame follows — so the
+    // pixel cap never sits on a size the picture has left behind.
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.addEventListener("resize", readStreamSize);
+      return () => video.removeEventListener("resize", readStreamSize);
+    }, [readStreamSize]);
 
     // Load the current link.
     const sourceUrl = source?.url ?? null;
@@ -203,11 +305,38 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           return;
         }
 
+        // One failure moves the chain on — and only after the instance
+        // has tried to mend itself in place. A second error out of the
+        // same dying instance must never skip a feed.
+        let mediaRecoveries = 0;
+        let networkRecoveries = 0;
+        let failedOver = false;
+
         const hls = new Hls({
           enableWorker: true,
           lowLatencyMode: true,
           backBufferLength: 30,
-          maxBufferLength: 20,
+          // A slow line needs slack in front of the picture: thirty
+          // seconds of forward buffer means a hiccup has to outlast the
+          // whole buffer before the picture stops at all, and when it
+          // does stop, the watchdog nudges the loader back to work.
+          maxBufferLength: 30,
+          // The target sits three segments behind the edge, pinned — not
+          // the playlist's own hold-back, which may promise half a
+          // second of latency that a slow connection cannot keep and
+          // then stall on. This is the only latency knob set: hls.js
+          // refuses a config that mixes count and duration forms.
+          liveSyncDurationCount: 3,
+          // When the picture still drifts back from that target, hls.js
+          // may walk it home slightly faster — never past this rate, and
+          // never while the buffer is empty, so it cannot deepen a
+          // stall. A scrub deeper than the target's own reach — target
+          // plus one segment — counts as DVR and keeps normal speed; only
+          // „Înapoi la direct” brings the viewer forward again.
+          maxLiveSyncPlaybackRate: 1.5,
+          // Quality follows the connection, never the size of the box —
+          // fullscreen included.
+          capLevelToPlayerSize: false,
           // A dead server has to fail over in about a second, not after the
           // default twenty-second retry ladder. The next feed of the same
           // channel is the real fallback.
@@ -228,7 +357,15 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             },
           },
         });
-        destroy = () => hls.destroy();
+        hlsRef.current = hls;
+
+        let tornDown = false;
+        destroy = () => {
+          if (tornDown) return;
+          tornDown = true;
+          if (hlsRef.current === hls) hlsRef.current = null;
+          hls.destroy();
+        };
 
         hls.on(Hls.Events.ERROR, (_event, data) => {
           // A manifest that will not load is a dead server: fail over at
@@ -239,7 +376,33 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             data.details === Hls.ErrorDetails.MANIFEST_PARSING_ERROR;
 
           if (!data.fatal && !manifestFailed) return;
+          if (failedOver) return;
 
+          // Mend in place first. A media error is the decoder wedged:
+          // restart it, and swap the audio codec if the plain restart
+          // keeps failing. A network error is a loader that stopped:
+          // ask it to pull again. Only when the same error comes back
+          // does the chain move to the next feed.
+          if (!manifestFailed && data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            if (mediaRecoveries < 2) {
+              mediaRecoveries += 1;
+              if (mediaRecoveries > 1) hls.swapAudioCodec();
+              hls.recoverMediaError();
+              return;
+            }
+          }
+          if (!manifestFailed && data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            if (networkRecoveries < 2) {
+              networkRecoveries += 1;
+              hls.startLoad();
+              return;
+            }
+          }
+
+          // The dead instance stops pulling in the background before the
+          // chain moves on; the next link gets a fresh one.
+          failedOver = true;
+          destroy?.();
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             failRef.current("Fluxul nu răspunde. Se încearcă următorul.");
             return;
@@ -320,6 +483,47 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       setFullscreenMode("none");
     }, [embedded]);
 
+    // In fullscreen the transport bar floats over the picture and rests:
+    // three seconds of still pointer while the picture runs, and it fades
+    // out with the cursor; a move or a tap brings it back at once, and a
+    // pause keeps it on screen. Leaving fullscreen wakes it for good.
+    useEffect(() => {
+      if (!fullscreen) {
+        setControlsAsleep(false);
+        return;
+      }
+      let timer = 0;
+      const wake = () => {
+        setControlsAsleep(false);
+        if (timer) {
+          window.clearTimeout(timer);
+          timer = 0;
+        }
+        if (!playing) return;
+        timer = window.setTimeout(() => setControlsAsleep(true), 3000);
+      };
+      wake();
+      document.addEventListener("pointermove", wake);
+      document.addEventListener("pointerdown", wake);
+      document.addEventListener("keydown", wake);
+      return () => {
+        if (timer) window.clearTimeout(timer);
+        document.removeEventListener("pointermove", wake);
+        document.removeEventListener("pointerdown", wake);
+        document.removeEventListener("keydown", wake);
+      };
+    }, [fullscreen, playing]);
+
+    // Fullscreen asks for the whole screen: a level anything pinned — to
+    // the old box, to a temporary choice — goes back to automatic, so the
+    // ladder picks quality by bandwidth alone. Nothing in this player
+    // pins levels; this is the insurance that it stays that way.
+    useEffect(() => {
+      if (!fullscreen) return;
+      const hls = hlsRef.current;
+      if (hls && hls.currentLevel !== -1) hls.currentLevel = -1;
+    }, [fullscreen]);
+
     // The live window: what the stream has buffered, and where the live edge
     // is right now. A live channel has no past to scrub into.
     useEffect(() => {
@@ -343,10 +547,102 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       return () => window.clearInterval(timer);
     }, [sourceUrl]);
 
+    /**
+     * The stall watchdog.
+     *
+     * A picture that stops on a slow line is nudged back to work: the
+     * loader is asked to pull again and — when frames are already waiting
+     * in the buffer but the pipeline sits on them — the playhead moves a
+     * hair forward so the decoder takes them. The chain only moves to the
+     * next feed when two nudges, five seconds apart, have all failed;
+     * while the video is paused (the wall, the visitor) nothing counts
+     * and nothing advances.
+     */
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || embedded) return;
+
+      const GRACE_MS = 5000;
+      const NUDGES = 2;
+      let timer = 0;
+      let attempts = 0;
+      // Set once the chain has been told to move on: a frozen picture
+      // must not keep sending the same message every few seconds. A new
+      // source re-runs this effect from scratch.
+      let givenUp = false;
+
+      const disarm = () => {
+        if (timer) {
+          window.clearTimeout(timer);
+          timer = 0;
+        }
+      };
+
+      const nudge = () => {
+        // A loader that went quiet looks exactly like a stall: ask it to
+        // pull again. On Safari's native HLS there is no instance and
+        // the seek below is the whole nudge.
+        hlsRef.current?.startLoad();
+        const ranges = video.buffered;
+        if (ranges.length > 0) {
+          const end = ranges.end(ranges.length - 1);
+          if (end - video.currentTime > 0.25) {
+            try {
+              video.currentTime += 0.1;
+            } catch {
+              /* the seek was refused; the next nudge tries again */
+            }
+          }
+        }
+        if (video.paused) void video.play().catch(() => undefined);
+      };
+
+      const tick = () => {
+        timer = 0;
+        // Paused by the wall or by the visitor: nothing is stalled, and
+        // a pause must never send the chain forward.
+        if (video.paused) return;
+        attempts += 1;
+        if (attempts > NUDGES) {
+          givenUp = true;
+          failRef.current("Fluxul se blochează. Se încearcă următorul.");
+          return;
+        }
+        nudge();
+        timer = window.setTimeout(tick, GRACE_MS);
+      };
+
+      const watch = () => {
+        if (givenUp || timer || video.paused) return;
+        timer = window.setTimeout(tick, GRACE_MS);
+      };
+
+      const heal = () => {
+        disarm();
+        attempts = 0;
+      };
+
+      video.addEventListener("waiting", watch);
+      video.addEventListener("stalled", watch);
+      video.addEventListener("playing", heal);
+      video.addEventListener("canplay", heal);
+
+      return () => {
+        disarm();
+        video.removeEventListener("waiting", watch);
+        video.removeEventListener("stalled", watch);
+        video.removeEventListener("playing", heal);
+        video.removeEventListener("canplay", heal);
+      };
+    }, [embedded, sourceUrl]);
+
     useImperativeHandle(
       ref,
       () => ({
         play: () => {
+          // Behind the wall the parent may ask for the picture; it does
+          // not get one.
+          if (gatedRef.current) return;
           player.play();
           void startPlaybackRef.current();
         },
@@ -370,7 +666,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     );
 
     const busy = status === "resolving" || status === "retrying";
-    const failed = status === "error";
+    const failed = status === "error" && !block;
     const hasNext = sourceIndex + 1 < sources.length;
 
     const togglePlay = useCallback(() => {
@@ -482,19 +778,37 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       <div
         ref={shellRef}
         className={cn(
-          "relative isolate flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black",
+          // `fx-player` is what the fullscreen rules hang off; a pointer
+          // that rests in fullscreen loses the cursor with the bar.
+          "relative isolate flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black fx-player",
+          fullscreen && controlsAsleep && "cursor-none",
           className,
         )}
       >
-        <div className="relative aspect-video w-full bg-black max-sm:aspect-auto max-sm:min-h-[56.25vw] max-sm:flex-1">
+        <div
+          className="fx-player-frame relative w-full bg-black max-sm:min-h-[56.25vw] max-sm:flex-1 rounded-2xl"
+          style={
+            {
+              "--player-aspect": stream
+                ? `${stream.width} / ${stream.height}`
+                : "16 / 9",
+              "--player-native-width": stream ? `${stream.width}px` : "none",
+            } as CSSProperties
+          }
+        >
           <video
             ref={videoRef}
             className={cn(
-              "absolute inset-0 size-full bg-black object-contain",
+              // Cover, never contain: the picture fills the frame by
+              // cropping, so it is never stretched and never letterboxed.
+              // Fullscreen is the one exception, set in CSS — there the
+              // frame is the screen itself and the surplus turns black.
+              "absolute inset-0 size-full bg-black object-cover rounded-2xl",
               embedded && "hidden",
             )}
             playsInline
             muted={muted}
+            onLoadedMetadata={readStreamSize}
             onPlaying={() => {
               setPlaying(true);
               player.markPlaying();
@@ -514,18 +828,18 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               // No `allow-popups`: an ad window can never open from here.
               sandbox="allow-scripts allow-same-origin allow-presentation"
               referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0 size-full border-0 bg-black"
+              className="absolute inset-0 size-full border-0 bg-black rounded-2xl"
             />
           ) : null}
 
           {embedded ? (
-            <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90">
+            <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90 rounded-t-2xl">
               Redarea este controlată din playerul încorporat.
             </p>
           ) : null}
 
           {busy && !failed && !embedded && !blocked ? (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55">
+            <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55 rounded-2xl">
               <div className="flex flex-col items-center gap-3 text-center">
                 <Loader2 className="size-7 animate-spin text-signal" />
                 <p className="text-sm text-ink/85">
@@ -543,7 +857,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           ) : null}
 
           {failed ? (
-            <div className="absolute inset-0 grid place-items-center bg-black/80 p-6 text-center">
+            <div className="absolute inset-0 grid place-items-center bg-black/80 p-6 text-center rounded-2xl">
               <div className="max-w-sm">
                 <TriangleAlert className="mx-auto size-7 text-signal" />
                 <p className="mt-3 font-display text-base font-semibold text-ink">
@@ -567,7 +881,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           ) : null}
 
           {!busy && !failed && status === "idle" && !embedded ? (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center">
+            <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-2xl">
               <div className="flex flex-col items-center gap-2 text-ink-faint">
                 <Radio className="size-6" />
                 <p className="text-[11px] uppercase tracking-[0.2em]">
@@ -596,6 +910,35 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               void enableSound();
             }}
           />
+
+          {/* Ten minutes before the wall: the line says so, once a day, and
+              the picture keeps running underneath it. */}
+          {embedded ? null : (
+            <MinutesWarning
+              signedIn={account.signedIn}
+              plan={account.plan}
+              remainingMinutes={account.remainingMinutes}
+              gated={gated}
+            />
+          )}
+
+          {/* The plan's own answer: too many screens, or a device the house
+              does not know yet. Under the wall, over the picture. */}
+          <StreamNotice
+            block={gated ? null : block}
+            onConfirm={confirmDevice}
+            onRetry={retry}
+          />
+
+          {/* The wall: the account decides whether the picture may play.
+              It is the last thing over the frame, and it says nothing about
+              where the picture comes from. */}
+          <Paywall
+            visible={gated}
+            reason={account.reason}
+            minutesWatchedToday={account.minutesWatchedToday}
+            allowanceMinutes={account.allowanceMinutes}
+          />
         </div>
 
         {bare || embedded ? null : (
@@ -605,6 +948,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             volume={volume}
             busy={busy}
             fullscreen={fullscreen}
+            asleep={fullscreen && controlsAsleep}
             canFullscreen={fullscreenMode !== "none"}
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}

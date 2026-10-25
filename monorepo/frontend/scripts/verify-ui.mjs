@@ -10,6 +10,7 @@ import { spawn } from "node:child_process";
 import { writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { installSession } from "./harness-signin.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(__dirname, "../docs/reviews");
@@ -94,6 +95,9 @@ async function main() {
   };
 
   await send("Page.enable");
+
+// The product is account-gated: the harness has to be signed in.
+await installSession(send);
   await send("Runtime.enable");
   await send("Log.enable");
 
