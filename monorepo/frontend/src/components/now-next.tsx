@@ -870,7 +870,7 @@ export function NowNext({ schedule, hue = 26, className }: NowNextProps) {
                 key={`${programme.start}-${programme.title}-${index}`}
                 className="flex min-w-0 items-baseline gap-2"
               >
-                <span className="font-mono text-[11px] tabular-nums text-signal/85">
+                <span className="font-mono text-[11px] tabular-nums text-white/80">
                   {formatClock(programme.start)}
                 </span>
                 <span className="truncate text-[13px] text-ink-muted">

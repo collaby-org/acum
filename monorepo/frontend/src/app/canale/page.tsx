@@ -8,6 +8,8 @@ import { getSecondaryMeta } from "@/lib/secondary";
 import { loadGuide } from "@/lib/guide";
 import { liveAudienceMap } from "@/lib/audience";
 import { pickTrending } from "@/lib/popularity";
+import { useAccount } from "@/hooks/use-account";
+import { redirect } from "next/navigation";
 
 /**
  * The guide is about now, so the page is rendered per request.
@@ -33,6 +35,11 @@ export const instant = false;
  */
 export default async function Home() {
   await connection();
+
+  const account = await useAccount();
+  if (!account.signedIn) {
+    redirect("/conturi");
+  }
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

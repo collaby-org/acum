@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Channel } from "@/data/types";
 import { useRecentlyWatched } from "@/hooks/use-favorites";
+import { useAccount } from "@/hooks/use-account";
 
 /** A phone: it is touched, and it is narrow. */
 const PHONE_QUERY = "(pointer: coarse) and (max-width: 640px)";
@@ -34,6 +35,7 @@ export type ChannelLauncher = {
 export function useChannelLauncher(): ChannelLauncher {
   const router = useRouter();
   const recent = useRecentlyWatched();
+  const account = useAccount();
 
   const [active, setActive] = useState<Channel | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +59,13 @@ export function useChannelLauncher(): ChannelLauncher {
       // watched" has to know about the phone route too.
       recent.remember(channel.id);
 
+      // Check if user is authenticated
+      if (!account.ready) return; // Don't block — wait for account to load
+      if (!account.signedIn) {
+        router.push("/conturi");
+        return;
+      }
+
       if (isPhone) {
         router.push(`/canal/${channel.id}`);
         return;
@@ -65,7 +74,7 @@ export function useChannelLauncher(): ChannelLauncher {
       setActive(channel);
       setIsOpen(true);
     },
-    [isPhone, recent, router],
+    [isPhone, recent, router, account.ready, account.signedIn],
   );
 
   const close = useCallback(() => {
