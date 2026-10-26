@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 
 export default async function CanaleGrupate() {
   await connection();
-  await requireSignedIn();
+  await requireSignedIn("/canale/grupate");
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

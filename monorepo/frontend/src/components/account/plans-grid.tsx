@@ -16,7 +16,7 @@ import Link from "next/link";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { accountToken, useAccount } from "@/hooks/use-account";
+import { accountToken } from "@/hooks/use-account";
 import {
   cadenceLabel,
   PLANS,
@@ -24,6 +24,7 @@ import {
   type Product,
 } from "@/lib/supabase/plans";
 import { formatRegionalPrice, useRegionalPricing } from "@/lib/pricing-client";
+import type { PlanPricing, RegionCode } from "@/lib/pricing-client";
 import { cn } from "@/lib/utils";
 
 export type PlansGridProps = {
@@ -31,10 +32,25 @@ export type PlansGridProps = {
   compact?: boolean;
   /** The plans to show; every plan by default. */
   plans?: PlanDefinition[];
+  /** The region the server read off the geo header. When it is given the
+   *  grid prices it directly; without it the browser's own region is
+   *  resolved after the first paint. */
+  region?: RegionCode;
   className?: string;
 };
 
-export function PlansGrid({ compact = false, plans = PLANS, className }: PlansGridProps) {
+export function PlansGrid({
+  compact = false,
+  plans = PLANS,
+  region,
+  className,
+}: PlansGridProps) {
+  // The visitor's own region: the server can only guess, so the card shows
+  // the regional price as soon as the browser answers. Before that the
+  // server's default (euro) is painted — the same first-paint tradeoff the
+  // pricing hook documents.
+  const { pricing } = useRegionalPricing(region);
+
   return (
     <div
       className={cn(
@@ -43,7 +59,7 @@ export function PlansGrid({ compact = false, plans = PLANS, className }: PlansGr
       )}
     >
       {plans.map((plan) => (
-        <PlanCard key={plan.id} plan={plan} compact={compact} />
+        <PlanCard key={plan.id} plan={plan} pricing={pricing} compact={compact} />
       ))}
     </div>
   );
@@ -51,29 +67,23 @@ export function PlansGrid({ compact = false, plans = PLANS, className }: PlansGr
 
 export function PlanCard({
   plan,
+  pricing,
   compact = false,
 }: {
   plan: PlanDefinition;
+  pricing: PlanPricing;
   compact?: boolean;
 }) {
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const account = useAccount();
-  // The visitor's own region: the server can only guess, so the card shows
-  // the regional price as soon as the browser answers. Before that the
-  // server's default (euro) is painted — the same first-paint tradeoff the
-  // pricing hook documents.
-  const { pricing } = useRegionalPricing();
+  // The free plan is the one with the free bill — not the one whose price
+  // happens to be zero in the region's table (every plan's free tier is
+  // zero there by construction).
   const free = plan.id === "free";
   // The plan's own tier: monthly → monthly, household → household, …
-  const ownPrice = pricing[plan.id] ?? pricing.monthly;
+  const ownPrice = pricing[plan.id as "free" | "monthly" | "household" | "lifetime"] ?? pricing.monthly;
   const product = plan.id as Product;
-
-  const buttonLabel = account.ready && account.signedIn
-    ? (free ? "Planul tău: Gratuit" : "Planul tău: " + (plan.id === "monthly" ? "Individual" : plan.id === "household" ? "Casă" : "Viață"))
-    : (free ? "Creează un cont" : "Alege " + (plan.id === "monthly" ? "Individual" : plan.id === "household" ? "Casă" : "Viață"));
-  const buttonHref = account.ready && account.signedIn ? "/conturi" : (free ? "/conturi?intent=register" : "/conturi?intent=plan&plan=" + product);
 
   const buy = async () => {
     if (free) return;
@@ -179,7 +189,6 @@ export function PlanCard({
           {plan.seats} locuri · {formatRegionalPrice({
             amount: Math.round(ownPrice.amount / plan.seats),
             currency: ownPrice.currency,
-            symbol: ownPrice.symbol,
             locale: ownPrice.locale,
           })} pe loc
           {plan.cadence === "month" ? " pe lună" : ""}

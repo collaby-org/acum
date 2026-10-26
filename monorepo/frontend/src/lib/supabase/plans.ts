@@ -1,21 +1,17 @@
 /**
  * The plan catalogue.
  *
- * The names, the prices and the promises live in `src/lib/site.ts` — the
+ * The names, the blurbs and the promises live in `src/lib/site.ts` — the
  * one place the product's identity is. This module only adds what the
  * database, the paywall and the payment route need on top of that: the
  * plan ids, the seats of each plan, the daily allowance and the products
  * that can be bought.
  *
- * The prices are read from one place, so the pricing page, the landing
+ * The **prices** do not live here: they live per region in
+ * `src/lib/shared/pricing-utils.ts`, so the pricing page, the landing
  * page, the paywall and the payment route cannot drift apart.
  */
 import { FREE_DAILY_MINUTES, PLANS as SITE_PLANS } from "@/lib/site";
-import {
-  getRegionalPricing,
-  type RegionCode,
-  type RegionalPrice,
-} from "@/lib/shared/pricing-utils";
 
 /** The plans an account can be on. `comp` is what the desk grants by hand. */
 export type Plan = "free" | "monthly" | "lifetime" | "household" | "comp";
@@ -38,9 +34,7 @@ export type PlanDefinition = {
   name: string;
   /** One line under the name. */
   tagline: string;
-  /** The price in minor units (cents, bani, yen) for each plan tier. */
-  regionalPrice: Record<string, RegionalPrice>;
-  /** `per month` or `once` — how the price is charged. */
+  /** `per month` or `once` — how the plan is charged. */
   cadence: "free" | "month" | "once";
   /** How many people share the plan. */
   seats: number;
@@ -52,33 +46,17 @@ export type PlanDefinition = {
   featured?: boolean;
 };
 
-/**
- * Get the regional pricing for all plans.
- */
-export function getPlansWithRegionalPricing(regionCode?: RegionCode): PlanDefinition[] {
-  const pricing = getRegionalPricing(regionCode);
-  
-  return SITE_PLANS.map((plan) => ({
-    id: plan.id as Plan,
-    name: plan.name,
-    tagline: plan.blurb,
-    regionalPrice: {
-      free: pricing.free,
-      monthly: pricing.monthly,
-      household: pricing.household,
-      lifetime: pricing.lifetime,
-    },
-    cadence:
-      plan.price === null ? "free" : plan.period === "o dată" ? "once" : "month",
-    seats: SEATS[plan.id] ?? 1,
-    allowanceSeconds: plan.minutes === null ? null : plan.minutes * 60,
-    features: [...plan.features],
-    featured: plan.id === "household",
-  }));
-}
-
 /** The plans, in the order the product shows them. */
-export const PLANS: PlanDefinition[] = getPlansWithRegionalPricing();
+export const PLANS: PlanDefinition[] = SITE_PLANS.map((plan) => ({
+  id: plan.id as Plan,
+  name: plan.name,
+  tagline: plan.blurb,
+  cadence: plan.billable,
+  seats: SEATS[plan.id] ?? 1,
+  allowanceSeconds: plan.minutes === null ? null : plan.minutes * 60,
+  features: [...plan.features],
+  featured: plan.id === "household",
+}));
 
 /** The plan a visitor starts on. */
 export const DEFAULT_PLAN: Plan = "free";

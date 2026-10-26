@@ -64,10 +64,10 @@ export default async function AuthCallbackPage({
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/"
+              href="/canale"
               className="inline-flex h-11 items-center rounded-full bg-signal px-6 text-sm font-medium text-[#141005] transition hover:bg-signal-bright"
             >
-              Începe acum
+              Deschide catalogul
             </Link>
             <Link
               href="/conturi"

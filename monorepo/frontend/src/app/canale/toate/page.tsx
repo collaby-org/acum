@@ -54,7 +54,7 @@ const NO_GUIDE: EpgGuide = { date: null, reference: null, channels: [] };
 
 export default async function ToateCanalele() {
   await connection();
-  await requireSignedIn();
+  await requireSignedIn("/canale/toate");
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

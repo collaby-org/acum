@@ -106,7 +106,7 @@ export default function Despre() {
                 {PLANS[0].blurb.replace(/\.$/, "").toLowerCase()}. El ține
                 favoritele și istoricul pe mai multe dispozitive. Planurile
                 plătite —{" "}
-                {PLANS.filter((plan) => plan.price !== null)
+                {PLANS.filter((plan) => plan.billable !== "free")
                   .map((plan) => plan.name.toLowerCase())
                   .join(", ")}{" "}
                 — ridică limita de vizionare. Prețurile și ce cuprinde fiecare

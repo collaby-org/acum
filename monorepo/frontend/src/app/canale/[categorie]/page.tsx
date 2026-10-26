@@ -54,11 +54,14 @@ export async function generateMetadata({
 
 export default async function Categorie({ params }: Props) {
   await connection();
-  await requireSignedIn();
 
+  // The route is resolved first: an unknown category is a 404 for a
+  // signed-in visitor, not an invitation to sign in.
   const { categorie } = await params;
   const resolved = resolveCategory(categorie);
   if (!resolved) notFound();
+
+  await requireSignedIn(`/canale/${categorie}`);
 
   const now = requestMoment();
   const meta = await getSecondaryMeta();

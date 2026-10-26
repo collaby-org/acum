@@ -3,85 +3,67 @@
 /**
  * Client-side pricing.
  *
- * Thin wrapper over the isomorphic source of truth in
- * `@/lib/shared/pricing-utils`. That module already runs on the client — it
- * guards every `document` access behind `typeof window` — so this file only
- * adds the React hook and re-exports the helpers under client-friendly names
- * so components never import server-only modules.
+ * The isomorphic core in `@/lib/shared/pricing-utils` already runs in the
+ * browser — every `document` access is guarded by `typeof window` — so this
+ * module is only the React seam: a hook that reads the region once, on the
+ * first client render, with no effect.
+ *
+ * The region cannot change while a page is mounted (a geo cookie and a
+ * device timezone do not move mid-session), so a lazy `useState` initialiser
+ * is the whole mechanism: the first client render already carries the right
+ * prices and there is no flash of the fallback region.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   REGIONAL_PRICING,
-  formatRegionalPrice,
-  getRegionalPricing,
   getRegionCode,
   getUserRegion,
   timezoneToCountry,
-  type CurrencyCode,
   type PlanPricing,
   type RegionCode,
-  type RegionalPrice,
 } from "@/lib/shared/pricing-utils";
 
-export {
-  formatRegionalPrice,
-  getRegionalPricing,
-  type CurrencyCode,
-  type PlanPricing,
-  type RegionCode,
-  type RegionalPrice,
-};
+export { formatRegionalPrice, getRegionalPricing } from "@/lib/shared/pricing-utils";
+export type { CurrencyCode, PlanPricing, RegionCode, RegionalPrice } from "@/lib/shared/pricing-utils";
 
-/**
- * The visitor's region, on the client.
- *
- * Alias of the shared `getUserRegion`, which is already safe in the browser.
- * Kept as a distinct name so client components read as client code.
- */
-export function getUserRegionClient(): RegionCode {
+/** The visitor's region, read once from the cookie, then the timezone. */
+function readRegion(): RegionCode {
+  // The lazy initialiser runs during server rendering too; there is no
+  // document there, so the server paints the fallback and the first
+  // client render carries the region.
+  if (typeof document === "undefined") return "DEFAULT";
+
+  const vercelCountry = document.cookie.match(/vercel-country=([^;]+)/)?.[1];
+  if (vercelCountry) return getRegionCode(vercelCountry);
+
+  try {
+    const country = timezoneToCountry(
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    );
+    if (country) return getRegionCode(country);
+  } catch {
+    // A browser without `Intl` keeps the fallback region.
+  }
+
   return getUserRegion();
 }
 
 /**
- * Hook: the visitor's region and pricing, resolved once on mount.
+ * Hook: the visitor's region and its prices, resolved on the first render.
  *
- * Server HTML always renders `DEFAULT` (euro) so the first paint is stable;
- * after mount the real region replaces it. Consumers should therefore avoid
- * layout that shifts when the currency symbol changes length.
+ * A `region` given by the server (read from the geo header) wins: the page
+ * then shows one price from the first byte, and hydration agrees with the
+ * server. Without it the browser's own region is detected on the first
+ * client render — the fallback for surfaces the server renders generically.
  */
-export function useRegionalPricing(): {
+export function useRegionalPricing(serverRegion?: RegionCode): {
   pricing: PlanPricing;
   region: RegionCode;
-  loading: boolean;
 } {
-  const [pricing, setPricing] = useState<PlanPricing>(REGIONAL_PRICING.DEFAULT);
-  const [region, setRegion] = useState<RegionCode>("DEFAULT");
-  const [loading, setLoading] = useState(true);
+  const [detected] = useState<RegionCode>(readRegion);
+  const region = serverRegion ?? detected;
+  const pricing = REGIONAL_PRICING[region] ?? REGIONAL_PRICING.DEFAULT;
 
-  useEffect(() => {
-    const vercelCountry = document.cookie.match(/vercel-country=([^;]+)/)?.[1];
-    let next: RegionCode = "DEFAULT";
-
-    if (vercelCountry) {
-      next = getRegionCode(vercelCountry);
-    } else {
-      try {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const country = timezoneToCountry(timezone);
-        if (country) next = getRegionCode(country);
-      } catch {
-        // No `Intl`: stay on the default.
-      }
-    }
-
-    setRegion(next);
-    setPricing(
-      (REGIONAL_PRICING as Record<string, PlanPricing>)[next] ??
-        REGIONAL_PRICING.DEFAULT,
-    );
-    setLoading(false);
-  }, []);
-
-  return { pricing, region, loading };
+  return { pricing, region };
 }

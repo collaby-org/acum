@@ -43,7 +43,7 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "description": "ACUM — TV live românesc, fără reclame, fără cont.",
+  "description": "ACUM — TV live românesc, fără reclame.",
   "license": "MIT",
   "repository": {
     "type": "git",

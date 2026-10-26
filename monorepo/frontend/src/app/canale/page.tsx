@@ -37,7 +37,7 @@ export default async function Home() {
 
   // A signed-out visitor never sees the catalogue or the error that would
   // follow — the accounts page is where the way in lives.
-  await requireSignedIn();
+  await requireSignedIn("/canale");
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

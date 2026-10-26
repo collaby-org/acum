@@ -21,7 +21,7 @@ import { ArrowRight, Clock, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignInForm, type AuthMode } from "@/components/account/sign-in-form";
 import { PLANS } from "@/lib/supabase/plans";
-import { getRegionalPricing, formatRegionalPrice, getUserRegionClient } from "@/lib/pricing-client";
+import { formatRegionalPrice, useRegionalPricing } from "@/lib/pricing-client";
 import { cn } from "@/lib/utils";
 
 export type PaywallReason = "signed_out" | "allowance_spent";
@@ -143,9 +143,10 @@ function SpentPanel({
   minutesWatchedToday: number;
   allowanceMinutes: number | null;
 }) {
-  const region = getUserRegionClient();
-  const pricing = getRegionalPricing(region);
-  
+  // The region is read once, on the first client render — not on every
+  // repaint of the wall, which sits over a picture that keeps playing.
+  const { pricing } = useRegionalPricing();
+
   const hours = Math.round((allowanceMinutes ?? 120) / 60);
 
   return (
@@ -180,7 +181,7 @@ function SpentPanel({
               ) : null}
             </span>
             <span className="shrink-0 font-display text-[13px] font-semibold text-ink">
-              {formatRegionalPrice(pricing[plan.id] ?? pricing.monthly)}
+              {formatRegionalPrice(pricing[plan.id as "free" | "monthly" | "household" | "lifetime"] ?? pricing.monthly)}
               {plan.cadence === "month" ? " / lună" : ""}
             </span>
           </li>

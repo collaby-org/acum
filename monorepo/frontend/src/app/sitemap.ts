@@ -4,16 +4,15 @@ import { SITE_URL } from "@/lib/site";
 /**
  * The sitemap.
  *
- * The catalogue is at `/` and the guide lives under its own routes, so
- * every page a crawler can reach is listed here. There is no `lastModified`:
+ * The guide lives under its own routes, so every page a crawler can reach
+ * is listed here. The catalogue itself is behind an account: anonymous
+ * crawlers are redirected away, so its URLs would only cost crawl budget.
+ * There is no `lastModified`:
  * the catalogue is rebuilt by a script, not by a request, and a timestamp
  * that cannot be read off the build would only be a guess.
  */
 const PAGES: { path: string; priority: number; changeFrequency: "daily" | "weekly" | "monthly" }[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
-  { path: "/canale", priority: 1, changeFrequency: "daily" },
-  { path: "/canale/toate", priority: 0.9, changeFrequency: "daily" },
-  { path: "/canale/grupate", priority: 0.7, changeFrequency: "weekly" },
   { path: "/trending", priority: 0.8, changeFrequency: "daily" },
   { path: "/azi", priority: 0.8, changeFrequency: "daily" },
   { path: "/ghid", priority: 0.7, changeFrequency: "daily" },

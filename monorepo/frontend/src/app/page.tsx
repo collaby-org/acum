@@ -78,6 +78,12 @@ async function copyrightYear() {
 export default async function LandingPage() {
   const year = await copyrightYear();
 
+  // The plans are priced the way the visitor's own country pays, read from
+  // the geo header — the same prime reading the pricing page uses.
+  // The visitor's own region: the grid prices it in the browser, so this
+  // page stays prerenderable (the same first-paint tradeoff the pricing
+  // hook documents — the visitor only ever sees their own prices).
+
   return (
     <main className="relative isolate min-h-dvh bg-canvas">
       {/* A signed-in account has no business on the front door; the gate

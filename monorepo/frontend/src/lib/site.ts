@@ -54,15 +54,17 @@ export const FREE_DAILY_MINUTES = 120;
 /**
  * The plans, in the order they are shown.
  *
- * The prices live here so that the pricing page, the landing page and the
- * paywall cannot drift apart.
+ * Names, blurbs, seats and features — the identity of each plan. **Prices do
+ * not live here**: they live in `src/lib/shared/pricing-utils.ts`, per region,
+ * so the pricing page, the landing page, the paywall and the payment route
+ * cannot drift apart. All that is left here is how a plan is charged, which
+ * is the same everywhere.
  */
 export const PLANS = [
   {
     id: "free",
     name: "Gratuit",
-    price: null,
-    period: null,
+    billable: "free",
     minutes: FREE_DAILY_MINUTES,
     blurb: "Două ore pe zi, cât timp vrei.",
     features: [
@@ -75,8 +77,7 @@ export const PLANS = [
   {
     id: "monthly",
     name: "Individual",
-    price: 3.99,
-    period: "lună",
+    billable: "month",
     minutes: null,
     blurb: "Nelimitat, pentru o singură persoană.",
     features: [
@@ -88,8 +89,7 @@ export const PLANS = [
   {
     id: "household",
     name: "Casă",
-    price: 5.99,
-    period: "lună",
+    billable: "month",
     minutes: null,
     blurb: "Nelimitat, pentru toată familia.",
     features: [
@@ -101,8 +101,7 @@ export const PLANS = [
   {
     id: "lifetime",
     name: "De o viață",
-    price: 39.99,
-    period: "o dată",
+    billable: "once",
     minutes: null,
     blurb: "Plătești o singură dată.",
     features: [
@@ -113,7 +112,5 @@ export const PLANS = [
   },
 ] as const;
 
-/** The plan's price, formatted the way a price is written in Romanian. */
-export function formatPrice(price: number): string {
-  return `${price.toFixed(2).replace(".", ",")} £`;
-}
+/** How a plan is charged — the same in every region. */
+export type Billable = "free" | "month" | "once";

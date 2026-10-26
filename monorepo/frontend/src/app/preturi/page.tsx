@@ -11,48 +11,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
-import { ArrowLeft, Info, ShieldCheck } from "lucide-react";
+import { headers } from "next/headers";
+import { ArrowLeft } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { EntrySection } from "@/components/preturi/entry-section";
-import { Button } from "@/components/ui/button";
-import { PLANS, freeHours, getPlansWithRegionalPricing } from "@/lib/supabase/plans";
+import { PLANS, freeHours } from "@/lib/supabase/plans";
 import {
   formatRegionalPrice,
-  type CurrencyCode,
-} from "@/lib/pricing";
-import {
-  formatPrice,
-  SITE_NAME,
-  SITE_PROMISE,
-  SITE_TAGLINE,
-} from "@/lib/site";
+  getRegionalPricing,
+  getRegionFromHeaders,
+} from "@/lib/shared/pricing-utils";
+import { SITE_NAME, SITE_PROMISE } from "@/lib/site";
 
 /**
  * The description is written from the prices themselves, so it cannot say
- * something the page does not.
+ * something the page does not. It reads the visitor's region the same way
+ * the page does — from the geo header — so a Romanian visitor is not
+ * described prices in euros.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const plans = getPlansWithRegionalPricing();
-  
-  const individual = plans.find((plan) => plan.id === "monthly");
-  const household = plans.find((plan) => plan.id === "household");
-  const lifetime = plans.find((plan) => plan.id === "lifetime");
-  
-  const individualPrice = individual?.regionalPrice?.monthly 
-    ? `${formatRegionalPrice(individual.regionalPrice.monthly)}/lună`
-    : "";
-  const householdPrice = household?.regionalPrice?.monthly
-    ? `${formatRegionalPrice(household.regionalPrice.monthly)}/lună`
-    : "";
-  const lifetimePrice = lifetime?.regionalPrice?.lifetime
-    ? formatRegionalPrice(lifetime.regionalPrice.lifetime)
-    : "";
+  const pricing = getRegionalPricing(getRegionFromHeaders(await headers()));
 
   return {
     title: "Planuri",
-    description: `${freeHours()} ore pe zi, gratuit. Fără limită de timp de la ${individualPrice}, un plan de casă la ${householdPrice} și un plan de viață la ${lifetimePrice}, plătit o singură dată.`,
+    description: `${freeHours()} ore pe zi, gratuit. Fără limită de timp de la ${formatRegionalPrice(pricing.monthly)}/lună, un plan de casă la ${formatRegionalPrice(pricing.household)}/lună și un plan de viață la ${formatRegionalPrice(pricing.lifetime)}, plătit o singură dată.`,
   };
 }
 
@@ -65,28 +49,14 @@ export const instant = false;
 /**
  * The reasons behind the prices, written from the prices themselves.
  *
- * The numbers are read from the plan catalogue, so the argument and the
- * price can never say different things.
+ * The numbers are read from the same regional table the grid and the entry
+ * section read, so the argument and the price can never say different
+ * things. `seats` stays with the plan catalogue — it is the product's
+ * shape, not the price.
  */
-function reasons() {
-  const plans = getPlansWithRegionalPricing();
-  
-  const individual = plans.find((plan) => plan.id === "monthly");
-  const household = plans.find((plan) => plan.id === "household");
-  const lifetime = plans.find((plan) => plan.id === "lifetime");
-
-  const perSeat =
-    household && household.regionalPrice?.monthly?.amount
-      ? Math.round(household.regionalPrice.monthly.amount / household.seats)
-      : 0;
-  const fourIndividuals =
-    individual && individual.regionalPrice?.monthly?.amount
-      ? Math.round(individual.regionalPrice.monthly.amount * (household?.seats ?? 4) / 100)
-      : 0;
-  const months =
-    lifetime && individual && individual.regionalPrice?.monthly?.amount && lifetime.regionalPrice?.lifetime?.amount
-      ? Math.round(lifetime.regionalPrice.lifetime.amount / (individual.regionalPrice.monthly?.amount || 1))
-      : 0;
+function reasons(pricing: ReturnType<typeof getRegionalPricing>) {
+  const household = PLANS.find((plan) => plan.id === "household");
+  const seats = household?.seats ?? 4;
 
   return [
     {
@@ -94,26 +64,24 @@ function reasons() {
       text: `${freeHours()} ore pe zi e destul ca să vezi ce rulează, și suficient ca să știi că nimic nu se pierde. Limita se resetează la miezul nopții, în România.`,
     },
     {
-      title: `Fără limită, de la ${individual?.regionalPrice?.monthly ? formatRegionalPrice(individual.regionalPrice.monthly) : ""}/lună`,
+      title: `Fără limită, de la ${formatRegionalPrice(pricing.monthly)}/lună`,
       text: "Planul individual ia doar limita. Nimic altceva nu se schimbă: aceleași canale, același player, fără reclame.",
     },
     {
-      title: `Toată casa, la ${household?.regionalPrice?.monthly ? formatRegionalPrice(household.regionalPrice.monthly) : ""}/lună`,
-      text: `${household?.seats ?? 4} locuri, ${household?.seats ?? 4} ecrane, o singură plată. Un loc costă ${formatRegionalPrice({
-        amount: Math.round((household?.regionalPrice?.monthly?.amount ?? 0) / (household?.seats ?? 1)),
-        currency: (household?.regionalPrice?.monthly?.currency ?? "EUR") as CurrencyCode,
-        symbol: household?.regionalPrice?.monthly?.symbol ?? "€",
-        locale: household?.regionalPrice?.monthly?.locale ?? "en-EU",
-      })} pe lună — ${household?.seats ?? 4} planuri individuale ar costa ${formatRegionalPrice({
-        amount: (individual?.regionalPrice?.monthly?.amount ?? 0) * (household?.seats ?? 4),
-        currency: (individual?.regionalPrice?.monthly?.currency ?? "EUR") as CurrencyCode,
-        symbol: individual?.regionalPrice?.monthly?.symbol ?? "€",
-        locale: individual?.regionalPrice?.monthly?.locale ?? "en-EU",
+      title: `Toată casa, la ${formatRegionalPrice(pricing.household)}/lună`,
+      text: `${seats} locuri, ${seats} ecrane, o singură plată. Un loc costă ${formatRegionalPrice({
+        amount: Math.round(pricing.household.amount / seats),
+        currency: pricing.household.currency,
+        locale: pricing.household.locale,
+      })} pe lună — ${seats} planuri individuale ar costa ${formatRegionalPrice({
+        amount: pricing.monthly.amount * seats,
+        currency: pricing.monthly.currency,
+        locale: pricing.monthly.locale,
       })}.`,
     },
     {
-      title: `O singură plată, la ${lifetime?.regionalPrice?.lifetime ? formatRegionalPrice(lifetime.regionalPrice.lifetime) : ""}`,
-      text: `Planul de viață nu se reînnoiește niciodată și prețul nu crește. Se amortizează în a ${months}-a lună a planului individual.`,
+      title: `O singură plată, la ${formatRegionalPrice(pricing.lifetime)}`,
+      text: `Planul de viață nu se reînnoiește niciodată și prețul nu crește. Se amortizează în a ${Math.max(1, Math.round(pricing.lifetime.amount / Math.max(1, pricing.monthly.amount)))}-a lună a planului individual.`,
     },
   ];
 }
@@ -149,25 +117,18 @@ export default async function PricingPage() {
   await connection();
 
   const paymentsReady = Boolean(process.env.STRIPE_SECRET_KEY);
-  const plans = getPlansWithRegionalPricing();
-  
-  const individual = plans.find((plan) => plan.id === "monthly");
-  const household = plans.find((plan) => plan.id === "household");
-  const lifetime = plans.find((plan) => plan.id === "lifetime");
-  const perSeat =
-    household && household.regionalPrice?.monthly?.amount
-      ? Math.round(household.regionalPrice.monthly.amount / household.seats)
-      : 0;
-  const fourIndividuals =
-    individual && individual.regionalPrice?.monthly?.amount
-      ? Math.round(individual.regionalPrice.monthly.amount * (household?.seats ?? 4) / 100)
-      : 0;
+
+  // The visitor's region, from the geo header the deployment sets. One
+  // prime reading: the grid, the entry section and the reason cards all
+  // prices the same currency, server-rendered.
+  const region = getRegionFromHeaders(await headers());
+  const pricing = getRegionalPricing(region);
 
   return (
-    <main className="relative isolate min-h-dvh bg-canvas">
+    <div className="relative isolate min-h-dvh bg-canvas">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        className="pointer-events absolute inset-0 -z-10 overflow-hidden"
       >
         <div
           className="absolute inset-0 mix-blend-screen"
@@ -181,27 +142,50 @@ export default async function PricingPage() {
         <div className="fx-grain absolute inset-0 opacity-[0.04] mix-blend-overlay" />
       </div>
 
-      <div
-        aria-hidden
-        className="fixed inset-x-0 top-0 h-16 bg-gradient-to-b from-black/50 to-transparent"
-      />
+      {/* The bar: the wordmark, the way back and the account — the same
+          shape as the accounts page, so the two side doors match. */}
+      <header className="mx-auto flex h-16 max-w-[1120px] items-center gap-4 px-4 sm:h-[72px] sm:px-8">
+        <Link
+          href="/"
+          className="group flex shrink-0 items-center gap-3"
+          aria-label={`${SITE_NAME} — acasă`}
+        >
+          <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
+            <AcumMark id="acum-mark-preturi" className="size-[21px]" />
+          </span>
+          <span className="font-display text-[19px] font-bold tracking-[0.16em] text-ink">
+            {SITE_NAME}
+          </span>
+        </Link>
+
+        <div className="flex-1" />
+
+        <Link
+          href="/"
+          className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.1]"
+        >
+          <ArrowLeft className="size-4" aria-hidden />
+          Înapoi acasă
+        </Link>
+        <AccountButton />
+      </header>
 
       <EntrySection
-        individualPrice={individual?.regionalPrice?.monthly ? formatRegionalPrice(individual.regionalPrice.monthly) : ""}
-        householdPrice={household?.regionalPrice?.monthly ? formatRegionalPrice(household.regionalPrice.monthly) : ""}
-        lifetimePrice={lifetime?.regionalPrice?.lifetime ? formatRegionalPrice(lifetime.regionalPrice.lifetime) : ""}
+        individualPrice={formatRegionalPrice(pricing.monthly)}
+        householdPrice={formatRegionalPrice(pricing.household)}
+        lifetimePrice={formatRegionalPrice(pricing.lifetime)}
         freeHours={freeHours()}
       />
 
       <main className="mx-auto max-w-[1120px] px-4 pb-24 sm:px-8 lg:px-12">
-        <PlansGrid plans={PLANS} />
+        <PlansGrid region={region} />
 
         <section className="mt-20" aria-labelledby="reasons-heading">
           <h2 id="reasons-heading" className="font-display text-3xl font-bold tracking-tight mb-12 text-center">
             De ce aceste prețuri
           </h2>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {reasons().map((reason, index) => (
+            {reasons(pricing).map((reason) => (
               <article
                 key={reason.title}
                 className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 transition hover:border-white/20 hover:bg-white/10"
@@ -218,8 +202,8 @@ export default async function PricingPage() {
             Întrebări frecvente
           </h2>
           <dl className="space-y-6 max-w-3xl mx-auto">
-            {QUESTIONS.map((qa, index) => (
-              <div key={index} className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+            {QUESTIONS.map((qa) => (
+              <div key={qa.question} className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
                 <dt className="font-semibold text-white mb-2">{qa.question}</dt>
                 <dd className="text-white/70 leading-relaxed">{qa.answer}</dd>
               </div>
@@ -227,22 +211,21 @@ export default async function PricingPage() {
           </dl>
         </section>
 
-        <section className="mt-20">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 sm:p-12 text-center">
-            <h3 className="font-display text-2xl font-bold mb-4">
-              Plățile nu sunt configurate încă
-            </h3>
-            <p className="text-white/60 mb-8 max-w-xl mx-auto">
-              Când sunt active, butoanele de mai sus îți trimit direct la Stripe.
-              Până atunci, poți testa interfața — butoanele îți explică ce fac.
-            </p>
-            <p className="text-sm text-white/40">
-              Configurează STRIPE_SECRET_KEY și NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-              în variabilele de mediu pentru a activa plățile.
-            </p>
-          </div>
-        </section>
+        {!paymentsReady ? (
+          <section className="mt-20">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-8 sm:p-12 text-center">
+              <h3 className="font-display text-2xl font-bold mb-4">
+                Plățile nu sunt configurate încă
+              </h3>
+              <p className="text-white/60 mb-8 max-w-xl mx-auto">
+                Când sunt active, butoanele de mai sus îți trimit direct la
+                plată. Până atunci, poți testa interfața — butoanele îți
+                explică ce fac.
+              </p>
+            </div>
+          </section>
+        ) : null}
       </main>
-    </main>
+    </div>
   );
 }

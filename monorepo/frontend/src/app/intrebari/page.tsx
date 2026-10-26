@@ -20,7 +20,7 @@ import { PLANS, SITE_NAME, SITE_PROMISE_SHORT } from "@/lib/site";
 const FREE_TIER = PLANS[0].blurb.replace(/\.$/, "").toLowerCase();
 
 /** The paid plans, by name, in the order they are offered. */
-const PAID_PLANS = PLANS.filter((plan) => plan.price !== null)
+const PAID_PLANS = PLANS.filter((plan) => plan.billable !== "free")
   .map((plan) => plan.name.toLowerCase())
   .join(", ");
 

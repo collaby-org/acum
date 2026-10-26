@@ -89,13 +89,21 @@ export async function readUser(
 ): Promise<{ id: string; email: string | null } | null> {
   assertServer("readUser()");
 
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
+    });
+  } catch {
+    // The auth server is unreachable. A visitor is not signed in for as
+    // long as that lasts — the caller decides what a blip means for this
+    // route, but the fetch itself must not crash the page.
+    return null;
+  }
 
   if (!response.ok) return null;
 
