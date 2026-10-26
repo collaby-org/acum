@@ -16,6 +16,8 @@
     "data:probe": "node scripts/check-embeds.mjs",
     "data:resolve": "node scripts/resolve-streams.mjs",
     "data:build": "node scripts/build-dataset.mjs",
+    "data:epg": "node scripts/scrape-epg.mjs",
+
     "data:stills": "node scripts/capture-posters.mjs"
   },
   "dependencies": {
@@ -43,7 +45,7 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "description": "ACUM — TV live românesc, fără reclame.",
+  "description": "ACUM â€” TV live romÃ¢nesc, fÄƒrÄƒ reclame.",
   "license": "MIT",
   "repository": {
     "type": "git",

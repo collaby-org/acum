@@ -1,0 +1,66 @@
+# Daily EPG refresh — ACUM
+#
+# The programme guide is scraped from canaletvlive.online into
+# monorepo/frontend/data/epg.json. The app derives "now" from the
+# programme timestamps at read time, so a stale file makes the hero, the
+# channel screens and the " URMEAZĂ" badges lag behind — the file has to
+# be refreshed every day.
+#
+# The scrape writes data/epg.json; the job commits that change when it
+# differs from what is on the branch. It runs on a schedule and can be
+# started by hand.
+
+name: EPG refresh
+
+on:
+  schedule:
+    # 04:20 UTC — 07:20 Bucharest in summer, 06:20 in winter. Early
+    # enough that the guide covers the Romanian working day, late enough
+    # that the source has published the new day's flights.
+    - cron: "20 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: epg-refresh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Scrape data/epg.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: monorepo/frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: monorepo/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scrape the guide
+        run: npm run data:epg
+
+      - name: Commit when the guide changed
+        run: |
+          if git diff --quiet -- data/epg.json; then
+            echo "data/epg.json unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/epg.json
+          git commit -m "chore: refresh data/epg.json (daily scrape)"
+          git push
