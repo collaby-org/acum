@@ -6,6 +6,8 @@
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { UpstreamChannel, UpstreamServer } from "@/data/types";
+import type { Quality } from "@/data/types";
+import { QUALITY_META } from "@/lib/channel-meta";
 
 /**
  * The upstream media hosts answer with a 300 kB HTML cloaking page unless the
@@ -730,6 +732,11 @@ export async function probePlaylist(
  * the catalogue never resolved — is dropped rather than handed to the
  * browser to fail on.
  *
+ * Within one likelihood band the **better picture** goes first: an HD feed
+ * is tried before an SD one carrying the same channel. The probe downstream
+ * drops whatever does not answer, so a dead HD link costs one quick hop and
+ * never outranks an SD feed that plays.
+ *
  * Only the feed list is read, so the caller may pass anything that has one:
  * the two catalogue shapes in this repo differ in which fields they type.
  */
@@ -739,6 +746,7 @@ type FeedLike = {
   source?: string | null;
   kind?: string | null;
   status?: string | null;
+  quality?: string | null;
 };
 
 export function pickServer<T extends FeedLike>(channel: {
@@ -762,7 +770,13 @@ export function pickServer<T extends FeedLike>(channel: {
     return server.status === "live" ? 3 : 5;
   };
 
-  return [...usable].sort((a, b) => rank(a) - rank(b));
+  const qualityRank = (server: T): number =>
+    QUALITY_META[server.quality as Quality]?.rank ??
+    QUALITY_META.unknown.rank;
+
+  return [...usable].sort(
+    (a, b) => rank(a) - rank(b) || qualityRank(a) - qualityRank(b),
+  );
 }
 
 /* ------------------------------------------------------------------ *
