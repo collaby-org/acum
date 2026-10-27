@@ -33,6 +33,15 @@ function formatDate(value: string | null): string | null {
   }).format(date);
 }
 
+/** The minutes left today, the way a person reads them. */
+function formatRemaining(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours <= 0) return `${rest} min`;
+  if (rest === 0) return `${hours} h`;
+  return `${hours} h ${rest} min`;
+}
+
 export function AccountPanel({
   initialMode = "signin",
   next = "/canale",
@@ -62,6 +71,11 @@ export function AccountPanel({
   const allowance = account.allowanceMinutes;
   const left = account.remainingMinutes;
   const used = account.minutesWatchedToday;
+  // The minutes left, as a whole number nobody has to do arithmetic on.
+  // A plan the desk has lifted the limit for has nothing to count down.
+  const remaining = left === null ? null : Math.max(0, Math.ceil(left));
+  const limited =
+    account.plan === "free" && !account.bypass && remaining !== null;
 
   return (
     <div>
@@ -99,6 +113,36 @@ export function AccountPanel({
           </div>
         )}
       </dl>
+
+      {/* What is left of today, said plainly — and, when the day is nearly
+          done, the way forward without going to look for it. */}
+      {limited ? (
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 text-[12px] leading-relaxed text-ink-muted">
+          {remaining > 0 ? (
+            <>
+              <span>Îți mai rămân {formatRemaining(remaining)} azi.</span>
+              {remaining <= 60 ? (
+                <Link
+                  href="/preturi"
+                  className="text-signal-bright underline underline-offset-4 transition-colors duration-300 hover:text-signal"
+                >
+                  Vezi planurile
+                </Link>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <span>Ai epuizat minutele incluse azi.</span>
+              <Link
+                href="/preturi"
+                className="font-medium text-signal-bright underline underline-offset-4 transition-colors duration-300 hover:text-signal"
+              >
+                Vezi planurile
+              </Link>
+            </>
+          )}
+        </p>
+      ) : null}
 
       <div className="fx-divider my-5" />
 

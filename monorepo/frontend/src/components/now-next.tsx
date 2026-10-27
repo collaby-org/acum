@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { CategoryId, ServerStatus } from "@/data/types";
+import { ProgrammeBadges } from "@/components/player/programme-badges";
 import { familyHue } from "@/lib/channel-meta";
 import { SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -802,6 +803,8 @@ export function formatGuideDate(date: string | null | undefined): string | null 
 export type NowNextProps = {
   /** The channel's day, already resolved against the clock. */
   schedule: ChannelSchedule | null;
+  /** The catalogue channel, so each slot can show its metadata row. */
+  channelId?: string | null;
   /** The family hue, used to tint the progress line. */
   hue?: number;
   className?: string;
@@ -811,7 +814,7 @@ export type NowNextProps = {
  * The now/next strip: what is on, how far into it we are, and what
  * follows. Renders nothing when the channel has no guide.
  */
-export function NowNext({ schedule, hue = 26, className }: NowNextProps) {
+export function NowNext({ schedule, channelId = null, hue = 26, className }: NowNextProps) {
   if (!schedule) return null;
   const { now, next, endsIn } = schedule;
   if (!now && next.length === 0) return null;
@@ -845,6 +848,12 @@ export function NowNext({ schedule, hue = 26, className }: NowNextProps) {
               </span>
             )}
           </div>
+
+          <ProgrammeBadges
+            channelId={channelId}
+            title={now.title}
+            className="mt-2.5"
+          />
 
           <ProgressLine value={schedule.progress} hue={hue} className="mt-3" />
         </>
@@ -981,6 +990,12 @@ function HighlightCard<C extends GuideChannelLike>({
       <p className="mt-3 line-clamp-2 min-h-[2.6rem] font-display text-[15px] font-semibold leading-[1.35] tracking-[-0.01em] text-ink">
         {programme.title}
       </p>
+
+      <ProgrammeBadges
+        channelId={channel.slug}
+        title={programme.title}
+        className="mt-2"
+      />
 
       <p className="mt-1.5 font-mono text-[11px] tabular-nums tracking-wide text-ink-faint">
         {formatClock(programme.start)} — {formatClock(programme.end)}

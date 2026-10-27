@@ -32,7 +32,11 @@ import {
 import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PlayerControls } from "@/components/player/player-controls";
+import { LiveChrome, PlayerControls } from "@/components/player/player-controls";
+import {
+  PlayerQualityBadge,
+  type QualityVariant,
+} from "@/components/player/player-quality";
 import { MinutesWarning } from "@/components/player/minutes-warning";
 import { StreamNotice } from "@/components/player/stream-notice";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
@@ -143,6 +147,14 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       current: number;
     } | null>(null);
     const [behindLive, setBehindLive] = useState(false);
+    // The ladder the manifest carries, and the rung in use right now. Both
+    // belong to the hls.js instance, and both are read off it — see the
+    // instance's own effect below.
+    const [qualityLevels, setQualityLevels] = useState<QualityVariant[]>([]);
+    const [currentLevel, setCurrentLevel] = useState(-1);
+    // The picture asked for frames the buffer does not have yet: the same
+    // pause the loading spinner answers, named for the chrome.
+    const [stalled, setStalled] = useState(false);
     // The browser refused to start the picture: the visitor has to tap.
     const [blocked, setBlocked] = useState(false);
 
@@ -284,6 +296,12 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       // A new link gets a new chance: the previous refusal says nothing
       // about this one.
       setBlocked(false);
+      setStalled(false);
+      // The ladder belongs to the instance that is about to be built: until
+      // its manifest is parsed there is no quality to name and none to
+      // choose, so the badge stays away.
+      setQualityLevels([]);
+      setCurrentLevel(-1);
 
       let disposed = false;
       let destroy: (() => void) | null = null;
@@ -359,10 +377,35 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         });
         hlsRef.current = hls;
 
+        /**
+         * The ladder the manifest carries, and the rung in use.
+         *
+         * The list only exists once the manifest has been parsed, and the
+         * rung moves under the viewer as the connection decides — so both
+         * are read again on every switch. That is what keeps the badge
+         * honest. `-1` is hls.js choosing for itself.
+         */
+        const readLevels = () => {
+          setQualityLevels(
+            hls.levels.map((level, index) => ({
+              index,
+              width: level.width,
+              height: level.height,
+              bitrate: level.bitrate,
+            })),
+          );
+          setCurrentLevel(hls.currentLevel);
+        };
+
+        hls.on(Hls.Events.MANIFEST_PARSED, readLevels);
+        hls.on(Hls.Events.LEVEL_SWITCHED, readLevels);
+
         let tornDown = false;
         destroy = () => {
           if (tornDown) return;
           tornDown = true;
+          hls.off(Hls.Events.MANIFEST_PARSED, readLevels);
+          hls.off(Hls.Events.LEVEL_SWITCHED, readLevels);
           if (hlsRef.current === hls) hlsRef.current = null;
           hls.destroy();
         };
@@ -774,6 +817,21 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       video.currentTime = video.buffered.end(video.buffered.length - 1);
     }, []);
 
+    /**
+     * Pin the picture to one rung of the ladder, or hand the choice back
+     * to the connection with `-1`.
+     *
+     * The instance is the one that holds the ladder, so there is nothing
+     * to do without it — and the answer is read back off it on the next
+     * switch, which is where the badge learns it.
+     */
+    const selectLevel = useCallback((index: number) => {
+      const hls = hlsRef.current;
+      if (!hls) return;
+      hls.currentLevel = index;
+      setCurrentLevel(index);
+    }, []);
+
     return (
       <div
         ref={shellRef}
@@ -811,10 +869,14 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             onLoadedMetadata={readStreamSize}
             onPlaying={() => {
               setPlaying(true);
+              setStalled(false);
               player.markPlaying();
             }}
             onPause={() => setPlaying(false)}
-            onWaiting={() => setPlaying(false)}
+            onWaiting={() => {
+              setPlaying(false);
+              setStalled(true);
+            }}
             onError={() => failRef.current("Fluxul nu poate fi redat.")}
           />
 
@@ -836,6 +898,26 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             <p className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center bg-gradient-to-b from-black/85 to-transparent px-4 py-3 text-center text-[13px] font-medium text-ink/90 rounded-t-2xl">
               Redarea este controlată din playerul încorporat.
             </p>
+          ) : null}
+
+          {/* The live chrome: the LIVE badge, the buffer bar and the
+              quality badge, over the picture. They sit before the loading
+              spinner in the DOM, so the spinner — the picture being late
+              — reads on top of them, and they recede while it waits. */}
+          {!bare && !embedded ? (
+            <LiveChrome
+              liveWindow={liveWindow}
+              busy={busy || stalled}
+              asleep={fullscreen && controlsAsleep}
+              onSeek={seek}
+            >
+              <PlayerQualityBadge
+                variants={qualityLevels}
+                currentLevel={currentLevel}
+                stream={stream}
+                onLevelChange={selectLevel}
+              />
+            </LiveChrome>
           ) : null}
 
           {busy && !failed && !embedded && !blocked ? (
@@ -952,14 +1034,12 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             canFullscreen={fullscreenMode !== "none"}
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}
-            liveWindow={liveWindow}
             behindLive={behindLive}
             onTogglePlay={togglePlay}
             onToggleMute={toggleMute}
             onVolumeChange={changeVolume}
             onToggleFullscreen={toggleFullscreen}
             onTogglePictureInPicture={togglePictureInPicture}
-            onSeek={seek}
             onJumpToLive={jumpToLive}
             onRetry={player.retry}
             onNextSource={player.advance}

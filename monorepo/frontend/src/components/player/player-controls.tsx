@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import {
   Maximize,
   Minimize,
@@ -15,6 +15,210 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+/* ------------------------------------------------------------------ *
+ * The live chrome
+ *
+ * The picture carries its own marks — a LIVE badge and the bar under it —
+ * because the picture is where the state is read. They live here beside
+ * the transport bar rather than in it: the transport bar sits under the
+ * picture, and a live badge under the picture says nothing about it.
+ * ------------------------------------------------------------------ */
+
+/** The window of the live stream the viewer may move through. */
+export type LiveWindow = {
+  /** Where the buffered window starts, in stream seconds. */
+  from: number;
+  /** Where the buffer ends — the live edge, in stream seconds. */
+  to: number;
+  /** Where the playhead sits, in stream seconds. */
+  current: number;
+};
+
+/**
+ * The forward buffer the player asks hls.js to hold — `maxBufferLength`,
+ * in the instance's own config. The live bar is measured against it: a
+ * healthy live stream has this much in hand ahead of the playhead.
+ */
+const LIVE_BUFFER_TARGET = 30;
+
+/**
+ * How full the live bar reads, 0..1.
+ *
+ * A live edge has no end, so there is no duration to divide the playhead
+ * by — `current/(to-from)` is a timestamp over a difference, and it
+ * counts nothing. What the bar counts is the buffer: how much of the
+ * window the stream has already put ahead of the playhead, against the
+ * reach a healthy live buffer holds. The bar fills while the picture runs
+ * at the edge, and it thins out while the buffer is starved — which is
+ * the only thing a loading bar over a live picture can honestly say.
+ */
+export function liveFill(liveWindow: LiveWindow | null | undefined): number {
+  if (!liveWindow) return 0;
+  const ahead = liveWindow.to - liveWindow.current;
+  if (!Number.isFinite(ahead) || ahead <= 0) return 0;
+  return Math.min(1, ahead / LIVE_BUFFER_TARGET);
+}
+
+/**
+ * The LIVE badge: the mark that says this is the live edge and not a
+ * recording. It reads over any frame — a red lens with its halo, the word
+ * in the display face, on a dark glass pill.
+ */
+export function LiveBadge({ className }: { className?: string }) {
+  return (
+    <span
+      data-slot="live-badge"
+      className={cn(
+        "inline-flex shrink-0 items-center gap-2 rounded-full border border-white/12 bg-black/55 py-1 pl-2 pr-2.5 backdrop-blur-md",
+        className,
+      )}
+    >
+      <span className="relative grid size-2 place-items-center">
+        <span aria-hidden className="fx-live-eye fx-live-eye-pulse absolute inset-0" />
+        <span aria-hidden className="relative size-2 rounded-full bg-live" />
+      </span>
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-live-soft">
+        Live
+      </span>
+    </span>
+  );
+}
+
+export type LiveBarProps = {
+  /** How full the bar reads, 0..1. */
+  fill: number;
+  /** The window the playhead may be moved through. */
+  liveWindow?: LiveWindow | null;
+  /** Moves the playhead through the window — desktop only. */
+  onSeek?: (time: number) => void;
+  className?: string;
+};
+
+/**
+ * The live bar.
+ *
+ * The track is the buffer, drawn from what the stream has put ahead of
+ * the playhead. The range input over it is the DVR scrubber, and it only
+ * appears where there is a pointer to drive it: a phone gets the filled
+ * track and the LIVE badge, and nothing to drag.
+ */
+function LiveBar({
+  fill,
+  liveWindow = null,
+  onSeek,
+  className,
+}: LiveBarProps) {
+  const scrubId = useId();
+  const [scrubbing, setScrubbing] = useState(false);
+  const [scrubValue, setScrubValue] = useState(0);
+
+  const span = liveWindow ? liveWindow.to - liveWindow.from : 0;
+  const scrubbable = Boolean(liveWindow && onSeek && span > 1);
+  const width = Math.max(0, Math.min(1, fill)) * 100;
+
+  return (
+    <div className={cn("flex min-w-0 flex-1 items-center", className)}>
+      <div className="relative h-1.5 w-full rounded-full bg-white/15">
+        <div
+          className={cn(
+            "absolute inset-y-0 left-0 rounded-full bg-signal",
+            "shadow-[0_0_14px_rgb(242_167_27/0.5)] transition-[width] duration-500 ease-out",
+          )}
+          style={{ width: `${width}%` }}
+        />
+
+        {liveWindow && scrubbable ? (
+          <>
+            <label htmlFor={scrubId} className="sr-only">
+              Poziția în flux
+            </label>
+            <input
+              id={scrubId}
+              type="range"
+              min={liveWindow.from}
+              max={liveWindow.to}
+              step={0.5}
+              value={scrubbing ? scrubValue : liveWindow.current}
+              onChange={(event) => setScrubValue(Number(event.target.value))}
+              onPointerDown={() => {
+                setScrubValue(liveWindow.current);
+                setScrubbing(true);
+              }}
+              onPointerUp={() => {
+                setScrubbing(false);
+                onSeek?.(scrubValue);
+              }}
+              onKeyUp={() => {
+                setScrubbing(false);
+                onSeek?.(scrubValue);
+              }}
+              aria-label="Poziția în flux"
+              className={cn(
+                "pointer-events-auto absolute inset-0 hidden h-full w-full cursor-pointer appearance-none bg-transparent md:block",
+                // `appearance-none` takes the native thumb away, so it is
+                // drawn here — in both engines.
+                "[&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink",
+                "[&::-moz-range-track]:bg-transparent",
+                "[&::-webkit-slider-runnable-track]:bg-transparent",
+                "[&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
+              )}
+            />
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export type LiveChromeProps = {
+  /** What the stream has buffered, and where the live edge is right now. */
+  liveWindow?: LiveWindow | null;
+  /** True while the picture is loading: the chrome steps back, it never leaves. */
+  busy?: boolean;
+  /** Fullscreen only: faded out and inert while the pointer rests. */
+  asleep?: boolean;
+  /** Moves the playhead through the buffered window. */
+  onSeek?: (time: number) => void;
+  /** The quality badge — it belongs to the hls instance, not to the bar. */
+  children?: ReactNode;
+  className?: string;
+};
+
+/**
+ * The chrome over the top of the picture: the LIVE badge, the live bar,
+ * and whatever else the picture has to say about itself.
+ *
+ * It is drawn before the loading spinner in the DOM, so the spinner —
+ * the picture being late — reads on top of it. While the spinner waits,
+ * the whole strip recedes to a whisper instead of disappearing.
+ */
+export function LiveChrome({
+  liveWindow = null,
+  busy = false,
+  asleep = false,
+  onSeek,
+  children,
+  className,
+}: LiveChromeProps) {
+  return (
+    <div
+      data-slot="live-chrome"
+      className={cn(
+        "pointer-events-none absolute inset-x-0 top-0 flex items-center gap-2.5",
+        "bg-gradient-to-b from-black/70 via-black/25 to-transparent px-3 py-2.5 sm:px-4",
+        "transition-opacity duration-300 ease-out",
+        busy && "opacity-40",
+        asleep && "opacity-0",
+        className,
+      )}
+    >
+      <LiveBadge />
+      <LiveBar fill={liveFill(liveWindow)} liveWindow={liveWindow} onSeek={onSeek} />
+      {children}
+    </div>
+  );
+}
 
 export type PlayerControlsProps = {
   /** True while frames are on screen. */
@@ -33,8 +237,6 @@ export type PlayerControlsProps = {
   canSwitch?: boolean;
   /** True when the browser can put the picture in a floating window. */
   canPictureInPicture?: boolean;
-  /** The window of the live stream the viewer may move through. */
-  liveWindow?: { from: number; to: number; current: number } | null;
   /** True while the viewer sits behind the live edge. */
   behindLive?: boolean;
   onTogglePlay: () => void;
@@ -42,7 +244,6 @@ export type PlayerControlsProps = {
   onVolumeChange: (value: number) => void;
   onToggleFullscreen: () => void;
   onTogglePictureInPicture?: () => void;
-  onSeek?: (time: number) => void;
   onJumpToLive?: () => void;
   onRetry: () => void;
   onNextSource?: () => void;
@@ -53,9 +254,9 @@ export type PlayerControlsProps = {
  * The transport bar under the picture.
  *
  * Every control is a real button with a label; the toggles carry
- * `aria-pressed` so a screen reader can tell their state. The scrubber only
- * spans what the stream has buffered — a live channel has no past to scrub
- * into.
+ * `aria-pressed` so a screen reader can tell their state. The live bar and
+ * the scrubber live over the picture, in `LiveChrome` above — a bar under
+ * the picture cannot say anything about the picture.
  */
 export function PlayerControls({
   playing,
@@ -67,25 +268,18 @@ export function PlayerControls({
   canFullscreen = true,
   canSwitch = false,
   canPictureInPicture = false,
-  liveWindow = null,
   behindLive = false,
   onTogglePlay,
   onToggleMute,
   onVolumeChange,
   onToggleFullscreen,
   onTogglePictureInPicture,
-  onSeek,
   onJumpToLive,
   onRetry,
   onNextSource,
   className,
 }: PlayerControlsProps) {
   const volumeId = useId();
-  const scrubId = useId();
-  const [scrubbing, setScrubbing] = useState(false);
-  const [scrubValue, setScrubValue] = useState(0);
-
-  const span = liveWindow ? liveWindow.to - liveWindow.from : 0;
 
   return (
     <div
@@ -142,37 +336,6 @@ export function PlayerControls({
         className="hidden h-1 w-24 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal sm:block"
         aria-label="Volum"
       />
-
-      {liveWindow && span > 1 ? (
-        <>
-          <label htmlFor={scrubId} className="sr-only">
-            Poziția în flux
-          </label>
-          <input
-            id={scrubId}
-            type="range"
-            min={liveWindow.from}
-            max={liveWindow.to}
-            step={0.5}
-            value={scrubbing ? scrubValue : liveWindow.current}
-            onChange={(event) => setScrubValue(Number(event.target.value))}
-            onPointerDown={() => {
-              setScrubValue(liveWindow.current);
-              setScrubbing(true);
-            }}
-            onPointerUp={() => {
-              setScrubbing(false);
-              onSeek?.(scrubValue);
-            }}
-            onKeyUp={() => {
-              setScrubbing(false);
-              onSeek?.(scrubValue);
-            }}
-            className="hidden h-1 w-28 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal md:block"
-            aria-label="Poziția în flux"
-          />
-        </>
-      ) : null}
 
       <Button
         variant="ghost"

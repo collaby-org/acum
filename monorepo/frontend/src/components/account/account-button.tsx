@@ -37,6 +37,15 @@ function formatDate(value: string | null): string | null {
   }).format(date);
 }
 
+/** The minutes left today, the way a person reads them. */
+function formatRemaining(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours <= 0) return `${rest} min`;
+  if (rest === 0) return `${hours} h`;
+  return `${hours} h ${rest} min`;
+}
+
 export function AccountButton({ className }: { className?: string }) {
   const account = useAccount();
   const [open, setOpen] = useState(false);
@@ -81,8 +90,12 @@ export function AccountButton({ className }: { className?: string }) {
   }
 
   const until = formatDate(account.planUntil);
-  const allowance = account.allowanceMinutes;
   const left = account.remainingMinutes;
+  // The minutes left, as a whole number nobody has to do arithmetic on.
+  // A plan the desk has lifted the limit for has nothing to count down.
+  const remaining = left === null ? null : Math.max(0, Math.ceil(left));
+  const limited =
+    account.plan === "free" && !account.bypass && remaining !== null;
 
   return (
     <div ref={wrapRef} className={cn("relative shrink-0", className)}>
@@ -115,9 +128,35 @@ export function AccountButton({ className }: { className?: string }) {
             {until ? ` · până la ${until}` : ""}
           </p>
 
-          {allowance !== null && left !== null ? (
-            <p className="mt-1 text-[12px] text-ink-muted">
-              Astăzi: {left} din {allowance} minute rămase.
+          {limited ? (
+            <p className="mt-1 flex flex-wrap items-center gap-x-2 text-[12px] leading-relaxed text-ink-muted">
+              {remaining > 0 ? (
+                <>
+                  <span>
+                    Astăzi îți mai rămân {formatRemaining(remaining)}.
+                  </span>
+                  {remaining <= 60 ? (
+                    <Link
+                      href="/preturi"
+                      onClick={() => setOpen(false)}
+                      className="text-signal-bright underline underline-offset-4 transition-colors duration-300 hover:text-signal"
+                    >
+                      Vezi planurile
+                    </Link>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <span>Ai epuizat minutele incluse azi.</span>
+                  <Link
+                    href="/preturi"
+                    onClick={() => setOpen(false)}
+                    className="font-medium text-signal-bright underline underline-offset-4 transition-colors duration-300 hover:text-signal"
+                  >
+                    Vezi planurile
+                  </Link>
+                </>
+              )}
             </p>
           ) : (
             <p className="mt-1 text-[12px] text-ink-muted">

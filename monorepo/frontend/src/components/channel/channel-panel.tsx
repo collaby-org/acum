@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Eye, Radio, TrendingUp } from "lucide-react";
 import { formatClock } from "@/components/now-next";
+import { ProgrammeBadges } from "@/components/player/programme-badges";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
 
@@ -233,6 +234,11 @@ export function ChannelPanel({
           <p className="mt-2 font-display text-[15px] font-semibold leading-tight tracking-tight text-ink">
             {sheet.now.title}
           </p>
+          <ProgrammeBadges
+            channelId={channelId}
+            title={sheet.now.title}
+            className="mt-2"
+          />
           {nowClock ? (
             <p className="mt-1 font-mono text-[11px] tabular-nums tracking-wide text-ink-faint">
               {nowClock}

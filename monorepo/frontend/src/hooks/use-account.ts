@@ -72,6 +72,18 @@ const PURCHASE_POLL_MS = 5_000;
 const PURCHASE_POLL_WINDOW_MS = 120_000;
 
 /**
+ * The largest watch time a single report may carry.
+ *
+ * The clock is read from `Date.now()`, and a machine that sleeps — or a
+ * clock that jumps — hands back one tick with hours "passed" inside it.
+ * Writing that would burn a whole daily allowance in one request, so a
+ * report is capped at a quarter of an hour. The server clamps to the same
+ * number; what an anomaly loses is lost on purpose, because undercounting
+ * a moment nobody watched beats charging for it.
+ */
+const MAX_REPORT_SECONDS = 900;
+
+/**
  * A message a person can read.
  *
  * The provider answers in English; the interface is in Romanian.
@@ -459,6 +471,12 @@ export function useAccount() {
  * The player knows how long it has been playing; the server counts it. The
  * clock is reported every few minutes and once more when the picture goes
  * away, so nothing is lost when the visitor closes the tab.
+ *
+ * It counts a picture somebody can see, and nothing else: a tab left in
+ * the background for an afternoon is not an afternoon of television. The
+ * moment the page is hidden, the seconds that were watched are sent and
+ * the clock stops; it starts again from the second the page is back on
+ * screen, and only while the picture is playing.
  */
 export function useWatchClock({
   channelId,
@@ -474,6 +492,12 @@ export function useWatchClock({
   const pendingRef = useRef(0);
   const lastRef = useRef<number | null>(null);
   const onReportRef = useRef(onReport);
+  // Whether the page can be seen. The clock asks it every second, so it is
+  // kept in a ref rather than in state: the answer moves while the picture
+  // is on screen, and repainting the player is not the clock's business.
+  const visibleRef = useRef(
+    typeof document === "undefined" || document.visibilityState !== "hidden",
+  );
 
   useEffect(() => {
     onReportRef.current = onReport;
@@ -489,17 +513,48 @@ export function useWatchClock({
   }, [playing]);
 
   const flush = useCallback(() => {
-    const seconds = pendingRef.current;
+    // The cap: a machine that slept or a clock that jumped is not a
+    // quarter of an hour of anybody's time, and it is never written as
+    // if it were.
+    const seconds = Math.min(pendingRef.current, MAX_REPORT_SECONDS);
     pendingRef.current = 0;
     if (seconds <= 0) return;
     onReportRef.current(seconds);
   }, []);
+
+  // The page goes behind another one: what has been watched is banked now,
+  // and nothing accrues again until the page is back on screen.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      const visible = document.visibilityState !== "hidden";
+      visibleRef.current = visible;
+
+      if (!visible) {
+        // Nothing accrues behind another window, so the clock is stopped
+        // before the watched seconds are sent.
+        lastRef.current = null;
+        flush();
+        return;
+      }
+
+      // Back on screen with the picture playing: the count starts from now.
+      if (playing) lastRef.current = Date.now();
+    };
+
+    visibleRef.current = document.visibilityState !== "hidden";
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [flush, playing]);
 
   // Every second, the second that passed while the picture played.
   useEffect(() => {
     if (!playing || !signedIn) return;
 
     const timer = window.setInterval(() => {
+      // A backgrounded tab is not watching, however long it stays open.
+      if (!visibleRef.current) return;
       const last = lastRef.current;
       if (last === null) return;
       const passed = Math.floor((Date.now() - last) / 1000);
@@ -519,13 +574,7 @@ export function useWatchClock({
   }, [flush, signedIn]);
 
   // The last one, when the picture goes away.
-  useEffect(() => {
-    return () => {
-      const seconds = pendingRef.current;
-      pendingRef.current = 0;
-      if (seconds > 0) onReportRef.current(seconds);
-    };
-  }, []);
+  useEffect(() => () => flush(), [flush]);
 
   return { flush, channelId };
 }

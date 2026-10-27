@@ -384,8 +384,13 @@ export async function POST(request: Request) {
   const reported = Number(payload.seconds);
   const channel = readChannel(payload.channel);
 
-  // The clock is the server's. A day cannot hold more watch time than it
-  // has hours, so the report is cut to what the wall clock allows.
+  // The clock is the server's, and the server is the last line of defence.
+  // A day cannot hold more watch time than it has hours, so the report is
+  // cut to what the wall clock allows — and to the quarter of an hour the
+  // client clock caps a single report at as well (`useWatchClock` in
+  // `src/hooks/use-account.ts`), so a sleeping machine or a jumped clock in
+  // the browser can never write a whole allowance in one request. Nothing
+  // is rejected: an oversized report is clamped and answered as usual.
   const dayStart = romaniaDayStart(now);
   const elapsedToday = Math.max(
     0,

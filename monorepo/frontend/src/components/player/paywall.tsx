@@ -26,6 +26,33 @@ import { cn } from "@/lib/utils";
 
 export type PaywallReason = "signed_out" | "allowance_spent";
 
+/** The key that remembers, for this browsing session, a wall put away. */
+const DISMISSED_KEY = "acum:paywall-dismissed";
+
+/**
+ * Whether the wall was already put away in this browsing session.
+ *
+ * The answer is read while rendering, not in an effect: the wall covers a
+ * picture that is already paused, and a second pass would put it back up
+ * for a frame. A browser that refuses storage keeps the wall up instead.
+ */
+function dismissedThisSession(): boolean {
+  try {
+    return window.sessionStorage.getItem(DISMISSED_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+/** Remember, for this browsing session, that the wall was put away. */
+function rememberDismissal(): void {
+  try {
+    window.sessionStorage.setItem(DISMISSED_KEY, "1");
+  } catch {
+    /* nowhere to write to; the wall is gone for this visit all the same */
+  }
+}
+
 export type PaywallProps = {
   /** True when the panel covers the picture. */
   visible: boolean;
@@ -47,10 +74,26 @@ export function Paywall({
 }: PaywallProps) {
   const [mode, setMode] = useState<AuthMode>("register");
   const [formOpen, setFormOpen] = useState(false);
+  // Read once, on the first render, so the answer is there before the
+  // first paint: the server draws the wall the same way for everybody,
+  // and the browser keeps its own answer from here on without a second
+  // pass. Only the spent wall may be put away — a visitor who is not
+  // signed in has to sign in, whatever the session remembers.
+  const [dismissed, setDismissed] = useState(dismissedThisSession);
 
   if (!visible || !reason) return null;
 
   const spent = reason === "allowance_spent";
+
+  // "Nu acum" closes the wall for this browsing session. It never resumes
+  // anything: the picture stays behind the wall until the account has a
+  // plan, and the visitor is free to keep browsing.
+  const dismiss = () => {
+    rememberDismissal();
+    setDismissed(true);
+  };
+
+  if (spent && dismissed) return null;
 
   return (
     <div
@@ -69,6 +112,7 @@ export function Paywall({
             <SpentPanel
               minutesWatchedToday={minutesWatchedToday}
               allowanceMinutes={allowanceMinutes}
+              onDismiss={dismiss}
             />
           ) : (
             <div>
@@ -133,15 +177,20 @@ export function Paywall({
 /**
  * The wall for a visitor who has spent the day's free hours.
  *
- * The plans are named and priced, and there is one action: the pricing
- * page, where the purchase happens.
+ * The plans are named and priced, and there is one action that matters:
+ * the pricing page, where the purchase happens. There is also a quiet way
+ * out — the wall goes away for this browsing session, and the picture
+ * stays exactly as paused as it was, which is the industry's answer to a
+ * visitor who is not ready to pay: browsing is never held hostage.
  */
 function SpentPanel({
   minutesWatchedToday,
   allowanceMinutes,
+  onDismiss,
 }: {
   minutesWatchedToday: number;
   allowanceMinutes: number | null;
+  onDismiss: () => void;
 }) {
   // The region is read once, on the first client render — not on every
   // repaint of the wall, which sits over a picture that keeps playing.
@@ -190,10 +239,20 @@ function SpentPanel({
 
       <Button asChild variant="primary" size="md" className="mt-5 w-full">
         <Link href="/preturi">
-          Vezi planurile
+          Alege un plan
           <ArrowRight className="size-4" />
         </Link>
       </Button>
+
+      {/* The quiet way out: the wall goes away, the picture does not come
+          back with it — only a plan does that. */}
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="mt-3 w-full text-center text-[12px] text-ink-faint underline-offset-4 transition-colors duration-300 hover:text-ink hover:underline"
+      >
+        Nu acum
+      </button>
 
       <p className="mt-3 text-center text-[12px] text-ink-faint">
         Limita gratuită se resetează la miezul nopții, în România.
