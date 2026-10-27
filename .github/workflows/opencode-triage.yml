@@ -13,7 +13,10 @@
 # a skip-if-already-primary guard — never re-running the model that just failed.
 #
 # ADVISORY, NOT A GATE. Credential-gated: without LLM_API_KEY + LLM_API_BASE
-# the job is SKIPPED (green, zero runner minutes) instead of failing.
+# every step is SKIPPED (green, zero runner minutes) instead of failing. The
+# check lives in the step conditions, fed by the job's `env` — the `secrets`
+# context is not readable in a job-level `if:` and GitHub rejects the whole
+# workflow graph there.
 name: opencode-triage
 
 on:
@@ -39,9 +42,13 @@ jobs:
     # Only trusted collaborators get agent triage with persisted credentials.
     # `opened`-only trigger means sender IS the author, so the documented
     # `issue.author_association` field gates the actor exactly.
+    # Credential gate: unconfigured -> every step below skips, so the job is
+    # green rather than red. The `secrets` context is NOT readable in a
+    # job-level `if:` (GitHub rejects the whole workflow graph with
+    # "Unrecognized named-value: 'secrets'", which produced 0-job failed runs
+    # with no log on every push), so it lives in the step conditions, fed by
+    # the job's own `env`. Do not move it back to `if:`.
     if: >-
-      secrets.LLM_API_KEY != '' &&
-      secrets.LLM_API_BASE != '' &&
       github.event.sender.type != 'Bot' &&
       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
     runs-on: ubuntu-latest
@@ -49,8 +56,14 @@ jobs:
     continue-on-error: true
     # Hard spend cap across the primary + three fallback attempts.
     timeout-minutes: 20
+    # The gate is read from the job's own `env`: the `secrets` context exists
+    # there, and an unset key is an empty string.
+    env:
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
     steps:
       - name: Checkout
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: true
@@ -60,6 +73,7 @@ jobs:
       # re-run of a failed run starts on the next ladder entry.
       - name: Pick model (rotate per run)
         id: pick_models
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' }}
         env:
           RUN_NUMBER: ${{ github.run_number }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
@@ -72,6 +86,7 @@ jobs:
       # Primary model: rotated per run
       - name: opencode triage (primary)
         id: opencode_triage_primary
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' }}
         uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
         with:
           model: ${{ steps.pick_models.outputs.primary }}
@@ -90,7 +105,7 @@ jobs:
       # Fallback 1/3 — enabled (glm-5.3-flash).
       - name: opencode triage (fallback glm-5.3-flash)
         id: opencode_triage_fallback_big_pickle
-        if: failure() && steps.pick_models.outputs.primary != 'openai/z-ai/glm-5.3-flash'
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' && failure() && steps.pick_models.outputs.primary != 'openai/z-ai/glm-5.3-flash' }}
         uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
         with:
           model: openai/z-ai/glm-5.3-flash
@@ -109,7 +124,7 @@ jobs:
       # Fallback 2/3 — enabled (step-5-preview).
       - name: opencode triage (fallback step-5-preview)
         id: opencode_triage_fallback_space_bunny
-        if: failure() && steps.pick_models.outputs.primary != 'openai/stepfun-ai/step-5-preview'
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' && failure() && steps.pick_models.outputs.primary != 'openai/stepfun-ai/step-5-preview' }}
         uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
         with:
           model: openai/stepfun-ai/step-5-preview
@@ -128,7 +143,7 @@ jobs:
       # Fallback 3/3 (last resort) — nemotron-3.5-super-vl-120b-a12b.
       - name: opencode triage (fallback nemotron-3.5-super-vl-120b-a12b)
         id: opencode_triage_fallback_kimi
-        if: failure() && steps.pick_models.outputs.primary != 'openai/nvidia/nemotron-3.5-super-vl-120b-a12b'
+        if: ${{ env.LLM_API_KEY != '' && env.LLM_API_BASE != '' && failure() && steps.pick_models.outputs.primary != 'openai/nvidia/nemotron-3.5-super-vl-120b-a12b' }}
         uses: anomalyco/opencode/github@6608799d35d96c2821a48ac1d4b26a3b84b4e433 # v2.0.9
         with:
           model: openai/nvidia/nemotron-3.5-super-vl-120b-a12b

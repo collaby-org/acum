@@ -11,6 +11,7 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { useAccount } from "@/hooks/use-account";
 import type { Channel } from "@/data/types";
 import { VideoPlayer } from "@/components/player/video-player";
 import { ChannelPanel } from "@/components/channel/channel-panel";
@@ -27,6 +28,12 @@ export type CanalScreenProps = {
 
 export function CanalScreen({ channel }: CanalScreenProps) {
   const router = useRouter();
+  const { signedIn } = useAccount();
+
+  // Home for an account is the catalogue; for a visitor it is the landing
+  // page. The back control leads there either way, not to a page the
+  // account will be bounced from.
+  const goHome = () => router.push(signedIn ? "/canale" : "/");
 
   return (
     <div className={cn("min-h-dvh bg-canvas", MOBILE_NAV_SPACE)}>
@@ -40,7 +47,7 @@ export function CanalScreen({ channel }: CanalScreenProps) {
       >
         <button
           type="button"
-          onClick={() => router.push("/")}
+          onClick={goHome}
           className={cn(
             "inline-flex min-h-11 items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-4",
             "text-[13px] font-semibold text-ink backdrop-blur-md transition-colors duration-300",

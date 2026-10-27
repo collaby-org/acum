@@ -3,8 +3,11 @@
 #
 # ADVISORY, NOT A GATE: findings are posted as PR review comments. This job
 # never blocks a merge and never fails a developer's PR (continue-on-error).
-# It is also credential-gated: with KODUS_API_URL / KODUS_TEAM_KEY unset the
-# job is SKIPPED (green, zero runner minutes) instead of failing.
+# It is also credential-gated: with KODUS_API_URL / KODUS_TEAM_KEY unset every
+# step is SKIPPED (green, zero runner minutes) instead of failing. The check
+# cannot live in a job-level `if:` — the `secrets` context is not readable
+# there and GitHub rejects the whole graph with "Unrecognized named-value:
+# 'secrets'". It lives in the step conditions, fed by the job's `env`.
 #
 # Auth: KODUS_API_URL + KODUS_TEAM_KEY only (secret refs, never literals).
 # Model routing is dashboard-only: Kodus Cloud CLI models are configured on the
@@ -31,9 +34,14 @@ concurrency:
 
 jobs:
   kodus_review:
-    # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
-    # an empty string, so this evaluates false instead of erroring.
-    if: ${{ secrets.KODUS_TEAM_KEY != '' && secrets.KODUS_API_URL != '' }}
+    # Unconfigured -> the steps below all skip, so the job is green rather
+    # than red.
+    # NOTE: the `secrets` context is NOT readable in a job-level `if:`.
+    # GitHub rejects the whole workflow graph with "Unrecognized named-value:
+    # 'secrets'", and every push then produces a 0-job failed run with no log
+    # at all - which is exactly what was happening. The credential check now
+    # lives in the step conditions below, fed by the job's own `env`. Do not
+    # move it back to `if:`.
     runs-on: ubuntu-latest
     # Advisory bot: never block a developer on a red Kodus run.
     continue-on-error: true
@@ -42,17 +50,25 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
+    # The gate is read from the job's own `env`: the `secrets` context exists
+    # there, and so does an empty string when a key is unset.
+    env:
+      KODUS_API_URL: ${{ secrets.KODUS_API_URL }}
+      KODUS_TEAM_KEY: ${{ secrets.KODUS_TEAM_KEY }}
     steps:
       - name: Checkout
+        if: ${{ env.KODUS_API_URL != '' && env.KODUS_TEAM_KEY != '' }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node
+        if: ${{ env.KODUS_API_URL != '' && env.KODUS_TEAM_KEY != '' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '20.19.0'
 
       # No --fail-on error: findings are reported, not enforced.
       - name: Kodus review (advisory)
+        if: ${{ env.KODUS_API_URL != '' && env.KODUS_TEAM_KEY != '' }}
         run: npx -y @kodus/cli review --format json
         env:
           KODUS_API_URL: ${{ secrets.KODUS_API_URL }}

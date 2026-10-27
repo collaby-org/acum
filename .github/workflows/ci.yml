@@ -1,4 +1,4 @@
-# CI — ACUM Monorepo
+﻿# CI â€” ACUM Monorepo
 
 name: CI
 
@@ -49,30 +49,10 @@ jobs:
       - name: Build
         run: npm run build
 
-  # TV App CI - placeholder for future implementation
-  # TV app will be deployed separately on Vercel as a native TV app
-  # QR auth flow: TV shows QR -> phone scans -> opens frontend on mobile to authenticate
-  tv:
-    name: TV App - Build check (placeholder)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: monorepo/tv
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: monorepo/tv/package-lock.json
-
-      - name: Check TV app structure
-        run: |
-          echo "TV app CI placeholder - will be implemented when TV app is ready"
-          echo "QR Auth flow: TV shows QR -> phone scans -> opens frontend on mobile to authenticate"
-          ls -la
+  # NOTE: the TV app (monorepo/tv) has no package.json yet, so a CI job for it
+  # has nothing to install and nothing to check. Its `cache-dependency-path`
+  # pointed at monorepo/tv/package-lock.json, which does not exist, so
+  # setup-node failed with "Some specified paths were not resolved" before any
+  # step could report and took the whole run down with it. The job comes back
+  # with the app itself; the QR-auth design it will exercise lives in docs/tv/
+  # and prompts/tv/.

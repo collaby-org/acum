@@ -15,6 +15,38 @@ export type BeforeInstallPromptEvent = Event & {
   }>;
 };
 
+/* ------------------------------------------------------------------ *
+ * The module-scope capture
+ *
+ * Chromium fires `beforeinstallprompt` as soon as the page is eligible —
+ * which on a slow phone is often *before* React has hydrated. A listener
+ * registered inside a `useEffect` misses it forever, and the app never
+ * gets a second chance to be installed. So the listener goes up here, at
+ * module scope: it is registered when this module evaluates, long before
+ * any component renders, and the event is kept in a module-level variable
+ * that every later mount can still read.
+ * ------------------------------------------------------------------ */
+
+/** The event, the moment the browser offered it — hydration or no hydration. */
+let capturedPrompt: BeforeInstallPromptEvent | null = null;
+
+/** Whether a capture is already spoken for. */
+let captureArmed = false;
+
+function onBeforeInstallPrompt(event: Event) {
+  // Keep the browser's own mini-infobar out of the way.
+  event.preventDefault();
+  capturedPrompt = event as BeforeInstallPromptEvent;
+  captureArmed = true;
+}
+
+// Registered once, at module evaluation. On the server there is no window,
+// and on a fast desktop device the effect-based listener catches it anyway,
+// so the `typeof` guard is what keeps this from crashing either way.
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+}
+
 /**
  * True when the app already runs from the home screen, in any browser.
  * Nothing install-related should be shown to someone who installed it.
@@ -64,20 +96,29 @@ export function useOnline() {
  */
 export function useInstall() {
   const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(
-    null,
+    // Start from whatever the module listener already caught: on a slow
+    // phone the event fires before this component ever mounts.
+    capturedPrompt,
   );
   const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
     const onBeforeInstall = (event: Event) => {
-      // Keep the browser's own mini-infobar out of the way.
+      // The module listener already called preventDefault; doing it twice
+      // is harmless, and this path only runs when the event arrived after
+      // hydration — the fast-desktop case.
       event.preventDefault();
-      setPromptEvent(event as BeforeInstallPromptEvent);
+      capturedPrompt = event as BeforeInstallPromptEvent;
+      captureArmed = true;
+      setPromptEvent(capturedPrompt);
     };
 
     const onInstalled = () => {
       setInstalled(true);
       setPromptEvent(null);
+      // Installed is installed: the offer is spent.
+      capturedPrompt = null;
+      captureArmed = false;
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
@@ -94,12 +135,15 @@ export function useInstall() {
     await promptEvent.prompt();
     const choice = await promptEvent.userChoice;
     setPromptEvent(null);
+    // The prompt may be shown only once, whatever the answer was.
+    capturedPrompt = null;
+    captureArmed = false;
     return choice.outcome;
   }, [promptEvent]);
 
   return {
-    /** The browser offered to install the app. */
-    canInstall: promptEvent !== null,
+    /** The browser offered to install the app — before or after hydration. */
+    canInstall: promptEvent !== null || captureArmed,
     installed,
     install,
   };

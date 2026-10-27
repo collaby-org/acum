@@ -18,6 +18,43 @@ import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";
 import { cn } from "@/lib/utils";
 
+/**
+ * The Google mark.
+ *
+ * The provider's own four-colour G, drawn rather than fetched: a social
+ * button that does not carry its brand is a button that looks broken, and
+ * the guidelines that come with the logo ask for exactly this drawing.
+ * The colours stay outside the product's palette on purpose — it is a
+ * foreign mark on our button, not our own.
+ */
+function GoogleMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden
+      focusable="false"
+    >
+      <path
+        fill="#4285F4"
+        d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.52 5.52 0 0 1-2.4 3.62v3.01h3.88c2.26-2.09 3.58-5.17 3.58-8.82Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.88-3.01c-1.07.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.72-4.96H1.32v3.12A11.99 11.99 0 0 0 12 24Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.28 14.27a7.2 7.2 0 0 1 0-4.54V6.61H1.32a11.99 11.99 0 0 0 0 10.78l3.96-3.12Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.77 0 3.35.61 4.6 1.79l3.45-3.45C17.95 1.17 15.24 0 12 0A11.99 11.99 0 0 0 1.32 6.61l3.96 3.12C6.22 6.86 8.87 4.75 12 4.75Z"
+      />
+    </svg>
+  );
+}
+
 export type AuthMode = "signin" | "register";
 
 export type SignInFormProps = {
@@ -197,8 +234,9 @@ export function SignInForm({
         size={compact ? "md" : "lg"}
         disabled={working}
         onClick={() => void google()}
-        className="w-full"
+        className="w-full gap-2.5"
       >
+        <GoogleMark className="size-4 shrink-0" />
         Continuă cu Google
       </Button>
 

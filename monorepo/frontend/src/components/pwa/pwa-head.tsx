@@ -23,7 +23,9 @@ export function PwaHead() {
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      {/* Translucent, so the app's own dark header shows through the status
+          bar in the standalone app instead of a flat black band. */}
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     </>
   );
 }

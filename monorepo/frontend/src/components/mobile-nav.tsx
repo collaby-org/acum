@@ -16,6 +16,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart, House, LayoutGrid, Search, type LucideIcon } from "lucide-react";
+import { useAccount } from "@/hooks/use-account";
 import { cn } from "@/lib/utils";
 
 /** The four places the bar can point at. */
@@ -50,6 +51,18 @@ const TABS: { id: MobileNavAction; label: string; icon: LucideIcon }[] = [
   { id: "search", label: "Caută", icon: Search },
 ];
 
+/**
+ * Where "home" is.
+ *
+ * The catalogue is the signed-in home page: a landing page full of plans
+ * and heroes is not for somebody who already has an account. Until the
+ * server has answered who is here, the visitor's side is assumed — the
+ * catalogue itself asks.
+ */
+function homeDestination(signedIn: boolean): string {
+  return signedIn ? "/canale" : "/";
+}
+
 export function MobileNav({
   active = null,
   onHome,
@@ -61,6 +74,10 @@ export function MobileNav({
   const router = useRouter();
   const pathname = usePathname();
   const pendingSearch = useRef(false);
+  const { signedIn } = useAccount();
+
+  /** The catalogue for an account, the landing page for a visitor. */
+  const home = () => homeDestination(signedIn);
 
   // The search input belongs to the header of the catalogue. When the bar
   // is used from a page that has none, the visitor is sent to the
@@ -82,7 +99,7 @@ export function MobileNav({
       return;
     }
     pendingSearch.current = true;
-    router.push("/");
+    router.push(home());
     window.setTimeout(() => {
       const late = document.querySelector<HTMLInputElement>('input[type="search"]');
       if (!late) return;
@@ -93,11 +110,11 @@ export function MobileNav({
   };
 
   const actions: Record<MobileNavAction, () => void> = {
-    home: () => (onHome ? onHome() : router.push("/")),
+    home: () => (onHome ? onHome() : router.push(home())),
     categories: () =>
       onCategories ? onCategories() : router.push("/canale/toate"),
     favorites: () =>
-      onFavorites ? onFavorites() : router.push("/?view=favorite"),
+      onFavorites ? onFavorites() : router.push(home()),
     search: () => (onSearch ? onSearch() : focusSearch()),
   };
 

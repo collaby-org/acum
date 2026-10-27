@@ -42,11 +42,13 @@ export function PwaRegister({ head = true }: PwaRegisterProps = {}) {
       {head && <PwaHead />}
 
       {/* The prompt sits above the bottom bar of the phone layout, not under
-          it: the bar is fixed, so anything anchored to the bottom of the
-          viewport has to clear it or its own buttons end up behind it. */}
+          it: the bar is fixed at z-[60] and the grain overlay at z-[45]
+          covers the viewport, so the container itself has to out-stack both
+          or its card is painted over them. The bar is also cleared by
+          MOBILE_NAV_SPACE, so nothing overlaps it either. */}
       <div
         className={cn(
-          "pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2.5 px-4",
+          "pointer-events-none fixed inset-x-0 bottom-0 z-[61] flex flex-col items-center gap-2.5 px-4",
           "pb-[max(1rem,env(safe-area-inset-bottom))]",
           "sm:items-start sm:px-6 sm:pb-[max(1rem,env(safe-area-inset-bottom))]",
           MOBILE_NAV_SPACE,

@@ -36,33 +36,69 @@ function rememberDismissal() {
   }
 }
 
-/** Safari on iOS has no install event, only the share sheet. */
-function isIosSafari() {
+/** Which browser reports this as iOS: it uses the share sheet. */
+function isIosLike() {
   const agent = window.navigator.userAgent;
-  const iOS = /iPad|iPhone|iPod/.test(agent);
+  const iOS = /iPhone|iPad|iPod/.test(agent);
+  // An iPad reports itself as a Mac since iPadOS 13; its touch count is
+  // what gives it away.
   const iPadOS = navigator.maxTouchPoints > 1 && /Macintosh/.test(agent);
-  const safari = /Safari/.test(agent) && !/CriOS|FxiOS|EdgiOS/.test(agent);
-  return (iOS || iPadOS) && safari;
+  return iOS || iPadOS;
+}
+
+/**
+ * Whether this is a phone or a tablet, whatever browser it carries.
+ *
+ * The install event is a Chromium favour that never reaches Safari, and it
+ * can be missed even on Chrome when the page is slow to hydrate. So the
+ * device, not the event, decides whether a recipe belongs on screen.
+ */
+function isMobileDevice() {
+  const agent = window.navigator.userAgent;
+  const handheld = /iPhone|iPad|iPod|Android/.test(agent);
+  const iPadOS = navigator.maxTouchPoints > 1 && /Macintosh/.test(agent);
+
+  // A coarse pointer alone is not enough — a desktop with a touchscreen has
+  // one. A finger *and* a small screen is what a phone is.
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const narrow = window.matchMedia("(max-width: 767px)").matches;
+
+  return handheld || iPadOS || (coarse && narrow);
+}
+
+/** Which of the two browser menus carries "add to home screen". */
+function manualRecipe() {
+  return isIosLike() ? "ios" : "android";
 }
 
 /**
  * The install prompt.
  *
  * Chromium gets a real button — the browser's own install event, fired on
- * our schedule. Safari gets the manual recipe, because that is all it has.
- * Anyone who already installed the app sees nothing.
+ * our schedule. A phone or a tablet that never got the event — Safari, or
+ * Chrome when the page was too slow to catch it — gets the recipe for the
+ * menu that does have it. Anyone who already installed the app sees
+ * nothing.
  */
 export function InstallPrompt() {
   const { canInstall, install } = useInstall();
   const standalone = useStandalone();
   const [ready, setReady] = useState(false);
 
-  // Safari on iOS never fires the install event, so the recipe is read once,
-  // from the user agent, while the component renders.
-  const manual = useMemo(
-    () => (typeof window === "undefined" ? false : isIosSafari()),
+  // The device decides once, from the user agent and the screen, while the
+  // component renders. Nothing here waits for a network round trip.
+  const device = useMemo(
+    () =>
+      typeof window === "undefined"
+        ? { mobile: false, recipe: null as "ios" | "android" | null }
+        : { mobile: isMobileDevice(), recipe: manualRecipe() },
     [],
   );
+
+  // Safari belongs to the mobile path too — it is the one case where the
+  // recipe is also the only option. On a desktop browser with no install
+  // event there is nothing honest to offer, so the card stays away.
+  const manual = device.mobile;
 
   useEffect(() => {
     if (standalone || dismissedRecently()) return;
@@ -93,8 +129,9 @@ export function InstallPrompt() {
           </p>
           {manual ? (
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
-              În Safari, apasă butonul de partajare și apoi „Adaugă pe ecranul
-              principal”.
+              {device.recipe === "ios"
+                ? "În Safari, apasă butonul de partajare și apoi „Adaugă pe ecranul de pornire”."
+                : "În meniul Chrome, alege „Instalează aplicația” sau „Adaugă pe ecranul principal”."}
             </p>
           ) : (
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">

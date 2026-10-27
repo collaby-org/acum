@@ -86,7 +86,11 @@ export function Header({
               : "/"
           }
           className="group flex shrink-0 items-center gap-3"
-          aria-label={`${SITE_NAME} — începutul paginii`}
+          aria-label={
+            account.signedIn
+              ? `${SITE_NAME} — catalog`
+              : `${SITE_NAME} — începutul paginii`
+          }
         >
           <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)] transition-transform duration-500 ease-spring group-hover:scale-105">
             <AcumMark id="acum-mark-header" className="size-[21px]" />

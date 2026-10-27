@@ -92,6 +92,15 @@
     "paprika-tv": { "genre": "Culinar" },
     "tv-paprika": { "genre": "Culinar" },
 
+    "pro-tv": { "genre": "Generaliste" },
+    "kanal-d": { "genre": "Generaliste" },
+    "romania-tv": { "genre": "Generaliste" },
+    "national-tv": { "genre": "Generaliste" },
+    "prima-tv": { "genre": "Generaliste" },
+    "pro-tv-news": { "genre": "Știri", "flags": ["S", "AD"] },
+    "antena-1": { "genre": "Generaliste" },
+    "antena-3": { "genre": "Știri" },
+    "metropola-tv": { "genre": "Știri" },
     "tvr-1": { "flags": ["S", "AD"] },
     "tvr-2": { "flags": ["S", "AD"] },
     "tvr-3": { "flags": ["S", "AD"] }

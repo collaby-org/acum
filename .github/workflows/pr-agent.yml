@@ -3,7 +3,10 @@
 #
 # ADVISORY, NOT A GATE: comments are posted to the PR; a red bot run never
 # blocks a developer (continue-on-error). Credential-gated: without
-# GEMINI_API_KEY the job is SKIPPED (green, zero runner minutes).
+# LLM_API_KEY the step is SKIPPED (green, zero runner minutes). The check
+# lives in the step condition, fed by the job's `env` — the `secrets` context
+# is not readable in a job-level `if:` and GitHub rejects the whole workflow
+# graph there.
 #
 # Provider: NVIDIA NIM over the OpenAI-compatible base (secrets.LLM_API_KEY +
 # LLM_API_BASE = https://integrate.api.nvidia.com/v1). Primary DeepSeek V4.1
@@ -24,10 +27,15 @@ concurrency:
 
 jobs:
   pr_agent_job:
-    # Unconfigured -> skipped (not failed). `!= ''` on an unset secret yields
-    # an empty string, so this evaluates false instead of erroring.
+    # Unconfigured -> the step below is SKIPPED (green, zero runner minutes),
+    # not failed.
+    # NOTE: the `secrets` context is NOT readable in a job-level `if:` — GitHub
+    # rejects the whole workflow graph with "Unrecognized named-value:
+    # 'secrets'", which is why every push produced a 0-job failed run with no
+    # log at all. The credential check now lives in the step's own condition,
+    # fed by the job's `env`. This `if:` keeps only the `github.*` clauses,
+    # which ARE readable at job level. Do not move the secret check back.
     if: >-
-      secrets.LLM_API_KEY != '' &&
       github.event.sender.type != 'Bot' &&
       (github.event_name != 'issue_comment' || contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/improve') || contains(github.event.comment.body, '/ask'))
     runs-on: ubuntu-latest
@@ -41,9 +49,14 @@ jobs:
       pull-requests: write
       contents: write
     name: Run pr agent on every pull request, respond to user comments
+    # The gate is read from the job's own `env`: the `secrets` context exists
+    # there, and an unset key is an empty string.
+    env:
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
     steps:
       - name: PR Agent action step
         id: pragent
+        if: ${{ env.LLM_API_KEY != '' }}
         uses: the-pr-agent/pr-agent@5a50bf1e00438268374e77c1a947c4ef7ba4a5cf # v0.48.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
