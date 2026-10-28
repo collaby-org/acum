@@ -6,9 +6,21 @@
 # channel screens and the " URMEAZĂ" badges lag behind — the file has to
 # be refreshed every day.
 #
-# The scrape writes data/epg.json; the job commits that change when it
-# differs from what is on the branch. It runs on a schedule and can be
-# started by hand.
+# The scrape writes data/epg.json; the job commits that change onto a
+# branch and opens a pull request when it differs from what is on the
+# branch. It runs on a schedule and can be started by hand.
+#
+# Why a branch and not main: main is protected and the repository does not
+# enforce rules on its owner — so a human push lands, while the
+# github-actions token is refused with GH006 ("protected branch update
+# failed"), which is how this refresh silently failed every morning. A
+# pull request is what the token is allowed to open.
+#
+# To refresh main directly instead, add a secret holding a token with
+# write access (a PAT with the `repo` scope), name it EPG_PUSH_TOKEN, and
+# push with it:
+#
+#     git push "https://x-access-token:${EPG_PUSH_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main
 
 name: EPG refresh
 
@@ -22,6 +34,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: epg-refresh-${{ github.ref }}
@@ -61,6 +74,20 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # A branch of its own, force-moved each morning: the guide is a
+          # generated file, so its history on that branch is noise.
+          git checkout -B chore/epg-refresh
           git add data/epg.json
           git commit -m "chore: refresh data/epg.json (daily scrape)"
-          git push
+          git push --force origin chore/epg-refresh
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "chore: refresh the programme guide (daily scrape)" \
+            --body "The daily scrape refreshed \`monorepo/frontend/data/epg.json\`. The app derives what is on now from these timestamps, so this is what keeps the hero, the channel screens and the URMEAZĂ badges honest. The earlier version of this job pushed straight to main and was refused by branch protection (GH006) every morning." \
+            --base main \
+            --head chore/epg-refresh \
+          || echo "A pull request is already open for this branch"
