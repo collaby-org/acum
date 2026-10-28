@@ -85,9 +85,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create \
+          # A PR that is already open is a success: the morning's data sits
+          # in it and only needs a merge.
+          if gh pr list --head chore/epg-refresh --base main --json number --jq 'length' | grep -q '[1-9]'; then
+            echo "A pull request is already open for this branch"
+            exit 0
+          fi
+
+          # Otherwise open one. GitHub refuses this when the repository does
+          # not allow Actions to create pull requests, and it refuses a
+          # push to main when the branch is protected — neither is a
+          # silent no-op, so both end the run with what to do about it.
+          if ! gh pr create \
             --title "chore: refresh the programme guide (daily scrape)" \
-            --body "The daily scrape refreshed \`monorepo/frontend/data/epg.json\`. The app derives what is on now from these timestamps, so this is what keeps the hero, the channel screens and the URMEAZĂ badges honest. The earlier version of this job pushed straight to main and was refused by branch protection (GH006) every morning." \
+            --body "The daily scrape refreshed \`monorepo/frontend/data/epg.json\`. The app derives what is on now from these timestamps, so this is what keeps the hero, the channel screens and the URMEAZĂ badges honest. Merging it is the whole point — the earlier version of this job pushed straight to main and was refused by branch protection (GH006) every morning." \
             --base main \
-            --head chore/epg-refresh \
-          || echo "A pull request is already open for this branch"
+            --head chore/epg-refresh; then
+            echo "::error::The refreshed guide is on the branch chore/epg-refresh, but no pull request could be opened. GitHub refuses Actions-created pull requests unless the repository allows it: Settings → Actions → General → Workflow permissions → 'Allow GitHub Actions to create and approve pull requests'. Or skip pull requests entirely: add a secret named EPG_PUSH_TOKEN holding a token with write access (a PAT with the repo scope) and change the push step to push HEAD to main with it."
+            exit 1
+          fi
