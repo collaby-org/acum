@@ -1,6 +1,6 @@
 {
   "source": "https://canaletvlive.online",
-  "generatedAt": "2026-10-28T15:29:20.191Z",
+  "generatedAt": "2026-10-28T16:38:03.176Z",
   "timezone": "Europe/Bucharest",
   "date": "2026-10-28",
   "days": [
@@ -28,18 +28,12 @@
       "name": "Acasa Gold",
       "epgId": "AcasaGold.ro",
       "now": {
-        "title": "Forta destinului",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Dila",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Dila",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Dragă mamă",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -126,13 +120,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Ana şi noi speranţe",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Forta destinului",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -345,13 +332,6 @@
       ],
       "programmes": [
         {
-          "title": "Kavya",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
           "title": "Inimă de aur",
           "startsAt": "2026-10-28T17:00:00+02:00",
           "endsAt": "2026-10-28T18:59:59+02:00",
@@ -538,13 +518,6 @@
       ],
       "programmes": [
         {
-          "title": "Dragonul: Viața lui Bruce Lee",
-          "startsAt": "2026-10-28T14:55:00+02:00",
-          "endsAt": "2026-10-28T17:24:59+02:00",
-          "durationMinutes": 150,
-          "description": "Filmul se bazeaza in intregime pe relatarile vaduvei Linda Lee Caldwell si e o poveste fascinanta ce reda viata trepidanta a lui Bruce Lee, maestrul luptelor martiale care era pe punctul de a deveni star international cand a murit, in mod misterios."
-        },
-        {
           "title": "Duel of Dragons",
           "startsAt": "2026-10-28T17:25:00+02:00",
           "endsAt": "2026-10-28T19:39:59+02:00",
@@ -692,13 +665,6 @@
       ],
       "programmes": [
         {
-          "title": "Observator",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Ştiri, reportaje, anchete, informaţii utile şi de ultimă oră. Fii observator!"
-        },
-        {
           "title": "Furnicuțele",
           "startsAt": "2026-10-28T17:00:00+02:00",
           "endsAt": "2026-10-28T18:59:59+02:00",
@@ -768,18 +734,12 @@
       "name": "Antena 3",
       "epgId": "Antena3.ro",
       "now": {
-        "title": "Romania 360 cu Ana Roman si Robert Kiss",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T18:00:00+02:00",
-        "description": "Romania 360 cu Ana Roman si Robert Kiss"
+        "title": "News Hour with CNN",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:00:00+02:00",
+        "description": "News Hour with CNN"
       },
       "next": [
-        {
-          "title": "News Hour with CNN",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:00:00+02:00",
-          "description": "News Hour with CNN"
-        },
         {
           "title": "Decisiv Prime Time cu Catalina Porumbel",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -818,13 +778,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Stiri cu Sabrina Preda si Sergiu Cora",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T17:00:00+02:00",
-          "durationMinutes": 60,
-          "description": "Stiri cu Sabrina Preda si Sergiu Cora"
-        },
         {
           "title": "Romania 360 cu Ana Roman si Robert Kiss",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -888,18 +841,12 @@
       "name": "Antena 3 CNN",
       "epgId": "Antena3.ro",
       "now": {
-        "title": "Romania 360 cu Ana Roman si Robert Kiss",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": ""
+        "title": "News Hour with CNN",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "News Hour with CNN este un program de știri interne și externe, prima emisiune din România în parteneriat cu CNN."
       },
       "next": [
-        {
-          "title": "News Hour with CNN",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "News Hour with CNN este un program de știri interne și externe, prima emisiune din România în parteneriat cu CNN."
-        },
         {
           "title": "Decisiv Prime Time cu Catalina Porumbel",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -980,13 +927,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Stiri cu Sabrina Preda si Sergiu Cora",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Romania 360 cu Ana Roman si Robert Kiss",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -1239,23 +1179,11 @@
       "epgId": "AXN.ro",
       "now": {
         "title": "Justiție militară",
-        "startsAt": "2026-10-28T17:10:00+02:00",
-        "endsAt": "2026-10-28T18:05:00+02:00",
+        "startsAt": "2026-10-28T18:05:00+02:00",
+        "endsAt": "2026-10-28T19:05:00+02:00",
         "description": "Justiție militară"
       },
       "next": [
-        {
-          "title": "Justiție militară",
-          "startsAt": "2026-10-28T18:05:00+02:00",
-          "endsAt": "2026-10-28T19:05:00+02:00",
-          "description": "Justiție militară"
-        },
-        {
-          "title": "Recrutul",
-          "startsAt": "2026-10-28T18:10:00+02:00",
-          "endsAt": "2026-10-28T19:09:59+02:00",
-          "description": "Nu e uşor să o iei de la capăt, mai ales pentru un tip dintr-un oraş mic precum John Nolan (Nathan Fillion) care, după un incident care i-a schimbat viaţa, îşi urmează visul de a deveni poliţist în Los Angeles."
-        },
         {
           "title": "Walker, polițist texan",
           "startsAt": "2026-10-28T19:05:00+02:00",
@@ -1402,20 +1330,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Walker, polițist texan",
-          "startsAt": "2026-10-28T16:10:00+02:00",
-          "endsAt": "2026-10-28T17:10:00+02:00",
-          "durationMinutes": 60,
-          "description": "Walker, polițist texan"
-        },
-        {
-          "title": "CSI - Crime și investigații",
-          "startsAt": "2026-10-28T16:25:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 50,
-          "description": "În Las Vegas, orașul în care nu mulți sunt cei care pot visa frumos, căci fărădelegea e prea des întâlnită, o echipă de criminaliști devotați rezolvă orice caz, oricât ar fi de greu!"
-        },
         {
           "title": "Justiție militară",
           "startsAt": "2026-10-28T17:10:00+02:00",
@@ -1619,18 +1533,12 @@
       "name": "B1TV",
       "epgId": "B1TV.ro",
       "now": {
-        "title": "Politica zilei",
-        "startsAt": "2026-10-28T15:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "cu Ioana Constantin."
+        "title": "Bună, România!",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "Radu Buzăianu și Răzvan Zamfir dezbat principalele subiecte ale zilei, într-un stil personal, emisiunea oferind o perspectivă satirică asupra evenimentelor de pe scena politică, dar și din societatea românească."
       },
       "next": [
-        {
-          "title": "Bună, România!",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "Radu Buzăianu și Răzvan Zamfir dezbat principalele subiecte ale zilei, într-un stil personal, emisiunea oferind o perspectivă satirică asupra evenimentelor de pe scena politică, dar și din societatea românească."
-        },
         {
           "title": "News Pass",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -1745,18 +1653,12 @@
       "name": "Balcan Music",
       "epgId": "Balkanika.TV.ro",
       "now": {
-        "title": "Hit mix",
-        "startsAt": "2026-10-28T17:20:00+02:00",
-        "endsAt": "2026-10-28T18:29:59+02:00",
-        "description": "Mix from the biggest hits of all Balkan countries."
+        "title": "New video",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
+        "description": "Rubric which presents new videos from all Balkan countries."
       },
       "next": [
-        {
-          "title": "New video",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": "Rubric which presents new videos from all Balkan countries."
-        },
         {
           "title": "Hit mix",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -1795,20 +1697,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Hit mix",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 45,
-          "description": "Mix from the biggest hits of all Balkan countries."
-        },
-        {
-          "title": "Standard - Croația",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:19:59+02:00",
-          "durationMinutes": 20,
-          "description": "The rubric presents 5 of the newest videos from all Balkan countries. Every week are presented different videos."
-        },
         {
           "title": "Hit mix",
           "startsAt": "2026-10-28T17:20:00+02:00",
@@ -1872,18 +1760,12 @@
       "name": "BBC Earth",
       "epgId": "BBCEarth.ro",
       "now": {
-        "title": "Plimbări la Țară și Bere, cu Bill Bailey",
-        "startsAt": "2026-10-28T16:35:00+02:00",
-        "endsAt": "2026-10-28T17:44:59+02:00",
+        "title": "Regatul rivalilor",
+        "startsAt": "2026-10-28T17:45:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Regatul rivalilor",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": ""
-        },
         {
           "title": "Aventura chinezească a lui Ben Fogle",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -1976,13 +1858,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Unde se află oamenii sălbatici cu Ben Fogle",
-          "startsAt": "2026-10-28T15:35:00+02:00",
-          "endsAt": "2026-10-28T16:34:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Plimbări la Țară și Bere, cu Bill Bailey",
           "startsAt": "2026-10-28T16:35:00+02:00",
@@ -2109,30 +1984,12 @@
       "name": "BBC World News",
       "epgId": "BBCNews.ro",
       "now": {
-        "title": "Verified Live",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Business Today",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Verified Live",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Verified Live",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Business Today",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": ""
-        },
         {
           "title": "Verified Live",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -2336,30 +2193,21 @@
           "startsAt": "2026-10-29T10:00:00+02:00",
           "endsAt": "2026-10-29T10:29:59+02:00",
           "description": ""
+        },
+        {
+          "title": "BBC News",
+          "startsAt": "2026-10-29T10:30:00+02:00",
+          "endsAt": "2026-10-29T10:59:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "BBC News",
+          "startsAt": "2026-10-29T11:00:00+02:00",
+          "endsAt": "2026-10-29T11:29:59+02:00",
+          "description": ""
         }
       ],
       "programmes": [
-        {
-          "title": "BBC News Now",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
-        {
-          "title": "BBC News Now",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
-        {
-          "title": "Verified Live",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
         {
           "title": "Verified Live",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -2618,6 +2466,20 @@
           "endsAt": "2026-10-29T10:29:59+02:00",
           "durationMinutes": 30,
           "description": ""
+        },
+        {
+          "title": "BBC News",
+          "startsAt": "2026-10-29T10:30:00+02:00",
+          "endsAt": "2026-10-29T10:59:59+02:00",
+          "durationMinutes": 30,
+          "description": ""
+        },
+        {
+          "title": "BBC News",
+          "startsAt": "2026-10-29T11:00:00+02:00",
+          "endsAt": "2026-10-29T11:29:59+02:00",
+          "durationMinutes": 30,
+          "description": ""
         }
       ]
     },
@@ -2626,42 +2488,12 @@
       "name": "Cartoon Network",
       "epgId": "CartoonNetwork.ro",
       "now": {
-        "title": "Minunata și năstrușnica lume a lui Gumball",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Draculaş, vampirul iepuraş",
+        "startsAt": "2026-10-28T18:20:00+02:00",
+        "endsAt": "2026-10-28T18:39:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Minunata și năstrușnica lume a lui Gumball",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:44:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Haideți tineri titani!",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T17:54:59+02:00",
-          "description": "Super-eroii colegi de cameră Robin, Cyborg, Starfire, Raven şi Beast Boy adoră să salveze mereu situaţia, dar ce se intâmplă în vieţile lor când încheie lupta cu răufăcătorii?"
-        },
-        {
-          "title": "Haideți tineri titani!",
-          "startsAt": "2026-10-28T17:55:00+02:00",
-          "endsAt": "2026-10-28T18:09:59+02:00",
-          "description": "Super-eroii colegi de cameră Robin, Cyborg, Starfire, Raven şi Beast Boy adoră să salveze mereu situaţia, dar ce se intâmplă în vieţile lor când încheie lupta cu răufăcătorii?"
-        },
-        {
-          "title": "Draculaş, vampirul iepuraş",
-          "startsAt": "2026-10-28T18:10:00+02:00",
-          "endsAt": "2026-10-28T18:19:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Draculaş, vampirul iepuraş",
-          "startsAt": "2026-10-28T18:20:00+02:00",
-          "endsAt": "2026-10-28T18:39:59+02:00",
-          "description": ""
-        },
         {
           "title": "Craig și dumbrava",
           "startsAt": "2026-10-28T18:40:00+02:00",
@@ -2840,46 +2672,41 @@
           "title": "Uimitoarea lume a lui Gumball",
           "startsAt": "2026-10-29T01:30:00+02:00",
           "endsAt": "2026-10-29T01:39:59+02:00",
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T01:40:00+02:00",
+          "endsAt": "2026-10-29T01:54:59+02:00",
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T01:55:00+02:00",
+          "endsAt": "2026-10-29T02:04:59+02:00",
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:05:00+02:00",
+          "endsAt": "2026-10-29T02:14:59+02:00",
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:15:00+02:00",
+          "endsAt": "2026-10-29T02:29:59+02:00",
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:30:00+02:00",
+          "endsAt": "2026-10-29T02:39:59+02:00",
           "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
         }
       ],
       "programmes": [
         {
-          "title": "Uimitoarea lume a lui Gumball",
-          "startsAt": "2026-10-28T16:20:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 10,
-          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
-        },
-        {
-          "title": "Uimitoarea lume a lui Gumball",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:49:59+02:00",
-          "durationMinutes": 20,
-          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
-        },
-        {
-          "title": "Uimitoarea lume a lui Gumball",
-          "startsAt": "2026-10-28T16:50:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 10,
-          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
-        },
-        {
-          "title": "Uimitoarea lume a lui Gumball",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 15,
-          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
-        },
-        {
-          "title": "Minunata și năstrușnica lume a lui Gumball",
-          "startsAt": "2026-10-28T17:15:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
           "title": "Minunata și năstrușnica lume a lui Gumball",
           "startsAt": "2026-10-28T17:30:00+02:00",
           "endsAt": "2026-10-28T17:44:59+02:00",
@@ -3121,6 +2948,41 @@
           "title": "Uimitoarea lume a lui Gumball",
           "startsAt": "2026-10-29T01:30:00+02:00",
           "endsAt": "2026-10-29T01:39:59+02:00",
+          "durationMinutes": 10,
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T01:40:00+02:00",
+          "endsAt": "2026-10-29T01:54:59+02:00",
+          "durationMinutes": 15,
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T01:55:00+02:00",
+          "endsAt": "2026-10-29T02:04:59+02:00",
+          "durationMinutes": 10,
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:05:00+02:00",
+          "endsAt": "2026-10-29T02:14:59+02:00",
+          "durationMinutes": 10,
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:15:00+02:00",
+          "endsAt": "2026-10-29T02:29:59+02:00",
+          "durationMinutes": 15,
+          "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
+        },
+        {
+          "title": "Uimitoarea lume a lui Gumball",
+          "startsAt": "2026-10-29T02:30:00+02:00",
+          "endsAt": "2026-10-29T02:39:59+02:00",
           "durationMinutes": 10,
           "description": "În Uimitoarea lume a lui Gumball personajele sunt obiecte sau animale. Gumball este personajul principal care face orice pentru a se distra alaturi de Darwin (pestele sau caruia i-au crescut picioare) si Anais (sora sa mai mica)."
         }
@@ -3131,60 +2993,12 @@
       "name": "Cartoonito",
       "epgId": "Cartoonito.ro",
       "now": {
-        "title": "Mr. Bean: Seria animată",
-        "startsAt": "2026-10-28T17:20:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Noile Looney Tunes",
+        "startsAt": "2026-10-28T18:35:00+02:00",
+        "endsAt": "2026-10-28T18:49:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Mr. Bean: Seria animată",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:49:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Micuții lemingi",
-          "startsAt": "2026-10-28T17:50:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Micuții lemingi",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:04:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Micuții lemingi",
-          "startsAt": "2026-10-28T18:05:00+02:00",
-          "endsAt": "2026-10-28T18:19:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Noile Looney Tunes",
-          "startsAt": "2026-10-28T18:20:00+02:00",
-          "endsAt": "2026-10-28T18:24:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Noile Looney Tunes",
-          "startsAt": "2026-10-28T18:25:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Noile Looney Tunes",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:34:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Noile Looney Tunes",
-          "startsAt": "2026-10-28T18:35:00+02:00",
-          "endsAt": "2026-10-28T18:49:59+02:00",
-          "description": ""
-        },
         {
           "title": "Fii tare, Scooby-Doo!",
           "startsAt": "2026-10-28T18:50:00+02:00",
@@ -3346,44 +3160,39 @@
           "startsAt": "2026-10-29T00:15:00+02:00",
           "endsAt": "2026-10-29T00:34:59+02:00",
           "description": ""
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:35:00+02:00",
+          "endsAt": "2026-10-29T00:39:59+02:00",
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:40:00+02:00",
+          "endsAt": "2026-10-29T00:49:59+02:00",
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:50:00+02:00",
+          "endsAt": "2026-10-29T00:54:59+02:00",
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:55:00+02:00",
+          "endsAt": "2026-10-29T01:04:59+02:00",
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T01:05:00+02:00",
+          "endsAt": "2026-10-29T01:14:59+02:00",
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
         }
       ],
       "programmes": [
-        {
-          "title": "Dino Ranch: Exploratori pe insulă",
-          "startsAt": "2026-10-28T16:25:00+02:00",
-          "endsAt": "2026-10-28T16:34:59+02:00",
-          "durationMinutes": 10,
-          "description": ""
-        },
-        {
-          "title": "Dino Ranch: Exploratori pe insulă",
-          "startsAt": "2026-10-28T16:35:00+02:00",
-          "endsAt": "2026-10-28T16:54:59+02:00",
-          "durationMinutes": 20,
-          "description": ""
-        },
-        {
-          "title": "Mr. Bean: Seria animată",
-          "startsAt": "2026-10-28T16:55:00+02:00",
-          "endsAt": "2026-10-28T17:04:59+02:00",
-          "durationMinutes": 10,
-          "description": ""
-        },
-        {
-          "title": "Mr. Bean: Seria animată",
-          "startsAt": "2026-10-28T17:05:00+02:00",
-          "endsAt": "2026-10-28T17:19:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
-          "title": "Mr. Bean: Seria animată",
-          "startsAt": "2026-10-28T17:20:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 10,
-          "description": ""
-        },
         {
           "title": "Mr. Bean: Seria animată",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -3628,6 +3437,41 @@
           "endsAt": "2026-10-29T00:34:59+02:00",
           "durationMinutes": 20,
           "description": ""
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:35:00+02:00",
+          "endsAt": "2026-10-29T00:39:59+02:00",
+          "durationMinutes": 5,
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:40:00+02:00",
+          "endsAt": "2026-10-29T00:49:59+02:00",
+          "durationMinutes": 10,
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:50:00+02:00",
+          "endsAt": "2026-10-29T00:54:59+02:00",
+          "durationMinutes": 5,
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T00:55:00+02:00",
+          "endsAt": "2026-10-29T01:04:59+02:00",
+          "durationMinutes": 10,
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
+        },
+        {
+          "title": "Grizzy şi lemingii",
+          "startsAt": "2026-10-29T01:05:00+02:00",
+          "endsAt": "2026-10-29T01:14:59+02:00",
+          "durationMinutes": 10,
+          "description": "Ursul Grizzy adoră să ia gustări și să se relaxeze într-o cabană din pădurea canadiană, unde o haită de lemingi adorabili, dar dornici de senzații tari, fac mereu haos."
         }
       ]
     },
@@ -3716,13 +3560,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Toate pânzele sus!",
-          "startsAt": "2026-10-28T15:40:00+02:00",
-          "endsAt": "2026-10-28T17:19:59+02:00",
-          "durationMinutes": 100,
-          "description": ""
-        },
         {
           "title": "Toate pânzele sus!",
           "startsAt": "2026-10-28T17:20:00+02:00",
@@ -3821,18 +3658,12 @@
       "name": "Cinemax",
       "epgId": "CineMAX.ro",
       "now": {
-        "title": "Luptând alături de familie",
-        "startsAt": "2026-10-28T15:55:00+02:00",
-        "endsAt": "2026-10-28T17:44:59+02:00",
-        "description": "Filmul este bazat pe incredibila poveste a superstarului WWE Paige. Născută într-o familie de wrestleri, este decisa să lupte pentru familia ei și să arate că ceea ce o face să fie diferită este chiar lucrul care o poate transforma într-un star."
+        "title": "Cum să fii normal",
+        "startsAt": "2026-10-28T17:45:00+02:00",
+        "endsAt": "2026-10-28T19:24:59+02:00",
+        "description": "După externarea dintr-un spital psihiatric, Pia revine acasă și încearcă să-și reconstruiască viața. Între muncă, relații și prejudecăți, ea se luptă să-și mențină echilibrul și să-și găsească stabilitatea."
       },
       "next": [
-        {
-          "title": "Cum să fii normal",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T19:24:59+02:00",
-          "description": "După externarea dintr-un spital psihiatric, Pia revine acasă și încearcă să-și reconstruiască viața. Între muncă, relații și prejudecăți, ea se luptă să-și mențină echilibrul și să-și găsească stabilitatea."
-        },
         {
           "title": "Panopticon",
           "startsAt": "2026-10-28T19:25:00+02:00",
@@ -3986,18 +3817,12 @@
       "name": "Cinemax 2",
       "epgId": "Cinemax2.ro",
       "now": {
-        "title": "Kyuka: Înainte ca vara să se sfârșească",
-        "startsAt": "2026-10-28T16:15:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Un tată singur organizează o vacanță cu barca pentru gemenii lui aproape adulți, dar plănuiește în secret să le-o prezinte pe mama lor biologică."
+        "title": "Pământul fraților noștri",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:34:59+02:00",
+        "description": "Trei membri ai unei familii afgane extinse iau viața de la capăt în Iran ca refugiați, fără să știe că le va lua decenii să se simtă „acasă”."
       },
       "next": [
-        {
-          "title": "Pământul fraților noștri",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:34:59+02:00",
-          "description": "Trei membri ai unei familii afgane extinse iau viața de la capăt în Iran ca refugiați, fără să știe că le va lua decenii să se simtă „acasă”."
-        },
         {
           "title": "Patty e nume de fată",
           "startsAt": "2026-10-28T19:35:00+02:00",
@@ -4151,30 +3976,12 @@
       "name": "Comedy Central",
       "epgId": "ComedyCentral.ro",
       "now": {
-        "title": "Iubirea bat-o vina",
-        "startsAt": "2026-10-28T17:05:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "Doua cupluri si prietenul lor singuratic, fiecare aflat intr-o alta etapa a relatiei, sunt de aceeasi parere cand vine vorba de intalniri amoroase, obiligatii si casatorie."
+        "title": "The Exes",
+        "startsAt": "2026-10-28T18:25:00+02:00",
+        "endsAt": "2026-10-28T18:49:59+02:00",
+        "description": ""
       },
       "next": [
-        {
-          "title": "Iubirea bat-o vina",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": "Doua cupluri si prietenul lor singuratic, fiecare aflat intr-o alta etapa a relatiei, sunt de aceeasi parere cand vine vorba de intalniri amoroase, obiligatii si casatorie."
-        },
-        {
-          "title": "The Exes",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:24:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "The Exes",
-          "startsAt": "2026-10-28T18:25:00+02:00",
-          "endsAt": "2026-10-28T18:49:59+02:00",
-          "description": ""
-        },
         {
           "title": "Frasier",
           "startsAt": "2026-10-28T18:50:00+02:00",
@@ -4377,32 +4184,17 @@
           "title": "The Exes",
           "startsAt": "2026-10-29T10:15:00+02:00",
           "endsAt": "2026-10-29T10:34:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "The Exes",
+          "startsAt": "2026-10-29T10:35:00+02:00",
+          "endsAt": "2026-10-29T11:09:59+02:00",
           "description": ""
         }
       ],
       "programmes": [
         {
-          "title": "Hot in Cleveland",
-          "startsAt": "2026-10-28T16:10:00+02:00",
-          "endsAt": "2026-10-28T16:34:59+02:00",
-          "durationMinutes": 25,
-          "description": ""
-        },
-        {
-          "title": "Hot in Cleveland",
-          "startsAt": "2026-10-28T16:35:00+02:00",
-          "endsAt": "2026-10-28T17:04:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
-        {
-          "title": "Iubirea bat-o vina",
-          "startsAt": "2026-10-28T17:05:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 25,
-          "description": "Doua cupluri si prietenul lor singuratic, fiecare aflat intr-o alta etapa a relatiei, sunt de aceeasi parere cand vine vorba de intalniri amoroase, obiligatii si casatorie."
-        },
-        {
           "title": "Iubirea bat-o vina",
           "startsAt": "2026-10-28T17:30:00+02:00",
           "endsAt": "2026-10-28T17:59:59+02:00",
@@ -4659,6 +4451,13 @@
           "startsAt": "2026-10-29T10:15:00+02:00",
           "endsAt": "2026-10-29T10:34:59+02:00",
           "durationMinutes": 20,
+          "description": ""
+        },
+        {
+          "title": "The Exes",
+          "startsAt": "2026-10-29T10:35:00+02:00",
+          "endsAt": "2026-10-29T11:09:59+02:00",
+          "durationMinutes": 35,
           "description": ""
         }
       ]
@@ -4669,23 +4468,11 @@
       "epgId": "Crime+Investigation.ro",
       "now": {
         "title": "Medici care ucid",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:44:59+02:00",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T19:14:59+02:00",
         "description": "Personajul aparent eroic al lui Paul Novak ca paramedic după atentatele din 11 septembrie 2001 a ascuns o latură întunecată care a culminat cu uciderea brutală a soției sale înstrăinate, Catherine, în casa lor din Sullivan County."
       },
       "next": [
-        {
-          "title": "Medici care ucid",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": "Personajul aparent eroic al lui Paul Novak ca paramedic după atentatele din 11 septembrie 2001 a ascuns o latură întunecată care a culminat cu uciderea brutală a soției sale înstrăinate, Catherine, în casa lor din Sullivan County."
-        },
-        {
-          "title": "Medici care ucid",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T19:14:59+02:00",
-          "description": "Personajul aparent eroic al lui Paul Novak ca paramedic după atentatele din 11 septembrie 2001 a ascuns o latură întunecată care a culminat cu uciderea brutală a soției sale înstrăinate, Catherine, în casa lor din Sullivan County."
-        },
         {
           "title": "Medici care ucid",
           "startsAt": "2026-10-28T19:15:00+02:00",
@@ -4826,13 +4613,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Medici care ucid",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 45,
-          "description": "Personajul aparent eroic al lui Paul Novak ca paramedic după atentatele din 11 septembrie 2001 a ascuns o latură întunecată care a culminat cu uciderea brutală a soției sale înstrăinate, Catherine, în casa lor din Sullivan County."
-        },
         {
           "title": "Medici care ucid",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -5022,24 +4802,12 @@
       "name": "Digi 24",
       "epgId": "Digi24.ro",
       "now": {
-        "title": "Știrile zilei",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": ""
+        "title": "Business Club",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Economia pe înţelesul tuturor! Această emisiune descifrează publicului larg tainele economiei şi ale lumii afacerilor."
       },
       "next": [
-        {
-          "title": "Ediție specială",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": "Află cele mai importante știri ale momentului din România, dezbătute pe larg de invitații din platou. Vezi reportaje exclusive despre problemele politice, economice sau sociale ale României."
-        },
-        {
-          "title": "Business Club",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Economia pe înţelesul tuturor! Această emisiune descifrează publicului larg tainele economiei şi ale lumii afacerilor."
-        },
         {
           "title": "Ediție specială",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -5120,13 +4888,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Știrile zilei",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Știrile zilei",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -5417,20 +5178,6 @@
       ],
       "programmes": [
         {
-          "title": "LIVE Cupa Romaniei: CSM Corona Brasov-FC Arges Grupe, etapa 2",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
-          "title": "LIVE Stirile Digi Sport",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
           "title": "LIVE Fotbal Club",
           "startsAt": "2026-10-28T17:15:00+02:00",
           "endsAt": "2026-10-28T18:44:59+02:00",
@@ -5697,13 +5444,6 @@
       "programmes": [
         {
           "title": "LIVE Tenis",
-          "startsAt": "2026-10-28T15:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 120,
-          "description": ""
-        },
-        {
-          "title": "LIVE Tenis",
           "startsAt": "2026-10-28T17:00:00+02:00",
           "endsAt": "2026-10-28T18:59:59+02:00",
           "durationMinutes": 120,
@@ -5779,18 +5519,12 @@
       "name": "Digi Sport 3",
       "epgId": "DigiSport3.ro",
       "now": {
-        "title": "Premiera Serie A: Full Impact",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Live Futsal: ACS FC Corvinul-CSM Odorheiu Secuiesc",
+        "startsAt": "2026-10-28T17:30:00+02:00",
+        "endsAt": "2026-10-28T19:14:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Live Futsal: ACS FC Corvinul-CSM Odorheiu Secuiesc",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T19:14:59+02:00",
-          "description": ""
-        },
         {
           "title": "Stirile Digi Sport",
           "startsAt": "2026-10-28T19:15:00+02:00",
@@ -5949,27 +5683,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "La Liga: Rezumat Etapa 10",
-          "startsAt": "2026-10-28T15:45:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
-          "title": "Stirile Digi Sport",
-          "startsAt": "2026-10-28T16:45:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
-          "title": "Premiera Serie A: Full Impact",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
         {
           "title": "Live Futsal: ACS FC Corvinul-CSM Odorheiu Secuiesc",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -6167,17 +5880,11 @@
       "epgId": "DigiSport4.ro",
       "now": {
         "title": "Live Tenis Ziua 3",
-        "startsAt": "2026-10-28T16:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:29:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Live Tenis Ziua 3",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:29:59+02:00",
-          "description": ""
-        },
         {
           "title": "Live Serie A: Milan-Bologna Etapa 9",
           "startsAt": "2026-10-28T19:30:00+02:00",
@@ -6331,24 +6038,12 @@
       "name": "Disney Channel",
       "epgId": "DisneyChannel.ro",
       "now": {
-        "title": "The Doomies",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T17:44:59+02:00",
-        "description": "Bobby și Romy deschid din greșeală o poartă către o altă lume, transformând orașul lor liniștit într-un punct de atracție pentru creaturi înspăimântătoare, fiind nevoiți să se lupte atât cu monștrii din lumea reală, cât și cu cei din interiorul lor."
+        "title": "Familia Green la oraș",
+        "startsAt": "2026-10-28T18:15:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
+        "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
       },
       "next": [
-        {
-          "title": "The Doomies",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T18:14:59+02:00",
-          "description": "Bobby și Romy deschid din greșeală o poartă către o altă lume, transformând orașul lor liniștit într-un punct de atracție pentru creaturi înspăimântătoare, fiind nevoiți să se lupte atât cu monștrii din lumea reală, cât și cu cei din interiorul lor."
-        },
-        {
-          "title": "Familia Green la oraș",
-          "startsAt": "2026-10-28T18:15:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
-        },
         {
           "title": "Familia Green la oraș",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -6558,23 +6253,21 @@
           "startsAt": "2026-10-29T08:15:00+02:00",
           "endsAt": "2026-10-29T08:44:59+02:00",
           "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
+        },
+        {
+          "title": "Familia Green la oraș",
+          "startsAt": "2026-10-29T08:45:00+02:00",
+          "endsAt": "2026-10-29T09:14:59+02:00",
+          "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
+        },
+        {
+          "title": "Familia Green la oraș",
+          "startsAt": "2026-10-29T09:15:00+02:00",
+          "endsAt": "2026-10-29T09:44:59+02:00",
+          "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
         }
       ],
       "programmes": [
-        {
-          "title": "Miraculous: Buburuza și Motan Noir",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 30,
-          "description": "Marinette şi Adrien sunt doi liceeni deosebiţi, aleşi să salveze Parisul! Misiunea lor e să captureze creaturile malefice Akuma, care pot transforma pe oricine în superticălos. Cei doi devin supereroi: Marinette e Buburuza şi Adrien e Motanul Negru."
-        },
-        {
-          "title": "Ciudățeni",
-          "startsAt": "2026-10-28T16:45:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 30,
-          "description": "Gravity Falls prezintă aventurile gemenilor Dipper şi Mabel Pines, ale căror planuri de vară sunt distruse atunci când părinţii lor îi trimit la unchiul lor Stan în oraşul Gravity Falls, Oregon."
-        },
         {
           "title": "The Doomies",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -6840,6 +6533,20 @@
           "endsAt": "2026-10-29T08:44:59+02:00",
           "durationMinutes": 30,
           "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
+        },
+        {
+          "title": "Familia Green la oraș",
+          "startsAt": "2026-10-29T08:45:00+02:00",
+          "endsAt": "2026-10-29T09:14:59+02:00",
+          "durationMinutes": 30,
+          "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
+        },
+        {
+          "title": "Familia Green la oraș",
+          "startsAt": "2026-10-29T09:15:00+02:00",
+          "endsAt": "2026-10-29T09:44:59+02:00",
+          "durationMinutes": 30,
+          "description": "Aceasta este povestea aventuroasă a lui Cricket Green, un băiat de la țară care se mută cu familia lui într-o metropolă modernă."
         }
       ]
     },
@@ -6848,30 +6555,12 @@
       "name": "Disney Junior",
       "epgId": "DisneyJunior.ro",
       "now": {
-        "title": "Clubul Lui Mickey Mouse Plus",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "Gașca ajută un câine robot să învețe să se joace cu Pluto."
+        "title": "Super Pisicuțe",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Pisicuțele salvează un cărucior. Zsa-Zsa vrea siguranță."
       },
       "next": [
-        {
-          "title": "Sofia Întâi: Magia Regală",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": "E prima zi la școala regală de magie pentru Sofia!"
-        },
-        {
-          "title": "Păienjenelul Marvel Și Prietenii Lui Uimitori",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": "Corn Dog King iese la bântuit. Zola fură bomboanele de Halloween."
-        },
-        {
-          "title": "Super Pisicuțe",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Pisicuțele salvează un cărucior. Zsa-Zsa vrea siguranță."
-        },
         {
           "title": "Clubul Lui Mickey Mouse Plus",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -7063,44 +6752,39 @@
           "startsAt": "2026-10-29T04:30:00+02:00",
           "endsAt": "2026-10-29T04:39:59+02:00",
           "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:40:00+02:00",
+          "endsAt": "2026-10-29T04:44:59+02:00",
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:45:00+02:00",
+          "endsAt": "2026-10-29T04:49:59+02:00",
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:50:00+02:00",
+          "endsAt": "2026-10-29T04:54:59+02:00",
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:55:00+02:00",
+          "endsAt": "2026-10-29T04:59:59+02:00",
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T05:00:00+02:00",
+          "endsAt": "2026-10-29T05:04:59+02:00",
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
         }
       ],
       "programmes": [
-        {
-          "title": "Blue",
-          "startsAt": "2026-10-28T16:20:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 10,
-          "description": "Bert Arătosul are păduchi!"
-        },
-        {
-          "title": "Blue",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 10,
-          "description": "Blue și Bingo așteaptă după șopârla lipicioasă."
-        },
-        {
-          "title": "Blue",
-          "startsAt": "2026-10-28T16:40:00+02:00",
-          "endsAt": "2026-10-28T16:49:59+02:00",
-          "durationMinutes": 10,
-          "description": "Blue și Bingo merg cu Trenul Tati."
-        },
-        {
-          "title": "Blue",
-          "startsAt": "2026-10-28T16:50:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 10,
-          "description": "Mama e încoronată ca regină iar fetele ei sunt majordomi."
-        },
-        {
-          "title": "Clubul Lui Mickey Mouse Plus",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "Gașca ajută un câine robot să învețe să se joace cu Pluto."
-        },
         {
           "title": "Sofia Întâi: Magia Regală",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -7345,6 +7029,41 @@
           "endsAt": "2026-10-29T04:39:59+02:00",
           "durationMinutes": 10,
           "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:40:00+02:00",
+          "endsAt": "2026-10-29T04:44:59+02:00",
+          "durationMinutes": 5,
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:45:00+02:00",
+          "endsAt": "2026-10-29T04:49:59+02:00",
+          "durationMinutes": 5,
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:50:00+02:00",
+          "endsAt": "2026-10-29T04:54:59+02:00",
+          "durationMinutes": 5,
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T04:55:00+02:00",
+          "endsAt": "2026-10-29T04:59:59+02:00",
+          "durationMinutes": 5,
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
+        },
+        {
+          "title": "Blue",
+          "startsAt": "2026-10-29T05:00:00+02:00",
+          "endsAt": "2026-10-29T05:04:59+02:00",
+          "durationMinutes": 5,
+          "description": "Blue e o căţeluşă blue heeler, de şase ani, care transformă viaţa familiei într-o aventură."
         }
       ]
     },
@@ -7353,18 +7072,12 @@
       "name": "Diva",
       "epgId": "Diva.ro",
       "now": {
-        "title": "Un prinț cadou",
-        "startsAt": "2026-10-28T16:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Invitată la o sărbătoare din regatul Valdonia, directoarea unei organizații caritabile se apropie de prințul Aiden. Cei doi s-au cunoscut la New York, dar eroina nu stia cine este Aiden. Revederea pare a fi ocazia pentru ca Aiden să scape de logodna."
+        "title": "Parfum de Crăciun",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "Ellie se întoarce acasă de Crăciun să-l ajute pe tatăl ei în afacerea cu lumânări. În curând va stârni interesul unui oaspete tânăr și fermecător."
       },
       "next": [
-        {
-          "title": "Parfum de Crăciun",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "Ellie se întoarce acasă de Crăciun să-l ajute pe tatăl ei în afacerea cu lumânări. În curând va stârni interesul unui oaspete tânăr și fermecător."
-        },
         {
           "title": "Un Crăciun delicios",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -7493,17 +7206,11 @@
       "epgId": "Dizi.ro",
       "now": {
         "title": "A doua șansă",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T18:04:59+02:00",
+        "startsAt": "2026-10-28T18:05:00+02:00",
+        "endsAt": "2026-10-28T18:49:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "A doua șansă",
-          "startsAt": "2026-10-28T18:05:00+02:00",
-          "endsAt": "2026-10-28T18:49:59+02:00",
-          "description": ""
-        },
         {
           "title": "Cercul",
           "startsAt": "2026-10-28T18:50:00+02:00",
@@ -7632,13 +7339,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Vinovaţi de iubire",
-          "startsAt": "2026-10-28T16:25:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 50,
-          "description": "O fată obişnuită se mută într-un apartament deţinut de o familie bogată, ai cărei membri au grave probleme psihologice şi obsesii. Vor fi ei capabili să se vindece unul pe altul?"
-        },
         {
           "title": "A doua șansă",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -7810,284 +7510,284 @@
       "next": [],
       "programmes": [
         {
-          "title": "Margo and Felix",
-          "startsAt": "2026-10-28T16:27:47+02:00",
-          "endsAt": "2026-10-28T16:30:47+02:00",
-          "durationMinutes": 3,
-          "description": "Aceasta serie ne da posibilitatea sa aruncam un ochi in viata de zi cu zi a doua foarte dragalase animale marionete. Acesti 2 prietenei au o casa incantatoare cu o gradina imprejur, in care lucreaza asa cum parintii o fac , si joaca precum micii spectatori."
-        },
-        {
-          "title": "Sunete din jurul nostru",
-          "startsAt": "2026-10-28T16:28:19+02:00",
-          "endsAt": "2026-10-28T16:30:18+02:00",
-          "durationMinutes": 2,
-          "description": "Lumea este plină de zgomote amuzante, interesante și ciudate. Liza și Ben, gemenii Spiridus ne ajută sa identificăm sursele sunetelor pe care le auzim zi de zi. Ele pot fi absolut orice, de la un claxon al unei biciclete la semnalul sonor al unui dispozitiv pana la sunetele amuzante ale curățatului de ferestre."
-        },
-        {
           "title": "Bau, te vad!",
-          "startsAt": "2026-10-28T16:30:19+02:00",
-          "endsAt": "2026-10-28T16:33:18+02:00",
-          "durationMinutes": 3,
+          "startsAt": "2026-10-28T17:36:55+02:00",
+          "endsAt": "2026-10-28T17:38:54+02:00",
+          "durationMinutes": 2,
           "description": "Bau, te vad! ne arata aventurile a 2 prieteni imaginari, Peeky-Pink si Peeky-Blue, jucanduse tot timpul de-a V-ati ascunselea. Viata lor este plina de joc si ras!"
         },
         {
-          "title": "Hop-hop",
-          "startsAt": "2026-10-28T16:30:48+02:00",
-          "endsAt": "2026-10-28T16:32:57+02:00",
-          "durationMinutes": 2,
-          "description": "Viaţa jucăuşă a unei familii de iepuraşi."
+          "title": "Lola and the Numbers",
+          "startsAt": "2026-10-28T17:38:00+02:00",
+          "endsAt": "2026-10-28T17:40:40+02:00",
+          "durationMinutes": 3,
+          "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
         },
         {
-          "title": "Lola and the Numbers",
-          "startsAt": "2026-10-28T16:32:58+02:00",
-          "endsAt": "2026-10-28T16:36:38+02:00",
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:38:55+02:00",
+          "endsAt": "2026-10-28T17:41:29+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:40:41+02:00",
+          "endsAt": "2026-10-28T17:43:10+02:00",
+          "durationMinutes": 2,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:41:30+02:00",
+          "endsAt": "2026-10-28T17:45:29+02:00",
           "durationMinutes": 4,
-          "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
-        },
-        {
-          "title": "Sippi Sappi",
-          "startsAt": "2026-10-28T16:33:19+02:00",
-          "endsAt": "2026-10-28T16:35:38+02:00",
-          "durationMinutes": 2,
-          "description": "Doi copilaşi cu patine cu rotile, Sippi şi Sappi, descoperă zona în vacanţă."
-        },
-        {
-          "title": "Margo and Felix",
-          "startsAt": "2026-10-28T16:35:39+02:00",
-          "endsAt": "2026-10-28T16:39:20+02:00",
-          "durationMinutes": 4,
-          "description": "Aceasta serie ne da posibilitatea sa aruncam un ochi in viata de zi cu zi a doua foarte dragalase animale marionete. Acesti 2 prietenei au o casa incantatoare cu o gradina imprejur, in care lucreaza asa cum parintii o fac , si joaca precum micii spectatori."
-        },
-        {
-          "title": "Lola and the Numbers",
-          "startsAt": "2026-10-28T16:36:39+02:00",
-          "endsAt": "2026-10-28T16:38:38+02:00",
-          "durationMinutes": 2,
-          "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
-        },
-        {
-          "title": "Bebe Didi",
-          "startsAt": "2026-10-28T16:38:39+02:00",
-          "endsAt": "2026-10-28T16:41:18+02:00",
-          "durationMinutes": 3,
-          "description": "Povestioarele senine ale micilor animale cu scutec, jucându-se şi ajutându-i pe alţii cu bunătate."
-        },
-        {
-          "title": "Lola and the Numbers",
-          "startsAt": "2026-10-28T16:39:21+02:00",
-          "endsAt": "2026-10-28T16:41:20+02:00",
-          "durationMinutes": 2,
-          "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
-        },
-        {
-          "title": "Păpușile – echipa de salvare",
-          "startsAt": "2026-10-28T16:41:19+02:00",
-          "endsAt": "2026-10-28T16:44:48+02:00",
-          "durationMinutes": 3,
-          "description": "Bell și prietenii ei, cangurul Fido și ursulețul Lilo salvează pe locuitorii disperați ai pădurii."
-        },
-        {
-          "title": "Bau, te vad!",
-          "startsAt": "2026-10-28T16:41:21+02:00",
-          "endsAt": "2026-10-28T16:44:19+02:00",
-          "durationMinutes": 3,
-          "description": "Bau, te vad! ne arata aventurile a 2 prieteni imaginari, Peeky-Pink si Peeky-Blue, jucanduse tot timpul de-a V-ati ascunselea. Viata lor este plina de joc si ras!"
-        },
-        {
-          "title": "Mimo şi Bobo",
-          "startsAt": "2026-10-28T16:44:20+02:00",
-          "endsAt": "2026-10-28T16:47:04+02:00",
-          "durationMinutes": 3,
           "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
-        },
-        {
-          "title": "Elfii natură",
-          "startsAt": "2026-10-28T16:44:49+02:00",
-          "endsAt": "2026-10-28T16:46:03+02:00",
-          "durationMinutes": 1,
-          "description": "Fructele, legumele și plantele cresc în Grădina veselă. Din semințe apar răsaduri, apoi flori, frunze și roade, care dansează pentru a vă distra. Înainte ca micile creaturi ale naturii să-și ia rămas bun, ei vă arată cum pot oamenii să se bucure de mirosurile și gusturile lor."
-        },
-        {
-          "title": "Mimo şi Bobo",
-          "startsAt": "2026-10-28T16:46:04+02:00",
-          "endsAt": "2026-10-28T16:48:38+02:00",
-          "durationMinutes": 3,
-          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
-        },
-        {
-          "title": "Higher The Better",
-          "startsAt": "2026-10-28T16:47:05+02:00",
-          "endsAt": "2026-10-28T16:50:06+02:00",
-          "durationMinutes": 3,
-          "description": "Doi prieteni, Kiteko, girafa prostuta si Umi mangusta jucausa, observa viata de zi cu zi a copiilor mici. De la copii, cei doi pot invata multe, despre activitatile de zi cu zi, excursiile pline de aventuri, si distractia de care au parte la joaca."
-        },
-        {
-          "title": "Aventurile raței",
-          "startsAt": "2026-10-28T16:48:39+02:00",
-          "endsAt": "2026-10-28T16:50:38+02:00",
-          "durationMinutes": 2,
-          "description": "În serialul nostru Aventurile raței prinde viață personajul brandului Ducktv, rățușca. Prin intermediul evenimentelor din viața sa de zi cu zi, telespectatorii noștri sub vârsta de 3 ani se pot familiariza cu programele și activitățile zilnice ale copiilor mici într-un mod plăcut și distractiv. Totodată, seria noastră dezvoltă și aptitudinile copiilor de observare și gândire."
-        },
-        {
-          "title": "Margo and Felix",
-          "startsAt": "2026-10-28T16:50:07+02:00",
-          "endsAt": "2026-10-28T16:53:07+02:00",
-          "durationMinutes": 3,
-          "description": "Aceasta serie ne da posibilitatea sa aruncam un ochi in viata de zi cu zi a doua foarte dragalase animale marionete. Acesti 2 prietenei au o casa incantatoare cu o gradina imprejur, in care lucreaza asa cum parintii o fac , si joaca precum micii spectatori."
-        },
-        {
-          "title": "Hubbi şi prietenii",
-          "startsAt": "2026-10-28T16:50:39+02:00",
-          "endsAt": "2026-10-28T16:53:13+02:00",
-          "durationMinutes": 3,
-          "description": "Oameni provinciali pricepuţi la toate se trezesc în tot felul de aventuri, datorită stângăciei lor, încercând să repare chiar şi ceea ce nu este stricat."
-        },
-        {
-          "title": "Grădina veselă",
-          "startsAt": "2026-10-28T16:53:08+02:00",
-          "endsAt": "2026-10-28T16:54:22+02:00",
-          "durationMinutes": 1,
-          "description": "Fructele, legumele și plantele cresc în Grădina veselă. Din semințe apar răsaduri, apoi flori, frunze și roade, care dansează pentru a vă distra. Înainte ca micile creaturi ale naturii să-și ia rămas bun, ei vă arată cum pot oamenii să se bucure de mirosurile și gusturile lor."
-        },
-        {
-          "title": "Tempo Giusto",
-          "startsAt": "2026-10-28T16:53:14+02:00",
-          "endsAt": "2026-10-28T16:55:13+02:00",
-          "durationMinutes": 2,
-          "description": "Tempo Giusto este o introducere jucăuşa pentru înţelegerea conceptului de timp. Mereu veselă, Lola spune timpul, şi împreună cu marele povestitor Henry, ne arată ce fac copii în diferite momente ale zilei."
-        },
-        {
-          "title": "Pompierii",
-          "startsAt": "2026-10-28T16:54:23+02:00",
-          "endsAt": "2026-10-28T16:57:47+02:00",
-          "durationMinutes": 3,
-          "description": "Cei trei pompieri sar în ajutorul orăşenilor în diferite situaţii."
-        },
-        {
-          "title": "Păpușile – echipa de salvare",
-          "startsAt": "2026-10-28T16:55:14+02:00",
-          "endsAt": "2026-10-28T16:57:18+02:00",
-          "durationMinutes": 2,
-          "description": "Bell și prietenii ei, cangurul Fido și ursulețul Lilo salvează pe locuitorii disperați ai pădurii."
-        },
-        {
-          "title": "DuckSchool",
-          "startsAt": "2026-10-28T16:57:19+02:00",
-          "endsAt": "2026-10-28T16:59:18+02:00",
-          "durationMinutes": 2,
-          "description": ""
-        },
-        {
-          "title": "Raul",
-          "startsAt": "2026-10-28T16:57:48+02:00",
-          "endsAt": "2026-10-28T17:00:27+02:00",
-          "durationMinutes": 3,
-          "description": "Un hipopotam grăsuţ şi prietenul său, pasărea."
-        },
-        {
-          "title": "Toby McFly",
-          "startsAt": "2026-10-28T16:59:19+02:00",
-          "endsAt": "2026-10-28T17:02:18+02:00",
-          "durationMinutes": 3,
-          "description": "Toby McFly este un cățeluș pilot care ne arată cum se vede lumea privită din înălțimi. El zboară peste peisaje naturale frumoase, animale, oameni și diverse locuri interesante. După ce le admiră de pe înălțimi, coboară cu avionul și ne arată și de aproape ce a văzut din înălțimi."
-        },
-        {
-          "title": "Hubbi şi prietenii",
-          "startsAt": "2026-10-28T17:00:28+02:00",
-          "endsAt": "2026-10-28T17:03:27+02:00",
-          "durationMinutes": 3,
-          "description": "Oameni provinciali pricepuţi la toate se trezesc în tot felul de aventuri, datorită stângăciei lor, încercând să repare chiar şi ceea ce nu este stricat."
-        },
-        {
-          "title": "Piticii harnici",
-          "startsAt": "2026-10-28T17:02:19+02:00",
-          "endsAt": "2026-10-28T17:05:03+02:00",
-          "durationMinutes": 3,
-          "description": "Trei pitici sculptează şi construiesc din lemn şi gheaţă."
-        },
-        {
-          "title": "Rața și prietenii săi",
-          "startsAt": "2026-10-28T17:03:28+02:00",
-          "endsAt": "2026-10-28T17:05:27+02:00",
-          "durationMinutes": 2,
-          "description": "În serialul nostru Rața și prietenii săi, la toate aventurile lui Ducky participă și prietenii săi Lola, Henry și Toby. Poveștile au fost scrise cu ajutorul psihologilor pentru copii și îi ajută pe cei mici să învețe cum să se înțeleagă între ei, să argumenteze și să se adapteze când se joacă împreună, arătându-le totodată câtă bucurie și satisfacție le aduce explorarea lumii împreună cu tovarășii lor."
-        },
-        {
-          "title": "Mimo şi Bobo",
-          "startsAt": "2026-10-28T17:05:04+02:00",
-          "endsAt": "2026-10-28T17:07:08+02:00",
-          "durationMinutes": 2,
-          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
-        },
-        {
-          "title": "Lola and the Numbers",
-          "startsAt": "2026-10-28T17:05:28+02:00",
-          "endsAt": "2026-10-28T17:07:27+02:00",
-          "durationMinutes": 2,
-          "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
-        },
-        {
-          "title": "Hubbi şi prietenii",
-          "startsAt": "2026-10-28T17:07:09+02:00",
-          "endsAt": "2026-10-28T17:09:14+02:00",
-          "durationMinutes": 2,
-          "description": "Oameni provinciali pricepuţi la toate se trezesc în tot felul de aventuri, datorită stângăciei lor, încercând să repare chiar şi ceea ce nu este stricat."
-        },
-        {
-          "title": "Elfii natură",
-          "startsAt": "2026-10-28T17:07:28+02:00",
-          "endsAt": "2026-10-28T17:08:42+02:00",
-          "durationMinutes": 1,
-          "description": "Elfii natură prezintă schimbarea anotimpurilor și vă arată modul în care animalele și plantele se bucură de schimbările vremii pe tot parcursul anului."
-        },
-        {
-          "title": "ABC - duckBC",
-          "startsAt": "2026-10-28T17:08:43+02:00",
-          "endsAt": "2026-10-28T17:11:48+02:00",
-          "durationMinutes": 3,
-          "description": "Ştiţi cine locuieşte pe masa de birou? Stilou, Creion, Ştampila, Radiera şi Pensula care se află în concurs de scriere a literelor. Până când prietenii noştri noi ne vor arăta stiluri diferite de scriere, noi facem cunoştinţă cu literele alfabetului latin."
-        },
-        {
-          "title": "Sunete din jurul nostru",
-          "startsAt": "2026-10-28T17:09:15+02:00",
-          "endsAt": "2026-10-28T17:11:14+02:00",
-          "durationMinutes": 2,
-          "description": "Lumea este plină de zgomote amuzante, interesante și ciudate. Liza și Ben, gemenii Spiridus ne ajută sa identificăm sursele sunetelor pe care le auzim zi de zi. Ele pot fi absolut orice, de la un claxon al unei biciclete la semnalul sonor al unui dispozitiv pana la sunetele amuzante ale curățatului de ferestre."
         },
         {
           "title": "Lumea lui Mimo",
-          "startsAt": "2026-10-28T17:11:15+02:00",
-          "endsAt": "2026-10-28T17:14:44+02:00",
+          "startsAt": "2026-10-28T17:43:11+02:00",
+          "endsAt": "2026-10-28T17:46:35+02:00",
           "durationMinutes": 3,
           "description": "Panda Mimo, ursul nostru preferat şi prietenul său cel mai bun, Bobo se întâlnesc cu prietenii din serialul Copilaşul Didi. Ei pornesc în noi aventuri împreună cu prietenii lor cei noi."
         },
         {
-          "title": "Colorati-o pe Clara",
-          "startsAt": "2026-10-28T17:11:49+02:00",
-          "endsAt": "2026-10-28T17:13:48+02:00",
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:45:30+02:00",
+          "endsAt": "2026-10-28T17:48:04+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Bau, te vad!",
+          "startsAt": "2026-10-28T17:46:36+02:00",
+          "endsAt": "2026-10-28T17:48:35+02:00",
           "durationMinutes": 2,
-          "description": "Clara este o fată cameleonica extraordinară. Ea locuiește în junglă în casa ei mica iar atunci cand isi schimbă culoarea reda nuanta potrivita a obiectelor si creaturilor vii care au fost în mod fals colorate."
+          "description": "Bau, te vad! ne arata aventurile a 2 prieteni imaginari, Peeky-Pink si Peeky-Blue, jucanduse tot timpul de-a V-ati ascunselea. Viata lor este plina de joc si ras!"
         },
         {
-          "title": "Păpușile – echipa de salvare",
-          "startsAt": "2026-10-28T17:13:49+02:00",
-          "endsAt": "2026-10-28T17:17:18+02:00",
+          "title": "Raul",
+          "startsAt": "2026-10-28T17:48:05+02:00",
+          "endsAt": "2026-10-28T17:50:44+02:00",
           "durationMinutes": 3,
-          "description": "Bell și prietenii ei, cangurul Fido și ursulețul Lilo salvează pe locuitorii disperați ai pădurii."
+          "description": "Un hipopotam grăsuţ şi prietenul său, pasărea."
         },
         {
-          "title": "Margo and Felix",
-          "startsAt": "2026-10-28T17:14:45+02:00",
-          "endsAt": "2026-10-28T17:17:45+02:00",
+          "title": "Zack and Ziggy",
+          "startsAt": "2026-10-28T17:48:36+02:00",
+          "endsAt": "2026-10-28T17:51:38+02:00",
           "durationMinutes": 3,
-          "description": "Aceasta serie ne da posibilitatea sa aruncam un ochi in viata de zi cu zi a doua foarte dragalase animale marionete. Acesti 2 prietenei au o casa incantatoare cu o gradina imprejur, in care lucreaza asa cum parintii o fac , si joaca precum micii spectatori."
+          "description": "Seria Zack si Ziggy, ne invata despre conceptele de baza de masurare prin aventurile micului baiat geek(neobisnuit) pe care il chiama Zack si ale loialului sau prieten, cainele Ziggy.,Impreuna ei fac coloane grupuri si comparatii."
+        },
+        {
+          "title": "Hubby o să se ocupe",
+          "startsAt": "2026-10-28T17:50:45+02:00",
+          "endsAt": "2026-10-28T17:53:22+02:00",
+          "durationMinutes": 3,
+          "description": "Cei trei meșteri ai noștri de acasă oriunde merg își efectuează munca în mod neobositor. Pe hipopotamul Hubby, pe castorul Matty și pe prietenul lor Mily nu îi sperie nici un fel de lucru. În ciuda unei neîndemânări mai mici sau mai mari, de fiecare dată obțin rezultate excelente."
+        },
+        {
+          "title": "Rața și prietenii săi",
+          "startsAt": "2026-10-28T17:51:39+02:00",
+          "endsAt": "2026-10-28T17:53:38+02:00",
+          "durationMinutes": 2,
+          "description": "În serialul nostru Rața și prietenii săi, la toate aventurile lui Ducky participă și prietenii săi Lola, Henry și Toby. Poveștile au fost scrise cu ajutorul psihologilor pentru copii și îi ajută pe cei mici să învețe cum să se înțeleagă între ei, să argumenteze și să se adapteze când se joacă împreună, arătându-le totodată câtă bucurie și satisfacție le aduce explorarea lumii împreună cu tovarășii lor."
+        },
+        {
+          "title": "Raul",
+          "startsAt": "2026-10-28T17:53:23+02:00",
+          "endsAt": "2026-10-28T17:56:14+02:00",
+          "durationMinutes": 3,
+          "description": "Un hipopotam grăsuţ şi prietenul său, pasărea."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:53:39+02:00",
+          "endsAt": "2026-10-28T17:55:58+02:00",
+          "durationMinutes": 2,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Hubbi şi prietenii",
+          "startsAt": "2026-10-28T17:55:59+02:00",
+          "endsAt": "2026-10-28T17:58:25+02:00",
+          "durationMinutes": 2,
+          "description": "Oameni provinciali pricepuţi la toate se trezesc în tot felul de aventuri, datorită stângăciei lor, încercând să repare chiar şi ceea ce nu este stricat."
         },
         {
           "title": "Lola and the Numbers",
-          "startsAt": "2026-10-28T17:17:19+02:00",
-          "endsAt": "2026-10-28T17:19:18+02:00",
+          "startsAt": "2026-10-28T17:56:15+02:00",
+          "endsAt": "2026-10-28T17:58:14+02:00",
           "durationMinutes": 2,
           "description": "Lola , fetita jucausa, in permanenta miscare, este intotdeauna gata sa numere impreuna cu prietenul ei Numar de la 1 la 10. Haideti sa numaram cu ei!"
+        },
+        {
+          "title": "Demonstraţiile lui Albert",
+          "startsAt": "2026-10-28T17:58:15+02:00",
+          "endsAt": "2026-10-28T18:01:14+02:00",
+          "durationMinutes": 3,
+          "description": "Profesorul Albert demonstrează cum este folosit un obiect uzual."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T17:58:26+02:00",
+          "endsAt": "2026-10-28T18:01:00+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Bau, te vad!",
+          "startsAt": "2026-10-28T18:01:01+02:00",
+          "endsAt": "2026-10-28T18:03:59+02:00",
+          "durationMinutes": 3,
+          "description": "Bau, te vad! ne arata aventurile a 2 prieteni imaginari, Peeky-Pink si Peeky-Blue, jucanduse tot timpul de-a V-ati ascunselea. Viata lor este plina de joc si ras!"
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:01:15+02:00",
+          "endsAt": "2026-10-28T18:03:44+02:00",
+          "durationMinutes": 2,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:03:45+02:00",
+          "endsAt": "2026-10-28T18:07:44+02:00",
+          "durationMinutes": 4,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Elfii natură",
+          "startsAt": "2026-10-28T18:04:00+02:00",
+          "endsAt": "2026-10-28T18:05:14+02:00",
+          "durationMinutes": 1,
+          "description": "Elfii natură prezintă schimbarea anotimpurilor și vă arată modul în care animalele și plantele se bucură de schimbările vremii pe tot parcursul anului."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:05:15+02:00",
+          "endsAt": "2026-10-28T18:07:49+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Ridică-te!",
+          "startsAt": "2026-10-28T18:07:45+02:00",
+          "endsAt": "2026-10-28T18:09:54+02:00",
+          "durationMinutes": 2,
+          "description": "Ridică-te! Si miscă-te cu noi! Instructorii de sport de la DuckTV impreună cu prietenii lor sportivi imaginari iti arata exerciții esențiale care te mențin în formă pentru a fi sănătosi și activi."
+        },
+        {
+          "title": "Africa",
+          "startsAt": "2026-10-28T18:07:50+02:00",
+          "endsAt": "2026-10-28T18:09:49+02:00",
+          "durationMinutes": 2,
+          "description": "Prezintă mediul natural al animalelor din Africa, cu toate jocurile lor."
+        },
+        {
+          "title": "DuckSchool",
+          "startsAt": "2026-10-28T18:09:50+02:00",
+          "endsAt": "2026-10-28T18:13:00+02:00",
+          "durationMinutes": 3,
+          "description": ""
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:09:55+02:00",
+          "endsAt": "2026-10-28T18:12:29+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Raul",
+          "startsAt": "2026-10-28T18:12:30+02:00",
+          "endsAt": "2026-10-28T18:15:09+02:00",
+          "durationMinutes": 3,
+          "description": "Un hipopotam grăsuţ şi prietenul său, pasărea."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:13:01+02:00",
+          "endsAt": "2026-10-28T18:15:35+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Elfii natură",
+          "startsAt": "2026-10-28T18:15:10+02:00",
+          "endsAt": "2026-10-28T18:16:24+02:00",
+          "durationMinutes": 1,
+          "description": "Fructele, legumele și plantele cresc în Grădina veselă. Din semințe apar răsaduri, apoi flori, frunze și roade, care dansează pentru a vă distra. Înainte ca micile creaturi ale naturii să-și ia rămas bun, ei vă arată cum pot oamenii să se bucure de mirosurile și gusturile lor."
+        },
+        {
+          "title": "Poveștile lui Henry",
+          "startsAt": "2026-10-28T18:15:36+02:00",
+          "endsAt": "2026-10-28T18:17:35+02:00",
+          "durationMinutes": 2,
+          "description": "Henry, naratorul nu merge nicăieri fără cardurile lui care ilustreaza povesti. Pornind de la cardurile respective, el creeaza povestiri scurte despre viața de zi cu zi a copiilor. Treptat, cum Henry își dă seama de ordinea corectă a cardurilor, povestea expusa prinde viață."
+        },
+        {
+          "title": "Africa",
+          "startsAt": "2026-10-28T18:16:25+02:00",
+          "endsAt": "2026-10-28T18:18:24+02:00",
+          "durationMinutes": 2,
+          "description": "Prezintă mediul natural al animalelor din Africa, cu toate jocurile lor."
+        },
+        {
+          "title": "Ridică-te!",
+          "startsAt": "2026-10-28T18:17:36+02:00",
+          "endsAt": "2026-10-28T18:19:35+02:00",
+          "durationMinutes": 2,
+          "description": "Ridică-te! Si miscă-te cu noi! Instructorii de sport de la DuckTV impreună cu prietenii lor sportivi imaginari iti arata exerciții esențiale care te mențin în formă pentru a fi sănătosi și activi."
+        },
+        {
+          "title": "DuckSchool",
+          "startsAt": "2026-10-28T18:18:25+02:00",
+          "endsAt": "2026-10-28T18:21:25+02:00",
+          "durationMinutes": 3,
+          "description": ""
+        },
+        {
+          "title": "Africa",
+          "startsAt": "2026-10-28T18:19:36+02:00",
+          "endsAt": "2026-10-28T18:21:35+02:00",
+          "durationMinutes": 2,
+          "description": "Prezintă mediul natural al animalelor din Africa, cu toate jocurile lor."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:21:26+02:00",
+          "endsAt": "2026-10-28T18:24:15+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Mimo şi Bobo",
+          "startsAt": "2026-10-28T18:21:36+02:00",
+          "endsAt": "2026-10-28T18:24:10+02:00",
+          "durationMinutes": 3,
+          "description": "Mimo, simpaticul ursuleţ panda şi prietenul lui bun, Bobo, maimuţa, învaţă şi prezintă jucăuş lumea mare celor mici, prin aventurile lor."
+        },
+        {
+          "title": "Africa",
+          "startsAt": "2026-10-28T18:24:11+02:00",
+          "endsAt": "2026-10-28T18:26:40+02:00",
+          "durationMinutes": 2,
+          "description": "Prezintă mediul natural al animalelor din Africa, cu toate jocurile lor."
+        },
+        {
+          "title": "Africa",
+          "startsAt": "2026-10-28T18:24:16+02:00",
+          "endsAt": "2026-10-28T18:26:15+02:00",
+          "durationMinutes": 2,
+          "description": "Prezintă mediul natural al animalelor din Africa, cu toate jocurile lor."
+        },
+        {
+          "title": "Raul",
+          "startsAt": "2026-10-28T18:26:16+02:00",
+          "endsAt": "2026-10-28T18:28:55+02:00",
+          "durationMinutes": 3,
+          "description": "Un hipopotam grăsuţ şi prietenul său, pasărea."
         }
       ]
     },
@@ -8097,17 +7797,11 @@
       "epgId": "EpicDrama.ro",
       "now": {
         "title": "Detectivul Murdoch",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T18:09:59+02:00",
+        "startsAt": "2026-10-28T18:10:00+02:00",
+        "endsAt": "2026-10-28T19:09:59+02:00",
         "description": "Anii 1890: William Murdoch foloseşte tehnici criminalistice pe atunci radicale, între care prelevarea de amprente şi dovezi subtile, rezolvând unele dintre cele mai cumplite cazuri de crimă din oraş."
       },
       "next": [
-        {
-          "title": "Detectivul Murdoch",
-          "startsAt": "2026-10-28T18:10:00+02:00",
-          "endsAt": "2026-10-28T19:09:59+02:00",
-          "description": "Anii 1890: William Murdoch foloseşte tehnici criminalistice pe atunci radicale, între care prelevarea de amprente şi dovezi subtile, rezolvând unele dintre cele mai cumplite cazuri de crimă din oraş."
-        },
         {
           "title": "Clubul crimelor din Marlow",
           "startsAt": "2026-10-28T19:10:00+02:00",
@@ -8194,13 +7888,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Miss Austen",
-          "startsAt": "2026-10-28T16:05:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 70,
-          "description": "Filmul urmărește povestea lui Jane Austen și a surorii sale, Cassandra."
-        },
         {
           "title": "Detectivul Murdoch",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -8320,18 +8007,12 @@
       "name": "EtnoTV",
       "epgId": "EtnoTV.ro",
       "now": {
-        "title": "Telesmart – teleshopping LIVE",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Cântece pentru cei dragi",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Cântece pentru cei dragi",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Seară Românească",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -8400,13 +8081,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Sănătate înainte de toate",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Telesmart – teleshopping LIVE",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -8505,18 +8179,12 @@
       "name": "EuroSport 1",
       "epgId": "Eurosport1.ro",
       "now": {
-        "title": "Escaladă : Seria Mondială - Koper - Dificultate",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T18:29:59+02:00",
+        "title": "Curling : Campionatele Europene - Ostrava / Italia - Germania",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Curling : Campionatele Europene - Ostrava / Italia - Germania",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Curling : Campionatele Europene - Ostrava / Germania - Olanda",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -8579,13 +8247,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Ciclism: Paris Roubaix -",
-          "startsAt": "2026-10-28T15:30:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 90,
-          "description": ""
-        },
         {
           "title": "Escaladă : Seria Mondială - Koper - Dificultate",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -8677,18 +8338,12 @@
       "name": "EuroSport 2",
       "epgId": "Eurosport2.ro",
       "now": {
-        "title": "Anduranță auto: FIA WEC - Cursa de 6 ore de la Sao Paulo",
-        "startsAt": "2026-10-28T15:30:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Ciclism: Turul Flandrei",
+        "startsAt": "2026-10-28T17:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Ciclism: Turul Flandrei",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Snooker: Openul Englez - Finala",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -8775,13 +8430,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Anduranță auto: FIA WEC - Cursa de 6 ore de la Sao Paulo",
-          "startsAt": "2026-10-28T15:30:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 120,
-          "description": ""
-        },
         {
           "title": "Ciclism: Turul Flandrei",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -8894,18 +8542,12 @@
       "name": "Film Cafe",
       "epgId": "FILMCAFE.ro",
       "now": {
-        "title": "Demon pe două roți",
-        "startsAt": "2026-10-28T15:35:00+02:00",
-        "endsAt": "2026-10-28T17:49:59+02:00",
-        "description": "Johnny Blaze are un secret, el este Ghost Rider si te poate obliga să retrăieşti de zece ori păcatelele săvârşite în viaţă; dacă sunt prea multe, vei arde de viu. Ghost Rider săvârşeşte o dreptate diavolească pe motocicleta sa de fiinţă a iadului."
+        "title": "Sahara",
+        "startsAt": "2026-10-28T17:50:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "1995, Egipt. Aflat in cautarea unei comori ascunse undeva, pe Nill, Dark Pitt impiedica asasinarea unei frumoase cercetatoare care studiaza o boala ce a impins mii de africani in bratele nebuniei, canibalismului si mortii."
       },
       "next": [
-        {
-          "title": "Sahara",
-          "startsAt": "2026-10-28T17:50:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "1995, Egipt. Aflat in cautarea unei comori ascunse undeva, pe Nill, Dark Pitt impiedica asasinarea unei frumoase cercetatoare care studiaza o boala ce a impins mii de africani in bratele nebuniei, canibalismului si mortii."
-        },
         {
           "title": "Călătorie în lumea vikingilor",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -9072,18 +8714,12 @@
       "name": "Film Now",
       "epgId": "FilmNow.ro",
       "now": {
-        "title": "Tom și Jerry",
-        "startsAt": "2026-10-28T16:15:00+02:00",
-        "endsAt": "2026-10-28T17:54:59+02:00",
-        "description": "Jerry se mută în cel mai luxos hotel din New York în ajunul „nunții secolului”, forțând planificatorul evenimentului, pe tânăra Kayla, să-l angajeze pe Tom pentru a scăpa de șoricel. Lupta care urmează amenință să distrugă nunta și cariera tinerei."
+        "title": "Cazul lui Richard Jewell",
+        "startsAt": "2026-10-28T17:55:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "Un film despre atentatul cu bombă de la Jocurile Olimpice de la Atlanta, din 1996, când, datorită vigilenței lui Jewell, unul dintre cei care asigurau paza stadionului, o mulțime de vieți au fost salvate."
       },
       "next": [
-        {
-          "title": "Cazul lui Richard Jewell",
-          "startsAt": "2026-10-28T17:55:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "Un film despre atentatul cu bombă de la Jocurile Olimpice de la Atlanta, din 1996, când, datorită vigilenței lui Jewell, unul dintre cei care asigurau paza stadionului, o mulțime de vieți au fost salvate."
-        },
         {
           "title": "Warcraft. Începutul",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -9224,18 +8860,12 @@
       "name": "FilmBox Premium",
       "epgId": "FilmboxPremium.ro",
       "now": {
-        "title": "Căsuţa roz",
-        "startsAt": "2026-10-28T16:40:00+02:00",
-        "endsAt": "2026-10-28T18:14:59+02:00",
-        "description": "O femeie se luptă cu un grup care vrea să evacueze întregul ei cartier pentru a-l ceda unei corporații, dar Curtea Supremă dă câștig de cauză evacuărilor. Corporația nu construiește nimic pe terenul unde fusese casei ei..."
+        "title": "Punct și de la capăt",
+        "startsAt": "2026-10-28T18:15:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "The Rewrite este povestea unui scenarist de la Hollywood care, deşi câştigător de Oscar, se află într-un impas în carieră. El decide să plece într-un orăşel pentru a preda scrierea creativă la colegiul local."
       },
       "next": [
-        {
-          "title": "Punct și de la capăt",
-          "startsAt": "2026-10-28T18:15:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "The Rewrite este povestea unui scenarist de la Hollywood care, deşi câştigător de Oscar, se află într-un impas în carieră. El decide să plece într-un orăşel pentru a preda scrierea creativă la colegiul local."
-        },
         {
           "title": "Smashing Machine",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -9280,13 +8910,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Vremuri demult uitate",
-          "startsAt": "2026-10-28T14:40:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 120,
-          "description": "Pelicula spune povestea unui bărbat din New York, care rămâne fără opţiuni şi este forţat să hoinărească fără scop prin oraş, singurul loc de refugiu fiind adăposturile pentru săraci. Încearcă însă din răsputeri să îşi refacă viaţa."
-        },
         {
           "title": "Căsuţa roz",
           "startsAt": "2026-10-28T16:40:00+02:00",
@@ -9357,18 +8980,12 @@
       "name": "Fishing and Hunting",
       "epgId": "TheFishing&HuntingChannel.ro",
       "now": {
-        "title": "Expediții la noi acasă",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T18:00:00+02:00",
-        "description": "Expediții la noi acasă"
+        "title": "Unde e peștele?",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:00:00+02:00",
+        "description": "Unde e peștele?"
       },
       "next": [
-        {
-          "title": "Unde e peștele?",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:00:00+02:00",
-          "description": "Unde e peștele?"
-        },
         {
           "title": "Pescuit fara frontiere",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -9431,13 +9048,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Spektív 2025",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T17:00:00+02:00",
-          "durationMinutes": 60,
-          "description": "Spektív 2025"
-        },
         {
           "title": "Expediții la noi acasă",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -9529,18 +9139,12 @@
       "name": "Happy Channel",
       "epgId": "HappyChannel.ro",
       "now": {
-        "title": "Dragoste și ură",
-        "startsAt": "2026-10-28T16:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Velvet – Imperiul modei",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Velvet – Imperiul modei",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Micuta raza de soare",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -9785,24 +9389,12 @@
       "name": "HBO",
       "epgId": "HBO.ro",
       "now": {
-        "title": "The Salt Path",
-        "startsAt": "2026-10-28T16:26:03+02:00",
-        "endsAt": "2026-10-28T18:17:56+02:00",
-        "description": "The Salt Path"
+        "title": "Neexplorat",
+        "startsAt": "2026-10-28T18:05:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
+        "description": "Un hoț descurcăreț, Nathan Drake (Tom Holland) este recrutat de către versatul vânător de comori Victor „Sully” Sullivan (Mark Wahlberg) pentru a recupera o avere pierdută cândva acum 500 de ani de către exploratorul Fernando Magellan."
       },
       "next": [
-        {
-          "title": "Neexplorat",
-          "startsAt": "2026-10-28T18:05:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": "Un hoț descurcăreț, Nathan Drake (Tom Holland) este recrutat de către versatul vânător de comori Victor „Sully” Sullivan (Mark Wahlberg) pentru a recupera o avere pierdută cândva acum 500 de ani de către exploratorul Fernando Magellan."
-        },
-        {
-          "title": "La răscruce de vânturi",
-          "startsAt": "2026-10-28T18:17:56+02:00",
-          "endsAt": "2026-10-28T21:27:22+02:00",
-          "description": "La răscruce de vânturi"
-        },
         {
           "title": "Agentul secret",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -9889,13 +9481,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Stă să plouă cu chiftele 2",
-          "startsAt": "2026-10-28T15:05:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 95,
-          "description": "Continuarea succesului din 2010 începe unde acesta s-a terminat: Flint e în sfârşit recunoscut odată ce idolul său Chester V îl invită să i se alăture la The Live Corp Company, unde s-au adunat cei mai buni şi mai străluciţi inventatori de pe glob."
-        },
         {
           "title": "The Salt Path",
           "startsAt": "2026-10-28T16:26:03+02:00",
@@ -10029,18 +9614,12 @@
       "name": "HBO 2",
       "epgId": "HBO2.ro",
       "now": {
-        "title": "The Salt Path",
-        "startsAt": "2026-10-28T16:26:03+02:00",
-        "endsAt": "2026-10-28T18:17:55+02:00",
-        "description": "Un cuplu își pierde casa și, mai târziu, află că soțul a fost diagnosticat cu o boală în stadiu terminal, în timp ce pornesc într-o călătorie de-a lungul coastei care va dura un an."
+        "title": "La răscruce de vânturi",
+        "startsAt": "2026-10-28T18:17:56+02:00",
+        "endsAt": "2026-10-28T20:31:22+02:00",
+        "description": "O poveste de dragoste pasională și tumultoasă, plasată pe fundalul mlaștinilor din Yorkshire, care explorează relația intensă și distructivă dintre Heathcliff și Catherine Earnshaw, personajele create de Emily Brontë în 1847."
       },
       "next": [
-        {
-          "title": "La răscruce de vânturi",
-          "startsAt": "2026-10-28T18:17:56+02:00",
-          "endsAt": "2026-10-28T20:31:22+02:00",
-          "description": "O poveste de dragoste pasională și tumultoasă, plasată pe fundalul mlaștinilor din Yorkshire, care explorează relația intensă și distructivă dintre Heathcliff și Catherine Earnshaw, personajele create de Emily Brontë în 1847."
-        },
         {
           "title": "Epoca de Aur",
           "startsAt": "2026-10-28T20:31:23+02:00",
@@ -10285,13 +9864,6 @@
       ],
       "programmes": [
         {
-          "title": "Batman - Începuturi",
-          "startsAt": "2026-10-28T14:15:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 135,
-          "description": "Cum schimba un om lumea? Iata o intrebare care il urmareste pe Bruce Wayne (CHRISTIAN BALE) precum imaginea parintilor lui impuscati in fata lui pe strazile din Gotham intr-o noapte care i-a schimbat viata pentru totdeauna."
-        },
-        {
           "title": "Ready Player One: Să înceapă jocul",
           "startsAt": "2026-10-28T16:30:00+02:00",
           "endsAt": "2026-10-28T18:44:59+02:00",
@@ -10431,18 +10003,12 @@
       "name": "History Channel",
       "epgId": "History.ro",
       "now": {
-        "title": "Aşii amanetului",
-        "startsAt": "2026-10-28T17:10:00+02:00",
-        "endsAt": "2026-10-28T18:04:59+02:00",
-        "description": "Porniţi la drum cu Aşii amanetului când Rick examinează o carte din secolul XIX care descrie experienţele personale ale unor sclavi negri ce au reuşit să evadeze. Va merge Rick până la capăt pentru a pune mâna pe acest crâmpei de istorie?"
+        "title": "Iadul pe autostradă",
+        "startsAt": "2026-10-28T18:05:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "În acest episod, arătăm ce se poate întâmpla când se conduce prea repede, de la un joc de-a șoarecele și pisica între o motocicletă și o mașină în Florida, până la șoferul din Arizona a cărui cursă prin munți se termină catastrofal pe o stâncă."
       },
       "next": [
-        {
-          "title": "Iadul pe autostradă",
-          "startsAt": "2026-10-28T18:05:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "În acest episod, arătăm ce se poate întâmpla când se conduce prea repede, de la un joc de-a șoarecele și pisica între o motocicletă și o mașină în Florida, până la șoferul din Arizona a cărui cursă prin munți se termină catastrofal pe o stâncă."
-        },
         {
           "title": "Înregistrat de camera de bord",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -10577,13 +10143,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Aşii amanetului",
-          "startsAt": "2026-10-28T16:10:00+02:00",
-          "endsAt": "2026-10-28T17:09:59+02:00",
-          "durationMinutes": 60,
-          "description": "Porniţi la drum cu Aşii amanetului când Rick examinează o carte din secolul XIX care descrie experienţele personale ale unor sclavi negri ce au reuşit să evadeze. Va merge Rick până la capăt pentru a pune mâna pe acest crâmpei de istorie?"
-        },
         {
           "title": "Aşii amanetului",
           "startsAt": "2026-10-28T17:10:00+02:00",
@@ -10759,24 +10318,12 @@
       "name": "Hit Music Channel",
       "epgId": "H!TMusicChannel.ro",
       "now": {
-        "title": "Top 5 At 5",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Star Wars",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Shuffle Hits",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Star Wars",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Shuffle Hits",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -10839,27 +10386,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Hot+Hits",
-          "startsAt": "2026-10-28T14:30:00+02:00",
-          "endsAt": "2026-10-28T17:00:00+02:00",
-          "durationMinutes": 150,
-          "description": "Hot+Hits"
-        },
-        {
-          "title": "Shuffle Hits",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
-          "title": "Top 5 At 5",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
         {
           "title": "Shuffle Hits",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -10951,18 +10477,12 @@
       "name": "ID",
       "epgId": "ID.Investigation.Discovery.ro",
       "now": {
-        "title": "Frații Menendez: Crime care schimbă lumea",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Un director de la Hollywood și soția lui sunt uciși cu brutalitate. Bănuielile cad asupra băieților lor. Acuzați de crimă, cei doi frați dezvăluie secrete de familie șocante."
+        "title": "Procesul bonei: Crime care schimbă lumea",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "O bonă de 18 ani din Marea Britanie e acuzată că l-a ucis pe Matthew Eapen, de 18 luni, zgâlțâindu-l violent. Procesul ei a stârnit o furtună mediatică în SUA și Marea Britanie."
       },
       "next": [
-        {
-          "title": "Procesul bonei: Crime care schimbă lumea",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "O bonă de 18 ani din Marea Britanie e acuzată că l-a ucis pe Matthew Eapen, de 18 luni, zgâlțâindu-l violent. Procesul ei a stârnit o furtună mediatică în SUA și Marea Britanie."
-        },
         {
           "title": "Crime aproape perfecte",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -11073,13 +10593,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Sunny Hostin în apărarea victimelor",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Sunny Hostin ajunge în zona rurală Galien din Michigan, ca să investigheze cazul unei femei de 33 de ani care, după ce a fost dată dispărută, a fost găsită îngropată în grabă."
-        },
         {
           "title": "Frații Menendez: Crime care schimbă lumea",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -11227,42 +10740,12 @@
       "name": "Jim Jam",
       "epgId": "Jimjam.ro",
       "now": {
-        "title": "Clifford the Big Red Dog",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "Un serial TV animat bazat pe populara serie de cărți pentru copii \"Clifford the Big Red Dog\"."
+        "title": "Pocoyo",
+        "startsAt": "2026-10-28T18:32:00+02:00",
+        "endsAt": "2026-10-28T18:39:59+02:00",
+        "description": ""
       },
       "next": [
-        {
-          "title": "Clifford’s Puppy Days",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Kipper",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:08:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Kipper",
-          "startsAt": "2026-10-28T18:09:00+02:00",
-          "endsAt": "2026-10-28T18:24:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Pocoyo",
-          "startsAt": "2026-10-28T18:25:00+02:00",
-          "endsAt": "2026-10-28T18:31:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Pocoyo",
-          "startsAt": "2026-10-28T18:32:00+02:00",
-          "endsAt": "2026-10-28T18:39:59+02:00",
-          "description": ""
-        },
         {
           "title": "Bobiță și Buburuză",
           "startsAt": "2026-10-28T18:40:00+02:00",
@@ -11436,51 +10919,45 @@
           "startsAt": "2026-10-28T23:37:00+02:00",
           "endsAt": "2026-10-28T23:44:59+02:00",
           "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-28T23:45:00+02:00",
+          "endsAt": "2026-10-28T23:59:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:00:00+02:00",
+          "endsAt": "2026-10-29T00:06:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:07:00+02:00",
+          "endsAt": "2026-10-29T00:14:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:15:00+02:00",
+          "endsAt": "2026-10-29T00:29:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "Bing",
+          "startsAt": "2026-10-29T00:30:00+02:00",
+          "endsAt": "2026-10-29T00:36:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "Bing",
+          "startsAt": "2026-10-29T00:37:00+02:00",
+          "endsAt": "2026-10-29T00:44:59+02:00",
+          "description": ""
         }
       ],
       "programmes": [
-        {
-          "title": "Conni",
-          "startsAt": "2026-10-28T16:11:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 19,
-          "description": ""
-        },
-        {
-          "title": "The Woohoos!",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:36:59+02:00",
-          "durationMinutes": 7,
-          "description": "Panda vine în vizită pe Insula Înţeleaptă, aşa că Woohoos pregătesc un picnic cu mâncărurile lor preferate - dar ei nu-i place nimic! Descoperă că fiecare are gusturi foarte diferite, iar Panda iubeşte mai presus de orice bambusul."
-        },
-        {
-          "title": "The Woohoos!",
-          "startsAt": "2026-10-28T16:37:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 8,
-          "description": "Woohoos văd o albină care îşi mişcă abdomenul într-un fel ciudat. Descoperă că albinele folosesc un dans special ca să le arate celorlalte unde găsesc cele mai bune flori."
-        },
-        {
-          "title": "Woezel And Pip",
-          "startsAt": "2026-10-28T16:45:00+02:00",
-          "endsAt": "2026-10-28T16:49:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Woezel And Pip",
-          "startsAt": "2026-10-28T16:50:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 10,
-          "description": ""
-        },
-        {
-          "title": "Clifford the Big Red Dog",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "Un serial TV animat bazat pe populara serie de cărți pentru copii \"Clifford the Big Red Dog\"."
-        },
         {
           "title": "Clifford’s Puppy Days",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -11718,6 +11195,48 @@
           "endsAt": "2026-10-28T23:44:59+02:00",
           "durationMinutes": 8,
           "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-28T23:45:00+02:00",
+          "endsAt": "2026-10-28T23:59:59+02:00",
+          "durationMinutes": 15,
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:00:00+02:00",
+          "endsAt": "2026-10-29T00:06:59+02:00",
+          "durationMinutes": 7,
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:07:00+02:00",
+          "endsAt": "2026-10-29T00:14:59+02:00",
+          "durationMinutes": 8,
+          "description": ""
+        },
+        {
+          "title": "The Triplets",
+          "startsAt": "2026-10-29T00:15:00+02:00",
+          "endsAt": "2026-10-29T00:29:59+02:00",
+          "durationMinutes": 15,
+          "description": ""
+        },
+        {
+          "title": "Bing",
+          "startsAt": "2026-10-29T00:30:00+02:00",
+          "endsAt": "2026-10-29T00:36:59+02:00",
+          "durationMinutes": 7,
+          "description": ""
+        },
+        {
+          "title": "Bing",
+          "startsAt": "2026-10-29T00:37:00+02:00",
+          "endsAt": "2026-10-29T00:44:59+02:00",
+          "durationMinutes": 8,
+          "description": ""
         }
       ]
     },
@@ -11794,13 +11313,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Jocul cuvintelor cu Dan Negru",
-          "startsAt": "2026-10-28T15:00:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 90,
-          "description": "În fiecare ediție a emisiunii, 5 concurenți se află față în față cu Dan Negru, pentru a-și testa vocabularul și spontaneitatea. Înțelegerea sensurilor şi uşurinţa de a face conexiunile potrivite sunt acele ingrediente care îi oferă oricărui participant şansa găsirii cuvântului corect. Pentru că Dan Negru dă definiţia, iar concurenţii găsesc soluţia! Participanții “Jocul cuvintelor cu Dan Negru” au la dispoziție 4 minute pentru a afla 14 cuvinte, în urma definițiilor primite chiar de la prezentatorul show-ului. Efortul concurenților va fi răsplătit cu premii importante în bani, dacă aceștia reușesc să afle răspunsurile corecte."
-        },
         {
           "title": "Casa iubirii",
           "startsAt": "2026-10-28T16:30:00+02:00",
@@ -11885,18 +11397,12 @@
       "name": "Kanal D2",
       "epgId": "KanalD2.ro",
       "now": {
-        "title": "In spatele valului",
-        "startsAt": "2026-10-28T16:30:00+02:00",
-        "endsAt": "2026-10-28T17:44:59+02:00",
+        "title": "Inima rebela",
+        "startsAt": "2026-10-28T17:45:00+02:00",
+        "endsAt": "2026-10-28T19:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Inima rebela",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T19:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Newstime",
           "startsAt": "2026-10-28T20:00:00+02:00",
@@ -11989,13 +11495,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Pe banii părinţilor",
-          "startsAt": "2026-10-28T15:00:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 90,
-          "description": "În prim plan-ul show-ului se află adolescenți care doresc să își sărbătorească majoratul, tineri care își doresc o petrecere de vis, ca de vedetă. Să primească mașini de fițe și carduri cu fonduri nelimitate, să petreacă în localuri luxoase, sunt doar cîteva din “micile” pretenții ale adolescenților. Ernest va fi alături de tineri de la început, încă de la primele etape ale organizării petrecerii de majorat, analizînd evoluția lucrurilor. Prietenii, frații și bunicii acestora vor condimenta show-ul dezvăluindu-ne poveşti impresionante și întîmplări amuzante din viaţa sărbătoriților."
-        },
         {
           "title": "In spatele valului",
           "startsAt": "2026-10-28T16:30:00+02:00",
@@ -12309,18 +11808,12 @@
       "name": "MetroPola TV",
       "epgId": "MetropolaTV.ro",
       "now": {
-        "title": "Sport Arena",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": ""
+        "title": "Doar o cifră să-ți mai spun",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Edward Pastia dezbate cu invitații săi cifrele și statisticile zilei."
       },
       "next": [
-        {
-          "title": "Doar o cifră să-ți mai spun",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Edward Pastia dezbate cu invitații săi cifrele și statisticile zilei."
-        },
         {
           "title": "Vezi ce crezi",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -12401,13 +11894,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Control medical",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Informații medicale privind îngrijirea copiilor."
-        },
         {
           "title": "Sport Arena",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -12520,36 +12006,12 @@
       "name": "Minimax",
       "epgId": "Minimax.ro",
       "now": {
-        "title": "SpongeBob Pantaloni Pătrați",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        "title": "Wild Kratts",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": ""
       },
       "next": [
-        {
-          "title": "Surorile",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:44:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Surorile",
-          "startsAt": "2026-10-28T17:45:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Wild Kratts",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Wild Kratts",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Curiosul George",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -12741,37 +12203,33 @@
           "startsAt": "2026-10-29T06:00:00+02:00",
           "endsAt": "2026-10-29T06:29:59+02:00",
           "description": "George, pe lângă faptul că este distracţia grozavă a întregii familii, prezintă şi o serie de informaţii utile din lumea ştiinţelor naturii, despre matematică, dar dacă eşti atent, îţi poţi îmbogăţi şi cunoştinţele tehnice."
+        },
+        {
+          "title": "Wild Kratts",
+          "startsAt": "2026-10-29T06:30:00+02:00",
+          "endsAt": "2026-10-29T06:59:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "Zorro the Chronicles",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:29:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "ALVINNN!!! și veverițele",
+          "startsAt": "2026-10-29T07:30:00+02:00",
+          "endsAt": "2026-10-29T07:44:59+02:00",
+          "description": "Veverițele, atât băieții, cât și fetele, sunt copii obișnuiți. Merg la școală, au sarcini și teme de casă, se ceartă ca frații și dau concerte cu casa închisă milioanelor de fani. Oh, am menționat că sunt vedete rock internaționale?"
+        },
+        {
+          "title": "ALVINNN!!! și veverițele",
+          "startsAt": "2026-10-29T07:45:00+02:00",
+          "endsAt": "2026-10-29T07:59:59+02:00",
+          "description": "Veverițele, atât băieții, cât și fetele, sunt copii obișnuiți. Merg la școală, au sarcini și teme de casă, se ceartă ca frații și dau concerte cu casa închisă milioanelor de fani. Oh, am menționat că sunt vedete rock internaționale?"
         }
       ],
       "programmes": [
-        {
-          "title": "Underdog",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 15,
-          "description": "Ca să câştige premiul pentru cel mai bun inventator al oraşului, Simon trimite drone hipnotizatoare care să-i forţeze pe oameni să-l admire pe el, nu pe Polly, fosta lui asistentă. Hipnotizată, Polly lucrează acum pentru Simon!"
-        },
-        {
-          "title": "Garfield Show",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
-          "title": "Garfield Show",
-          "startsAt": "2026-10-28T16:45:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
-          "title": "SpongeBob Pantaloni Pătrați",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
-        },
         {
           "title": "Surorile",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -13023,6 +12481,34 @@
           "endsAt": "2026-10-29T06:29:59+02:00",
           "durationMinutes": 30,
           "description": "George, pe lângă faptul că este distracţia grozavă a întregii familii, prezintă şi o serie de informaţii utile din lumea ştiinţelor naturii, despre matematică, dar dacă eşti atent, îţi poţi îmbogăţi şi cunoştinţele tehnice."
+        },
+        {
+          "title": "Wild Kratts",
+          "startsAt": "2026-10-29T06:30:00+02:00",
+          "endsAt": "2026-10-29T06:59:59+02:00",
+          "durationMinutes": 30,
+          "description": ""
+        },
+        {
+          "title": "Zorro the Chronicles",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:29:59+02:00",
+          "durationMinutes": 30,
+          "description": ""
+        },
+        {
+          "title": "ALVINNN!!! și veverițele",
+          "startsAt": "2026-10-29T07:30:00+02:00",
+          "endsAt": "2026-10-29T07:44:59+02:00",
+          "durationMinutes": 15,
+          "description": "Veverițele, atât băieții, cât și fetele, sunt copii obișnuiți. Merg la școală, au sarcini și teme de casă, se ceartă ca frații și dau concerte cu casa închisă milioanelor de fani. Oh, am menționat că sunt vedete rock internaționale?"
+        },
+        {
+          "title": "ALVINNN!!! și veverițele",
+          "startsAt": "2026-10-29T07:45:00+02:00",
+          "endsAt": "2026-10-29T07:59:59+02:00",
+          "durationMinutes": 15,
+          "description": "Veverițele, atât băieții, cât și fetele, sunt copii obișnuiți. Merg la școală, au sarcini și teme de casă, se ceartă ca frații și dau concerte cu casa închisă milioanelor de fani. Oh, am menționat că sunt vedete rock internaționale?"
         }
       ]
     },
@@ -13031,24 +12517,12 @@
       "name": "Music Channel",
       "epgId": "MusicChannel.ro",
       "now": {
-        "title": "Get fresh! - TODAY'S HOTTEST 5",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Today's hot girls",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Social Media Chart",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Today's hot girls",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Beats and massive R'N'B Hits",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -13111,27 +12585,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Hot+Hits",
-          "startsAt": "2026-10-28T14:30:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 120,
-          "description": ""
-        },
-        {
-          "title": "Versus",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
-        {
-          "title": "Get fresh! - TODAY'S HOTTEST 5",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
         {
           "title": "Social Media Chart",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -13223,18 +12676,12 @@
       "name": "National Geographic",
       "epgId": "NationalGeographic.ro",
       "now": {
-        "title": "Aeroportul din Sydney",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Când fulgerul lovește un avion care sosește, pasagerii devin din ce în ce mai nerăbdători, iar inginerii evaluează daunele. Lucrurile se înrăutățesc când mai multe piste sunt închise din cauza vântului puternic. Un avion sosește cu un lichid potențial periculos care se scurge din încărcătură, forțând la carantină personalul de la sol expus acestuia."
+        "title": "Giganți ai ingineriei",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Lângă capitala franceză se află trei rețele subterane extraordinare: un sistem de canalizare, cea mai densă rețea de metrou din lume, care transportă 4 milioane de pasageri zilnic și un labirint de cariere care adăpostește cele mai mari catacombe din lume. Metroul, sistemul de canalizare și carierele sunt trei realizări colosale care simbolizează realizările ingineriei subterane."
       },
       "next": [
-        {
-          "title": "Giganți ai ingineriei",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Lângă capitala franceză se află trei rețele subterane extraordinare: un sistem de canalizare, cea mai densă rețea de metrou din lume, care transportă 4 milioane de pasageri zilnic și un labirint de cariere care adăpostește cele mai mari catacombe din lume. Metroul, sistemul de canalizare și carierele sunt trei realizări colosale care simbolizează realizările ingineriei subterane."
-        },
         {
           "title": "Salvatori pe drumuri înghețate",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -13351,13 +12798,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Dezastre în aer",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Serialul Dezastre în aer analizează cauzele care au provocat aceste incidente și dacă ar fi putut fi evitate. Aceste evenimente au contribuit la adoptarea de noi măsuri privind securitatea în transportul aerian, producând unele dintre cele mai importante schimbări în regulamentele aviatice. Mărturiile supraviețuitorilor și reconstituirile înfățișează povești impresionante, iar grafica computerizată și experții în domeniu explică motivele aflate la baza producerii evenimentelor fatale sau aproape fatale."
-        },
         {
           "title": "Aeroportul din Sydney",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -13512,18 +12952,12 @@
       "name": "National TV",
       "epgId": "NationalTV.ro",
       "now": {
-        "title": "Cavalerii nopții",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T18:29:59+02:00",
-        "description": "Spania, secolul XVII. Dupa moartea sotiei sale, Gonzalo de Montalvo este hotarat sa ia atitudine. Aceasta decizie il determina sa duca o viata dubla: profesor ziua si erou anonim noaptea, in cautarea celor vinovati."
+        "title": "Ştiri Naţional TV",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Jurnalele Naţional TV beneficiază de studioul modern, excelent echipat, şi de suportul unor echipe de reporteri şi redactori acoperind geografic întreaga ţară. Contactele externe, jurnalistice, permit o bună acoperire a evenimentelor internaţionale, sociale, politice, economice sau sportive."
       },
       "next": [
-        {
-          "title": "Ştiri Naţional TV",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Jurnalele Naţional TV beneficiază de studioul modern, excelent echipat, şi de suportul unor echipe de reporteri şi redactori acoperind geografic întreaga ţară. Contactele externe, jurnalistice, permit o bună acoperire a evenimentelor internaţionale, sociale, politice, economice sau sportive."
-        },
         {
           "title": "Anupamaa",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -13616,13 +13050,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Dragoste dulce-amară",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Cavalerii nopții",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -13749,30 +13176,12 @@
       "name": "Nick Jr",
       "epgId": "NickJr.ro",
       "now": {
-        "title": "Purcelușa Peppa",
-        "startsAt": "2026-10-28T17:25:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
+        "title": "Familia Barbapapa",
+        "startsAt": "2026-10-28T18:25:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Dora descoperă lumea",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:49:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Dora descoperă lumea",
-          "startsAt": "2026-10-28T17:50:00+02:00",
-          "endsAt": "2026-10-28T18:24:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Familia Barbapapa",
-          "startsAt": "2026-10-28T18:25:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": ""
-        },
         {
           "title": "Familia Barbapapa",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -13922,93 +13331,81 @@
           "startsAt": "2026-10-29T02:00:00+02:00",
           "endsAt": "2026-10-29T02:24:59+02:00",
           "description": "Patrula Cățelușilor este o serie pentru preșcolari având în rolurile principale șase cățeluși curajoși: Chase, Marshall, Rocky, Zuma, Rubble și Skye, fiind coordonați de un băiețel în vârstă de 10 ani pe nume Ryder, priceput la dispozitive tehnice."
-        }
-      ],
-      "programmes": [
+        },
+        {
+          "title": "Patrula Cățelușilor",
+          "startsAt": "2026-10-29T02:25:00+02:00",
+          "endsAt": "2026-10-29T02:49:59+02:00",
+          "description": "Patrula Cățelușilor este o serie pentru preșcolari având în rolurile principale șase cățeluși curajoși: Chase, Marshall, Rocky, Zuma, Rubble și Skye, fiind coordonați de un băiețel în vârstă de 10 ani pe nume Ryder, priceput la dispozitive tehnice."
+        },
+        {
+          "title": "Echipa Căprioarelor",
+          "startsAt": "2026-10-29T02:50:00+02:00",
+          "endsAt": "2026-10-29T03:09:59+02:00",
+          "description": "Patru căprioare tinere pe nume Kai, Lola, Ramsey și Bobby protejează atât orașul, cât și Pădurea Centrală de problemele cu puterile elementare ale apei, soarelui, lemnului și pământului."
+        },
         {
           "title": "Ghicitoarea lui Bleu",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:34:59+02:00",
-          "durationMinutes": 20,
+          "startsAt": "2026-10-29T03:10:00+02:00",
+          "endsAt": "2026-10-29T03:34:59+02:00",
           "description": "Câinele Blue și prietenul ei Josh trec prin aventuri interactive pentru a găsi indicii și pentru a rezolva o varietate de puzzle-uri și probleme."
         },
         {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T16:35:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 5,
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T03:35:00+02:00",
+          "endsAt": "2026-10-29T03:54:59+02:00",
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
+        },
+        {
+          "title": "Rubble și echipa lui",
+          "startsAt": "2026-10-29T03:55:00+02:00",
+          "endsAt": "2026-10-29T04:19:59+02:00",
+          "description": "Rubble se mută împreună cu familia sa de cățeluși constructori în orașul din apropiere, Golful Constructorilor, unde trăiesc, se joacă și construiesc tot ce are nevoie comunitatea."
+        },
+        {
+          "title": "Navigăm cu Santiago",
+          "startsAt": "2026-10-29T04:20:00+02:00",
+          "endsAt": "2026-10-29T04:39:59+02:00",
+          "description": "Alături de cei mai buni prieteni ai săi, Tomás și Lorelai, micul pirat de 8 ani Santi, curajos și cu o inimă mare, pornește în aventuri în Caraibe."
+        },
+        {
+          "title": "Dora descoperă lumea",
+          "startsAt": "2026-10-29T04:40:00+02:00",
+          "endsAt": "2026-10-29T05:04:59+02:00",
           "description": ""
         },
         {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T16:40:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 5,
+          "title": "Ghicitoarea lui Bleu",
+          "startsAt": "2026-10-29T05:05:00+02:00",
+          "endsAt": "2026-10-29T05:49:59+02:00",
+          "description": "Câinele Blue și prietenul ei Josh trec prin aventuri interactive pentru a găsi indicii și pentru a rezolva o varietate de puzzle-uri și probleme."
+        },
+        {
+          "title": "Familia Barbapapa",
+          "startsAt": "2026-10-29T05:50:00+02:00",
+          "endsAt": "2026-10-29T06:14:59+02:00",
           "description": ""
         },
         {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T16:45:00+02:00",
-          "endsAt": "2026-10-28T16:49:59+02:00",
-          "durationMinutes": 5,
+          "title": "Familia Barbapapa",
+          "startsAt": "2026-10-29T06:15:00+02:00",
+          "endsAt": "2026-10-29T06:34:59+02:00",
           "description": ""
         },
         {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T16:50:00+02:00",
-          "endsAt": "2026-10-28T16:54:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T06:35:00+02:00",
+          "endsAt": "2026-10-29T06:59:59+02:00",
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
         },
         {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T16:55:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:04:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:05:00+02:00",
-          "endsAt": "2026-10-28T17:09:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:10:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:15:00+02:00",
-          "endsAt": "2026-10-28T17:19:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:20:00+02:00",
-          "endsAt": "2026-10-28T17:24:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
-        {
-          "title": "Purcelușa Peppa",
-          "startsAt": "2026-10-28T17:25:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
+        }
+      ],
+      "programmes": [
         {
           "title": "Dora descoperă lumea",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -14204,6 +13601,90 @@
           "endsAt": "2026-10-29T02:24:59+02:00",
           "durationMinutes": 25,
           "description": "Patrula Cățelușilor este o serie pentru preșcolari având în rolurile principale șase cățeluși curajoși: Chase, Marshall, Rocky, Zuma, Rubble și Skye, fiind coordonați de un băiețel în vârstă de 10 ani pe nume Ryder, priceput la dispozitive tehnice."
+        },
+        {
+          "title": "Patrula Cățelușilor",
+          "startsAt": "2026-10-29T02:25:00+02:00",
+          "endsAt": "2026-10-29T02:49:59+02:00",
+          "durationMinutes": 25,
+          "description": "Patrula Cățelușilor este o serie pentru preșcolari având în rolurile principale șase cățeluși curajoși: Chase, Marshall, Rocky, Zuma, Rubble și Skye, fiind coordonați de un băiețel în vârstă de 10 ani pe nume Ryder, priceput la dispozitive tehnice."
+        },
+        {
+          "title": "Echipa Căprioarelor",
+          "startsAt": "2026-10-29T02:50:00+02:00",
+          "endsAt": "2026-10-29T03:09:59+02:00",
+          "durationMinutes": 20,
+          "description": "Patru căprioare tinere pe nume Kai, Lola, Ramsey și Bobby protejează atât orașul, cât și Pădurea Centrală de problemele cu puterile elementare ale apei, soarelui, lemnului și pământului."
+        },
+        {
+          "title": "Ghicitoarea lui Bleu",
+          "startsAt": "2026-10-29T03:10:00+02:00",
+          "endsAt": "2026-10-29T03:34:59+02:00",
+          "durationMinutes": 25,
+          "description": "Câinele Blue și prietenul ei Josh trec prin aventuri interactive pentru a găsi indicii și pentru a rezolva o varietate de puzzle-uri și probleme."
+        },
+        {
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T03:35:00+02:00",
+          "endsAt": "2026-10-29T03:54:59+02:00",
+          "durationMinutes": 20,
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
+        },
+        {
+          "title": "Rubble și echipa lui",
+          "startsAt": "2026-10-29T03:55:00+02:00",
+          "endsAt": "2026-10-29T04:19:59+02:00",
+          "durationMinutes": 25,
+          "description": "Rubble se mută împreună cu familia sa de cățeluși constructori în orașul din apropiere, Golful Constructorilor, unde trăiesc, se joacă și construiesc tot ce are nevoie comunitatea."
+        },
+        {
+          "title": "Navigăm cu Santiago",
+          "startsAt": "2026-10-29T04:20:00+02:00",
+          "endsAt": "2026-10-29T04:39:59+02:00",
+          "durationMinutes": 20,
+          "description": "Alături de cei mai buni prieteni ai săi, Tomás și Lorelai, micul pirat de 8 ani Santi, curajos și cu o inimă mare, pornește în aventuri în Caraibe."
+        },
+        {
+          "title": "Dora descoperă lumea",
+          "startsAt": "2026-10-29T04:40:00+02:00",
+          "endsAt": "2026-10-29T05:04:59+02:00",
+          "durationMinutes": 25,
+          "description": ""
+        },
+        {
+          "title": "Ghicitoarea lui Bleu",
+          "startsAt": "2026-10-29T05:05:00+02:00",
+          "endsAt": "2026-10-29T05:49:59+02:00",
+          "durationMinutes": 45,
+          "description": "Câinele Blue și prietenul ei Josh trec prin aventuri interactive pentru a găsi indicii și pentru a rezolva o varietate de puzzle-uri și probleme."
+        },
+        {
+          "title": "Familia Barbapapa",
+          "startsAt": "2026-10-29T05:50:00+02:00",
+          "endsAt": "2026-10-29T06:14:59+02:00",
+          "durationMinutes": 25,
+          "description": ""
+        },
+        {
+          "title": "Familia Barbapapa",
+          "startsAt": "2026-10-29T06:15:00+02:00",
+          "endsAt": "2026-10-29T06:34:59+02:00",
+          "durationMinutes": 20,
+          "description": ""
+        },
+        {
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T06:35:00+02:00",
+          "endsAt": "2026-10-29T06:59:59+02:00",
+          "durationMinutes": 25,
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
+        },
+        {
+          "title": "Tim Rex în spațiu",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "durationMinutes": 20,
+          "description": "Tiranozaurul Tim, fratele său mai mare Toma, surioara mai mică Tia și prietena triceratops Cati rezolvă probleme copilărești găsind soluții uriașe de dinozauri, în spațiu!"
         }
       ]
     },
@@ -14212,30 +13693,12 @@
       "name": "Nickelodeon",
       "epgId": "Nickelodeon.ro",
       "now": {
-        "title": "SpongeBob Pantaloni Pătrați",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T17:39:59+02:00",
-        "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        "title": "Marsupilami",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:49:59+02:00",
+        "description": ""
       },
       "next": [
-        {
-          "title": "SpongeBob Pantaloni Pătrați",
-          "startsAt": "2026-10-28T17:40:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
-        },
-        {
-          "title": "Un show cu Patrick Stea",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
-        },
-        {
-          "title": "Marsupilami",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:49:59+02:00",
-          "description": ""
-        },
         {
           "title": "Marsupilami",
           "startsAt": "2026-10-28T18:50:00+02:00",
@@ -14433,30 +13896,27 @@
           "startsAt": "2026-10-29T06:45:00+02:00",
           "endsAt": "2026-10-29T06:59:59+02:00",
           "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "Marsupilami",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "description": ""
+        },
+        {
+          "title": "Un show cu Patrick Stea",
+          "startsAt": "2026-10-29T07:20:00+02:00",
+          "endsAt": "2026-10-29T07:44:59+02:00",
+          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
+        },
+        {
+          "title": "Un show cu Patrick Stea",
+          "startsAt": "2026-10-29T07:45:00+02:00",
+          "endsAt": "2026-10-29T07:59:59+02:00",
+          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
         }
       ],
       "programmes": [
-        {
-          "title": "Casa Loud",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 25,
-          "description": "Lincoln Loud este un băieţel de 11 ani care trăieşte împreună cu cele 10 surori ale lui. Cu ajutorul mâinii lui drepte, Clyde, Lincoln găseşte de fiecare dată noi metode de a rezista în fiecare zi într-o familie atât de numeroasă."
-        },
-        {
-          "title": "Casa Loud",
-          "startsAt": "2026-10-28T16:40:00+02:00",
-          "endsAt": "2026-10-28T16:54:59+02:00",
-          "durationMinutes": 15,
-          "description": "Lincoln Loud este un băieţel de 11 ani care trăieşte împreună cu cele 10 surori ale lui. Cu ajutorul mâinii lui drepte, Clyde, Lincoln găseşte de fiecare dată noi metode de a rezista în fiecare zi într-o familie atât de numeroasă."
-        },
-        {
-          "title": "Casa Loud",
-          "startsAt": "2026-10-28T16:55:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 20,
-          "description": "Lincoln Loud este un băieţel de 11 ani care trăieşte împreună cu cele 10 surori ale lui. Cu ajutorul mâinii lui drepte, Clyde, Lincoln găseşte de fiecare dată noi metode de a rezista în fiecare zi într-o familie atât de numeroasă."
-        },
         {
           "title": "SpongeBob Pantaloni Pătrați",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -14715,6 +14175,27 @@
           "endsAt": "2026-10-29T06:59:59+02:00",
           "durationMinutes": 15,
           "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "Marsupilami",
+          "startsAt": "2026-10-29T07:00:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "durationMinutes": 20,
+          "description": ""
+        },
+        {
+          "title": "Un show cu Patrick Stea",
+          "startsAt": "2026-10-29T07:20:00+02:00",
+          "endsAt": "2026-10-29T07:44:59+02:00",
+          "durationMinutes": 25,
+          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
+        },
+        {
+          "title": "Un show cu Patrick Stea",
+          "startsAt": "2026-10-29T07:45:00+02:00",
+          "endsAt": "2026-10-29T07:59:59+02:00",
+          "durationMinutes": 15,
+          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
         }
       ]
     },
@@ -14723,36 +14204,12 @@
       "name": "Nicktoons",
       "epgId": "Nicktoons.ro",
       "now": {
-        "title": "Rock, Scissors, Paper",
-        "startsAt": "2026-10-28T17:20:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": ""
+        "title": "Un show cu Patrick Stea",
+        "startsAt": "2026-10-28T18:35:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
       },
       "next": [
-        {
-          "title": "Casa Loud",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:49:59+02:00",
-          "description": "Lincoln Loud este un băieţel de 11 ani care trăieşte împreună cu cele 10 surori ale lui. Cu ajutorul mâinii lui drepte, Clyde, Lincoln găseşte de fiecare dată noi metode de a rezista în fiecare zi într-o familie atât de numeroasă."
-        },
-        {
-          "title": "Casa Loud",
-          "startsAt": "2026-10-28T17:50:00+02:00",
-          "endsAt": "2026-10-28T18:09:59+02:00",
-          "description": "Lincoln Loud este un băieţel de 11 ani care trăieşte împreună cu cele 10 surori ale lui. Cu ajutorul mâinii lui drepte, Clyde, Lincoln găseşte de fiecare dată noi metode de a rezista în fiecare zi într-o familie atât de numeroasă."
-        },
-        {
-          "title": "Ceata Sălbatică a Familiei Wylde Pak",
-          "startsAt": "2026-10-28T18:10:00+02:00",
-          "endsAt": "2026-10-28T18:34:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Un show cu Patrick Stea",
-          "startsAt": "2026-10-28T18:35:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Cu sprijinul familiei sale, Patrick Star joacă în propriul său sitcom fals și trăsnit, împreună cu prietenii săi adorabili din Bikini Bottom."
-        },
         {
           "title": "SpongeBob Pantaloni Pătrați",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -14950,30 +14407,27 @@
           "startsAt": "2026-10-29T06:00:00+02:00",
           "endsAt": "2026-10-29T06:19:59+02:00",
           "description": ""
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T06:20:00+02:00",
+          "endsAt": "2026-10-29T06:44:59+02:00",
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T06:45:00+02:00",
+          "endsAt": "2026-10-29T07:04:59+02:00",
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T07:05:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
         }
       ],
       "programmes": [
-        {
-          "title": "SpongeBob Pantaloni Pătrați",
-          "startsAt": "2026-10-28T16:25:00+02:00",
-          "endsAt": "2026-10-28T16:49:59+02:00",
-          "durationMinutes": 25,
-          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
-        },
-        {
-          "title": "SpongeBob Pantaloni Pătrați",
-          "startsAt": "2026-10-28T16:50:00+02:00",
-          "endsAt": "2026-10-28T17:19:59+02:00",
-          "durationMinutes": 30,
-          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
-        },
-        {
-          "title": "Rock, Scissors, Paper",
-          "startsAt": "2026-10-28T17:20:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 10,
-          "description": ""
-        },
         {
           "title": "Casa Loud",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -15232,6 +14686,27 @@
           "endsAt": "2026-10-29T06:19:59+02:00",
           "durationMinutes": 20,
           "description": ""
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T06:20:00+02:00",
+          "endsAt": "2026-10-29T06:44:59+02:00",
+          "durationMinutes": 25,
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T06:45:00+02:00",
+          "endsAt": "2026-10-29T07:04:59+02:00",
+          "durationMinutes": 20,
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
+        },
+        {
+          "title": "SpongeBob Pantaloni Pătrați",
+          "startsAt": "2026-10-29T07:05:00+02:00",
+          "endsAt": "2026-10-29T07:19:59+02:00",
+          "durationMinutes": 15,
+          "description": "SpongeBob sau Buretele Bob, este un buretel care duce o viata normala dar nelipsita de aventuri. Calamarul, Sandy veverita, Plancton, dl. Krabs, si prietenul lui cel mai bun, Patrick, sunt personajele care i se alatura in aventurile lui zilnice."
         }
       ]
     },
@@ -15240,18 +14715,12 @@
       "name": "Prima News",
       "epgId": "PrimaNews.ro",
       "now": {
-        "title": "Timp Pt Sanatate",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Prima News By Profit.Ro Cu C-Tin Rudnitchi",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Prima News By Profit.Ro Cu C-Tin Rudnitchi",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Podcasturi Cotidianul",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -15314,13 +14783,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Focus 14",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Timp Pt Sanatate",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -15413,17 +14875,11 @@
       "epgId": "PrimaSport1.ro",
       "now": {
         "title": "Fotbal Show",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Fotbal Show",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Dinamo – Chindia",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -15528,13 +14984,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Corona Brașov – FC Argeș",
-          "startsAt": "2026-10-28T15:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 120,
-          "description": ""
-        },
         {
           "title": "Fotbal Show",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -15785,27 +15234,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Ştirile Prima Sport",
-          "startsAt": "2026-10-28T16:15:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
-        {
-          "title": "Teleshopping",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
-        {
-          "title": "Ştirile Prima Sport",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 15,
-          "description": ""
-        },
         {
           "title": "Roma – Cagliari",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -16074,13 +15502,6 @@
       ],
       "programmes": [
         {
-          "title": "Rezumate Turcia",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
           "title": "Fcsb – Rapid București",
           "startsAt": "2026-10-28T17:00:00+02:00",
           "endsAt": "2026-10-28T18:59:59+02:00",
@@ -16241,24 +15662,12 @@
       "name": "Prima TV",
       "epgId": "PrimaTV.ro",
       "now": {
-        "title": "Elisa",
-        "startsAt": "2026-10-28T16:45:00+02:00",
-        "endsAt": "2026-10-28T17:49:59+02:00",
-        "description": "Frumoasa Elisa Scalzi, dama de companie a contesei Ristori, se îndrăgosteşte de fiul acesteia, Fabrizio. Din păcate, diferenţa mare de rang şi de avere face imposibilă căsătoria celor doi tineri. Intrigile familiei îi vor pune la încercare pe Elisa şi Fabrizio, care vor trece prin nenumărate aventuri până să-şi găsească fericirea. Dar, în cele din urmă, în ciuda diferenţelor sociale şi a imixtiunilor celor răuvoitori, dragostea va iesi triumfătoare."
+        "title": "Focus 18",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T19:14:59+02:00",
+        "description": "La Focus 18, cel mai important jurnal de ştiri, telespectatorii pot urmări, în fiecare zi, atât materiale în exclusivitate, cât şi rubrici dedicate sau reportaje speciale."
       },
       "next": [
-        {
-          "title": "Focus sport",
-          "startsAt": "2026-10-28T17:50:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Focus 18",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T19:14:59+02:00",
-          "description": "La Focus 18, cel mai important jurnal de ştiri, telespectatorii pot urmări, în fiecare zi, atât materiale în exclusivitate, cât şi rubrici dedicate sau reportaje speciale."
-        },
         {
           "title": "50/50",
           "startsAt": "2026-10-28T19:15:00+02:00",
@@ -16339,13 +15748,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Exclusiv VIP",
-          "startsAt": "2026-10-28T14:50:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 115,
-          "description": "Lumea mondenă îşi deschide larg uşile şi îi invită în culisele ei pe telespectatorii Prima TV. Moderatorul emisiunii este pregătit să îi descoasă pe invitaţi şi să le afle toate secretele. Exclusivităţi, momente emoţionante, discuţii între prieteni, voie bună şi relaxare!"
-        },
         {
           "title": "Elisa",
           "startsAt": "2026-10-28T16:45:00+02:00",
@@ -16465,18 +15867,12 @@
       "name": "Pro Arena",
       "epgId": "ProArena.ro",
       "now": {
-        "title": "Xena: prințesa războinică",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "Xena, o prințesă cu un trecut întunecat, pornește într-o călătorie pentru a-și îndrepta greșelile. Alături de Gabrielle, Xena străbate lumea antică și luptă pentru binele suprem împotriva unor conducători militari nemiloși și a zeilor."
+        "title": "Dragul de Raymond",
+        "startsAt": "2026-10-28T17:30:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Ray Baron, un jurnalist de sport, locuieşte cu soţia, fiica de 12 ani, şi gemenii de 8 ani, în Long Island. Viaţa lor ar decurge fără probleme dacă părinţii lui Ray, care locuiesc peste drum, nu s-ar amesteca tot timpul în treburi care nu-i privesc."
       },
       "next": [
-        {
-          "title": "Dragul de Raymond",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Ray Baron, un jurnalist de sport, locuieşte cu soţia, fiica de 12 ani, şi gemenii de 8 ani, în Long Island. Viaţa lor ar decurge fără probleme dacă părinţii lui Ray, care locuiesc peste drum, nu s-ar amesteca tot timpul în treburi care nu-i privesc."
-        },
         {
           "title": "Singuri",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -16581,20 +15977,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Viper",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
-        {
-          "title": "Xena: prințesa războinică",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "Xena, o prințesă cu un trecut întunecat, pornește într-o călătorie pentru a-și îndrepta greșelile. Alături de Gabrielle, Xena străbate lumea antică și luptă pentru binele suprem împotriva unor conducători militari nemiloși și a zeilor."
-        },
         {
           "title": "Dragul de Raymond",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -16728,18 +16110,12 @@
       "name": "Pro Cinema",
       "epgId": "ProCinema.ro",
       "now": {
-        "title": "Dragoste în pași de dans",
-        "startsAt": "2026-10-28T16:30:00+02:00",
-        "endsAt": "2026-10-28T18:14:59+02:00",
-        "description": "Acrobatul profesionist Bennet (Olivier Renaud) are nevoie urgent de o nouă parteneră pentru o reprezentație la un festival artistic local. Așa că face pereche cu fosta dansatoare Luna (Jocelyn Hudon)."
+        "title": "La bloc",
+        "startsAt": "2026-10-28T18:15:00+02:00",
+        "endsAt": "2026-10-28T20:29:59+02:00",
+        "description": "De-a lungul celor 16 ani de căsnicie, Suzi şi Nelu adunaseră ceva bănuţi şi îşi doreau o viaţă nouă într-o locuinţă nouă. Aşa că, împreună cu fiica lor, aceştia se mută într-un nou apartament, recomandat de prietenul lui Nelu, Costel Jurcă."
       },
       "next": [
-        {
-          "title": "La bloc",
-          "startsAt": "2026-10-28T18:15:00+02:00",
-          "endsAt": "2026-10-28T20:29:59+02:00",
-          "description": "De-a lungul celor 16 ani de căsnicie, Suzi şi Nelu adunaseră ceva bănuţi şi îşi doreau o viaţă nouă într-o locuinţă nouă. Aşa că, împreună cu fiica lor, aceştia se mută într-un nou apartament, recomandat de prietenul lui Nelu, Costel Jurcă."
-        },
         {
           "title": "Cursă infernală",
           "startsAt": "2026-10-28T20:30:00+02:00",
@@ -16790,13 +16166,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Încă un pic de dragoste",
-          "startsAt": "2026-10-28T14:45:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 105,
-          "description": "Când se întâlnesc la școala culinară, Carly și Jason încearcă să fie cei mai buni, iar chimia apare între ei. Jason dispare, dar cei doi se întâlnesc trei ani mai târziu, la Kitchen Showdown, unde concurează pentru a-și câștiga propriul restaurant."
-        },
         {
           "title": "Dragoste în pași de dans",
           "startsAt": "2026-10-28T16:30:00+02:00",
@@ -16874,18 +16243,12 @@
       "name": "ProTV",
       "epgId": "PROTV.ro",
       "now": {
-        "title": "Ştirile Pro Tv",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Știri de ultimă oră din țară și externe. Urmărește transmisiuni live, breaking news, reportaje și anchete."
+        "title": "Batem palma?",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "PRO TV prezintă un format care testează norocul și intuiția concurenților. Emisiunea Batem Palma? îl are ca prezentator pe îndrăgitul om de televiziune, Cosmin Seleși. Scopul fiecărei ediții este ca un concurent să plece acasă cu o sumă cât mai mare, deschizând pe parcurs 24 de cutii misterioase existente în joc. Sumele variază și în funcție de prestația concurentului pe parcusul showului. Un alt element surpriză este banca. Parcursul unui concurent se încheie în momentul în care acesta alege să bată palma și acceptă una dintre ofertele băncii."
       },
       "next": [
-        {
-          "title": "Batem palma?",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "PRO TV prezintă un format care testează norocul și intuiția concurenților. Emisiunea Batem Palma? îl are ca prezentator pe îndrăgitul om de televiziune, Cosmin Seleși. Scopul fiecărei ediții este ca un concurent să plece acasă cu o sumă cât mai mare, deschizând pe parcurs 24 de cutii misterioase existente în joc. Sumele variază și în funcție de prestația concurentului pe parcusul showului. Un alt element surpriză este banca. Parcursul unui concurent se încheie în momentul în care acesta alege să bată palma și acceptă una dintre ofertele băncii."
-        },
         {
           "title": "Ştirile Pro Tv",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -16948,13 +16311,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Lecţii de viaţă",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "O emisiune care prezintă diverse situații inspirate din viața reală a familiilor, în care se va pune accent pe povești de iubire, dorință, lăcomie, minciună sau violență. Fiecare episod va ilustra probleme și întâmplări des întâlnite în viața cotidiană. Acest program este o ficțiune."
-        },
         {
           "title": "Ştirile Pro Tv",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -17046,18 +16402,12 @@
       "name": "Realitatea Plus",
       "epgId": "RealitateaPlus.ro",
       "now": {
-        "title": "100%",
-        "startsAt": "2026-10-28T16:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Culisele statului paralel",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T20:49:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Culisele statului paralel",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T20:49:59+02:00",
-          "description": ""
-        },
         {
           "title": "România suverană",
           "startsAt": "2026-10-28T20:50:00+02:00",
@@ -17159,18 +16509,12 @@
       "name": "Romania TV",
       "epgId": "RomâniaTV.ro",
       "now": {
-        "title": "Cheia zilei",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "title": "Ştirile România TV",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": ""
       },
       "next": [
-        {
-          "title": "Ştirile România TV",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": ""
-        },
         {
           "title": "Ultima oră",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -17269,13 +16613,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Ştirile România TV",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": ""
-        },
         {
           "title": "Cheia zilei",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -17510,17 +16847,11 @@
       "epgId": "TLC.ro",
       "now": {
         "title": "Lumea familiei Plath",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
         "description": "Facem cunoștință cu familia Plath: 11 blonzi cu ochi albaștri care trăiesc în sud-estul Georgiei, uniți de pasiunea pentru muzică, religie, viața de familie și roluri tradiționale."
       },
       "next": [
-        {
-          "title": "Lumea familiei Plath",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Facem cunoștință cu familia Plath: 11 blonzi cu ochi albaștri care trăiesc în sud-estul Georgiei, uniți de pasiunea pentru muzică, religie, viața de familie și roluri tradiționale."
-        },
         {
           "title": "Viaţa la 300 kg",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -17625,13 +16956,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Seducție fatală",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Prietena din copilărie a unui bărbat se mută cu el și cu familia lui, dar o poveste sinistră de seducție se încheie cu o crimă comisă cu sânge rece în Buford, Georgia."
-        },
         {
           "title": "Lumea familiei Plath",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -17772,18 +17096,12 @@
       "name": "Tralala",
       "epgId": "TraLaLa.ro",
       "now": {
-        "title": "Zigaloo și prietenii",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "De regulă, primul cântecel pe care îl învață un copil este despre un animăluț (cățeluș, pisicuță etc.) Cântecelele cu și despre animale sunt cele mai apreciate fiindcă, în primii ani, toți copiii se familiarizează cu animalele, mai ales prin intermediul jucăriilor. Toți învață - repede și ușor - sunetele pe care le scot animalele. Ele devin parte din lumea lor și pot fi asociate cu orice fel de activități - educative sau distractive - pe care copiii le vor accepta și le vor îndrăgi și mai mult, prezentate fiind prin intermediul animalelor. Învață,totodată, despre animale, să le aprecieze și să le ocrotească."
+        "title": "Tralala mă joc așa",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Cântecele pentru copii pot fi ascultate în orice împrejurare, chiar și atunci când cei mici se joacă. Jocul poate fi mai distractiv, mai interesant și mai complex."
       },
       "next": [
-        {
-          "title": "Tralala mă joc așa",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Cântecele pentru copii pot fi ascultate în orice împrejurare, chiar și atunci când cei mici se joacă. Jocul poate fi mai distractiv, mai interesant și mai complex."
-        },
         {
           "title": "Dansează hopa hopa",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -17834,13 +17152,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Ora de engleză",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 60,
-          "description": "Limba engleză poate fi mult mai accesibilă și mult mai agreabilă dacă este predată/învățată cu ajutorul cântecelelor. Există, deja, o mulțime de studii de specialitate care recomandă - pentru educația timpurie (0-3 ani) și, în general,preșcolarilor, această metodă de familiarizare cu o limbă străină."
-        },
         {
           "title": "Zigaloo și prietenii",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -17918,24 +17229,12 @@
       "name": "Trinitas TV",
       "epgId": "TrinitasTV.ro",
       "now": {
-        "title": "Vecernia şi slujba Paraclisului",
-        "startsAt": "2026-10-28T16:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "LIVE din Catedrala Patriarhală."
+        "title": "Secvenţe Trinitas",
+        "startsAt": "2026-10-28T18:30:00+02:00",
+        "endsAt": "2026-10-28T18:54:59+02:00",
+        "description": ""
       },
       "next": [
-        {
-          "title": "Cuvânt pentru suflet",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:29:59+02:00",
-          "description": ""
-        },
-        {
-          "title": "Secvenţe Trinitas",
-          "startsAt": "2026-10-28T18:30:00+02:00",
-          "endsAt": "2026-10-28T18:54:59+02:00",
-          "description": ""
-        },
         {
           "title": "Sinaxar",
           "startsAt": "2026-10-28T18:55:00+02:00",
@@ -18586,18 +17885,12 @@
       "name": "Tv Paprika",
       "epgId": "TVPaprika.ro",
       "now": {
-        "title": "James Martin: Mâncăruri de suflet",
-        "startsAt": "2026-10-28T17:15:00+02:00",
-        "endsAt": "2026-10-28T18:14:59+02:00",
-        "description": "James Martin ne invită în propria bucătărie ca să ne împărtăşească reţetele cu gusturi de acasă, precum şi secretele şi practicile care merită ştiute de orice gospodină. Bucatele de acasă nu sunt renumite tocmai pentru aspectul elegant şi nici nu sunt foarte plăcute ochiului, dar dacă lingura de lemn e în mâna lui James, putem fi siguri că mâncarea va fi cel puţin gustoasă."
+        "title": "River Cottage în Australia",
+        "startsAt": "2026-10-28T18:15:00+02:00",
+        "endsAt": "2026-10-28T19:09:59+02:00",
+        "description": "Hugh Fearnley-Whittingstall, celebrul bucătar englez, personalitate din televiziune, autor culinar și susținător al cauzelor gastronomice și de mediu, și-a început experimentul cu mulți ani în urmă, sub egida durabilității și autosuficienței. S-a mutat pe o fermă din Dorset, s-a apucat de agricultură și creșterea animalelor, integrându-se în comunitatea locală nu doar pentru a-și împărtăși cunoștințele, ci și roadele gospodăriei autosuficiente. Hugh aduce acum acest experiment și mesajul durabilității și pe continentul sudic. Predă ștafeta colegului australian, bucătarul din Tasmania, Paul West, care trebuie să se confrunte cu noi provocări în timp ce încearcă să-și creeze propria gospodărie în apropierea pitorescului sat istoric, Central Tilba, pe malurile sudice ale statului New South Wales."
       },
       "next": [
-        {
-          "title": "River Cottage în Australia",
-          "startsAt": "2026-10-28T18:15:00+02:00",
-          "endsAt": "2026-10-28T19:09:59+02:00",
-          "description": "Hugh Fearnley-Whittingstall, celebrul bucătar englez, personalitate din televiziune, autor culinar și susținător al cauzelor gastronomice și de mediu, și-a început experimentul cu mulți ani în urmă, sub egida durabilității și autosuficienței. S-a mutat pe o fermă din Dorset, s-a apucat de agricultură și creșterea animalelor, integrându-se în comunitatea locală nu doar pentru a-și împărtăși cunoștințele, ci și roadele gospodăriei autosuficiente. Hugh aduce acum acest experiment și mesajul durabilității și pe continentul sudic. Predă ștafeta colegului australian, bucătarul din Tasmania, Paul West, care trebuie să se confrunte cu noi provocări în timp ce încearcă să-și creeze propria gospodărie în apropierea pitorescului sat istoric, Central Tilba, pe malurile sudice ale statului New South Wales."
-        },
         {
           "title": "Marea confruntare a ciocolatei",
           "startsAt": "2026-10-28T19:10:00+02:00",
@@ -18750,20 +18043,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Reţetele preferate ale lui Mary Berry",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:34:59+02:00",
-          "durationMinutes": 35,
-          "description": "Mary Berry alege câteva dintre reţetele preferate pentru a crea bucate minunate şi magice pe care le putem încerca şi noi."
-        },
-        {
-          "title": "Reţetele preferate ale lui Mary Berry",
-          "startsAt": "2026-10-28T16:35:00+02:00",
-          "endsAt": "2026-10-28T17:14:59+02:00",
-          "durationMinutes": 40,
-          "description": "Mary Berry alege câteva dintre reţetele preferate pentru a crea bucate minunate şi magice pe care le putem încerca şi noi."
-        },
         {
           "title": "James Martin: Mâncăruri de suflet",
           "startsAt": "2026-10-28T17:15:00+02:00",
@@ -18960,30 +18239,12 @@
       "name": "TVR 3",
       "epgId": "TVR3.ro",
       "now": {
-        "title": "Cu tigaia-n spate",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:29:59+02:00",
-        "description": "Emisiunea marca TVR Cluj este pusă cap la cap de către Radu Puşcaş şi Dan Păvăloiu. Cu tigaia-n spate cuprinde o serie de reportaje de călătorie avându-i ca protagonişti pe cei doi experimentaţi realizatori clujeni. Principala lor misiune este să străbată ţara-n lung şi-n lat în căutarea unei realităţi arhaice pe care mulţi o credem demult dispărută."
+        "title": "Tableta de sănătate",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:54:59+02:00",
+        "description": "De luni până vineri, studiourile teritoriale ne prezintă cei mai buni specialişti din regiune pentru a discuta și analiza diferite probleme sănătate. Tableta de sănătate este una dintre puţinele emisiuni în care medicii şi specialiştii sunt puşi faţă-n față cu publicul, martor al demonstraţiilor şi prezentărilor live despre cum să-ţi protejezi, practic, sănătatea."
       },
       "next": [
-        {
-          "title": "Reporter special",
-          "startsAt": "2026-10-28T17:30:00+02:00",
-          "endsAt": "2026-10-28T17:54:59+02:00",
-          "description": "Investigaţii jurnalistice pornite de la sesizările telespectatorilor, poveşti de viaţă, întâmplări şi oameni deosebiţi. Anchetele şi investigaţiile atrag atenţia telespectatorilor şi autorităţilor asupra problemelor care apar izolat sau recurent. Reporterul Special devine o oglindă a comunităţii, cu bune şi cu rele, fie că este vorba despre patrimoniul naţional în continuă degradare, viaţa minorilor dintr-un centru de reeducare, drumul excepţional al unui rrom spre Oxford sau starea bibliotecilor săteşti."
-        },
-        {
-          "title": "Maşina timpului",
-          "startsAt": "2026-10-28T17:55:00+02:00",
-          "endsAt": "2026-10-28T17:59:59+02:00",
-          "description": "Fiecare zi este specială. Aniversări, comemorări, evenimente care au rămas în memoria colectivă - toate au, pentru fiecare dintre noi, o semnificaţie subiectivă. Sub pretextul enumerării unora dintre personalităţile sau evenimentele legate de o zi anume de-a lungul istoriei, rubrica Maşina timpului prezintă detalii poate mai puţin cunoscute, anecdotice pe alocuri, dar şi fragmente din marile opere muzicale, citate care au facut istorie sau interpretări subiective ale unor fapte petrecute mai demult sau foarte recent. Comentariul nu este – şi nu poate fi – nici infailibil, nici exhaustiv. Între 3 şi 5 minute zilnic, vă propunem un exerciţiu de memorie al cărui scop nedeclarat este acela de a vă stârni să căutaţi mai multe amănunte despre marile personalităţi care au marcat omenirea. Oricum, nu le vom şti niciodată pe toate, important e să-nţelegem ceva din viaţa asta!"
-        },
-        {
-          "title": "Tableta de sănătate",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:54:59+02:00",
-          "description": "De luni până vineri, studiourile teritoriale ne prezintă cei mai buni specialişti din regiune pentru a discuta și analiza diferite probleme sănătate. Tableta de sănătate este una dintre puţinele emisiuni în care medicii şi specialiştii sunt puşi faţă-n față cu publicul, martor al demonstraţiilor şi prezentărilor live despre cum să-ţi protejezi, practic, sănătatea."
-        },
         {
           "title": "Maşina timpului",
           "startsAt": "2026-10-28T18:55:00+02:00",
@@ -19142,27 +18403,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Forum",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:54:59+02:00",
-          "durationMinutes": 55,
-          "description": "Studioul teritorial Iaşi Producător Iulian Leca Transmisiune directa."
-        },
-        {
-          "title": "Memoria tiparului",
-          "startsAt": "2026-10-28T16:55:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 5,
-          "description": "Studioul teritorial Tg.Mureş Revista presei vechi prezintă, prin tema fiecărei ediții, realitatea din România interbelică, surprinsă prin intermediul fragmentelor extrase din ziarele centrale, regionale sau locale ale epocii, și ilustrate vizual prin imagini de arhivă, fotografii vechi şi dramatizări. Producător Angela Precup."
-        },
-        {
-          "title": "Cu tigaia-n spate",
-          "startsAt": "2026-10-28T17:00:00+02:00",
-          "endsAt": "2026-10-28T17:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "Emisiunea marca TVR Cluj este pusă cap la cap de către Radu Puşcaş şi Dan Păvăloiu. Cu tigaia-n spate cuprinde o serie de reportaje de călătorie avându-i ca protagonişti pe cei doi experimentaţi realizatori clujeni. Principala lor misiune este să străbată ţara-n lung şi-n lat în căutarea unei realităţi arhaice pe care mulţi o credem demult dispărută."
-        },
         {
           "title": "Reporter special",
           "startsAt": "2026-10-28T17:30:00+02:00",
@@ -19373,18 +18613,12 @@
       "name": "TVR 1",
       "epgId": "TVR1.ro",
       "now": {
-        "title": "TVR 70",
-        "startsAt": "2026-10-28T16:45:00+02:00",
-        "endsAt": "2026-10-28T17:39:59+02:00",
-        "description": "Gala umorului Producător Cosmin Dumitru Sezon nou."
+        "title": "Zeul războiului",
+        "startsAt": "2026-10-28T17:40:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "În timpul invaziilor mongole în Coreea, Kim Jun avansează în ierarhie până la rangul de comandant militar suprem şi ajunge în cele din urmă să conducă regatul Goryeo timp de câteva zeci de ani."
       },
       "next": [
-        {
-          "title": "Zeul războiului",
-          "startsAt": "2026-10-28T17:40:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "În timpul invaziilor mongole în Coreea, Kim Jun avansează în ierarhie până la rangul de comandant militar suprem şi ajunge în cele din urmă să conducă regatul Goryeo timp de câteva zeci de ani."
-        },
         {
           "title": "Telejurnal",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -19501,20 +18735,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Convieţuiri",
-          "startsAt": "2026-10-28T15:50:00+02:00",
-          "endsAt": "2026-10-28T16:39:59+02:00",
-          "durationMinutes": 50,
-          "description": "O agoră modernă în care fiecare comunitate deschide porţi ale dialogului, îşi expune arta şi filosofia de viaţă. Aveţi ocazia să savuraţi alesele bucate preparate în laboratorul culinar al comunităţilor etnice. Să le cunoaşteţi şi să le înţelegeţi istoria, cultura şi obiceiurile. Să admiraţi talentul artiştilor şi meşterilor populari. Să vă lăsaţi prins în vârtejul dansurilor tradiţionale."
-        },
-        {
-          "title": "Zi de zi cu părintele Constantin Necula",
-          "startsAt": "2026-10-28T16:40:00+02:00",
-          "endsAt": "2026-10-28T16:44:59+02:00",
-          "durationMinutes": 5,
-          "description": ""
-        },
         {
           "title": "TVR 70",
           "startsAt": "2026-10-28T16:45:00+02:00",
@@ -19669,18 +18889,12 @@
       "name": "TVR 2",
       "epgId": "TVR2.ro",
       "now": {
-        "title": "Poarta Pangrati",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": "Calea de acces spre Tunelul Timpului, spre cei 70 de ani ai Televiziunii Romane. Emisiunea cu acelasi titlu va aduna personalitati ale Romaniei a caror viata a fost marcata de Televiziunea Romana , laolaltă cu romani de nota 10 ai prezentului, pe care TVR îi propune ca modele. Un show inedit, cu de toate, cu emotii si bucurii, transmis live, de luni pana joi, direct in strada, din fata celebrei Porti Pangrati a Televiziunii Romane. Prezentatori : Marina Almasan, Costin Teodorescu, Florin Peste, Miruna Dascalu, Bogdan Vârsan. Producatori : Marina Almasan, Andreea Baciu Transmisiune directa."
+        "title": "Ora de ştiri",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:44:59+02:00",
+        "description": "Vă propune o sinteză a celor mai importante informaţii ale zilei, comentate împreună cu specialişti de înaltă ţinută."
       },
       "next": [
-        {
-          "title": "Ora de ştiri",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:44:59+02:00",
-          "description": "Vă propune o sinteză a celor mai importante informaţii ale zilei, comentate împreună cu specialişti de înaltă ţinută."
-        },
         {
           "title": "E vremea ta!",
           "startsAt": "2026-10-28T18:45:00+02:00",
@@ -19827,20 +19041,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "AI idee?!",
-          "startsAt": "2026-10-28T16:00:00+02:00",
-          "endsAt": "2026-10-28T16:29:59+02:00",
-          "durationMinutes": 30,
-          "description": "Sezon Nou AI idee?! este un proiect educaţional care înseamnă: emisiuni dedicate informării si educării copiilor, adolescentilor si părintilor privind protectia minorilor şi prevenirea situatiilor de risc, ediţii dedicate inteligentei artificial, cu rol important în informarea si educarea publicului, subiecte despre folosirea limbii semnelor române în diverse domenii ale educaţiei, emisiuni de orientare profesională, precum şi teme de actualitate. Moderator: Corina Dobre Realizator: Mimi Necula Producător: Sînziana Miloşoiu."
-        },
-        {
-          "title": "România... în bucate",
-          "startsAt": "2026-10-28T16:30:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 30,
-          "description": ""
-        },
         {
           "title": "Poarta Pangrati",
           "startsAt": "2026-10-28T17:00:00+02:00",
@@ -20030,18 +19230,12 @@
       "name": "ZU TV",
       "epgId": "ZUTV.ro",
       "now": {
-        "title": "Hello Chef",
-        "startsAt": "2026-10-28T17:00:00+02:00",
-        "endsAt": "2026-10-28T17:59:59+02:00",
-        "description": ""
+        "title": "Poftă bună împreună",
+        "startsAt": "2026-10-28T18:00:00+02:00",
+        "endsAt": "2026-10-28T18:59:59+02:00",
+        "description": "Emisiunea reunește rețete din toate colțurile lumii, sfaturi practice pentru organizarea bucătăriei și secrete dezvăluite de unii dintre cei mai iubiți chefi din România. Fiecare ediție pune accentul pe ideea de comunitate: cum mâncarea aduce oamenii laolaltă, transformă ingredientele simple în emoție pură și creează momente memorabile în jurul mesei.De la tehnici de gătire corecte la trucuri pentru controlul poftei de mâncare și asocieri inedite între preparate și băuturi, „Poftă bună împreună” aduce inspirație zilnică pentru mese savuroase în familie sau alături de prieteni."
       },
       "next": [
-        {
-          "title": "Poftă bună împreună",
-          "startsAt": "2026-10-28T18:00:00+02:00",
-          "endsAt": "2026-10-28T18:59:59+02:00",
-          "description": "Emisiunea reunește rețete din toate colțurile lumii, sfaturi practice pentru organizarea bucătăriei și secrete dezvăluite de unii dintre cei mai iubiți chefi din România. Fiecare ediție pune accentul pe ideea de comunitate: cum mâncarea aduce oamenii laolaltă, transformă ingredientele simple în emoție pură și creează momente memorabile în jurul mesei.De la tehnici de gătire corecte la trucuri pentru controlul poftei de mâncare și asocieri inedite între preparate și băuturi, „Poftă bună împreună” aduce inspirație zilnică pentru mese savuroase în familie sau alături de prieteni."
-        },
         {
           "title": "Chefi la cuțite",
           "startsAt": "2026-10-28T19:00:00+02:00",
@@ -20146,13 +19340,6 @@
         }
       ],
       "programmes": [
-        {
-          "title": "Chefi la cuțite",
-          "startsAt": "2026-10-28T13:35:00+02:00",
-          "endsAt": "2026-10-28T16:59:59+02:00",
-          "durationMinutes": 205,
-          "description": ""
-        },
         {
           "title": "Hello Chef",
           "startsAt": "2026-10-28T17:00:00+02:00",
