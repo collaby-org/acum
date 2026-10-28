@@ -1,5 +1,5 @@
 /**
- * The quality badge, and the menu that opens under it.
+ * The quality badge, and the menu that opens above it.
  *
  * The badge reads the picture, not the playlist: the stream's own decoded
  * size is what the viewer is actually watching, and it moves under them
@@ -7,15 +7,23 @@
  * therefore the catalogue's word for that height — the same word the rest
  * of the app uses.
  *
- * The menu underneath names every rung the manifest carries and lets the
- * viewer pin one, or hand the choice back to the connection. It is the
- * hls.js instance that holds both the ladder and the answer, so the
- * player reads them off the instance and passes them in; this file never
- * touches hls.js itself.
+ * The menu names every rung the manifest carries and lets the viewer pin
+ * one, or hand the choice back to the connection. It is the hls.js
+ * instance that holds both the ladder and the answer, so the player reads
+ * them off the instance and passes them in; this file never touches hls.js
+ * itself.
+ *
+ * The menu opens upward, out of the player. Drawn inside the badge it is
+ * a child of whatever the badge sits in: the picture frame clips it, and
+ * the fullscreen bar — a layer of its own — holds it under the wall. So
+ * it is portaled to the body and pinned to the badge's own position,
+ * re-measured whenever the badge moves.
  */
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { Check, ChevronDown, Signal } from "lucide-react";
 import type { Quality } from "@/data/types";
 import { QUALITY_META } from "@/lib/channel-meta";
@@ -85,6 +93,24 @@ function rungClassName(active: boolean): string {
 }
 
 /* ------------------------------------------------------------------ *
+ * The menu, out in the open
+ * ------------------------------------------------------------------ */
+
+/** The menu's own width — `w-52`, spelled for the arithmetic below. */
+const MENU_WIDTH = 208;
+/** The air between the badge and the menu. */
+const MENU_GAP = 8;
+/** The shortest menu the viewport may leave room for. */
+const MENU_MIN_HEIGHT = 180;
+
+/** Where the menu sits, in viewport pixels. */
+type MenuSpot = {
+  top: number;
+  left: number;
+  maxHeight: number;
+};
+
+/* ------------------------------------------------------------------ *
  * The badge
  * ------------------------------------------------------------------ */
 
@@ -98,8 +124,23 @@ export function PlayerQualityBadge({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [spot, setSpot] = useState<MenuSpot | null>(null);
 
   const close = useCallback(() => setOpen(false), []);
+
+  /**
+   * Whether a node belongs to the badge — the trigger or the menu.
+   *
+   * The menu is portaled out of the badge's own DOM, so a press or a
+   * focus that lands in it still counts as inside.
+   */
+  const owns = useCallback((node: Node | null | undefined): boolean => {
+    if (!node) return false;
+    return Boolean(
+      rootRef.current?.contains(node) || menuRef.current?.contains(node),
+    );
+  }, []);
 
   // Escape closes the menu and gives the trigger its focus back.
   useEffect(() => {
@@ -118,25 +159,78 @@ export function PlayerQualityBadge({
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (rootRef.current?.contains(event.target as Node)) return;
+      if (owns(event.target as Node)) return;
       setOpen(false);
     };
     document.addEventListener("pointerdown", onPointerDown, true);
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
-  }, [open]);
+  }, [open, owns]);
 
   // Focus lands on the rung already in use, so the arrows have somewhere
   // to start.
   useEffect(() => {
     if (!open) return;
-    const root = rootRef.current;
-    if (!root) return;
+    const menu = menuRef.current;
+    if (!menu) return;
     const chosen =
-      root.querySelector<HTMLButtonElement>(
+      menu.querySelector<HTMLButtonElement>(
         '[data-quality-item][aria-checked="true"]',
       ) ??
-      root.querySelector<HTMLButtonElement>("[data-quality-item]");
+      menu.querySelector<HTMLButtonElement>("[data-quality-item]");
     chosen?.focus();
+  }, [open]);
+
+  /**
+   * Where the menu goes, and where it goes again.
+   *
+   * Above the badge, never below it: the badge sits at the bottom of the
+   * picture, and a menu that opened downward would fall off the frame.
+   * The measurement is taken in the viewport, because that is where the
+   * portaled menu lives — and it is taken again on every move of the page,
+   * since the badge moves with the scroll, with the window, and with the
+   * picture going full screen.
+   */
+  useLayoutEffect(() => {
+    // Closed, the menu is not on the page; the spot it last held is
+    // re-measured the moment it opens again, before anything paints.
+    if (!open) return;
+
+    const place = () => {
+      const trigger = triggerRef.current;
+      const menu = menuRef.current;
+      if (!trigger || !menu) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const room = Math.max(MENU_MIN_HEIGHT, rect.top - MENU_GAP * 2);
+      // `scrollHeight` is the content's own height: the cap never feeds
+      // back into the measurement, so opening cannot chase itself.
+      const height = Math.min(menu.scrollHeight, room);
+      const left = Math.max(
+        MENU_GAP,
+        Math.min(rect.right - MENU_WIDTH, window.innerWidth - MENU_WIDTH - MENU_GAP),
+      );
+
+      setSpot({
+        top: Math.max(MENU_GAP, rect.top - MENU_GAP - height),
+        left,
+        maxHeight: room,
+      });
+    };
+
+    place();
+
+    window.addEventListener("resize", place);
+    // Captured: a scroll anywhere in the page moves the badge, not only
+    // one on the player itself.
+    window.addEventListener("scroll", place, true);
+    document.addEventListener("fullscreenchange", place);
+    document.addEventListener("webkitfullscreenchange", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+      document.removeEventListener("fullscreenchange", place);
+      document.removeEventListener("webkitfullscreenchange", place);
+    };
   }, [open]);
 
   // No ladder means nothing to choose: the manifest has not been parsed
@@ -155,13 +249,22 @@ export function PlayerQualityBadge({
   const label = QUALITY_META[qualityOfHeight(decoded || pinned)].label || "Automată";
 
   const moveFocus = (step: number) => {
-    const root = rootRef.current;
-    if (!root) return;
+    const menu = menuRef.current;
+    if (!menu) return;
     const items = Array.from(
-      root.querySelectorAll<HTMLButtonElement>("[data-quality-item]"),
+      menu.querySelectorAll<HTMLButtonElement>("[data-quality-item]"),
     );
     const at = items.indexOf(document.activeElement as HTMLButtonElement);
     items[(at + step + items.length) % items.length]?.focus();
+  };
+
+  const menuStyle: CSSProperties = {
+    top: spot?.top ?? 0,
+    left: spot?.left ?? 0,
+    maxHeight: spot?.maxHeight,
+    // The first frame is not placed yet; it is measured in the layout
+    // effect below and never painted off its mark.
+    visibility: spot ? "visible" : "hidden",
   };
 
   return (
@@ -169,9 +272,7 @@ export function PlayerQualityBadge({
       ref={rootRef}
       // Tab away closes the menu, the way a menu does.
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          close();
-        }
+        if (!owns(event.relatedTarget as Node | null)) close();
       }}
       className={cn("relative shrink-0", className)}
     >
@@ -184,7 +285,7 @@ export function PlayerQualityBadge({
         aria-label={`Calitate: ${label}`}
         title="Calitate"
         className={cn(
-          "pointer-events-auto inline-flex h-6 items-center gap-1.5 rounded-full border border-white/12",
+          "inline-flex h-6 items-center gap-1.5 rounded-full border border-white/12",
           "bg-black/55 py-0 pl-2 pr-1.5 text-ink/90 backdrop-blur-md",
           "transition-colors duration-300 hover:border-white/20 hover:bg-black/75",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
@@ -203,86 +304,95 @@ export function PlayerQualityBadge({
         />
       </button>
 
-      {open ? (
-        <div
-          role="menu"
-          aria-label="Calitate"
-          onKeyDown={(event) => {
-            if (event.key === "ArrowDown") {
-              event.preventDefault();
-              moveFocus(1);
-            } else if (event.key === "ArrowUp") {
-              event.preventDefault();
-              moveFocus(-1);
-            }
-          }}
-          className={cn(
-            "absolute left-0 top-full z-30 mt-2 max-h-72 w-52 origin-top-left overflow-y-auto",
-            "rounded-2xl border border-white/10 bg-canvas-raised/95 p-1.5 shadow-[var(--shadow-e4)]",
-            "backdrop-blur-xl fx-hide-scrollbar animate-scale-in",
-          )}
-        >
-          <p className="px-2.5 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-signal/85">
-            Calitate
-          </p>
-          <div aria-hidden className="fx-divider mx-2 mb-1.5" />
+      {open
+        ? createPortal(
+            <div
+              ref={menuRef}
+              role="menu"
+              aria-label="Calitate"
+              onKeyDown={(event) => {
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  moveFocus(1);
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  moveFocus(-1);
+                }
+              }}
+              style={menuStyle}
+              className={cn(
+                // Fixed to the viewport and out of the player's own layers:
+                // `z-[70]` puts it above the frame's overlays, the wall and
+                // the fullscreen bar alike, and nothing above it clips its
+                // rounded corners.
+                "fixed z-[70] w-52 origin-bottom-right overflow-y-auto",
+                "rounded-2xl border border-white/10 bg-canvas-raised/95 p-1.5 shadow-[var(--shadow-e4)]",
+                "backdrop-blur-xl fx-hide-scrollbar animate-scale-in",
+              )}
+            >
+              <p className="px-2.5 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-signal/85">
+                Calitate
+              </p>
+              <div aria-hidden className="fx-divider mx-2 mb-1.5" />
 
-          <button
-            type="button"
-            role="menuitemradio"
-            aria-checked={currentLevel === -1}
-            data-quality-item
-            onClick={() => {
-              onLevelChange(-1);
-              close();
-            }}
-            className={rungClassName(currentLevel === -1)}
-          >
-            <span aria-hidden className="grid size-4 shrink-0 place-items-center">
-              {currentLevel === -1 ? (
-                <Check className="size-3.5 text-signal" />
-              ) : null}
-            </span>
-            <span className="truncate">Automată</span>
-            <span className="ml-auto font-mono text-[10px] tabular-nums text-ink-faint">
-              după conexiune
-            </span>
-          </button>
-
-          {variants.map((variant) => {
-            const active = currentLevel === variant.index;
-            const rate = formatBitrate(variant.bitrate);
-            return (
               <button
-                key={variant.index}
                 type="button"
                 role="menuitemradio"
-                aria-checked={active}
+                aria-checked={currentLevel === -1}
                 data-quality-item
                 onClick={() => {
-                  onLevelChange(variant.index);
+                  onLevelChange(-1);
                   close();
                 }}
-                className={rungClassName(active)}
+                className={rungClassName(currentLevel === -1)}
               >
                 <span aria-hidden className="grid size-4 shrink-0 place-items-center">
-                  {active ? <Check className="size-3.5 text-signal" /> : null}
+                  {currentLevel === -1 ? (
+                    <Check className="size-3.5 text-signal" />
+                  ) : null}
                 </span>
-                <span className="font-display tabular-nums">
-                  {variant.height > 0
-                    ? `${variant.height}p`
-                    : `Nivel ${variant.index + 1}`}
+                <span className="truncate">Automată</span>
+                <span className="ml-auto font-mono text-[10px] tabular-nums text-ink-faint">
+                  după conexiune
                 </span>
-                {rate ? (
-                  <span className="ml-auto font-mono text-[10px] tabular-nums text-ink-faint">
-                    {rate}
-                  </span>
-                ) : null}
               </button>
-            );
-          })}
-        </div>
-      ) : null}
+
+              {variants.map((variant) => {
+                const active = currentLevel === variant.index;
+                const rate = formatBitrate(variant.bitrate);
+                return (
+                  <button
+                    key={variant.index}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={active}
+                    data-quality-item
+                    onClick={() => {
+                      onLevelChange(variant.index);
+                      close();
+                    }}
+                    className={rungClassName(active)}
+                  >
+                    <span aria-hidden className="grid size-4 shrink-0 place-items-center">
+                      {active ? <Check className="size-3.5 text-signal" /> : null}
+                    </span>
+                    <span className="font-display tabular-nums">
+                      {variant.height > 0
+                        ? `${variant.height}p`
+                        : `Nivel ${variant.index + 1}`}
+                    </span>
+                    {rate ? (
+                      <span className="ml-auto font-mono text-[10px] tabular-nums text-ink-faint">
+                        {rate}
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

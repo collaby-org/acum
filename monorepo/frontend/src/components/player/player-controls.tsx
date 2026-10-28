@@ -7,7 +7,6 @@ import {
   Pause,
   PictureInPicture2,
   Play,
-  Radio,
   RotateCcw,
   SkipForward,
   Volume2,
@@ -19,10 +18,17 @@ import { cn } from "@/lib/utils";
 /* ------------------------------------------------------------------ *
  * The live chrome
  *
- * The picture carries its own marks — a LIVE badge and the bar under it —
- * because the picture is where the state is read. They live here beside
- * the transport bar rather than in it: the transport bar sits under the
- * picture, and a live badge under the picture says nothing about it.
+ * A live channel says three things about itself: that it is live, how
+ * much buffer the connection has put ahead of the playhead, and what
+ * rung of the picture is on screen. Every player in the industry puts
+ * all three in the transport bar — the badge on the left of the track,
+ * the track filling the bar, the quality chip on the right of it — and
+ * none of them over the picture, where they sit on top of the very
+ * frame they describe and recede every time the picture is late.
+ *
+ * So the chrome lives here, in the bar, and the picture is left to the
+ * picture: the loading spinner and the failure states are the only
+ * things drawn over the frame now.
  * ------------------------------------------------------------------ */
 
 /** The window of the live stream the viewer may move through. */
@@ -62,15 +68,16 @@ export function liveFill(liveWindow: LiveWindow | null | undefined): number {
 
 /**
  * The LIVE badge: the mark that says this is the live edge and not a
- * recording. It reads over any frame — a red lens with its halo, the word
- * in the display face, on a dark glass pill.
+ * recording. A red lens with its halo, the word in the display face —
+ * flat now, because it sits on the transport bar rather than on the
+ * picture, and a glass pill floating over the frame says nothing here.
  */
 export function LiveBadge({ className }: { className?: string }) {
   return (
     <span
       data-slot="live-badge"
       className={cn(
-        "inline-flex shrink-0 items-center gap-2 rounded-full border border-white/12 bg-black/55 py-1 pl-2 pr-2.5 backdrop-blur-md",
+        "inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full bg-live/12 pl-1.5 pr-2",
         className,
       )}
     >
@@ -78,7 +85,7 @@ export function LiveBadge({ className }: { className?: string }) {
         <span aria-hidden className="fx-live-eye fx-live-eye-pulse absolute inset-0" />
         <span aria-hidden className="relative size-2 rounded-full bg-live" />
       </span>
-      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-live-soft">
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-live-soft">
         Live
       </span>
     </span>
@@ -171,52 +178,38 @@ function LiveBar({
   );
 }
 
-export type LiveChromeProps = {
-  /** What the stream has buffered, and where the live edge is right now. */
-  liveWindow?: LiveWindow | null;
-  /** True while the picture is loading: the chrome steps back, it never leaves. */
-  busy?: boolean;
-  /** Fullscreen only: faded out and inert while the pointer rests. */
-  asleep?: boolean;
-  /** Moves the playhead through the buffered window. */
-  onSeek?: (time: number) => void;
-  /** The quality badge — it belongs to the hls instance, not to the bar. */
-  children?: ReactNode;
-  className?: string;
-};
-
 /**
- * The chrome over the top of the picture: the LIVE badge, the live bar,
- * and whatever else the picture has to say about itself.
+ * The jump back to the edge, offered by the live mark itself.
  *
- * It is drawn before the loading spinner in the DOM, so the spinner —
- * the picture being late — reads on top of it. While the spinner waits,
- * the whole strip recedes to a whisper instead of disappearing.
+ * The viewer sits behind the live edge, and one press walks them home.
+ * It carries the same red lens as the badge — the eye reads it as the
+ * same mark — but it is a button, so it is set as type rather than as
+ * another pill: two red chips side by side say the same thing twice. On
+ * a phone the words shorten to the destination, and the lens stays.
  */
-export function LiveChrome({
-  liveWindow = null,
-  busy = false,
-  asleep = false,
-  onSeek,
-  children,
-  className,
-}: LiveChromeProps) {
+function LiveJump({ onJump, className }: { onJump: () => void; className?: string }) {
   return (
-    <div
-      data-slot="live-chrome"
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={onJump}
+      aria-label="Înapoi la direct"
+      title="Înapoi la direct"
       className={cn(
-        "pointer-events-none absolute inset-x-0 top-0 flex items-center gap-2.5",
-        "bg-gradient-to-b from-black/70 via-black/25 to-transparent px-3 py-2.5 sm:px-4",
-        "transition-opacity duration-300 ease-out",
-        busy && "opacity-40",
-        asleep && "opacity-0",
+        "h-6 shrink-0 gap-1.5 rounded-full px-2 text-live-soft",
+        "hover:bg-live/12 hover:text-live",
         className,
       )}
     >
-      <LiveBadge />
-      <LiveBar fill={liveFill(liveWindow)} liveWindow={liveWindow} onSeek={onSeek} />
-      {children}
-    </div>
+      <span className="relative grid size-2 place-items-center">
+        <span aria-hidden className="fx-live-eye absolute inset-0" />
+        <span aria-hidden className="relative size-2 rounded-full bg-live" />
+      </span>
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em]">
+        <span className="sm:hidden">Direct</span>
+        <span className="hidden sm:inline">Înapoi la direct</span>
+      </span>
+    </Button>
   );
 }
 
@@ -227,7 +220,7 @@ export type PlayerControlsProps = {
   volume: number;
   /** True while the player is looking for a working link. */
   busy?: boolean;
-  /** True while the picture fills the screen: the bar floats over it. */
+  /** True when the picture fills the screen: the bar floats over it. */
   fullscreen?: boolean;
   /** Fullscreen only: faded out and inert while the pointer rests. */
   asleep?: boolean;
@@ -239,6 +232,17 @@ export type PlayerControlsProps = {
   canPictureInPicture?: boolean;
   /** True while the viewer sits behind the live edge. */
   behindLive?: boolean;
+  /** What the stream has buffered, and where the live edge is right now. */
+  liveWindow?: LiveWindow | null;
+  /** Moves the playhead through the buffered window — desktop only. */
+  onSeek?: (time: number) => void;
+  /**
+   * What is on now — the channel and the marks of the programme it is
+   * playing. It heads the bar, the way every player names what it shows.
+   */
+  nowPlaying?: ReactNode;
+  /** The quality badge, on the right of the track. */
+  quality?: ReactNode;
   onTogglePlay: () => void;
   onToggleMute: () => void;
   onVolumeChange: (value: number) => void;
@@ -251,12 +255,19 @@ export type PlayerControlsProps = {
 };
 
 /**
- * The transport bar under the picture.
+ * The transport bar.
  *
  * Every control is a real button with a label; the toggles carry
- * `aria-pressed` so a screen reader can tell their state. The live bar and
- * the scrubber live over the picture, in `LiveChrome` above — a bar under
- * the picture cannot say anything about the picture.
+ * `aria-pressed` so a screen reader can tell their state.
+ *
+ * The bar holds the live chrome as well: what is on now at its head, the
+ * LIVE badge and the live bar under it, and the quality chip at the end of
+ * the track. On a phone the chrome takes a row of its own above the
+ * transport — a 360px screen cannot seat six controls and a scrubber side
+ * by side, and squeezing them would leave the bar no room to say anything.
+ * From `sm` up the two rows become one: the transport on the left, the
+ * track filling what is left, the quality chip and the picture controls on
+ * the right — the arrangement every player in the industry uses.
  */
 export function PlayerControls({
   playing,
@@ -269,6 +280,10 @@ export function PlayerControls({
   canSwitch = false,
   canPictureInPicture = false,
   behindLive = false,
+  liveWindow = null,
+  onSeek,
+  nowPlaying,
+  quality,
   onTogglePlay,
   onToggleMute,
   onVolumeChange,
@@ -284,122 +299,139 @@ export function PlayerControls({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 px-3 py-2.5 sm:px-4",
+        "flex flex-col",
         fullscreen
           ? // Fullscreen: the bar floats over the bottom of the picture on
-            // a gradient, so the buttons stay readable over any frame.
-            "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-opacity duration-300"
+             // a gradient, so the buttons stay readable over any frame.
+             "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-opacity duration-300"
           : // The bar sits at the bottom of the sheet on a phone, clear of
-            // the home indicator.
-            "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
+             // the home indicator.
+             "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
         // The picture runs alone in fullscreen until the pointer moves.
         asleep && "pointer-events-none opacity-0",
         className,
       )}
     >
-      <Button
-        variant="primary"
-        size="icon"
-        onClick={onTogglePlay}
-        aria-label={playing ? "Pauză" : "Redare"}
-        title={playing ? "Pauză" : "Redare"}
-      >
-        {playing ? <Pause className="size-4.5" /> : <Play className="size-4.5" />}
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        onClick={onToggleMute}
-        aria-label={muted ? "Ssună audio" : "Dezactivează sunetul"}
-        aria-pressed={muted}
-        title={muted ? "Ssună audio" : "Dezactivează sunetul"}
-      >
-        {muted ? (
-          <VolumeX className="size-4" />
-        ) : (
-          <Volume2 className="size-4" />
-        )}
-      </Button>
-
-      <label htmlFor={volumeId} className="sr-only">
-        Volum
-      </label>
-      <input
-        id={volumeId}
-        type="range"
-        min={0}
-        max={1}
-        step={0.05}
-        value={muted ? 0 : volume}
-        onChange={(event) => onVolumeChange(Number(event.target.value))}
-        className="hidden h-1 w-24 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal sm:block"
-        aria-label="Volum"
-      />
-
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        onClick={onRetry}
-        aria-label="Reîncearcă fluxul"
-        title="Reîncearcă fluxul"
-      >
-        <RotateCcw className={cn("size-4", busy && "animate-spin")} />
-      </Button>
-
-      {canSwitch && onNextSource ? (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onNextSource}
-          aria-label="Treci la următorul flux"
-        >
-          <SkipForward className="size-4" />
-          <span className="hidden sm:inline">Flux următor</span>
-        </Button>
+      {/* What is on now. */}
+      {nowPlaying ? (
+        <div className="flex min-w-0 items-center gap-x-2.5 px-3 pt-2.5 sm:px-4 sm:pt-3">
+          {nowPlaying}
+        </div>
       ) : null}
 
-      <div className="ml-auto flex items-center gap-3">
-        {behindLive && onJumpToLive ? (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onJumpToLive}
-            aria-label="Înapoi la direct"
-          >
-            <Radio className="size-3.5 text-live" />
-            Înapoi la direct
-          </Button>
-        ) : null}
+      <div
+        className={cn(
+          "flex flex-col gap-1.5 px-3 pb-2.5 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:pb-2.5",
+          nowPlaying ? "pt-1.5" : "pt-2.5",
+        )}
+      >
+        {/* The live chrome: the badge, the buffer bar, the quality chip and
+            the way back to the edge. It takes a row of its own on a phone,
+            and joins the bar row from `sm` up. */}
+        <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:order-2 sm:gap-3">
+          <LiveBadge />
+          <LiveBar fill={liveFill(liveWindow)} liveWindow={liveWindow} onSeek={onSeek} />
+          {quality}
+          {behindLive && onJumpToLive ? (
+            <LiveJump onJump={onJumpToLive} />
+          ) : null}
+        </div>
 
-        {canPictureInPicture && onTogglePictureInPicture ? (
+        {/* The transport. */}
+        <div className="flex shrink-0 items-center gap-1.5 sm:order-1 sm:gap-2">
+          <Button
+            variant="primary"
+            size="icon"
+            onClick={onTogglePlay}
+            aria-label={playing ? "Pauză" : "Redare"}
+            title={playing ? "Pauză" : "Redare"}
+          >
+            {playing ? <Pause className="size-4.5" /> : <Play className="size-4.5" />}
+          </Button>
+
           <Button
             variant="ghost"
             size="icon-sm"
-            onClick={onTogglePictureInPicture}
-            aria-label="Picture in Picture"
-            title="Picture in Picture"
+            onClick={onToggleMute}
+            aria-label={muted ? "Ssună audio" : "Dezactivează sunetul"}
+            aria-pressed={muted}
+            title={muted ? "Ssună audio" : "Dezactivează sunetul"}
           >
-            <PictureInPicture2 className="size-4" />
-          </Button>
-        ) : null}
-
-        {canFullscreen ? (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={onToggleFullscreen}
-            aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-            aria-pressed={fullscreen}
-            title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-          >
-            {fullscreen ? (
-              <Minimize className="size-4" />
+            {muted ? (
+              <VolumeX className="size-4" />
             ) : (
-              <Maximize className="size-4" />
+              <Volume2 className="size-4" />
             )}
           </Button>
-        ) : null}
+
+          <label htmlFor={volumeId} className="sr-only">
+            Volum
+          </label>
+          <input
+            id={volumeId}
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={muted ? 0 : volume}
+            onChange={(event) => onVolumeChange(Number(event.target.value))}
+            className="hidden h-1 w-24 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal lg:block"
+            aria-label="Volum"
+          />
+
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onRetry}
+            aria-label="Reîncearcă fluxul"
+            title="Reîncearcă fluxul"
+          >
+            <RotateCcw className={cn("size-4", busy && "animate-spin")} />
+          </Button>
+
+          {canSwitch && onNextSource ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onNextSource}
+              aria-label="Treci la următorul flux"
+            >
+              <SkipForward className="size-4" />
+              <span className="hidden lg:inline">Flux următor</span>
+            </Button>
+          ) : null}
+
+          <div className="ml-auto flex items-center gap-2 sm:ml-0">
+            {canPictureInPicture && onTogglePictureInPicture ? (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={onTogglePictureInPicture}
+                aria-label="Picture in Picture"
+                title="Picture in Picture"
+              >
+                <PictureInPicture2 className="size-4" />
+              </Button>
+            ) : null}
+
+            {canFullscreen ? (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={onToggleFullscreen}
+                aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+                aria-pressed={fullscreen}
+                title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+              >
+                {fullscreen ? (
+                  <Minimize className="size-4" />
+                ) : (
+                  <Maximize className="size-4" />
+                )}
+              </Button>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );

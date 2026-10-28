@@ -32,7 +32,7 @@ import {
 import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LiveChrome, PlayerControls } from "@/components/player/player-controls";
+import { PlayerControls } from "@/components/player/player-controls";
 import {
   PlayerQualityBadge,
   type QualityVariant,
@@ -41,11 +41,13 @@ import { MinutesWarning } from "@/components/player/minutes-warning";
 import { StreamNotice } from "@/components/player/stream-notice";
 import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import { Paywall } from "@/components/player/paywall";
+import { ProgrammeBadges } from "@/components/player/programme-badges";
 import {
   usePlayer,
   type PlayerStatus,
 } from "@/hooks/use-player";
 import { useAccount, useWatchClock } from "@/hooks/use-account";
+import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
 
 /**
@@ -152,9 +154,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // instance's own effect below.
     const [qualityLevels, setQualityLevels] = useState<QualityVariant[]>([]);
     const [currentLevel, setCurrentLevel] = useState(-1);
-    // The picture asked for frames the buffer does not have yet: the same
-    // pause the loading spinner answers, named for the chrome.
-    const [stalled, setStalled] = useState(false);
     // The browser refused to start the picture: the visitor has to tap.
     const [blocked, setBlocked] = useState(false);
 
@@ -296,7 +295,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       // A new link gets a new chance: the previous refusal says nothing
       // about this one.
       setBlocked(false);
-      setStalled(false);
       // The ladder belongs to the instance that is about to be built: until
       // its manifest is parsed there is no quality to name and none to
       // choose, so the badge stays away.
@@ -591,6 +589,47 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     }, [sourceUrl]);
 
     /**
+     * What is on the air right now.
+     *
+     * The bar heads itself with the programme's own marks — the age rating,
+     * the genre, the accessibility flags — and those are resolved from the
+     * programme's title. The guide is read on the server, so the browser
+     * asks the same sheet the channel panel reads and keeps the title. Once
+     * a minute, because that is the guide's own resolution: a show that ends
+     * at 12:59 is named no longer than a second past 13:00.
+     */
+    const minuteTick = useMinuteTick();
+    const [programme, setProgramme] = useState<{
+      id: string;
+      title: string | null;
+    }>({ id: channelId, title: null });
+
+    useEffect(() => {
+      let live = true;
+
+      fetch(`/api/channel/${encodeURIComponent(channelId)}`)
+        .then((response) => {
+          if (!response.ok) throw new Error("bad status");
+          return response.json() as Promise<{
+            now?: { title?: string | null } | null;
+          }>;
+        })
+        .then((sheet) => {
+          if (live) setProgramme({ id: channelId, title: sheet?.now?.title ?? null });
+        })
+        .catch(() => {
+          // The sheet did not answer: what the player already knew stays,
+          // rather than the bar losing its marks over a slow minute.
+        });
+
+      return () => {
+        live = false;
+      };
+    }, [channelId, minuteTick]);
+
+    const programmeTitle = programme.id === channelId ? programme.title : null;
+
+    /**
      * The stall watchdog.
      *
      * A picture that stops on a slow line is nudged back to work: the
@@ -869,14 +908,10 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             onLoadedMetadata={readStreamSize}
             onPlaying={() => {
               setPlaying(true);
-              setStalled(false);
               player.markPlaying();
             }}
             onPause={() => setPlaying(false)}
-            onWaiting={() => {
-              setPlaying(false);
-              setStalled(true);
-            }}
+            onWaiting={() => setPlaying(false)}
             onError={() => failRef.current("Fluxul nu poate fi redat.")}
           />
 
@@ -900,25 +935,11 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             </p>
           ) : null}
 
-          {/* The live chrome: the LIVE badge, the buffer bar and the
-              quality badge, over the picture. They sit before the loading
-              spinner in the DOM, so the spinner — the picture being late
-              — reads on top of them, and they recede while it waits. */}
-          {!bare && !embedded ? (
-            <LiveChrome
-              liveWindow={liveWindow}
-              busy={busy || stalled}
-              asleep={fullscreen && controlsAsleep}
-              onSeek={seek}
-            >
-              <PlayerQualityBadge
-                variants={qualityLevels}
-                currentLevel={currentLevel}
-                stream={stream}
-                onLevelChange={selectLevel}
-              />
-            </LiveChrome>
-          ) : null}
+          {/* The picture is left to the picture: the loading spinner and
+              the failure states below are the only things drawn over the
+              frame. The live chrome — the LIVE badge, the buffer bar and
+              the quality chip — lives in the transport bar, where every
+              player in the industry keeps it. */}
 
           {busy && !failed && !embedded && !blocked ? (
             <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55 rounded-2xl">
@@ -1035,6 +1056,28 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}
             behindLive={behindLive}
+            liveWindow={liveWindow}
+            nowPlaying={
+              <>
+                <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
+                  {channelName}
+                </span>
+                <ProgrammeBadges
+                  channelId={channelId}
+                  title={programmeTitle}
+                  className="min-w-0"
+                />
+              </>
+            }
+            quality={
+              <PlayerQualityBadge
+                variants={qualityLevels}
+                currentLevel={currentLevel}
+                stream={stream}
+                onLevelChange={selectLevel}
+              />
+            }
+            onSeek={seek}
             onTogglePlay={togglePlay}
             onToggleMute={toggleMute}
             onVolumeChange={changeVolume}
