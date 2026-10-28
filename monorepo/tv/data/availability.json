@@ -1,0 +1,1292 @@
+{
+  "generatedAt": "2026-10-22T07:38:05.872Z",
+  "results": [
+    {
+      "id": "pro-tv",
+      "name": "PRO TV",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 4,
+      "working": 4,
+      "why": null
+    },
+    {
+      "id": "pro-tv-news",
+      "name": "PRO TV News",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "pro-cinema",
+      "name": "PRO CINEMA",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "tvr-1",
+      "name": "TVR 1",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "tvr-2",
+      "name": "TVR 2",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "tvr-3",
+      "name": "TVR 3",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "tvr-sport",
+      "name": "TVR Sport",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "tvr-internazionale",
+      "name": "TVR Internazionale",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "prima-tv",
+      "name": "Prima TV",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 4,
+      "working": 4,
+      "why": null
+    },
+    {
+      "id": "hbo",
+      "name": "HBO",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "hbo-2",
+      "name": "HBO 2",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "hbo-3",
+      "name": "HBO 3",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "cinemax-1",
+      "name": "Cinemax 1",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "cinemax-2",
+      "name": "Cinemax 2",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "national-tv",
+      "name": "Național TV",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "kanal-d",
+      "name": "Kanal D",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "kanal-d-2",
+      "name": "Kanal D 2",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "antena-1",
+      "name": "Antena 1",
+      "declared": "live",
+      "feeds": 5,
+      "sources": 5,
+      "working": 5,
+      "why": null
+    },
+    {
+      "id": "pro-2",
+      "name": "PRO 2",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "pro-2-gold",
+      "name": "PRO 2 Gold",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "pro-x",
+      "name": "PRO X",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "antena-3",
+      "name": "Antena 3",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 4,
+      "working": 4,
+      "why": null
+    },
+    {
+      "id": "realitatea",
+      "name": "Realitatea",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 4,
+      "working": 4,
+      "why": null
+    },
+    {
+      "id": "supersport-1",
+      "name": "SuperSport 1",
+      "declared": "blocked",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "supersport-2",
+      "name": "SuperSport 2",
+      "declared": "blocked",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "supersport-3",
+      "name": "SuperSport 3",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 1,
+      "why": "http 502"
+    },
+    {
+      "id": "supersport-4",
+      "name": "SuperSport 4",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 1,
+      "why": "http 502"
+    },
+    {
+      "id": "telekom-sport-1",
+      "name": "Telekom Sport 1",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "telekom-sport-2",
+      "name": "Telekom Sport 2",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "telekom-sport-3",
+      "name": "Telekom Sport 3",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "telekom-sport-4",
+      "name": "Telekom Sport 4",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "look-sport-1",
+      "name": "LOOK Sport 1",
+      "declared": "blocked",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "look-sport-2",
+      "name": "LOOK Sport 2",
+      "declared": "blocked",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "look-sport-3",
+      "name": "LOOK Sport 3",
+      "declared": "blocked",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "look-sport-4",
+      "name": "LOOK Sport 4",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 0,
+      "why": "http 502"
+    },
+    {
+      "id": "look-sport-5",
+      "name": "LOOK Sport 5",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 0,
+      "why": "http 502"
+    },
+    {
+      "id": "look-pp1",
+      "name": "LOOK PP1",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 0,
+      "why": "http 502"
+    },
+    {
+      "id": "look-pp2",
+      "name": "LOOK PP2",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 0,
+      "why": "http 502"
+    },
+    {
+      "id": "look-pp3",
+      "name": "LOOK PP3",
+      "declared": "blocked",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "esports-1",
+      "name": "eSports 1",
+      "declared": "blocked",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "esports-2",
+      "name": "eSports 2",
+      "declared": "blocked",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "rtv",
+      "name": "RTV",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "tv-1000-max",
+      "name": "TV 1000 Max",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "movies",
+      "name": "Movies",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "zu-tv",
+      "name": "Zu TV",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "filmbox-hd",
+      "name": "Filmbox HD",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "filmbox-family",
+      "name": "Filmbox Family",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "filmbox-extra",
+      "name": "Filmbox Extra",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "filmbox",
+      "name": "Filmbox",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "antena-stars",
+      "name": "Antena Stars",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "teennick",
+      "name": "TeenNick",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "film-cafe",
+      "name": "Film Café",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "happy-channel",
+      "name": "Happy Channel",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "diva-universal",
+      "name": "Diva Universal",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "disney-channel",
+      "name": "Disney Channel",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "disney-junior",
+      "name": "Disney Junior",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "cartoon-network",
+      "name": "Cartoon Network",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "boomerang",
+      "name": "Boomerang",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "jim-jam",
+      "name": "Jim Jam",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "b1-tv",
+      "name": "B1 TV",
+      "declared": "live",
+      "feeds": 4,
+      "sources": 4,
+      "working": 4,
+      "why": null
+    },
+    {
+      "id": "nickelodeon",
+      "name": "Nickelodeon",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "nickelodeon-junior",
+      "name": "Nickelodeon Junior",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "nicktoons",
+      "name": "NickToons",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "amc",
+      "name": "AMC",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "bbc-earth",
+      "name": "BBC Earth",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "prima-news",
+      "name": "Prima News",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "euronews",
+      "name": "EuroNews",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "show-1",
+      "name": "SHOW 1",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "show-2",
+      "name": "SHOW 2",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "axn",
+      "name": "AXN",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "axn-black",
+      "name": "AXN Black",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "axn-white",
+      "name": "AXN White",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "axn-spin",
+      "name": "AXN Spin",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "tnt",
+      "name": "TNT",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "epic-drama",
+      "name": "Epic Drama",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "comedy-central",
+      "name": "Comedy Central",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "shorts",
+      "name": "Shorts",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "viasat-nature",
+      "name": "ViaSat Nature",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "viasat-explorer",
+      "name": "ViaSat Explorer",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "viasat-history",
+      "name": "ViaSat History",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "duck-tv",
+      "name": "Duck TV",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "bollywood-clasic",
+      "name": "Bollywood Clasic",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "bollywood-tv",
+      "name": "Bollywood TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "bollywood-extra",
+      "name": "Bollywood Extra",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "crime",
+      "name": "Crime+",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "tlc",
+      "name": "TLC",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "travel-channel",
+      "name": "Travel Channel",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "travel-living",
+      "name": "Travel & Living",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "national-geographic",
+      "name": "National Geographic",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "nat-geo-wild",
+      "name": "Nat Geo Wild",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "animal-planet",
+      "name": "Animal Planet",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "discovery-channel",
+      "name": "Discovery Channel",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "history-channel",
+      "name": "History Channel",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "discovery-id",
+      "name": "Discovery ID",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "discovery-science",
+      "name": "Discovery Science",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 1,
+      "why": "http 502"
+    },
+    {
+      "id": "discovery-world",
+      "name": "Discovery World",
+      "declared": "acestream",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "trinitas-tv",
+      "name": "Trinitas TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "credo-tv",
+      "name": "Credo TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "moldova-1",
+      "name": "Moldova 1",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "publika-tv",
+      "name": "Publika TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "paprika-tv",
+      "name": "Paprika TV",
+      "declared": "live",
+      "feeds": 3,
+      "sources": 3,
+      "working": 3,
+      "why": null
+    },
+    {
+      "id": "cbs-reality",
+      "name": "CBS Reality",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 0,
+      "why": "The operation was aborted due to timeout"
+    },
+    {
+      "id": "fishing-hunting",
+      "name": "Fishing & Hunting",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 1,
+      "why": "http 502"
+    },
+    {
+      "id": "u-tv-music",
+      "name": "U-TV Music",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "n24",
+      "name": "N24+",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "kiss-tv",
+      "name": "Kiss TV",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "taraf-tv",
+      "name": "Taraf TV",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "favorit-tv",
+      "name": "Favorit TV",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "music-channel",
+      "name": "Music Channel",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "hit-music",
+      "name": "Hit Music",
+      "declared": "live",
+      "feeds": 2,
+      "sources": 2,
+      "working": 2,
+      "why": null
+    },
+    {
+      "id": "news-24",
+      "name": "News 24",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "inedit-tv",
+      "name": "Inedit TV",
+      "declared": "acestream",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "france-24",
+      "name": "France 24",
+      "declared": "acestream",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "cnn",
+      "name": "CNN",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "etno-tv",
+      "name": "Etno TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "acasa-gold",
+      "name": "Acasa Gold",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "acasa-tv",
+      "name": "Acasa TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "antena-3-cnn",
+      "name": "Antena 3 CNN",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "balcan-music",
+      "name": "Balcan Music",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "bbc-world-news",
+      "name": "BBC World News",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 1,
+      "working": 0,
+      "why": "The operation was aborted due to timeout"
+    },
+    {
+      "id": "cartoonito",
+      "name": "Cartoonito",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "cinemaraton",
+      "name": "Cinemaraton",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "cinewow",
+      "name": "CineWOW",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "digi-24",
+      "name": "Digi 24",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "digi-sport-1",
+      "name": "Digi Sport 1",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "digi-sport-2",
+      "name": "Digi Sport 2",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "digi-sport-3",
+      "name": "Digi Sport 3",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "digi-sport-4",
+      "name": "Digi Sport 4",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "dizi",
+      "name": "Dizi",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "eurosport-1",
+      "name": "EuroSport 1",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "eurosport-2",
+      "name": "EuroSport 2",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "film-now",
+      "name": "Film Now",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "magic-tv",
+      "name": "Magic TV",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "metropola-tv",
+      "name": "MetroPola TV",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "mtv",
+      "name": "MTV",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "prima-sport-1",
+      "name": "Prima Sport 1",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "prima-sport-2",
+      "name": "Prima Sport 2",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "prima-sport-3",
+      "name": "Prima Sport 3",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "pro-arena",
+      "name": "Pro Arena",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "romania-tv",
+      "name": "Romania TV",
+      "declared": "live",
+      "feeds": 1,
+      "sources": 1,
+      "working": 1,
+      "why": null
+    },
+    {
+      "id": "traditional-tv",
+      "name": "Traditional TV",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    },
+    {
+      "id": "tralala",
+      "name": "Tralala",
+      "declared": "unknown",
+      "feeds": 1,
+      "sources": 0,
+      "working": 0,
+      "why": null
+    }
+  ]
+}

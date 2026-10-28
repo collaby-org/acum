@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#06070a" />
+    <title>ACUM — fără conexiune</title>
+    <link rel="icon" href="/icons/icon-192.png" />
+    <style>
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("/fonts/space-grotesk-700-latin.woff2") format("woff2");
+        font-weight: 700;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("/fonts/inter-400-700-latin.woff2") format("woff2");
+        font-weight: 400 700;
+        font-display: swap;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: #06070a;
+        color: #f2f4f8;
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 30rem;
+        padding: 40px 32px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.03);
+        text-align: center;
+      }
+
+      .badge {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        margin: 0 auto;
+        border-radius: 15px;
+        background: linear-gradient(180deg, #121724 0%, #080b14 55%, #04050a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 14px 34px -14px rgba(242, 167, 27, 0.75),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+      }
+
+      .badge svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      h1 {
+        margin: 28px 0 0;
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      p {
+        margin: 14px 0 0;
+        font-size: 15px;
+        line-height: 1.65;
+        color: #949cad;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: #f2a71b;
+        color: #1a1000;
+        box-shadow: 0 14px 34px -14px rgba(242, 167, 27, 0.9);
+      }
+
+      .btn-ghost {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        color: #f2f4f8;
+      }
+
+      .wordmark {
+        margin-top: 32px;
+        font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: #616a7b;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <span class="badge" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="acum-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFE7B0" />
+              <stop offset="0.38" stop-color="#F7B733" />
+              <stop offset="0.72" stop-color="#DE9206" />
+              <stop offset="1" stop-color="#9C6600" />
+            </linearGradient>
+            <linearGradient id="acum-rail" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#D98F04" />
+              <stop offset="0.55" stop-color="#FFC95E" />
+              <stop offset="1" stop-color="#FFF3D4" />
+            </linearGradient>
+          </defs>
+          <rect x="59" y="54" width="33" height="12" rx="6" fill="url(#acum-rail)" />
+          <path d="M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z" fill="url(#acum-gold)" />
+        </svg>
+      </span>
+      <h1>Fără conexiune</h1>
+      <p>
+        Canalele TV live au nevoie de internet. Când reveniți online, apăsați
+        din nou — ACUM reia de unde ați rămas.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/">Înapoi la canale</a>
+        <button class="btn btn-ghost" type="button" onclick="location.reload()">
+          Reîncarcă
+        </button>
+      </div>
+      <p class="wordmark">ACUM</p>
+    </main>
+  </body>
+</html>

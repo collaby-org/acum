@@ -1,0 +1,1323 @@
+{
+  "generatedAt": "2026-10-22T21:17:29.395Z",
+  "posters": {
+    "pro-tv": [
+      {
+        "file": "pro-tv-1792701900000.jpg",
+        "capturedAt": "2026-10-22T20:57:44.007Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Ştirile Pro Tv",
+          "startsAt": 1792701900000,
+          "endsAt": 1792703699000
+        }
+      },
+      {
+        "file": "pro-tv.jpg",
+        "capturedAt": "2026-10-22T08:05:13.943Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "tvr-1": [
+      {
+        "file": "tvr-1-1792699200000.jpg",
+        "capturedAt": "2026-10-22T20:58:08.751Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Telejurnal",
+          "startsAt": 1792699200000,
+          "endsAt": 1792702799000
+        }
+      },
+      {
+        "file": "tvr-1.jpg",
+        "capturedAt": "2026-10-22T08:05:38.868Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "tvr-2": [
+      {
+        "file": "tvr-2-1792701000000.jpg",
+        "capturedAt": "2026-10-22T20:58:14.911Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Poarta Pangrati",
+          "startsAt": 1792701000000,
+          "endsAt": 1792704599000
+        }
+      },
+      {
+        "file": "tvr-2.jpg",
+        "capturedAt": "2026-10-22T08:05:46.202Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "tvr-3": [
+      {
+        "file": "tvr-3-1792701000000.jpg",
+        "capturedAt": "2026-10-22T20:58:22.052Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Program preluat de la Televiziunea Publică din Ucraina destinat refugiaţilor",
+          "startsAt": 1792701000000,
+          "endsAt": 1792708199000
+        }
+      },
+      {
+        "file": "tvr-3.jpg",
+        "capturedAt": "2026-10-22T08:05:51.623Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "tvr-sport": {
+      "file": "tvr-sport.jpg",
+      "capturedAt": "2026-10-22T08:06:01.912Z",
+      "width": 640,
+      "height": 360
+    },
+    "prima-tv": [
+      {
+        "file": "prima-tv-1792699200000.jpg",
+        "capturedAt": "2026-10-22T20:58:39.847Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Caracatița",
+          "startsAt": 1792699200000,
+          "endsAt": 1792702799000
+        }
+      },
+      {
+        "file": "prima-tv.jpg",
+        "capturedAt": "2026-10-22T08:06:14.184Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "hbo": [
+      {
+        "file": "hbo-1792700100000.jpg",
+        "capturedAt": "2026-10-22T20:58:45.078Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Crimele de la magazinul cu iaurturi",
+          "startsAt": 1792700100000,
+          "endsAt": 1792703699000
+        }
+      },
+      {
+        "file": "hbo.jpg",
+        "capturedAt": "2026-10-22T08:06:20.578Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "hbo-2": [
+      {
+        "file": "hbo-2-1792702500000.jpg",
+        "capturedAt": "2026-10-22T20:58:50.645Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Dezghețul",
+          "startsAt": 1792702500000,
+          "endsAt": 1792705199000
+        }
+      },
+      {
+        "file": "hbo-2.jpg",
+        "capturedAt": "2026-10-22T08:06:27.004Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "hbo-3": [
+      {
+        "file": "hbo-3-1792700400000.jpg",
+        "capturedAt": "2026-10-22T20:58:56.239Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Spencer",
+          "startsAt": 1792700400000,
+          "endsAt": 1792702799000
+        }
+      },
+      {
+        "file": "hbo-3.jpg",
+        "capturedAt": "2026-10-22T08:06:35.458Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "cinemax-1": [
+      {
+        "file": "cinemax-1-1792700100000.jpg",
+        "capturedAt": "2026-10-22T20:59:01.315Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Crimele de la magazinul cu iaurturi",
+          "startsAt": 1792700100000,
+          "endsAt": 1792703699000
+        }
+      },
+      {
+        "file": "cinemax-1.jpg",
+        "capturedAt": "2026-10-22T08:06:46.852Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "cinemax-2": [
+      {
+        "file": "cinemax-2-1792702200000.jpg",
+        "capturedAt": "2026-10-22T20:59:11.082Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Strălucirea",
+          "startsAt": 1792702200000,
+          "endsAt": 1792710599000
+        }
+      },
+      {
+        "file": "cinemax-2.jpg",
+        "capturedAt": "2026-10-22T08:16:26.486Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "national-tv": [
+      {
+        "file": "national-tv-1792700100000.jpg",
+        "capturedAt": "2026-10-22T20:59:15.738Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Gotti",
+          "startsAt": 1792700100000,
+          "endsAt": 1792708199000
+        }
+      },
+      {
+        "file": "national-tv.jpg",
+        "capturedAt": "2026-10-22T08:07:48.761Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "kanal-d": [
+      {
+        "file": "kanal-d-1792699200000.jpg",
+        "capturedAt": "2026-10-22T20:59:20.321Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Adevăr sau legendă",
+          "startsAt": 1792699200000,
+          "endsAt": 1792704599000
+        }
+      },
+      {
+        "file": "kanal-d.jpg",
+        "capturedAt": "2026-10-22T08:07:54.848Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "kanal-d-2": [
+      {
+        "file": "kanal-d-2-1792699200000.jpg",
+        "capturedAt": "2026-10-22T20:59:25.399Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Pe banii părinţilor",
+          "startsAt": 1792699200000,
+          "endsAt": 1792704599000
+        }
+      },
+      {
+        "file": "kanal-d-2.jpg",
+        "capturedAt": "2026-10-22T08:08:04.584Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "antena-1": [
+      {
+        "file": "antena-1-1792701000000.jpg",
+        "capturedAt": "2026-10-22T20:59:29.977Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Observator",
+          "startsAt": 1792701000000,
+          "endsAt": 1792703699000
+        }
+      },
+      {
+        "file": "antena-1.jpg",
+        "capturedAt": "2026-10-22T08:08:10.616Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "antena-3": [
+      {
+        "file": "antena-3-1792701000000.jpg",
+        "capturedAt": "2026-10-22T20:59:58.062Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "În gura presei",
+          "startsAt": 1792701000000,
+          "endsAt": 1792706400000
+        }
+      },
+      {
+        "file": "antena-3.jpg",
+        "capturedAt": "2026-10-22T08:41:14.723Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "realitatea": {
+      "file": "realitatea.jpg",
+      "capturedAt": "2026-10-22T08:41:20.868Z",
+      "width": 640,
+      "height": 360
+    },
+    "supersport-1": {
+      "file": "supersport-1.jpg",
+      "capturedAt": "2026-10-22T08:17:02.639Z",
+      "width": 640,
+      "height": 360
+    },
+    "pro-cinema": [
+      {
+        "file": "pro-cinema-1792698300000.jpg",
+        "capturedAt": "2026-10-22T20:58:03.068Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Resident Evil : Viața de apoi",
+          "startsAt": 1792698300000,
+          "endsAt": 1792705499000
+        }
+      },
+      {
+        "file": "pro-cinema.jpg",
+        "capturedAt": "2026-10-22T08:05:32.517Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "pro-tv-news": [
+      {
+        "file": "pro-tv-news-1792701900000.jpg",
+        "capturedAt": "2026-10-22T20:57:58.416Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Ştirile Pro Tv",
+          "startsAt": 1792701900000,
+          "endsAt": 1792703699000
+        }
+      },
+      {
+        "file": "pro-tv-news.jpg",
+        "capturedAt": "2026-10-22T08:05:21.371Z",
+        "width": 640,
+        "height": 360
+      }
+    ],
+    "pro-2-gold": [
+      {
+        "file": "pro-2-gold.jpg",
+        "capturedAt": "2026-10-22T20:59:46.262Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "pro-x": [
+      {
+        "file": "pro-x.jpg",
+        "capturedAt": "2026-10-22T20:59:50.833Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "rtv": [
+      {
+        "file": "rtv.jpg",
+        "capturedAt": "2026-10-22T21:03:26.206Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "tv-1000-max": [
+      {
+        "file": "tv-1000-max.jpg",
+        "capturedAt": "2026-10-22T21:03:30.264Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "movies": [
+      {
+        "file": "movies.jpg",
+        "capturedAt": "2026-10-22T21:03:34.306Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "zu-tv": [
+      {
+        "file": "zu-tv-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:03:39.393Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Poftă bună împreună",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "filmbox-hd": [
+      {
+        "file": "filmbox-hd.jpg",
+        "capturedAt": "2026-10-22T21:03:44.422Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "filmbox-family": [
+      {
+        "file": "filmbox-family.jpg",
+        "capturedAt": "2026-10-22T21:03:48.956Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "filmbox-extra": [
+      {
+        "file": "filmbox-extra.jpg",
+        "capturedAt": "2026-10-22T21:03:54.498Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "filmbox": [
+      {
+        "file": "filmbox.jpg",
+        "capturedAt": "2026-10-22T21:03:59.078Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "antena-stars": [
+      {
+        "file": "antena-stars-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:04:03.647Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Acces direct",
+          "startsAt": 1792702800000,
+          "endsAt": 1792712699000
+        }
+      }
+    ],
+    "film-cafe": [
+      {
+        "file": "film-cafe-1792695600000.jpg",
+        "capturedAt": "2026-10-22T21:04:21.894Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Dracula 2000",
+          "startsAt": 1792695600000,
+          "endsAt": 1792703699000
+        }
+      }
+    ],
+    "happy-channel": [
+      {
+        "file": "happy-channel-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:04:26.972Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Micuta raza de soare",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "diva-universal": [
+      {
+        "file": "diva-universal.jpg",
+        "capturedAt": "2026-10-22T21:04:32.044Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "disney-channel": [
+      {
+        "file": "disney-channel.jpg",
+        "capturedAt": "2026-10-22T21:04:37.244Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "disney-junior": [
+      {
+        "file": "disney-junior.jpg",
+        "capturedAt": "2026-10-22T21:04:45.363Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "cartoon-network": [
+      {
+        "file": "cartoon-network.jpg",
+        "capturedAt": "2026-10-22T21:04:50.442Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "boomerang": [
+      {
+        "file": "boomerang.jpg",
+        "capturedAt": "2026-10-22T21:04:54.972Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "minimax": [
+      {
+        "file": "minimax.jpg",
+        "capturedAt": "2026-10-22T21:05:00.077Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "jim-jam": [
+      {
+        "file": "jim-jam.jpg",
+        "capturedAt": "2026-10-22T21:05:05.152Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "b1-tv": [
+      {
+        "file": "b1-tv-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:05:10.171Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Bună, România!",
+          "startsAt": 1792702800000,
+          "endsAt": 1792709399000
+        }
+      }
+    ],
+    "nickelodeon": [
+      {
+        "file": "nickelodeon.jpg",
+        "capturedAt": "2026-10-22T21:05:15.181Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "nickelodeon-junior": [
+      {
+        "file": "nickelodeon-junior.jpg",
+        "capturedAt": "2026-10-22T21:05:21.811Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "nicktoons": [
+      {
+        "file": "nicktoons.jpg",
+        "capturedAt": "2026-10-22T21:05:27.863Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "amc": [
+      {
+        "file": "amc-1792696500000.jpg",
+        "capturedAt": "2026-10-22T21:05:32.389Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Omul cu pumni de fier 2",
+          "startsAt": 1792696500000,
+          "endsAt": 1792703699000
+        }
+      }
+    ],
+    "bbc-earth": [
+      {
+        "file": "bbc-earth-1792700400000.jpg",
+        "capturedAt": "2026-10-22T21:05:36.963Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Michael Mosley prezintă revoluția somnului australienilor",
+          "startsAt": 1792700400000,
+          "endsAt": 1792705199000
+        }
+      }
+    ],
+    "prima-news": [
+      {
+        "file": "prima-news-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:05:43.007Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Interese Mari Si Mici",
+          "startsAt": 1792702800000,
+          "endsAt": 1792709999000
+        }
+      }
+    ],
+    "euronews": [
+      {
+        "file": "euronews.jpg",
+        "capturedAt": "2026-10-22T21:05:47.539Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "show-1": [
+      {
+        "file": "show-1.jpg",
+        "capturedAt": "2026-10-22T21:05:51.542Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "show-2": [
+      {
+        "file": "show-2.jpg",
+        "capturedAt": "2026-10-22T21:05:56.044Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "axn": [
+      {
+        "file": "axn-1792698600000.jpg",
+        "capturedAt": "2026-10-22T21:06:01.078Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Mafia de la răsărit",
+          "startsAt": 1792698600000,
+          "endsAt": 1792705799000
+        }
+      }
+    ],
+    "axn-black": [
+      {
+        "file": "axn-black.jpg",
+        "capturedAt": "2026-10-22T21:06:05.641Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "axn-white": [
+      {
+        "file": "axn-white.jpg",
+        "capturedAt": "2026-10-22T21:06:09.661Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "axn-spin": [
+      {
+        "file": "axn-spin.jpg",
+        "capturedAt": "2026-10-22T21:06:14.707Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "tnt": [
+      {
+        "file": "tnt.jpg",
+        "capturedAt": "2026-10-22T21:06:18.739Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "epic-drama": [
+      {
+        "file": "epic-drama-1792702500000.jpg",
+        "capturedAt": "2026-10-22T21:06:23.769Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Detectivul Murdoch",
+          "startsAt": 1792702500000,
+          "endsAt": 1792705799000
+        }
+      }
+    ],
+    "comedy-central": [
+      {
+        "file": "comedy-central.jpg",
+        "capturedAt": "2026-10-22T21:06:28.315Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "shorts": [
+      {
+        "file": "shorts.jpg",
+        "capturedAt": "2026-10-22T21:06:32.348Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "viasat-nature": [
+      {
+        "file": "viasat-nature.jpg",
+        "capturedAt": "2026-10-22T21:06:36.900Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "viasat-explorer": [
+      {
+        "file": "viasat-explorer.jpg",
+        "capturedAt": "2026-10-22T21:06:42.460Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "viasat-history": [
+      {
+        "file": "viasat-history.jpg",
+        "capturedAt": "2026-10-22T21:06:46.976Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "duck-tv": [
+      {
+        "file": "duck-tv.jpg",
+        "capturedAt": "2026-10-22T21:06:51.518Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "bollywood-clasic": [
+      {
+        "file": "bollywood-clasic.jpg",
+        "capturedAt": "2026-10-22T21:06:55.525Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "bollywood-tv": [
+      {
+        "file": "bollywood-tv.jpg",
+        "capturedAt": "2026-10-22T21:06:59.548Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "bollywood-extra": [
+      {
+        "file": "bollywood-extra.jpg",
+        "capturedAt": "2026-10-22T21:07:04.080Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "crime": [
+      {
+        "file": "crime.jpg",
+        "capturedAt": "2026-10-22T21:07:11.144Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "tlc": [
+      {
+        "file": "tlc-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:07:17.196Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Cazuri medicale şocante",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "travel-channel": [
+      {
+        "file": "travel-channel.jpg",
+        "capturedAt": "2026-10-22T21:07:21.736Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "national-geographic": [
+      {
+        "file": "national-geographic-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:07:38.952Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Dezastre în aer",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "nat-geo-wild": [
+      {
+        "file": "nat-geo-wild.jpg",
+        "capturedAt": "2026-10-22T21:07:43.701Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "discovery-channel": [
+      {
+        "file": "discovery-channel.jpg",
+        "capturedAt": "2026-10-22T21:07:59.982Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "history-channel": [
+      {
+        "file": "history-channel-1792702500000.jpg",
+        "capturedAt": "2026-10-22T21:08:05.681Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Crimă în desfășurare",
+          "startsAt": 1792702500000,
+          "endsAt": 1792705799000
+        }
+      }
+    ],
+    "discovery-id": [
+      {
+        "file": "discovery-id.jpg",
+        "capturedAt": "2026-10-22T21:08:11.309Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "paprika-tv": [
+      {
+        "file": "paprika-tv.jpg",
+        "capturedAt": "2026-10-22T21:09:31.336Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "fishing-hunting": [
+      {
+        "file": "fishing-hunting.jpg",
+        "capturedAt": "2026-10-22T21:10:12.899Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "n24": [
+      {
+        "file": "n24.jpg",
+        "capturedAt": "2026-10-22T21:10:33.296Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "kiss-tv": [
+      {
+        "file": "kiss-tv-1792692000000.jpg",
+        "capturedAt": "2026-10-22T21:10:38.418Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Kiss Cinema",
+          "startsAt": 1792692000000,
+          "endsAt": 1792709999000
+        }
+      }
+    ],
+    "taraf-tv": [
+      {
+        "file": "taraf-tv-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:10:43.072Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Videodedicaţii",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "favorit-tv": [
+      {
+        "file": "favorit-tv.jpg",
+        "capturedAt": "2026-10-22T21:10:48.150Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "music-channel": [
+      {
+        "file": "music-channel-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:10:53.270Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Streaming Chart",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "hit-music": [
+      {
+        "file": "hit-music.jpg",
+        "capturedAt": "2026-10-22T21:10:59.370Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "news-24": [
+      {
+        "file": "news-24.jpg",
+        "capturedAt": "2026-10-22T21:11:03.909Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "cnn": [
+      {
+        "file": "cnn.jpg",
+        "capturedAt": "2026-10-22T21:11:32.698Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "etno-tv": [
+      {
+        "file": "etno-tv-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:11:43.457Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Cântece pentru cei dragi",
+          "startsAt": 1792702800000,
+          "endsAt": 1792708199000
+        }
+      }
+    ],
+    "acasa-gold": [
+      {
+        "file": "acasa-gold-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:11:48.640Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Evadatele",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "acasa-tv": [
+      {
+        "file": "acasa-tv-1792699200000.jpg",
+        "capturedAt": "2026-10-22T21:11:57.336Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Burlacii: Foc în paradis",
+          "startsAt": 1792699200000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "antena-3-cnn": [
+      {
+        "file": "antena-3-cnn-1792701000000.jpg",
+        "capturedAt": "2026-10-22T21:12:04.476Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "În gura presei",
+          "startsAt": 1792701000000,
+          "endsAt": 1792704599000
+        }
+      }
+    ],
+    "balcan-music": [
+      {
+        "file": "balcan-music-1792684800000.jpg",
+        "capturedAt": "2026-10-22T21:12:09.501Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Balkan party",
+          "startsAt": 1792684800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "cartoonito": [
+      {
+        "file": "cartoonito.jpg",
+        "capturedAt": "2026-10-22T21:12:40.379Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "digi-24": [
+      {
+        "file": "digi-24-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:13:11.770Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Știrile serii",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "digi-sport-1": [
+      {
+        "file": "digi-sport-1-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:13:18.505Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Stirile Digi Sport",
+          "startsAt": 1792702800000,
+          "endsAt": 1792703699000
+        }
+      }
+    ],
+    "digi-sport-2": [
+      {
+        "file": "digi-sport-2-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:13:26.221Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Tenis",
+          "startsAt": 1792702800000,
+          "endsAt": 1792709999000
+        }
+      }
+    ],
+    "digi-sport-3": [
+      {
+        "file": "digi-sport-3-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:13:34.448Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Stirile Digi Sport",
+          "startsAt": 1792702800000,
+          "endsAt": 1792703699000
+        }
+      }
+    ],
+    "digi-sport-4": [
+      {
+        "file": "digi-sport-4-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:13:43.011Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Europa League: Juventus-Rennes Etapa 3",
+          "startsAt": 1792702800000,
+          "endsAt": 1792709099000
+        }
+      }
+    ],
+    "dizi": [
+      {
+        "file": "dizi-1792703400000.jpg",
+        "capturedAt": "2026-10-22T21:13:52.885Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Vinovaţi de iubire",
+          "startsAt": 1792703400000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "eurosport-1": [
+      {
+        "file": "eurosport-1-1792692000000.jpg",
+        "capturedAt": "2026-10-22T21:14:00.724Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Snooker: Openul Irlandei de Nord - Turul al treilea",
+          "startsAt": 1792692000000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "eurosport-2": [
+      {
+        "file": "eurosport-2-1792699200000.jpg",
+        "capturedAt": "2026-10-22T21:14:09.928Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Ciclism: Turul Franţei - Prezentarea traseului",
+          "startsAt": 1792699200000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "film-now": [
+      {
+        "file": "film-now-1792699500000.jpg",
+        "capturedAt": "2026-10-22T21:14:21.738Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Ultimul castel",
+          "startsAt": 1792699500000,
+          "endsAt": 1792706999000
+        }
+      }
+    ],
+    "prima-sport-1": [
+      {
+        "file": "prima-sport-1-1792701900000.jpg",
+        "capturedAt": "2026-10-22T21:15:05.431Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Studio UEFA",
+          "startsAt": 1792701900000,
+          "endsAt": 1792708199000
+        }
+      }
+    ],
+    "prima-sport-2": [
+      {
+        "file": "prima-sport-2-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:15:13.166Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Inter Escalades – CS U Craiova",
+          "startsAt": 1792702800000,
+          "endsAt": 1792709999000
+        }
+      }
+    ],
+    "prima-sport-3": [
+      {
+        "file": "prima-sport-3-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:15:20.415Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Special Motogp",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "pro-arena": [
+      {
+        "file": "pro-arena-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:15:24.551Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Stiri Pro Arena",
+          "startsAt": 1792702800000,
+          "endsAt": 1792704599000
+        }
+      }
+    ],
+    "romania-tv": [
+      {
+        "file": "romania-tv-1792702800000.jpg",
+        "capturedAt": "2026-10-22T21:15:29.187Z",
+        "width": 640,
+        "height": 360,
+        "programme": {
+          "title": "Ştirile România TV",
+          "startsAt": 1792702800000,
+          "endsAt": 1792706399000
+        }
+      }
+    ],
+    "bbc-news": [
+      {
+        "file": "bbc-news.jpg",
+        "capturedAt": "2026-10-22T21:15:58.041Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "prima-sport-4": [
+      {
+        "file": "prima-sport-4.jpg",
+        "capturedAt": "2026-10-22T21:16:02.121Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "prima-sport-5": [
+      {
+        "file": "prima-sport-5.jpg",
+        "capturedAt": "2026-10-22T21:16:06.162Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "ppv-1": [
+      {
+        "file": "ppv-1.jpg",
+        "capturedAt": "2026-10-22T21:16:10.260Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "ppv-2": [
+      {
+        "file": "ppv-2.jpg",
+        "capturedAt": "2026-10-22T21:16:14.780Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "ppv-3": [
+      {
+        "file": "ppv-3.jpg",
+        "capturedAt": "2026-10-22T21:16:18.877Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "sport-extra": [
+      {
+        "file": "sport-extra.jpg",
+        "capturedAt": "2026-10-22T21:16:26.066Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "warner-tv": [
+      {
+        "file": "warner-tv.jpg",
+        "capturedAt": "2026-10-22T21:16:30.088Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "travel-mix": [
+      {
+        "file": "travel-mix.jpg",
+        "capturedAt": "2026-10-22T21:17:03.487Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ],
+    "canal-33": [
+      {
+        "file": "canal-33.jpg",
+        "capturedAt": "2026-10-22T21:17:28.224Z",
+        "width": 640,
+        "height": 360,
+        "programme": null
+      }
+    ]
+  }
+}

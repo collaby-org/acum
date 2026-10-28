@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#121724"/>
+      <stop offset="0.55" stop-color="#080B14"/>
+      <stop offset="1" stop-color="#04050A"/>
+    </linearGradient>
+    <radialGradient id="bloom" cx="0.5" cy="0.60" r="0.55">
+      <stop offset="0" stop-color="#F2A71B" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#F2A71B" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#F2A71B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE7B0"/>
+      <stop offset="0.38" stop-color="#F7B733"/>
+      <stop offset="0.72" stop-color="#DE9206"/>
+      <stop offset="1" stop-color="#9C6600"/>
+    </linearGradient>
+    <linearGradient id="rail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D98F04"/>
+      <stop offset="0.55" stop-color="#FFC95E"/>
+      <stop offset="1" stop-color="#FFF3D4"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+  <rect x="59" y="54" width="33" height="12" rx="6" fill="url(#rail)"/>
+  <path d="M12 88 L50 14 L88 88 L70 88 L50 49 L30 88 Z" fill="url(#gold)"/></svg>
