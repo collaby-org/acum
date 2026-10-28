@@ -321,14 +321,18 @@ export function PlayerControls({
 
       <div
         className={cn(
-          "flex flex-col gap-1.5 px-3 pb-2.5 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:pb-2.5",
+          "flex flex-wrap items-center gap-x-1.5 gap-y-1.5 px-3 pb-2.5 sm:flex-nowrap sm:items-center sm:gap-3 sm:px-4 sm:pb-2.5",
           nowPlaying ? "pt-1.5" : "pt-2.5",
         )}
       >
         {/* The live chrome: the badge, the buffer bar, the quality chip and
-            the way back to the edge. It takes a row of its own on a phone,
-            and joins the bar row from `sm` up. */}
-        <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:order-2 sm:gap-3">
+            the way back to the edge. On a phone it takes a row of its own
+            above the transport — six controls and a scrubber will not seat
+            themselves on 360px, and squeezing them would leave the bar no
+            room to say anything. From `sm` up the two rows become one: the
+            transport on the left, the track filling what is left, the
+            picture controls on the right. */}
+        <div className="flex min-w-0 basis-full items-center gap-2.5 sm:basis-auto sm:flex-1 sm:order-2 sm:gap-3">
           <LiveBadge />
           <LiveBar fill={liveFill(liveWindow)} liveWindow={liveWindow} onSeek={onSeek} />
           {quality}
@@ -338,7 +342,7 @@ export function PlayerControls({
         </div>
 
         {/* The transport. */}
-        <div className="flex shrink-0 items-center gap-1.5 sm:order-1 sm:gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:order-1 sm:flex-none sm:gap-2">
           <Button
             variant="primary"
             size="icon"
@@ -401,7 +405,7 @@ export function PlayerControls({
             </Button>
           ) : null}
 
-          <div className="ml-auto flex items-center gap-2 sm:ml-0">
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:order-3">
             {canPictureInPicture && onTogglePictureInPicture ? (
               <Button
                 variant="ghost"
