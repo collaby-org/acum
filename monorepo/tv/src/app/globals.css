@@ -715,3 +715,242 @@
  * Keep additions inside this block so the layer above stays
  * reviewable and self-contained.
  * ================================================================== */
+
+/* ================================================================== *
+ * TV — the ten-foot layer
+ *
+ * A television is a different room, not a smaller screen. Three metres
+ * away, a 16px paragraph is a rumour and a 1px focus ring is nothing at
+ * all. Everything in this block exists because of those two facts:
+ *
+ *   1. The type is bigger. The `tv-` type scale starts where the web
+ *      scale ends, and only the TV components use it — the web-shaped
+ *      routes keep the scale they were drawn at.
+ *   2. Focus is a light, not an outline. The ring is a bar of gold with
+ *      a gap and a bloom around it, the focused card grows, and the rest
+ *      of its row falls back into the dark. That is what makes a D-pad
+ *      legible: you always know where you are, and you can see what you
+ *      are not.
+ *
+ * The third rule is the cursor: it is absent until a mouse actually
+ * moves. See `data-tv-cursor` at the bottom of this block.
+ * ================================================================== */
+
+@theme {
+  /* The ten-foot type scale. Body starts at 19px; the hero goes past
+     five rem. Read from three metres, not from a desk. */
+  --text-tv-micro: 13px;
+  --text-tv-caption: 16px;
+  --text-tv-body: 19px;
+  --text-tv-lead: clamp(1.25rem, 1.6vw, 1.6rem);
+  --text-tv-title: clamp(2rem, 3.4vw, 3.25rem);
+  --text-tv-hero: clamp(2.5rem, 5.6vw, 5rem);
+
+  /* The focus light. A gold bar, held off the edge by a gap so the
+     element's own artwork never touches the ring, with a bloom that
+     spills past it. Three pixels is invisible from a sofa; three rem
+     is not, and this is the middle. */
+  --tv-ring-size: 3px;
+  --tv-ring-gap: 4px;
+  --tv-card-scale: 1.09;
+  --tv-row-dim: 0.42;
+
+  /* The gutter a TV is read through: wider than the web's, because the
+     edges of a panel are cut off on a real set. */
+  --tv-gutter: clamp(1.5rem, 3.4vw, 4rem);
+
+  /* The navigation bar. 80px clears the safe area of every panel. */
+  --tv-nav-height: 5rem;
+
+  --animate-tv-in: tv-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-tv-row-in: tv-row-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes tv-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tv-row-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Safe area
+ * ------------------------------------------------------------------ */
+
+/* The gutter that survives the notch, the home indicator and the
+   overscan of a set that crops two percent of the frame it is given. */
+@utility tv-safe-area {
+  padding-left: max(var(--tv-gutter), env(safe-area-inset-left));
+  padding-right: max(var(--tv-gutter), env(safe-area-inset-right));
+}
+
+/* A full-bleed surface still owes the set its edges. */
+@utility tv-safe-area-block {
+  padding-top: max(var(--tv-gutter), env(safe-area-inset-top));
+  padding-bottom: max(var(--tv-gutter), env(safe-area-inset-bottom));
+}
+
+/* ------------------------------------------------------------------ *
+ * Focus — the light a remote draws
+ * ------------------------------------------------------------------ */
+
+/* The base every focusable on a television wears.
+ *
+ * One transition declaration covers the three things a remote can move
+ * on a control: the transform (the card grows, the press sinks), the
+ * opacity (the row dims), and the box-shadow (the ring arrives). Keeping
+ * them in a single utility rather than in Tailwind classes on each
+ * component is deliberate: `tv-card-focus` below sets the transform on
+ * focus, and two rules setting different properties compose, where a
+ * `transition-transform` class and a `transition` utility would fight
+ * over whichever one the stylesheet happened to emit last.
+ *
+ * The press is a scale, not a colour change: a remote cannot hover, so
+ * "held" is the only state a control has between resting and focused.
+ */
+@utility tv-focusable {
+  outline: none;
+  transition:
+    transform 420ms var(--ease-spring),
+    opacity 320ms var(--ease-swift),
+    box-shadow 280ms var(--ease-swift);
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+/* The ring. It is a stack of shadows rather than an outline for two
+   reasons: it is drawn outside the element without moving anything, and
+   it can carry a bloom, which an outline cannot. `outline: none` is
+   deliberate — the ring replaces the web's thin 2px one; this element
+   is only ever focused by a remote or a keyboard. */
+@utility tv-focus-ring {
+  outline: none;
+  &:where(:focus, :focus-visible) {
+    box-shadow:
+      0 0 0 var(--tv-ring-gap) rgb(4 5 10 / 0.9),
+      0 0 0 calc(var(--tv-ring-gap) + var(--tv-ring-size)) var(--color-signal),
+      0 0 0 calc(var(--tv-ring-gap) + var(--tv-ring-size) + 8px)
+        rgb(242 167 27 / 0.28),
+      var(--shadow-e3);
+  }
+}
+
+/* The same light on a control that already carries a shadow of its own
+   (the hero's buttons), where the ring has to replace it. */
+@utility tv-focus-ring-soft {
+  outline: none;
+  &:where(:focus, :focus-visible) {
+    box-shadow:
+      0 0 0 var(--tv-ring-gap) rgb(4 5 10 / 0.9),
+      0 0 0 calc(var(--tv-ring-gap) + var(--tv-ring-size)) var(--color-signal);
+  }
+}
+
+/* The card under focus: it grows towards the viewer, it rises above its
+   neighbours, and the neighbours give way. It sets the transform only —
+   the transition and the press come from `tv-focusable`, and the light
+   is carried by the ring and the rim. */
+@utility tv-card-focus {
+  &:where(:focus, :focus-visible) {
+    transform: scale(var(--tv-card-scale));
+  }
+}
+
+/* Everything the D-pad can land on owes the fixed nav bar its height:
+   an item scrolled up the page has to stop *below* the bar, not under
+   it. This is `scroll-margin`, which `scrollIntoView` honours on both
+   axes, rather than a correction bolted onto the navigation engine. */
+[data-tv-focus] {
+  scroll-margin-top: calc(var(--tv-nav-height) + 1rem);
+  scroll-margin-bottom: 2rem;
+}
+
+/* ------------------------------------------------------------------ *
+ * The row
+ * ------------------------------------------------------------------ */
+
+/* A row knows which of its cards is focused, and gives way in the dark.
+   This is `:has()` doing the work in the engine — no JavaScript, no
+   state, and it cannot fall out of step with the DOM the user is
+   actually looking at. */
+[data-tv-rail]:has([data-tv-focus]:focus) [data-tv-focus]:not(:focus) {
+  opacity: var(--tv-row-dim);
+}
+
+/* The `:not(:focus)` above is not decoration, it is the only thing that
+   keeps the two rules from fighting. `:has()` inherits the specificity of
+   its own most specific argument, so the dim rule scores (0,4,0) against
+   the focus rule's (0,3,0) — without the exclusion the focused card would
+   dim along with its siblings, which is precisely backwards. */
+[data-tv-rail] [data-tv-focus]:focus {
+  opacity: 1;
+}
+
+/* The rail itself: hidden scrollbar, because a scrollbar is furniture
+   for a mouse and there is no mouse here. */
+@utility tv-rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * The cursor rule
+ *
+ * The cursor is the web answering to a mouse. A television has no
+ * mouse, so the rule is: absent until a pointer actually moves.
+ *
+ * `data-tv-cursor` is set on <html> — `remote` from the first byte, so
+ * there is never a frame where an arrow sits on a television screen.
+ * The first real mouse movement flips it to `mouse` and the cursor comes
+ * back for the rest of the session; the next press of a D-pad takes it
+ * away again.
+ *
+ * Only the hiding rule is written. Forcing `cursor: auto` on every
+ * element would out-specify the `cursor-pointer` utility, and a link
+ * that does not look clickable is worse than a hidden cursor.
+ * ------------------------------------------------------------------ */
+html[data-tv-cursor="remote"] *,
+html[data-tv-cursor="remote"] *::before,
+html[data-tv-cursor="remote"] *::after {
+  cursor: none !important;
+}
+
+/* A selection is a web gesture. On a television the user is driving with
+   five buttons and a text selection would only ever be an accident. */
+html[data-tv-cursor="remote"] ::selection {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion
+ *
+ * The global rule above already collapses every animation. The TV
+ * entrance adds one thing: the card's focus scale is a transform, and a
+ * transform that snaps is still a transform the user can land on. It
+ * goes too, so a reduced-motion row is truly still.
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  [data-tv-rail] [data-tv-focus]:focus {
+    transform: none;
+  }
+}

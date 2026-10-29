@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { connection } from "next/server";
 import {
   LinkRow,
@@ -193,14 +192,9 @@ export default async function Diaspora() {
               playerul lor funcționează la fel de bine.
             </p>
             <p className="mt-3">
-              Dacă vrei un canal care nu este aici,{" "}
-              <Link
-                href="/propune-un-canal"
-                className="text-signal-bright underline underline-offset-4"
-              >
-                propune-l
-              </Link>{" "}
-              — mesajul ajunge direct în panoul echipei.
+              Dacă vrei un canal care nu este aici, catalogul crește din
+              surse verificate — un canal intră când cineva îl difuzează,
+              nu când cineva îl cere.
             </p>
           </Note>
         </PageSection>
@@ -212,7 +206,6 @@ export default async function Diaspora() {
               { label: "Toate canalele", href: "/canale/grupate" },
               { label: "Știri", href: "/canale/stiri" },
               { label: "Ce rulează acum", href: "/azi" },
-              { label: "Propune un canal", href: "/propune-un-canal" },
             ]}
           />
         </PageSection>

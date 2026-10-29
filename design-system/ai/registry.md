@@ -3,6 +3,14 @@
 What exists today, and where it lives. A component that is not in this file
 does not exist — add it here in the same commit that adds it.
 
+> **The television build has its own layer.** `monorepo/tv/` carries a ten-foot
+> design layer — a larger type scale, a focus ring that is a light rather than an
+> outline, safe-area inset, and a D-pad engine. Its registry lives at
+> [`monorepo/tv/design-system/ai/registry.md`](../../monorepo/tv/design-system/ai/registry.md)
+> and its design system at
+> [`monorepo/tv/design-system/DESIGN_SYSTEM.md`](../../monorepo/tv/design-system/DESIGN_SYSTEM.md).
+> This file covers the shared system both builds inherit.
+
 ## Primitives (`src/components/ui/`)
 
 | Component | File | Variants | Used by |

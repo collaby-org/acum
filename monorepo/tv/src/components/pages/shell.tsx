@@ -15,7 +15,6 @@ import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 const BAR_LINKS = [
   { label: "Toate canalele", href: "/canale/grupate" },
   { label: "Ghid TV", href: "/ghid" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export function PageBar() {

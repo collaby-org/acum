@@ -9,6 +9,36 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+### Added — the ten-foot layer (`monorepo/tv`)
+
+- **A design system for three metres.** A type scale that starts where the web
+  scale ends — body copy at 19px, the hero past five rem. A focus ring that is a
+  bar of gold held off the element by a dark gap, with a bloom behind it, so a
+  remote always knows where it is. Safe-area inset for a set that overscans.
+- **The cursor rule.** The cursor is absent until a pointer actually moves. The
+  state is written in the server-rendered markup, so a television never sees a
+  frame with an arrow on it; the first genuine mouse movement brings it back, and
+  the next keypress takes it away.
+- **A D-pad engine** in `src/hooks/use-remote-nav.ts`. One `window` keydown
+  listener, geometric spatial navigation over `[data-tv-nav]` scopes, and
+  *real* DOM focus — no selected index kept in React state, no synthetic click on
+  Enter, because the browser already does that and cannot get out of step with
+  the DOM.
+- **Rails that wrap, and remember where you were.** `"x"` wraps the horizontal
+  axis and nothing else, so a vertical key falls *out of* a row to the one below
+  it; and `src/hooks/use-focus-loop.ts` puts a row's focus back when its cards
+  re-render, in a row that has actually held focus. A remote with a dead D-pad
+  looks exactly like a broken app, and there is no mouse to click out of it.
+- **The remote-driven components**: `TVNav`, `TVHero`, `TVChannelRow`,
+  `TVChannelCard`, `TVFocusable`, `TVSafeArea`, `TVShell`, and the `/tv` front
+  door they compose into — a hero banner over one row per category, reachable
+  with four arrows and a select button. The card reuses the shared catalogue
+  card's screen unchanged; a television changes what is around it.
+- **Ten dead links closed.** `/contact`, `/propune-un-canal`, `/admin`,
+  `/reset-password` and the five legal pages were removed from the TV build
+  along with a whole footer column, because a navigation that promises a
+  destination the app does not have is worse than no navigation.
+
 ### Changed
 
 - **The product is now ACUM.** The name was VIZOR; it is now **ACUM** — Romanian

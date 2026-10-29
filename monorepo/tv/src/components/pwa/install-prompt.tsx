@@ -145,6 +145,7 @@ export function InstallPrompt() {
           type="button"
           onClick={dismiss}
           aria-label="Nu instala acum"
+          data-tv-focus=""
           className="-mr-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-full text-ink-faint transition duration-200 hover:bg-white/8 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
         >
           <X className="size-4" />
@@ -153,16 +154,16 @@ export function InstallPrompt() {
 
       <div className="mt-4 flex items-center gap-2">
         {manual ? (
-          <Button size="sm" variant="secondary" onClick={dismiss}>
+          <Button size="sm" variant="secondary" onClick={dismiss} data-tv-focus="">
             <Share className="size-3.5" aria-hidden />
             Am înțeles
           </Button>
         ) : (
           <>
-            <Button size="sm" onClick={() => void install()}>
+            <Button size="sm" onClick={() => void install()} data-tv-focus="">
               Instalează
             </Button>
-            <Button size="sm" variant="ghost" onClick={dismiss}>
+            <Button size="sm" variant="ghost" onClick={dismiss} data-tv-focus="">
               Nu, mulțumesc
             </Button>
           </>

@@ -9,16 +9,32 @@ driven from five buttons. Signing in is done from the phone you already
 have — the app shows a QR code, you scan it, and your session crosses over
 to the screen. No typing credentials on a television, ever.
 
+The design system for this build is documented in
+[`design-system/`](design-system/DESIGN_SYSTEM.md), and the AI-facing registry
+in [`design-system/ai/registry.md`](design-system/ai/registry.md).
+
 This app was cut down from [`../frontend`](../frontend) and shares its
 catalogue, its data pipeline and its Supabase project. It is deliberately
 _not_ a fork: it is the same product for a different input device.
 
 ## Status
 
-Skeleton. The build passes and the routes that a TV never shows have been
-removed, but the TV components, the focus system and the QR sign-in flow
-are still to be written. Until they land this is the web app wearing the
-routes of a TV app.
+The ten-foot layer has landed. The build passes, the routes a TV never shows
+have been removed, and the app now has the two things a television is actually
+about:
+
+- **a design system for three metres** — a type scale that starts where the
+  web's ends, a focus ring that is a bar of gold with a bloom, safe-area
+  inset, and the cursor rule: the cursor is absent until a pointer moves;
+- **a D-pad engine** — one `keydown` listener that moves *real* DOM focus
+  geometrically between `[data-tv-nav]` scopes, with rails that wrap and
+  remember where you were.
+
+`/tv` is the front door: a hero banner over a row per category, all of it
+reachable with four arrows and a select button. What is still to come is the
+player's own full-screen chrome and the QR sign-in from the phone, so today a
+channel opens its page rather than a player, and the catalogue is visible
+before signing in.
 
 ## Running it
 

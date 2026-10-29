@@ -46,19 +46,9 @@ const GUIDE_LINKS = [
 ];
 
 const INFO_LINKS = [
-  { label: "Despre noi", href: "/despre" },
   { label: "Ghid TV", href: "/ghid-tv" },
-  { label: "Întrebări frecvente", href: "/intrebari" },
-  { label: "Propune un canal", href: "/propune-un-canal" },
-  { label: "Contact", href: "/contact" },
-];
-
-const LEGAL_LINKS = [
-  { label: "Termeni și condiții", href: "/termeni" },
-  { label: "Confidențialitate", href: "/confidentialitate" },
-  { label: "Cookies", href: "/cookies" },
-  { label: "DMCA & Copyright", href: "/dmca" },
-  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "Prețuri", href: "/preturi" },
+  { label: "Contul tău", href: "/conturi" },
 ];
 
 const PROMISES = [
@@ -145,11 +135,10 @@ export async function Footer() {
           </div>
 
           {/* Navigation */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-6">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6">
             <FooterColumn title="Categorii TV Live" links={CATEGORY_LINKS} />
             <FooterColumn title="Program TV & Ghid" links={GUIDE_LINKS} />
             <FooterColumn title="Informații" links={INFO_LINKS} />
-            <FooterColumn title="Legal" links={LEGAL_LINKS} />
           </div>
         </div>
 

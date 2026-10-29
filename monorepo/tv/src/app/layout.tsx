@@ -75,7 +75,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ro" data-scroll-behavior="smooth" className="h-full antialiased">
+    // `data-tv-cursor="remote"` is the cursor rule's starting state: this
+    // is a television build, so the cursor is absent until a pointer
+    // actually moves. Writing it in the server-rendered markup means a
+    // television never sees a frame with an arrow on it — the state is
+    // true before the first byte, not after the first component mount.
+    <html
+      lang="ro"
+      data-scroll-behavior="smooth"
+      data-tv-cursor="remote"
+      className="h-full antialiased"
+    >
       <head>
         <link
           rel="preload"

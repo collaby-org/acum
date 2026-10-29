@@ -21,12 +21,6 @@ export function CallbackExchange() {
     // The recovery flow lands with the token in the hash (access_token,
     // refresh_token, type=recovery). Continue to the reset page with the
     // credentials preserved, so the new password can be set.
-    const hash = window.location.hash;
-    if (hash && (hash.includes("access_token") || hash.includes("type=recovery"))) {
-      window.location.replace(`/reset-password${hash}`);
-      return;
-    }
-
     // The clean address is the point: whatever was in it has been read,
     // and the accounts page must not carry it further.
     const finish = () => window.location.replace("/conturi");

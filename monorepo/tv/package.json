@@ -12,6 +12,7 @@
     "verify:player": "node scripts/verify-player.mjs",
     "verify:fallback": "node scripts/verify-fallback.mjs",
     "verify:acum": "node scripts/verify-acum.mjs",
+    "verify:nav": "node scripts/verify-tv-nav.mjs",
     "data:scrape": "node scripts/scrape-channels.mjs",
     "data:probe": "node scripts/check-embeds.mjs",
     "data:resolve": "node scripts/resolve-streams.mjs",

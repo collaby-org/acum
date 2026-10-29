@@ -155,14 +155,8 @@ export default async function CanaleGrupate() {
             </p>
             <p className="mt-3">
               Lipsesc canalele pe care nu le-am putut verifica sau pe care nimeni
-              nu le mai difuzează. Dacă știi un canal care merită să fie aici,{" "}
-              <Link
-                href="/propune-un-canal"
-                className="text-signal-bright underline underline-offset-4"
-              >
-                propune-l
-              </Link>
-              .
+              nu le mai difuzează. Un canal intră în listă când o sursă îl
+              difuzează, nu când cineva îl cere.
             </p>
           </Note>
         </PageSection>

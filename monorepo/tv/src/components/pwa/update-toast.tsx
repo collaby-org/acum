@@ -25,7 +25,7 @@ export function UpdateToast({ updateReady, onUpdate }: UpdateToastProps) {
       className="pointer-events-auto inline-flex items-center gap-3 rounded-full border border-signal/30 bg-canvas-raised/95 py-1.5 pl-4 pr-1.5 shadow-[0_18px_44px_-24px_rgba(0,0,0,0.95)] backdrop-blur-xl"
     >
       <span className="text-[13px] text-ink">Versiune nouă disponibilă</span>
-      <Button size="sm" variant="primary" onClick={onUpdate}>
+      <Button size="sm" variant="primary" onClick={onUpdate} data-tv-focus="">
         <RefreshCw className="size-3.5" aria-hidden />
         Reîncarcă
       </Button>

@@ -209,11 +209,8 @@ export default function GhidTv() {
                 reinterpretăm.
               </p>
               <p className="mt-4 text-[15px] leading-[1.75] text-ink-muted">
-                Dacă vezi o greșeală care ne-a scăpat, spune-ne prin{" "}
-                <Link href="/contact" className="text-signal-bright underline underline-offset-4">
-                  contact
-                </Link>{" "}
-                — și o corectăm la sursă, pentru toată lumea.
+                Dacă vezi o greșeală care ne-a scăpat, spune-ne — și o
+                corectăm la sursă, pentru toată lumea.
               </p>
             </div>
 

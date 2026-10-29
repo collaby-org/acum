@@ -136,6 +136,12 @@ export type ChannelScreenProps = {
   popularity?: number | null;
   /** Leaves room for a favourite button sitting over the corner. */
   reserve?: boolean;
+  /**
+   * Whether to offer the plans. On by default, because a browser is where a
+   * plan is bought; a television turns it off, where the way in is a phone and
+   * a "buy a plan" chip on a card is a door to a room the device cannot enter.
+   */
+  showPlans?: boolean;
   className?: string;
 };
 
@@ -156,6 +162,7 @@ export function ChannelScreen({
   views,
   popularity: popularityProp,
   reserve = false,
+  showPlans = true,
   className,
 }: ChannelScreenProps) {
   const palette = posterPalette(channel.familyKey, channel.category);
@@ -188,6 +195,7 @@ export function ChannelScreen({
 
   const account = useAccount();
   const showUpgrade =
+    showPlans &&
     account.ready &&
     account.plan === "free" &&
     !isAdmin(account.email, account.plan);

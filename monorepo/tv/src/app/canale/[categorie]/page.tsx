@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
-import Link from "next/link";
 import {
   LinkRow,
   Note,
@@ -184,14 +183,8 @@ export default async function Categorie({ params }: Props) {
             </p>
             <p className="mt-3">
               Lipsesc canalele pe care nu le-am putut verifica. Dacă știi unul
-              care merită,{" "}
-              <Link
-                href="/propune-un-canal"
-                className="text-signal-bright underline underline-offset-4"
-              >
-                propune-l
-              </Link>
-              .
+              care merită, catalogul crește din surse verificate: un canal
+              intră când îl difuzează cineva, nu când cineva îl cere.
             </p>
           </Note>
         </PageSection>

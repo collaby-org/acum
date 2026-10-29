@@ -210,15 +210,6 @@ export function SignInForm({
         {mode === "register" ? "Creează contul" : "Intră"}
       </Button>
 
-      <div className="flex items-center justify-between pt-0.5">
-        <a
-          href="/reset-password"
-          className="text-[13px] text-ink-muted underline-offset-4 transition-colors duration-300 hover:text-signal-bright hover:underline"
-        >
-          Ai uitat parola?
-        </a>
-      </div>
-
       {/* The other way in: the provider, for the visitor who would rather not type a password. */}
       <div className="flex items-center gap-3 pt-0.5">
         <div className="fx-divider flex-1" aria-hidden />
