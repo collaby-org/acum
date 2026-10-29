@@ -16,7 +16,6 @@ import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
-import { LandingGate } from "@/components/landing-gate";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
@@ -76,6 +75,9 @@ async function copyrightYear() {
 }
 
 export default async function LandingPage() {
+  // A signed-in account never reaches this render: the middleware sends
+  // it to the catalogue before the route is even matched, which is what
+  // keeps this page static for everybody else.
   const year = await copyrightYear();
 
   // The plans are priced the way the visitor's own country pays, read from
@@ -86,9 +88,6 @@ export default async function LandingPage() {
 
   return (
     <main className="relative isolate min-h-dvh bg-canvas">
-      {/* A signed-in account has no business on the front door; the gate
-          sends it to the catalogue as soon as the session is known. */}
-      <LandingGate />
 
       {/* The light the page stands in. Screen-blended, so it stays
           luminous over the near-black surface. */}
