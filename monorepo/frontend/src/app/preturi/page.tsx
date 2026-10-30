@@ -170,28 +170,28 @@ export default async function PricingPage() {
         <AccountButton />
       </header>
 
-      <EntrySection
-        individualPrice={formatRegionalPrice(pricing.monthly)}
-        householdPrice={formatRegionalPrice(pricing.household)}
-        lifetimePrice={formatRegionalPrice(pricing.lifetime)}
-        freeHours={freeHours()}
-      />
-
       <main className="mx-auto max-w-[1120px] px-4 pb-24 sm:px-8 lg:px-12">
         {/* The plan the account is on is named on its card rather than
             offered again: a paid visitor checking the pricing page should
             read what they have, not be asked to buy it twice. */}
-        <PlansGrid region={region} showCurrentPlan />
+        <EntrySection
+          individualPrice={formatRegionalPrice(pricing.monthly)}
+          householdPrice={formatRegionalPrice(pricing.household)}
+          lifetimePrice={formatRegionalPrice(pricing.lifetime)}
+          freeHours={freeHours()}
+        />
 
-        <section className="mt-20" aria-labelledby="reasons-heading">
-          <h2 id="reasons-heading" className="font-display text-3xl font-bold tracking-tight mb-12 text-center">
+        <PlansGrid region={region} showCurrentPlan className="mt-8" />
+
+        <section className="mt-16" aria-labelledby="reasons-heading">
+          <h2 id="reasons-heading" className="font-display text-2xl font-bold tracking-tight mb-8 text-ink">
             De ce aceste prețuri
           </h2>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {reasons(pricing).map((reason) => (
               <article
                 key={reason.title}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 transition hover:border-white/20 hover:bg-white/10"
+                className="rounded-2xl border border-white/[0.08] bg-surface/50 p-6 sm:p-8 transition hover:border-white/20 hover:bg-white/10"
               >
                 <h3 className="font-display text-xl font-semibold tracking-tight mb-4">{reason.title}</h3>
                 <p className="text-white/70 leading-relaxed">{reason.text}</p>
@@ -200,13 +200,13 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="mt-20" aria-labelledby="questions-heading">
-          <h2 id="questions-heading" className="font-display text-3xl font-bold tracking-tight mb-12 text-center">
+        <section className="mt-16" aria-labelledby="questions-heading">
+          <h2 id="questions-heading" className="font-display text-2xl font-bold tracking-tight mb-8 text-ink">
             Întrebări frecvente
           </h2>
           <dl className="space-y-6 max-w-3xl mx-auto">
             {QUESTIONS.map((qa) => (
-              <div key={qa.question} className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+              <div key={qa.question} className="rounded-2xl border border-white/[0.08] bg-surface/50 p-6 sm:p-8">
                 <dt className="font-semibold text-white mb-2">{qa.question}</dt>
                 <dd className="text-white/70 leading-relaxed">{qa.answer}</dd>
               </div>
@@ -216,7 +216,7 @@ export default async function PricingPage() {
 
         {!paymentsReady ? (
           <section className="mt-20">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-8 sm:p-12 text-center">
+            <div className="rounded-2xl border border-white/[0.08] bg-surface/50 p-8 sm:p-12 text-center">
               <h3 className="font-display text-2xl font-bold mb-4">
                 Plățile nu sunt configurate încă
               </h3>

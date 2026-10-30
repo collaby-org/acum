@@ -185,7 +185,11 @@ export function PlanCard({
         />
       ) : null}
 
-      <div className="flex items-start justify-between gap-3">
+      {/* The badge row is a fixed height even when empty: a card that
+          carries a "Recomandat" would otherwise start its price a line
+          lower than its neighbours, and four prices in a row that do not
+          line up read as a broken grid rather than a featured plan. */}
+      <div className="flex min-h-6 items-start justify-between gap-3">
         <div>
           <h3 className="font-display text-[17px] font-semibold tracking-[-0.01em] text-ink">
             {plan.name}

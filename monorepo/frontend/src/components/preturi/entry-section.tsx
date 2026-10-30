@@ -41,8 +41,8 @@ export function EntrySection({
 
   // Not signed in: show the free-plan intro with pricing info.
   return (
-    <section className="mt-24">
-      <div className="flex flex-col items-start gap-6 rounded-2xl border border-white/[0.08] bg-canvas-raised/70 p-6 backdrop-blur-xl sm:p-10 md:flex-row md:items-center md:justify-between">
+    <section>
+      <div className="flex flex-col items-start gap-6 rounded-2xl border border-white/[0.08] bg-canvas-raised/70 p-6 backdrop-blur-xl sm:p-10 md:flex-row md:items-end md:justify-between">
         <div className="max-w-xl">
           <h2 className="font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-semibold leading-[1.12] tracking-[-0.025em] text-balance text-ink">
             Începe cu planul gratuit. {freeHours} ore, fără card.
