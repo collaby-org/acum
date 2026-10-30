@@ -178,7 +178,10 @@ export default async function PricingPage() {
       />
 
       <main className="mx-auto max-w-[1120px] px-4 pb-24 sm:px-8 lg:px-12">
-        <PlansGrid region={region} />
+        {/* The plan the account is on is named on its card rather than
+            offered again: a paid visitor checking the pricing page should
+            read what they have, not be asked to buy it twice. */}
+        <PlansGrid region={region} showCurrentPlan />
 
         <section className="mt-20" aria-labelledby="reasons-heading">
           <h2 id="reasons-heading" className="font-display text-3xl font-bold tracking-tight mb-12 text-center">
