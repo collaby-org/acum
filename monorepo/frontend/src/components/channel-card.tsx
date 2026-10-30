@@ -10,7 +10,7 @@ import type { Quality } from "@/data/types";
 import { QUALITY_META, STATUS_META, posterPalette } from "@/lib/channel-meta";
 import { nowProgramme } from "@/lib/now-showing";
 import { useGuideMoment } from "@/hooks/use-guide-clock";
-import { pictureFor } from "@/lib/stills";
+import { pictureFor, slotFor, stillUrl } from "@/lib/stills";
 import type { ChannelLike } from "@/lib/navigation";
 import { cn, formatViewers } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -184,7 +184,24 @@ export function ChannelScreen({
     () => pictureFor(channel.stills, programme, moment),
     [channel.stills, programme, moment],
   );
-  const poster = picture.still?.file ?? null;
+  const captured = picture.still?.file ?? null;
+
+  /**
+   * The frame a visitor filed for the slot on air, if there is one.
+   *
+   * Nothing is read to learn this. The slot names the object, so the card
+   * computes the address and tries it — and an object that is not there
+   * yet answers with a 404, which the `onError` below hands back to the
+   * family's wash. A missing still costs one request and no picture.
+   */
+  const frame = useMemo(
+    () => stillUrl(channel.id, slotFor(programme)),
+    [channel, programme],
+  );
+
+  // A still the catalogue vouches for still wins. The live frame is the
+  // next best thing, and the family wash stays under both.
+  const poster = captured ?? frame;
 
   const account = useAccount();
   const showUpgrade =
