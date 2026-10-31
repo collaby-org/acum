@@ -16,8 +16,9 @@ import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
+import { PopularReviews, type ComposerChannel } from "@/components/reviews";
 import { Button } from "@/components/ui/button";
-import { CHANNEL_COUNT } from "@/data/channels";
+import { CHANNEL_COUNT, CHANNELS } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
 import {
   SITE_NAME,
@@ -34,6 +35,18 @@ export const metadata: Metadata = {
 
 /** The free tier's allowance, the way it is spoken. */
 const FREE_HOURS_WORDS = freeHours();
+
+/**
+ * The channels a review can be about: ids and names, nothing else.
+ *
+ * The catalogue is server-side and carries the upstream addresses with
+ * it, so what reaches the browser through here is the two fields the
+ * composer needs to name a channel and the endpoint needs to check one.
+ */
+const REVIEW_CHANNELS: ComposerChannel[] = CHANNELS.map((channel) => ({
+  id: channel.id,
+  name: channel.name,
+}));
 
 /** The stills the hero is built from — what is on air, right now. */
 const STILLS = [
@@ -251,6 +264,11 @@ export default async function LandingPage() {
         </div>
 
         <PlansGrid className="mt-10" />
+      </section>
+
+      {/* What the viewers said about what was on. */}
+      <section className="mx-auto max-w-[1800px] px-4 pb-24 sm:px-8 lg:px-12">
+        <PopularReviews channels={REVIEW_CHANNELS} />
       </section>
 
       {/* The way in */}

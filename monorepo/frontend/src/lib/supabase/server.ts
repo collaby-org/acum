@@ -28,6 +28,17 @@ export function hasServiceRole(): boolean {
 }
 
 /**
+ * True when the public desk can be reached — the anon key is present.
+ *
+ * This is the one the reviews need, and it is the one that is always
+ * present in a real deployment: the same key ships in the browser, so a
+ * project that can sign anybody in can read the reviews as well.
+ */
+export function hasPublicConfig(): boolean {
+  return Boolean(SUPABASE_URL) && Boolean(SUPABASE_ANON_KEY);
+}
+
+/**
  * Refuse to run a server module in the browser.
  *
  * The service role key bypasses every row level policy. A bundle that carried
@@ -58,6 +69,28 @@ export function getServiceClient(): SupabaseClient {
   }
 
   return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+/**
+ * A client with no session behind it: everything the anon key may read.
+ *
+ * This is the read the whole world gets — the reviews and their counts,
+ * which is exactly what the row level policies hand to `anon` and nobody
+ * else. Writing never goes through here: a write needs a session, and a
+ * session is a token.
+ */
+export function getPublicClient(): SupabaseClient {
+  assertServer("getPublicClient()");
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error(
+      "NEXT_PUBLIC_SUPABASE_URL și NEXT_PUBLIC_SUPABASE_ANON_KEY nu sunt setate. Operațiunile publice (recenzii) au nevoie de ele.",
+    );
+  }
+
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
