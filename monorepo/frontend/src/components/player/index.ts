@@ -1,4 +1,5 @@
 export { PlayerControls, type PlayerControlsProps } from "@/components/player/player-controls";
+export { CinemaLights, type CinemaLightsProps } from "@/components/player/cinema-lights";
 export { PlayerModal, type PlayerModalProps } from "@/components/player/player-modal";
 export {
   MuteOverlay,

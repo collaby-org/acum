@@ -2,11 +2,14 @@
 
 import { useId, useState, type ReactNode } from "react";
 import {
+  Cast,
+  Lightbulb,
   Maximize,
   Minimize,
   Pause,
   PictureInPicture2,
   Play,
+  Projector,
   RotateCcw,
   SkipForward,
   Volume2,
@@ -66,6 +69,32 @@ export function liveFill(liveWindow: LiveWindow | null | undefined): number {
   return Math.min(1, ahead / LIVE_BUFFER_TARGET);
 }
 
+/* ------------------------------------------------------------------ *
+ * One control size
+ * ------------------------------------------------------------------ */
+
+/**
+ * The single control size of the bar.
+ *
+ * The bar used to carry three at once: a large round play button, small
+ * square buttons beside it, then small chips — so nothing lined up with
+ * anything, and the row read as three rows. Now every control is the
+ * same round target: 36px on a desktop, where a mouse is happy with it,
+ * and 40px on a phone, where a finger is not. The gold play button keeps
+ * its lead through colour, never through size, and a labelled pill
+ * („Flux următor”, the way back to live) shares the same height with the
+ * same radius. Only the LIVE badge keeps its own small shape: it is a
+ * mark that says something, not a control that does something.
+ */
+const CONTROL = "size-9 max-sm:size-10";
+
+/** The same size, spelled for a control that carries a word. */
+const CONTROL_PILL = "h-9 max-sm:h-10 px-3";
+
+/** The icon inside a control — the play glyph leads by a hair. */
+const CONTROL_ICON = "size-4 max-sm:size-[18px]";
+const CONTROL_ICON_LEAD = "size-4.5 max-sm:size-5";
+
 /**
  * The LIVE badge: the mark that says this is the live edge and not a
  * recording. A red lens with its halo, the word in the display face —
@@ -99,6 +128,8 @@ export type LiveBarProps = {
   liveWindow?: LiveWindow | null;
   /** Moves the playhead through the window — desktop only. */
   onSeek?: (time: number) => void;
+  /** Reports a drag of the scrubber, so the bar can stay awake for it. */
+  onScrubChange?: (scrubbing: boolean) => void;
   className?: string;
 };
 
@@ -114,6 +145,7 @@ function LiveBar({
   fill,
   liveWindow = null,
   onSeek,
+  onScrubChange,
   className,
 }: LiveBarProps) {
   const scrubId = useId();
@@ -151,13 +183,16 @@ function LiveBar({
               onPointerDown={() => {
                 setScrubValue(liveWindow.current);
                 setScrubbing(true);
+                onScrubChange?.(true);
               }}
               onPointerUp={() => {
                 setScrubbing(false);
+                onScrubChange?.(false);
                 onSeek?.(scrubValue);
               }}
               onKeyUp={() => {
                 setScrubbing(false);
+                onScrubChange?.(false);
                 onSeek?.(scrubValue);
               }}
               aria-label="Poziția în flux"
@@ -195,11 +230,7 @@ function LiveJump({ onJump, className }: { onJump: () => void; className?: strin
       onClick={onJump}
       aria-label="Înapoi la direct"
       title="Înapoi la direct"
-      className={cn(
-        "h-6 shrink-0 gap-1.5 rounded-full px-2 text-live-soft",
-        "hover:bg-live/12 hover:text-live",
-        className,
-      )}
+      className={cn(CONTROL_PILL, "gap-1.5 text-live-soft", "hover:bg-live/12 hover:text-live", className)}
     >
       <span className="relative grid size-2 place-items-center">
         <span aria-hidden className="fx-live-eye absolute inset-0" />
@@ -222,7 +253,7 @@ export type PlayerControlsProps = {
   busy?: boolean;
   /** True when the picture fills the screen: the bar floats over it. */
   fullscreen?: boolean;
-  /** Fullscreen only: faded out and inert while the pointer rests. */
+  /** True while the bar is resting: faded out and inert until a move. */
   asleep?: boolean;
   /** False when the browser cannot go full screen at all. */
   canFullscreen?: boolean;
@@ -230,12 +261,22 @@ export type PlayerControlsProps = {
   canSwitch?: boolean;
   /** True when the browser can put the picture in a floating window. */
   canPictureInPicture?: boolean;
+  /** True when the browser has the Remote Playback API for a smart TV. */
+  canCast?: boolean;
+  /** True while a smart TV is playing the picture. */
+  castConnected?: boolean;
+  /** True while the lights are down: the page around is near-black. */
+  cinema?: boolean;
+  /** False where there is nothing to dim — fullscreen is already the page. */
+  canCinema?: boolean;
   /** True while the viewer sits behind the live edge. */
   behindLive?: boolean;
   /** What the stream has buffered, and where the live edge is right now. */
   liveWindow?: LiveWindow | null;
   /** Moves the playhead through the buffered window — desktop only. */
   onSeek?: (time: number) => void;
+  /** Reports a drag of the live scrubber, so the bar stays awake for it. */
+  onScrubChange?: (scrubbing: boolean) => void;
   /**
    * What is on now — the channel and the marks of the programme it is
    * playing. It heads the bar, the way every player names what it shows.
@@ -248,6 +289,9 @@ export type PlayerControlsProps = {
   onVolumeChange: (value: number) => void;
   onToggleFullscreen: () => void;
   onTogglePictureInPicture?: () => void;
+  /** Opens the browser's own picker of remote screens. */
+  onToggleCast?: () => void;
+  onToggleCinema?: () => void;
   onJumpToLive?: () => void;
   onRetry: () => void;
   onNextSource?: () => void;
@@ -266,8 +310,14 @@ export type PlayerControlsProps = {
  * transport — a 360px screen cannot seat six controls and a scrubber side
  * by side, and squeezing them would leave the bar no room to say anything.
  * From `sm` up the two rows become one: the transport on the left, the
- * track filling what is left, the quality chip and the picture controls on
- * the right — the arrangement every player in the industry uses.
+ * track filling what is left, the picture controls on the right — the
+ * arrangement every player in the industry uses.
+ *
+ * The bar rests while the picture runs: the player fades it out after a
+ * moment of stillness and brings it back at the first move, exactly as it
+ * does in fullscreen. The space is held rather than released, because a
+ * bar that changed the height of the page every time the pointer came to
+ * rest would move the content under the visitor's hands.
  */
 export function PlayerControls({
   playing,
@@ -279,9 +329,14 @@ export function PlayerControls({
   canFullscreen = true,
   canSwitch = false,
   canPictureInPicture = false,
+  canCast = false,
+  castConnected = false,
+  cinema = false,
+  canCinema = false,
   behindLive = false,
   liveWindow = null,
   onSeek,
+  onScrubChange,
   nowPlaying,
   quality,
   onTogglePlay,
@@ -289,6 +344,8 @@ export function PlayerControls({
   onVolumeChange,
   onToggleFullscreen,
   onTogglePictureInPicture,
+  onToggleCast,
+  onToggleCinema,
   onJumpToLive,
   onRetry,
   onNextSource,
@@ -296,18 +353,44 @@ export function PlayerControls({
 }: PlayerControlsProps) {
   const volumeId = useId();
 
+  /**
+   * The cast button, said honestly.
+   *
+   * The Remote Playback API is a Chromium thing: where it is missing the
+   * button does not pretend. It stays, dimmed and inert, with a title
+   * that names the reason — a visitor learns that their browser cannot
+   * hand the picture to a TV, rather than pressing a button that does
+   * nothing at all.
+   */
+  const castLabel = canCast
+    ? castConnected
+      ? "Se redă pe TV"
+      : "Trimite pe TV"
+    : "Castarea pe TV nu e disponibilă în acest browser";
+  const castTitle = canCast
+    ? castConnected
+      ? "Se redă pe un ecran extern"
+      : "Trimite imaginea pe un smart TV"
+    : "Castarea pe TV necesită Chrome, Edge sau Opera";
+
+  const cinemaLabel = cinema ? "Aprinde lumina" : "Mod cinema — stinge lumina";
+  const cinemaTitle = cinema
+    ? "Aprinde lumina în pagină"
+    : "Mod cinema: pagina înnegrită, imaginea la fel";
+
   return (
     <div
+      data-player-controls=""
       className={cn(
-        "flex flex-col",
+        "flex flex-col transition-opacity duration-300",
         fullscreen
           ? // Fullscreen: the bar floats over the bottom of the picture on
              // a gradient, so the buttons stay readable over any frame.
-             "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-opacity duration-300"
+             "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))]"
           : // The bar sits at the bottom of the sheet on a phone, clear of
              // the home indicator.
              "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
-        // The picture runs alone in fullscreen until the pointer moves.
+        // The picture runs alone until the visitor reaches for it.
         asleep && "pointer-events-none opacity-0",
         className,
       )}
@@ -334,7 +417,12 @@ export function PlayerControls({
             picture controls on the right. */}
         <div className="flex min-w-0 basis-full items-center gap-2.5 sm:basis-auto sm:flex-1 sm:order-2 sm:gap-3">
           <LiveBadge />
-          <LiveBar fill={liveFill(liveWindow)} liveWindow={liveWindow} onSeek={onSeek} />
+          <LiveBar
+            fill={liveFill(liveWindow)}
+            liveWindow={liveWindow}
+            onSeek={onSeek}
+            onScrubChange={onScrubChange}
+          />
           {quality}
           {behindLive && onJumpToLive ? (
             <LiveJump onJump={onJumpToLive} />
@@ -349,23 +437,25 @@ export function PlayerControls({
             onClick={onTogglePlay}
             aria-label={playing ? "Pauză" : "Redare"}
             title={playing ? "Pauză" : "Redare"}
+            className={CONTROL}
           >
-            {playing ? <Pause className="size-4.5" /> : <Play className="size-4.5" />}
+            {playing ? (
+              <Pause className={CONTROL_ICON_LEAD} />
+            ) : (
+              <Play className={CONTROL_ICON_LEAD} />
+            )}
           </Button>
 
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             onClick={onToggleMute}
-            aria-label={muted ? "Ssună audio" : "Dezactivează sunetul"}
+            aria-label={muted ? "Pornește sunetul" : "Dezactivează sunetul"}
             aria-pressed={muted}
-            title={muted ? "Ssună audio" : "Dezactivează sunetul"}
+            title={muted ? "Pornește sunetul" : "Dezactivează sunetul"}
+            className={CONTROL}
           >
-            {muted ? (
-              <VolumeX className="size-4" />
-            ) : (
-              <Volume2 className="size-4" />
-            )}
+            {muted ? <VolumeX className={CONTROL_ICON} /> : <Volume2 className={CONTROL_ICON} />}
           </Button>
 
           <label htmlFor={volumeId} className="sr-only">
@@ -379,18 +469,29 @@ export function PlayerControls({
             step={0.05}
             value={muted ? 0 : volume}
             onChange={(event) => onVolumeChange(Number(event.target.value))}
-            className="hidden h-1 w-24 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal lg:block"
             aria-label="Volum"
+            className={cn(
+              // The slider owns a full control's height so the thumb has
+              // somewhere to be grabbed; the track drawn inside it is the
+              // thin line the eye reads. `appearance-none` takes the native
+              // rendering away in both engines, so both are redrawn here.
+              "hidden h-9 w-24 cursor-pointer appearance-none bg-transparent lg:block",
+              "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-white/15",
+              "[&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink",
+              "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-white/15",
+              "[&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
+            )}
           />
 
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             onClick={onRetry}
             aria-label="Reîncearcă fluxul"
             title="Reîncearcă fluxul"
+            className={CONTROL}
           >
-            <RotateCcw className={cn("size-4", busy && "animate-spin")} />
+            <RotateCcw className={cn(CONTROL_ICON, busy && "animate-spin")} />
           </Button>
 
           {canSwitch && onNextSource ? (
@@ -399,38 +500,82 @@ export function PlayerControls({
               size="sm"
               onClick={onNextSource}
               aria-label="Treci la următorul flux"
+              title="Treci la următorul flux"
+              className={cn(CONTROL_PILL, "gap-1.5")}
             >
-              <SkipForward className="size-4" />
+              <SkipForward className={CONTROL_ICON} />
               <span className="hidden lg:inline">Flux următor</span>
             </Button>
           ) : null}
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 sm:order-3">
+          {/* The picture controls: what the picture can be handed to, and
+              how much of the room it takes. */}
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:order-3 sm:gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onToggleCast}
+              disabled={!canCast}
+              aria-label={castLabel}
+              aria-pressed={canCast ? castConnected : undefined}
+              title={castTitle}
+              className={cn(
+                CONTROL,
+                // A disabled button swallows its own tooltip in some
+                // engines; the cast button keeps the pointer so the reason
+                // it is dimmed can still be read.
+                "disabled:pointer-events-auto disabled:cursor-not-allowed",
+                castConnected && "text-signal",
+              )}
+            >
+              <Cast className={CONTROL_ICON} />
+            </Button>
+
             {canPictureInPicture && onTogglePictureInPicture ? (
               <Button
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
                 onClick={onTogglePictureInPicture}
                 aria-label="Picture in Picture"
                 title="Picture in Picture"
+                className={CONTROL}
               >
-                <PictureInPicture2 className="size-4" />
+                <PictureInPicture2 className={CONTROL_ICON} />
+              </Button>
+            ) : null}
+
+            {canCinema && onToggleCinema ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleCinema}
+                aria-label={cinemaLabel}
+                aria-pressed={cinema}
+                title={cinemaTitle}
+                className={cn(CONTROL, cinema && "text-signal")}
+              >
+                {cinema ? (
+                  <Projector className={CONTROL_ICON} />
+                ) : (
+                  <Lightbulb className={CONTROL_ICON} />
+                )}
               </Button>
             ) : null}
 
             {canFullscreen ? (
               <Button
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
                 onClick={onToggleFullscreen}
                 aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
                 aria-pressed={fullscreen}
                 title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+                className={CONTROL}
               >
                 {fullscreen ? (
-                  <Minimize className="size-4" />
+                  <Minimize className={CONTROL_ICON} />
                 ) : (
-                  <Maximize className="size-4" />
+                  <Maximize className={CONTROL_ICON} />
                 )}
               </Button>
             ) : null}

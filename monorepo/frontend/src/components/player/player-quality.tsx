@@ -18,6 +18,12 @@
  * the fullscreen bar — a layer of its own — holds it under the wall. So
  * it is portaled to the body and pinned to the badge's own position,
  * re-measured whenever the badge moves.
+ *
+ * The chip is a control, not a decoration: it carries the same round
+ * target and the same weight as the play and the fullscreen button beside
+ * it, and its chevron turns on hover and while the menu is up. A chip
+ * that merely reports the rung would be read and passed over; this one
+ * invites the press.
  */
 "use client";
 
@@ -50,6 +56,8 @@ export type PlayerQualityBadgeProps = {
   stream?: { width: number; height: number } | null;
   /** Pin a rung, or pass `-1` to hand the choice back to the connection. */
   onLevelChange: (index: number) => void;
+  /** Told when the menu opens and closes, so the bar can stay awake. */
+  onOpenChange?: (open: boolean) => void;
   className?: string;
 };
 
@@ -103,6 +111,16 @@ const MENU_GAP = 8;
 /** The shortest menu the viewport may leave room for. */
 const MENU_MIN_HEIGHT = 180;
 
+/**
+ * The chip's own size — the bar's control size, spelled once more.
+ *
+ * `36px` on a desktop and `40px` on a phone, the same as every button in
+ * the bar. It is what makes the chip read as a control rather than as a
+ * label: a badge can be any height it likes, but a control has to sit
+ * beside its neighbours and share their weight.
+ */
+const CHIP = "size-9 max-sm:size-10";
+
 /** Where the menu sits, in viewport pixels. */
 type MenuSpot = {
   top: number;
@@ -119,6 +137,7 @@ export function PlayerQualityBadge({
   currentLevel,
   stream = null,
   onLevelChange,
+  onOpenChange,
   className,
 }: PlayerQualityBadgeProps) {
   const [open, setOpen] = useState(false);
@@ -127,7 +146,20 @@ export function PlayerQualityBadge({
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [spot, setSpot] = useState<MenuSpot | null>(null);
 
-  const close = useCallback(() => setOpen(false), []);
+  /**
+   * Open and close, said out loud.
+   *
+   * The bar has to know: it rests while the picture runs, and a menu
+   * that is open must not be left hanging over a bar that faded away.
+   */
+  const show = useCallback(
+    (next: boolean) => {
+      setOpen(next);
+      onOpenChange?.(next);
+    },
+    [onOpenChange],
+  );
+  const close = useCallback(() => show(false), [show]);
 
   /**
    * Whether a node belongs to the badge — the trigger or the menu.
@@ -147,12 +179,12 @@ export function PlayerQualityBadge({
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      setOpen(false);
+      close();
       triggerRef.current?.focus();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+  }, [open, close]);
 
   // A press anywhere outside the menu closes it. Captured, so it is seen
   // on the way down, before anything else acts on it.
@@ -160,11 +192,11 @@ export function PlayerQualityBadge({
     if (!open) return;
     const onPointerDown = (event: PointerEvent) => {
       if (owns(event.target as Node)) return;
-      setOpen(false);
+      close();
     };
     document.addEventListener("pointerdown", onPointerDown, true);
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
-  }, [open, owns]);
+  }, [open, owns, close]);
 
   // Focus lands on the rung already in use, so the arrows have somewhere
   // to start.
@@ -279,26 +311,28 @@ export function PlayerQualityBadge({
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => show(!open)}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Calitate: ${label}`}
         title="Calitate"
         className={cn(
-          "inline-flex h-6 items-center gap-1.5 rounded-full border border-white/12",
-          "bg-black/55 py-0 pl-2 pr-1.5 text-ink/90 backdrop-blur-md",
-          "transition-colors duration-300 hover:border-white/20 hover:bg-black/75",
+          CHIP,
+          "items-center justify-center gap-1.5 rounded-full border border-white/12",
+          "bg-black/55 text-ink/90 backdrop-blur-md",
+          "transition-[background-color,border-color,color,transform] duration-300",
+          "hover:border-white/20 hover:bg-black/75",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
         )}
       >
-        <Signal className="size-3.5 text-signal" aria-hidden />
-        <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em]">
+        <Signal className="size-3.5 text-signal max-sm:size-4" aria-hidden />
+        <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] max-sm:text-[11px]">
           {label}
         </span>
         <ChevronDown
           aria-hidden
           className={cn(
-            "size-3 text-ink-faint transition-transform duration-300 ease-spring",
+            "size-3 text-ink-faint transition-transform duration-300 ease-spring max-sm:size-3.5",
             open && "rotate-180",
           )}
         />

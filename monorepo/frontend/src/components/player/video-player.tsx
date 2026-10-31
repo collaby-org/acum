@@ -33,6 +33,7 @@ import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
+import { CinemaLights } from "@/components/player/cinema-lights";
 import {
   PlayerQualityBadge,
   type QualityVariant,
@@ -64,6 +65,32 @@ type WebkitVideoElement = HTMLVideoElement & {
 
 /** How this browser can go full screen. */
 type FullscreenMode = "element" | "video" | "none";
+
+/**
+ * The Remote Playback API, as the browser that has it spells it.
+ *
+ * It is how the picture is handed to a smart TV or a cast stick: the
+ * browser chooses the device, and the video element keeps its own state
+ * machine while the frames travel elsewhere. The interfaces are the DOM's
+ * own — `HTMLMediaElement.remote`, and the `connect` and `disconnect`
+ * events it answers to — and they are named here only because the answer
+ * to "does this browser have it" is a runtime one: the property is
+ * `readonly` on the interface, and a browser that does not implement it
+ * simply has nothing there.
+ */
+type CastableVideoElement = HTMLVideoElement & {
+  readonly remote?: RemotePlayback;
+};
+
+/**
+ * How long the bar waits before it rests, in milliseconds.
+ *
+ * In the window it is a shade quicker than in fullscreen: the bar sits
+ * under the picture there, out of the way of the frame itself, so the
+ * picture is never left uncovered by it.
+ */
+const IDLE_MS = 2600;
+const FULLSCREEN_IDLE_MS = 3000;
 
 /**
  * The hls.js instance as TypeScript sees it.
@@ -121,14 +148,19 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const shellRef = useRef<HTMLDivElement>(null);
     /** The hls.js instance driving the picture right now, if any. */
     const hlsRef = useRef<HlsInstance | null>(null);
+    /**
+     * Whether the pointer rests on the bar, and whether the focus ring is
+     * inside it. Both are read by the timer that rests the bar: a mouse
+     * that stopped moving over the quality chip is a visitor who is still
+     * using it, and the bar has to know that without another event.
+     */
+    const overBarRef = useRef(false);
+    const focusInBarRef = useRef(false);
     const [playing, setPlaying] = useState(false);
     const [muted, setMuted] = useState(true);
     const [volume, setVolume] = useState(1);
     const [fullscreen, setFullscreen] = useState(false);
     const [fullscreenMode, setFullscreenMode] = useState<FullscreenMode>("none");
-    // Fullscreen only: the transport bar steps aside while the picture
-    // runs, and comes back at the first move of the pointer.
-    const [controlsAsleep, setControlsAsleep] = useState(false);
     /**
      * The stream's own shape, read off the picture when it arrives.
      *
@@ -156,6 +188,32 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const [currentLevel, setCurrentLevel] = useState(-1);
     // The browser refused to start the picture: the visitor has to tap.
     const [blocked, setBlocked] = useState(false);
+    /**
+     * Cinema mode: the page around the picture goes near-black and the
+     * frame stays lit. The lights are the player's to put down and to
+     * pick back up, so the state lives here and the strips follow it.
+     */
+    const [cinema, setCinema] = useState(false);
+    /**
+     * The bar rests while the picture runs — in fullscreen, where it has
+     * always done, and in the window too, where the live chrome used to
+     * sit there for good with its buffer bar moving back and forth over
+     * a picture that has no position to show. A move, a tap, a key or the
+     * focus ring brings it back at once.
+     */
+    const [asleep, setAsleep] = useState(false);
+    // The quality menu has to be able to hold the bar awake while it is
+    // open — the menu is portaled out of the bar, so nothing about it can
+    // be seen from here except what the badge says.
+    const [qualityOpen, setQualityOpen] = useState(false);
+    // A drag of the live scrubber holds it awake for the same reason.
+    const [scrubbing, setScrubbing] = useState(false);
+    // Cast: whether this browser can hand the picture to a smart TV, and
+    // whether one is playing it right now. Both answers only exist in the
+    // browser, so both wait for the mount — the way the
+    // picture-in-picture answer below does.
+    const [castSupported, setCastSupported] = useState(false);
+    const [castConnected, setCastConnected] = useState(false);
 
     // The account decides whether the picture may play at all. The free
     // plan has two hours a day and the server is the one that counts them,
@@ -524,36 +582,70 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       setFullscreenMode("none");
     }, [embedded]);
 
-    // In fullscreen the transport bar floats over the picture and rests:
-    // three seconds of still pointer while the picture runs, and it fades
-    // out with the cursor; a move or a tap brings it back at once, and a
-    // pause keeps it on screen. Leaving fullscreen wakes it for good.
+    /**
+     * What this browser can cast to.
+     *
+     * The Remote Playback API is a Chromium thing, and where it is missing
+     * there is nothing to prompt and nothing to watch — so the bar is told
+     * that, and it keeps the cast button with an honest label rather than
+     * a press that goes nowhere. The two events are the whole of the
+     * state machine the API offers: a screen arrived, or it went away.
+     */
     useEffect(() => {
-      if (!fullscreen) {
-        setControlsAsleep(false);
+      const video = videoRef.current as CastableVideoElement | null;
+      const remote = video?.remote;
+      if (!remote) {
+        setCastSupported(false);
         return;
       }
-      let timer = 0;
-      const wake = () => {
-        setControlsAsleep(false);
-        if (timer) {
-          window.clearTimeout(timer);
-          timer = 0;
-        }
-        if (!playing) return;
-        timer = window.setTimeout(() => setControlsAsleep(true), 3000);
-      };
-      wake();
-      document.addEventListener("pointermove", wake);
-      document.addEventListener("pointerdown", wake);
-      document.addEventListener("keydown", wake);
+      setCastSupported(true);
+      const sync = () => setCastConnected(remote.state === "connected");
+      sync();
+      remote.addEventListener("connect", sync);
+      remote.addEventListener("disconnect", sync);
       return () => {
-        if (timer) window.clearTimeout(timer);
-        document.removeEventListener("pointermove", wake);
-        document.removeEventListener("pointerdown", wake);
-        document.removeEventListener("keydown", wake);
+        remote.removeEventListener("connect", sync);
+        remote.removeEventListener("disconnect", sync);
       };
-    }, [fullscreen, playing]);
+    }, []);
+
+    /**
+     * Fullscreen is the end of cinema mode.
+     *
+     * The picture fills the screen, so there is no page left to dim, and
+     * a toggle that lights a room nobody can see would be a lie. The
+     * visitor gets the screen instead of the dark.
+     */
+    useEffect(() => {
+      if (fullscreen) setCinema(false);
+    }, [fullscreen]);
+
+    /**
+     * The player is leaving the page: fullscreen goes with it.
+     *
+     * A shell that is gone from the document would otherwise leave the
+     * browser holding a full screen with nothing on it.
+     */
+    useEffect(
+      () => () => {
+        if (document.fullscreenElement === shellRef.current) {
+          void document.exitFullscreen?.().catch(() => undefined);
+        }
+      },
+      [],
+    );
+
+    /**
+     * What holds the bar awake.
+     *
+     * Anything the visitor may be in the middle of: a paused picture, a
+     * stream still being found, the browser's own refusal, the quality
+     * menu open, the scrubber under the finger, the picture already handed
+     * to a TV, and the lights being down — the bar is the only way back
+     * up out of the dark. The pointer resting on the bar counts too, and
+     * so does the focus ring inside it: a bar that faded while the mouse
+     * sat still on a chip would be a chip nobody could open.
+     */
 
     // Fullscreen asks for the whole screen: a level anything pinned — to
     // the old box, to a temporary choice — goes back to automatic, so the
@@ -751,6 +843,93 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const failed = status === "error" && !block;
     const hasNext = sourceIndex + 1 < sources.length;
 
+    /**
+     * What holds the bar awake.
+     *
+     * Anything the visitor may be in the middle of: a paused picture, a
+     * stream still being found, the browser's own refusal, the quality
+     * menu open, the scrubber under the finger, the picture already handed
+     * to a TV, and the lights being down — the bar is the only way back
+     * up out of the dark. The pointer resting on the bar counts too, and
+     * so does the focus ring inside it: a bar that faded while the mouse
+     * sat still on a chip would be a chip nobody could open.
+     */
+    const holdsBarAwake = useCallback(
+      () =>
+        !playing ||
+        busy ||
+        blocked ||
+        failed ||
+        cinema ||
+        qualityOpen ||
+        scrubbing ||
+        overBarRef.current ||
+        focusInBarRef.current ||
+        Boolean(document.pictureInPictureElement),
+      [playing, busy, blocked, failed, cinema, qualityOpen, scrubbing],
+    );
+
+    // The bar rests while the picture runs: a moment of stillness and it
+    // fades out, with the cursor in fullscreen, where nothing covers the
+    // frame behind it. A move, a tap, a wheel or a key brings it back at
+    // once, and anything the visitor is doing keeps it there.
+    useEffect(() => {
+      const shell = shellRef.current;
+      if (!shell) return;
+
+      let timer = 0;
+
+      const wake = (event?: Event) => {
+        if (event?.type === "pointermove") {
+          const target = event.target as Element | null;
+          overBarRef.current = Boolean(target?.closest?.("[data-player-controls]"));
+        }
+        if (event?.type === "focusin") {
+          const target = event.target as Element | null;
+          focusInBarRef.current = Boolean(
+            target?.closest?.("[data-player-controls]"),
+          );
+        }
+        if (event?.type === "focusout") {
+          focusInBarRef.current = false;
+        }
+        setAsleep(false);
+        if (timer) {
+          window.clearTimeout(timer);
+          timer = 0;
+        }
+        if (holdsBarAwake()) return;
+        timer = window.setTimeout(
+          () => setAsleep(true),
+          fullscreen ? FULLSCREEN_IDLE_MS : IDLE_MS,
+        );
+      };
+
+      wake();
+
+      // The listeners sit on the player's own shell, not on the document:
+      // a visitor scrolling the catalogue past the picture is not a
+      // visitor reaching for the bar. The key is the one exception — a
+      // keystroke that reaches the player is a keystroke that belongs to
+      // it, wherever it was aimed.
+      shell.addEventListener("pointermove", wake);
+      shell.addEventListener("pointerdown", wake);
+      shell.addEventListener("wheel", wake, { passive: true });
+      shell.addEventListener("focusin", wake);
+      shell.addEventListener("focusout", wake);
+      shell.addEventListener("keydown", wake);
+
+      return () => {
+        if (timer) window.clearTimeout(timer);
+        shell.removeEventListener("pointermove", wake);
+        shell.removeEventListener("pointerdown", wake);
+        shell.removeEventListener("wheel", wake);
+        shell.removeEventListener("focusin", wake);
+        shell.removeEventListener("focusout", wake);
+        shell.removeEventListener("keydown", wake);
+      };
+    }, [fullscreen, holdsBarAwake]);
+
     const togglePlay = useCallback(() => {
       const video = videoRef.current;
       if (!video) return;
@@ -844,6 +1023,22 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       void video.requestPictureInPicture().catch(() => undefined);
     }, []);
 
+    /**
+     * Hand the picture to a smart TV.
+     *
+     * The browser opens its own picker: it names the screens it found,
+     * and it says so when it found none — which is the honest answer, and
+     * the reason this does not try to keep a list of its own. A visitor
+     * who closes the picker without choosing has done nothing, and
+     * nothing happens.
+     */
+    const toggleCast = useCallback(() => {
+      const video = videoRef.current as CastableVideoElement | null;
+      const remote = video?.remote;
+      if (!remote) return;
+      void remote.prompt().catch(() => undefined);
+    }, []);
+
     const seek = useCallback((time: number) => {
       const video = videoRef.current;
       if (!video) return;
@@ -855,6 +1050,35 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       if (!video || video.buffered.length === 0) return;
       video.currentTime = video.buffered.end(video.buffered.length - 1);
     }, []);
+
+    /**
+     * The keys and the double press that go with fullscreen.
+     *
+     * Every player on a desktop answers `f` and a double click on the
+     * picture; a phone has neither, and it is not asked for either — its
+     * own fullscreen is the button in the corner. The handler only ever
+     * runs where the player holds the focus, so a keystroke aimed at a
+     * search box on the page behind never reaches here.
+     */
+    const onShellKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        if (event.key !== "f" && event.key !== "F") return;
+        if (fullscreenMode === "none") return;
+        const target = event.target as HTMLElement | null;
+        if (target && (target.tagName === "INPUT" || target.isContentEditable)) {
+          return;
+        }
+        event.preventDefault();
+        toggleFullscreen();
+      },
+      [fullscreenMode, toggleFullscreen],
+    );
+
+    const onFrameDoubleClick = useCallback(() => {
+      if (fullscreenMode === "none") return;
+      toggleFullscreen();
+    }, [fullscreenMode, toggleFullscreen]);
 
     /**
      * Pin the picture to one rung of the ladder, or hand the choice back
@@ -874,16 +1098,18 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     return (
       <div
         ref={shellRef}
+        onKeyDown={onShellKeyDown}
         className={cn(
           // `fx-player` is what the fullscreen rules hang off; a pointer
           // that rests in fullscreen loses the cursor with the bar.
           "relative isolate flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black fx-player",
-          fullscreen && controlsAsleep && "cursor-none",
+          fullscreen && asleep && "cursor-none",
           className,
         )}
       >
         <div
-          className="fx-player-frame relative w-full bg-black max-sm:min-h-[56.25vw] max-sm:flex-1 rounded-2xl"
+          onDoubleClick={onFrameDoubleClick}
+          className="fx-player-frame relative w-full bg-black max-sm:min-h-[56.25vw] max-sm:flex-1 rounded-2xl touch-manipulation"
           style={
             {
               "--player-aspect": stream
@@ -1051,10 +1277,14 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             volume={volume}
             busy={busy}
             fullscreen={fullscreen}
-            asleep={fullscreen && controlsAsleep}
+            asleep={asleep}
             canFullscreen={fullscreenMode !== "none"}
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}
+            canCast={castSupported}
+            castConnected={castConnected}
+            cinema={cinema}
+            canCinema={!fullscreen}
             behindLive={behindLive}
             liveWindow={liveWindow}
             nowPlaying={
@@ -1075,19 +1305,32 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                 currentLevel={currentLevel}
                 stream={stream}
                 onLevelChange={selectLevel}
+                // The bar is told: the menu is portaled out of it, so
+                // this is the only way it can know to stay awake.
+                onOpenChange={setQualityOpen}
               />
             }
             onSeek={seek}
+            onScrubChange={setScrubbing}
             onTogglePlay={togglePlay}
             onToggleMute={toggleMute}
             onVolumeChange={changeVolume}
             onToggleFullscreen={toggleFullscreen}
             onTogglePictureInPicture={togglePictureInPicture}
+            onToggleCast={toggleCast}
+            onToggleCinema={() => setCinema((value) => !value)}
             onJumpToLive={jumpToLive}
             onRetry={player.retry}
             onNextSource={player.advance}
           />
         )}
+
+        {/* The lights, while they are down. Portaled to the body and
+            measured against this shell: the picture is the hole in the
+            dark, and the strips follow it wherever the page puts it. */}
+        {cinema && !bare && !embedded ? (
+          <CinemaLights targetRef={shellRef} onDismiss={() => setCinema(false)} />
+        ) : null}
       </div>
     );
   },
