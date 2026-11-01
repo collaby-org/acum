@@ -9,6 +9,13 @@
     "rating": {
       "rule": "Ratings are programme-only — never a channel default, never a heuristic. 18 is reserved for genuinely adult / violent true crime with a Romanian reason; PG for family, lifestyle and entertainment (guidance, not restrictive); news and kids carry no rating. When in doubt the rating is left null: a wrong 18 is worse than no pill.",
       "labels": "PG, 12, 18 follow the ITVX-style scale the brief specified; 'AP' is deliberately unused in favour of leaving news unrestricted."
+    },
+    "vocabulary": {
+      "purpose": "The badge row (src/components/programme-badges/badge-row.tsx) paints up to four groups, in order: quality/format, audio, accessibility, maturity, with the genre as a plain pill between accessibility and maturity. The groups and the labels live in src/lib/programme-badges.ts; this file records what was actually authored.",
+      "quality": "A measurement, not a claim: it is the catalogue's own feed resolution (QUALITY_META in src/lib/channel-meta.ts). No quality is ever authored here — a card shows the measured resolution of its feeds, and a feed nobody measured earns no badge.",
+      "audio": "Dolby Atmos, Spatial Audio and 5.1 have NO source: the feeds carry a resolution and an address, the guide carries titles, times and a description. The types exist in the vocabulary so the badge set is complete, and no entry here claims one. Unknown renders absent, never as a guess.",
+      "accessibility": "AD/S/SSL are curated per the flags rule above. CC (closed captions) is vocabulary-only: no source states it, no entry may claim it, and a broadcast subtitle (S) is not the same thing as a closed caption.",
+      "rating_labels": "The maturity vocabulary names both scales: the UK's (U, PG, 12, 12A, 15, 18) which ITVX prints, and the US one (TV-Y, TV-Y7, G, TV-G, TV-PG, PG-13, TV-14, R, TV-MA, NC-17) which Netflix prints. Only curated values appear here; a rating outside the vocabulary paints nothing."
     }
   },
   "channels": {
@@ -99,8 +106,8 @@
     "prima-tv": { "genre": "Generaliste" },
     "pro-tv-news": { "genre": "Știri", "flags": ["S", "AD"] },
     "antena-1": { "genre": "Generaliste" },
-    "antena-3": { "genre": "Știri" },
-    "metropola-tv": { "genre": "Știri" },
+    "antena-3": { "genre": "Știri", "flags": ["S", "AD"] },
+    "metropola-tv": { "genre": "Știri", "flags": ["S", "AD"] },
     "tvr-1": { "flags": ["S", "AD"] },
     "tvr-2": { "flags": ["S", "AD"] },
     "tvr-3": { "flags": ["S", "AD"] }

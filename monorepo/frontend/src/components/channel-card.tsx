@@ -8,6 +8,7 @@ import type { MouseEvent } from "react";
 import type { EpgGuide } from "@/components/now-next";
 import type { Quality } from "@/data/types";
 import { QUALITY_META, STATUS_META, posterPalette } from "@/lib/channel-meta";
+import { qualityBadge } from "@/lib/programme-badges";
 import { nowProgramme } from "@/lib/now-showing";
 import { useGuideMoment } from "@/hooks/use-guide-clock";
 import { pictureFor, slotFor, stillUrl } from "@/lib/stills";
@@ -16,6 +17,7 @@ import { cn, formatViewers } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAccount } from "@/hooks/use-account";
 import { isAdmin } from "@/lib/admin-access";
+import { ProgrammeBadgeRow } from "@/components/programme-badges/badge-row";
 
 /* ------------------------------------------------------------------ *
  * Quality
@@ -37,6 +39,10 @@ export function channelQuality(channel: ChannelLike): Quality | undefined {
  * card asks for the floor to be named too (`showStandard`). The badge stays
  * quiet either way: a hairline ring and a muted label, so it never competes
  * with the channel name.
+ *
+ * The label, the accessible name and the "is this badge-worthy" rule
+ * come from the badge resolver's quality vocabulary, so this chip and
+ * the programme badge row can never disagree about what "HD" means.
  */
 export function QualityBadge({
   quality,
@@ -48,16 +54,15 @@ export function QualityBadge({
   /** Name the standard definition as well, so "not HD" is visible too. */
   showStandard?: boolean;
 }) {
-  if (!quality) return null;
-  const meta = QUALITY_META[quality];
-  if (!meta) return null;
+  const badge = qualityBadge(quality, { showStandard });
+  if (!badge) return null;
 
   const standard = quality === "sd" || quality === "low";
-  if (!meta.showBadge && !(showStandard && standard)) return null;
 
   return (
     <span
       data-slot="quality-badge"
+      title={badge.title}
       className={cn(
         "inline-flex h-5 items-center rounded-full border px-2",
         "text-[10px] font-semibold uppercase tracking-[0.14em]",
@@ -67,7 +72,7 @@ export function QualityBadge({
         className,
       )}
     >
-      {meta.label}
+      {badge.label}
     </span>
   );
 }
@@ -356,12 +361,9 @@ export function ChannelScreen({
             reserve ? "pr-14" : "pr-3.5",
           )}
         >
-          <div className="flex items-center gap-2">
-            <h3 className="min-w-0 truncate font-display text-[15px] font-semibold leading-[1.15] tracking-tight text-ink drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
-              {channel.name}
-            </h3>
-            <QualityBadge quality={quality} showStandard className="shrink-0" />
-          </div>
+          <h3 className="min-w-0 truncate font-display text-[15px] font-semibold leading-[1.15] tracking-tight text-ink drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            {channel.name}
+          </h3>
 
           <p className="mt-1 flex min-w-0 items-center gap-1.5">
             {programme ? (
@@ -382,6 +384,22 @@ export function ChannelScreen({
               </span>
             )}
           </p>
+
+          {/* What is on, badged. The row paints only what the resolver
+              can support — the measured feed quality, the accessibility
+              the channel broadcasts, the genre and the age rating — and
+              paints nothing where no source states a value. It lives in
+              a fixed-height region: the minute tick can change the show
+              and with it the pills, and the reserved height keeps the
+              title block still while that happens. */}
+          <div className="mt-1.5 h-[19px] overflow-hidden">
+            <ProgrammeBadgeRow
+              channelId={channel.id}
+              title={programme?.title ?? null}
+              quality={quality}
+              showStandard
+            />
+          </div>
 
           {showUpgrade ? (
             <Link
