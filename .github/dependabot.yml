@@ -52,15 +52,3 @@ updates:
       minor-patch:
         patterns:
           - "*"
-
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    labels:
-      - "dependencies"
-    groups:
-      actions:
-        patterns:
-          - "*"

@@ -1,44 +1,53 @@
 # Labeler rules for ACUM
 #
 # Automatically applies labels based on changed files.
+#
+# Format: actions/labeler v7 requires every `changed-files` entry to be a
+# mapping with a glob key. A bare glob string ("monorepo/frontend/**") is
+# rejected by the action with:
+#
+#   The "changed-files" section must have a valid config structure.
+#
+# `any-glob-to-any-file` matches the changed file against the glob. The
+# v4-style shorthand is not supported any more.
 
 frontend:
   - changed-files:
-      - "monorepo/frontend/**"
+      - any-glob-to-any-file: "monorepo/frontend/**"
 
 tv:
   - changed-files:
-      - "monorepo/tv/**"
-      - "tizen-tv/**"
-      - "webos-tv/**"
-      - "android-tv/**"
+      - any-glob-to-any-file: "monorepo/tv/**"
+      - any-glob-to-any-file: "tizen-tv/**"
+      - any-glob-to-any-file: "webos-tv/**"
+      - any-glob-to-any-file: "android-tv/**"
 
 supabase:
   - changed-files:
-      - "supabase/**"
+      - any-glob-to-any-file: "supabase/**"
 
 scripts:
   - changed-files:
-      - "scripts/**"
-      - "data/**"
-      - "src/data/**"
+      - any-glob-to-any-file: "scripts/**"
+      - any-glob-to-any-file: "data/**"
+      - any-glob-to-any-file: "src/data/**"
 
 docs:
   - changed-files:
-      - "docs/**"
-      - "*.md"
-      - "**/*.md"
+      - any-glob-to-any-file: "docs/**"
+      - any-glob-to-any-file: "*.md"
+      - any-glob-to-any-file: "**/*.md"
 
 ci:
   - changed-files:
-      - ".github/**"
+      - any-glob-to-any-file: ".github/**"
 
 design-system:
   - changed-files:
-      - "design-system/**"
+      - any-glob-to-any-file: "design-system/**"
 
 tv-apps:
   - changed-files:
-      - "tizen-tv/**"
-      - "webos-tv/**"
-      - "android-tv/**"
+      - any-glob-to-any-file: "tizen-tv/**"
+      - any-glob-to-any-file: "webos-tv/**"
+      - any-glob-to-any-file: "android-tv/**"
