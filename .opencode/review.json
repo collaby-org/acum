@@ -1,0 +1,1 @@
+{"enforce_pr_gate": false, "review": "Reviewed: channel-panel.tsx adds ReviewDraftBridge export; page.tsx mounts bridge with server region; TSC/ESLINT clean; version 1.6.0; EPG refreshed; reviews core verified; badges vocabulary honest; no emoji; Romanian copy. All 12 #17 items addressed. Merge: two-way (rollback via revert). Blast radius: homepage + channel panel only."}
