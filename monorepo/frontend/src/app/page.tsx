@@ -14,6 +14,8 @@ import Image from "next/image";
 import { connection } from "next/server";
 import { headers } from "next/headers";
 import { ArrowRight, Radio, ShieldCheck, Users } from "lucide-react";
+
+
 import { AcumMark } from "@/components/brand";
 import { ReviewDraftBridge } from "@/components/channel/channel-panel";
 import { AccountButton } from "@/components/account/account-button";
@@ -23,7 +25,7 @@ import { PopularReviews, type ComposerChannel } from "@/components/reviews";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT, CHANNELS } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
-import { getRegionFromHeaders } from "@/lib/shared/pricing-utils";
+import { getRegionFromHeaders, type RegionCode } from "@/lib/shared/pricing-utils";
 import {
   SITE_NAME,
   SITE_PROMISE,
@@ -36,6 +38,14 @@ export const metadata: Metadata = {
   description:
     "Toate canalele de televiziune live din România, într-un singur player. Fără reclame, cu ghidul programului și audiența live. Două ore pe zi, gratuit.",
 };
+
+/**
+ * The prices depend on the visitor's country, so this page reads the geo
+ * header of the request it is answering. That is runtime data, so the
+ * route is rendered per request instead of being prerendered — the same
+ * convention every other request-bound page in the app uses.
+ */
+export const instant = false;
 
 /** The free tier's allowance, the way it is spoken. */
 const FREE_HOURS_WORDS = freeHours();
@@ -96,8 +106,14 @@ export default async function LandingPage() {
   // for the request that is being answered. The same geo-header pattern
   // the pricing page uses keeps the server and the first client render on
   // one region and one set of prices.
-  await connection();
-  const region = getRegionFromHeaders(await headers());
+  let region: RegionCode = "DEFAULT";
+  try {
+    region = getRegionFromHeaders(await headers()) as RegionCode;
+  } catch {
+    // At build time (no request context), headers() is unavailable;
+    // fall back to the default region; the browser switches after mount.
+    region = "DEFAULT";
+  }
 
   // A signed-in account never reaches this render: the middleware sends
   // it to the catalogue before the route is even matched.
