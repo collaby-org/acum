@@ -40,13 +40,28 @@ import { cn } from "@/lib/utils";
  *      stylesheet kills CSS animations under `prefers-reduced-motion`;
  *      `element.animate()` is not a CSS animation, so it is not killed
  *      by it. The preference is read here, explicitly, and the
- *      choreography then runs without the movement: the same fade, the
- *      same scale, the same timing, and no travel.
+ *      choreography then does not run at all: the panel is simply there,
+ *      and it is simply gone. Nothing travels, nothing fades, and nothing
+ *      waits for an animation to finish.
  *
  *   3. **The exit is awaited.** The parent is free to flip `open` to
  *      false in the same tick it decides to close; the panel stays
  *      mounted until the animation it is running has finished, and only
  *      then does it unmount itself.
+ *
+ * Two more rules the file keeps, because a panel that breaks them is a
+ * panel nobody can use:
+ *
+ *   4. **The surface is usable while it moves.** The focus goes into the
+ *      panel before the arrival animation has finished, and the panel is
+ *      never inert while it is on its way out. The animation is a layer
+ *      over a working surface, not a gate in front of it.
+ *
+ *   5. **The animation never holds the focus.** When the panel leaves,
+ *      the focus goes back to where it came from in the same moment the
+ *      exit starts, and Tab is not trapped while the panel is on its way
+ *      out. A visitor who closes the panel is not held inside it for the
+ *      length of an animation.
  */
 
 /** A point on the screen, in viewport coordinates. */
@@ -55,14 +70,9 @@ export type ZoomPoint = { x: number; y: number };
 /** The choreography, in milliseconds. */
 const ENTER_MS = 220;
 const EXIT_MS = 180;
-/** With the movement taken out, the fade is the only thing left. */
-const REDUCED_ENTER_MS = 140;
-const REDUCED_EXIT_MS = 120;
 
 /** Where the panel starts from, and where it goes back to. */
 const ZOOMED = 0.86;
-/** The scale left when the movement is taken away: a breath, nothing more. */
-const STILL = 0.97;
 
 /** The app's own spring curve. It overshoots, which is what makes a panel
  *  feel as though it has weight rather than sliding. */
@@ -137,18 +147,11 @@ function choreograph(
  * two transforms, and a `var()` inside one is something engines have
  * never agreed on; a pair of numbers is something every one of them
  * interpolates.
+ *
+ * There is no reduced version of these frames: when the visitor asks for
+ * less movement, there are no frames at all.
  */
-function enteringFrames(
-  travel: ZoomPoint,
-  sheet: boolean,
-  reduced: boolean,
-): Keyframe[] {
-  if (reduced) {
-    return [
-      { opacity: 0, transform: `scale(${STILL})` },
-      { opacity: 1, transform: "scale(1)" },
-    ];
-  }
+function enteringFrames(travel: ZoomPoint, sheet: boolean): Keyframe[] {
   if (sheet) {
     return [
       { opacity: 0, transform: "translate3d(0, 26px, 0) scale(0.99)" },
@@ -171,13 +174,7 @@ function enteringFrames(
  * panel. On a phone the sheet shrinks towards it, which reads as the
  * sheet being taken back rather than dropped into the sea.
  */
-function leavingFrames(travel: ZoomPoint, reduced: boolean): Keyframe[] {
-  if (reduced) {
-    return [
-      { opacity: 1, transform: "scale(1)" },
-      { opacity: 0, transform: `scale(${STILL})` },
-    ];
-  }
+function leavingFrames(travel: ZoomPoint): Keyframe[] {
   return [
     { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)" },
     {
@@ -232,6 +229,45 @@ function focusFirst(panel: HTMLElement): void {
   }
   if (panel.getAttribute("tabindex") !== "-1") panel.setAttribute("tabindex", "-1");
   panel.focus({ preventScroll: true });
+}
+
+/**
+ * How much of the screen the software keyboard is eating.
+ *
+ * On a phone the keyboard covers the bottom of the page, and a sheet that
+ * ends up under it is a sheet nobody can read or answer in. The visual
+ * viewport says how much of the layout viewport is still visible; the gap
+ * between the two is the keyboard, and the panel is lifted by exactly
+ * that much.
+ *
+ * Both events are watched: the keyboard changes the size of the viewport
+ * when it opens, and it scrolls the viewport when it opens half way up
+ * the screen — the two together are the whole of what happens on a phone.
+ */
+function useKeyboardInset(): number {
+  const [inset, setInset] = useState(0);
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const measure = () => {
+      const visible = viewport.offsetTop + viewport.height;
+      const gap = Math.round(window.innerHeight - visible);
+      setInset(gap > 0 ? gap : 0);
+    };
+
+    measure();
+    viewport.addEventListener("resize", measure);
+    viewport.addEventListener("scroll", measure);
+
+    return () => {
+      viewport.removeEventListener("resize", measure);
+      viewport.removeEventListener("scroll", measure);
+    };
+  }, []);
+
+  return inset;
 }
 
 export type ZoomOverlayProps = {
@@ -292,6 +328,8 @@ export function ZoomOverlay({
   const narrow = useMediaQuery(SHEET_QUERY);
   const reduced = useMediaQuery(REDUCED_QUERY);
   const sheet = variant === "sheet" || narrow;
+  /** How much the software keyboard is covering the bottom of the screen. */
+  const keyboardInset = useKeyboardInset();
 
   /* ---------------- opening ---------------- */
 
@@ -324,22 +362,40 @@ export function ZoomOverlay({
     const panel = panelRef.current;
     if (!panel) return;
 
-    restore.current =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
+    // Where the focus came from, so it can go back. Remembered once: the
+    // element that opened the panel is not the element that happens to be
+    // focused when the screen changes shape.
+    if (!restore.current) {
+      restore.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    }
 
     // Where it came from: the point the visitor asked for, the press that
     // opened it, or failing both, the panel's own centre — which is a
     // zoom out of nothing, and is what a keyboard-open panel gets.
     const point = from.current ?? press.current ?? centreOf(panel);
 
-    running.current = choreograph(
-      panel,
-      enteringFrames(travelTo(panel, point), sheet, reduced),
-      reduced ? REDUCED_ENTER_MS : ENTER_MS,
-      reduced ? EASE_OUT : EASE_SPRING,
-    );
+    running.current?.cancel();
+    running.current = null;
+
+    if (reduced) {
+      // Less movement asked for: the panel is simply there. No travel, no
+      // fade, and nothing to wait for.
+      panel.style.opacity = "1";
+      panel.style.transform = "none";
+    } else {
+      running.current = choreograph(
+        panel,
+        enteringFrames(travelTo(panel, point), sheet),
+        ENTER_MS,
+        EASE_SPRING,
+      );
+    }
+
+    // The focus goes in straight away — before the panel has finished
+    // arriving — so the surface is usable while it is still moving.
     focusFirst(panel);
   }, [mounted, leaving, sheet, reduced]);
 
@@ -359,11 +415,19 @@ export function ZoomOverlay({
     setLeaving(true);
   }, [open, mounted]);
 
-  // `onExited` is read once, when the panel has finished leaving. The
-  // effect is keyed on the leaving phase rather than on the callback's
-  // identity: a parent that re-creates the callback mid-animation must
-  // not restart the panel's exit.
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the leaving phase, not on callback identity
+  /**
+   * The latest `onExited`, kept in a ref.
+   *
+   * The exit is read once, when the panel has finished leaving, and the
+   * effect is keyed on the leaving phase rather than on the callback's
+   * identity: a parent that re-creates the callback mid-animation must
+   * not restart the panel's exit.
+   */
+  const exitedRef = useRef(onExited);
+  useEffect(() => {
+    exitedRef.current = onExited;
+  }, [onExited]);
+
   useLayoutEffect(() => {
     if (!leaving) return;
 
@@ -371,7 +435,7 @@ export function ZoomOverlay({
     if (!panel) {
       setMounted(false);
       setLeaving(false);
-      onExited?.();
+      exitedRef.current?.();
       return;
     }
 
@@ -381,13 +445,7 @@ export function ZoomOverlay({
     const target = press.current ?? from.current ?? centreOf(panel);
 
     running.current?.cancel();
-    const animation = choreograph(
-      panel,
-      leavingFrames(travelTo(panel, target), reduced),
-      reduced ? REDUCED_EXIT_MS : EXIT_MS,
-      EASE_OUT,
-    );
-    running.current = animation;
+    running.current = null;
 
     let done = false;
     const finish = () => {
@@ -397,14 +455,37 @@ export function ZoomOverlay({
       setMounted(false);
       setLeaving(false);
       restore.current?.focus();
-      onExited?.();
+      restore.current = null;
+      exitedRef.current?.();
     };
+
+    // The focus leaves with the panel, in the same moment the exit
+    // starts: an animation must never hold it. Whatever was focused
+    // before the panel opened gets it back now, not after the panel is
+    // gone.
+    restore.current?.focus();
+    restore.current = null;
+
+    if (reduced) {
+      // Less movement asked for: the panel goes at once, and there is
+      // nothing left to wait for.
+      finish();
+      return;
+    }
+
+    const animation = choreograph(
+      panel,
+      leavingFrames(travelTo(panel, target)),
+      EXIT_MS,
+      EASE_OUT,
+    );
+    running.current = animation;
 
     animation.finished.then(finish, finish);
 
     // A close that never finished: a hidden tab, a browser that cancelled
     // the animation. The panel must not be left behind.
-    const safety = window.setTimeout(finish, (reduced ? REDUCED_EXIT_MS : EXIT_MS) + 250);
+    const safety = window.setTimeout(finish, EXIT_MS + 250);
     return () => window.clearTimeout(safety);
   }, [leaving, reduced]);
 
@@ -433,10 +514,15 @@ export function ZoomOverlay({
    * A panel the visitor can tab out of is a panel they can lose, and
    * losing the focus of a dialog behind the page it covers is the
    * quietest accessibility bug there is.
+   *
+   * While the panel is leaving, it is not: the focus has already gone
+   * back to where it came from, and trapping it now would pull the
+   * visitor into a panel that is on its way out.
    */
   const onKeyDownCapture = useCallback(
     (event: ReactKeyboardEvent<HTMLDivElement>) => {
       if (event.key !== "Tab") return;
+      if (leaving) return;
       const panel = panelRef.current;
       if (!panel) return;
 
@@ -458,7 +544,7 @@ export function ZoomOverlay({
         last.focus();
       }
     },
-    [],
+    [leaving],
   );
 
   /**
@@ -485,6 +571,12 @@ export function ZoomOverlay({
       data-slot="review-overlay"
       data-state={leaving ? "closed" : "open"}
       onPointerDown={onBackdropPointerDown}
+      // The software keyboard covers the bottom of the screen; the gap it
+      // leaves is added here, so the panel sits above it instead of
+      // under it.
+      style={
+        keyboardInset > 0 ? { paddingBottom: `${keyboardInset}px` } : undefined
+      }
       className={cn(
         "fixed inset-0 z-[60] flex justify-center",
         sheet ? "items-end p-0" : "items-center p-4",
@@ -499,6 +591,13 @@ export function ZoomOverlay({
         aria-modal="true"
         aria-label={label}
         onKeyDownCapture={onKeyDownCapture}
+        // The panel is never taller than the room the keyboard left it:
+        // otherwise the top of it would be cut off by the screen.
+        style={
+          keyboardInset > 0
+            ? { maxHeight: `calc(92dvh - ${keyboardInset}px)` }
+            : undefined
+        }
         className={cn(
           "relative w-full",
           sheet

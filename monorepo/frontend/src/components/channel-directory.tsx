@@ -222,7 +222,7 @@ export function ChannelDirectory({
               aria-label="Caută în director după nume, familie sau categorie"
               aria-controls={`${LIST_ID} ${COUNT_ID}`}
               autoComplete="off"
-              className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:appearance-none"
+              className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-sm [&::-webkit-search-cancel-button]:appearance-none"
             />
             {query.length > 0 ? (
               <button

@@ -1,15 +1,15 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import {
   Cast,
   Lightbulb,
+  LightbulbOff,
   Maximize,
   Minimize,
   Pause,
   PictureInPicture2,
   Play,
-  Projector,
   RotateCcw,
   SkipForward,
   Volume2,
@@ -19,48 +19,28 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ *
- * The live chrome
- *
- * A live channel says three things about itself: that it is live, how
- * much buffer the connection has put ahead of the playhead, and what
- * rung of the picture is on screen. Every player in the industry puts
- * all three in the transport bar — the badge on the left of the track,
- * the track filling the bar, the quality chip on the right of it — and
- * none of them over the picture, where they sit on top of the very
- * frame they describe and recede every time the picture is late.
- *
- * So the chrome lives here, in the bar, and the picture is left to the
- * picture: the loading spinner and the failure states are the only
- * things drawn over the frame now.
+ *Transportul playerului
  * ------------------------------------------------------------------ */
 
-/** The window of the live stream the viewer may move through. */
+/** Fereastra fluxului live pe care spectatorul o poate vedea. */
 export type LiveWindow = {
-  /** Where the buffered window starts, in stream seconds. */
+  /** Începutul ferestrei tamponate, în secunde de flux. */
   from: number;
-  /** Where the buffer ends — the live edge, in stream seconds. */
+  /** Capătul ferestrei tamponate — marginea live, în secunde de flux. */
   to: number;
-  /** Where the playhead sits, in stream seconds. */
+  /** Poziția curentă în flux, în secunde de flux. */
   current: number;
 };
 
-/**
- * The forward buffer the player asks hls.js to hold — `maxBufferLength`,
- * in the instance's own config. The live bar is measured against it: a
- * healthy live stream has this much in hand ahead of the playhead.
- */
+/** Tamponul live cerut de hls.js, în secunde. */
 const LIVE_BUFFER_TARGET = 30;
 
 /**
- * How full the live bar reads, 0..1.
+ * Cât de plină este linia live, între 0 și 1.
  *
- * A live edge has no end, so there is no duration to divide the playhead
- * by — `current/(to-from)` is a timestamp over a difference, and it
- * counts nothing. What the bar counts is the buffer: how much of the
- * window the stream has already put ahead of the playhead, against the
- * reach a healthy live buffer holds. The bar fills while the picture runs
- * at the edge, and it thins out while the buffer is starved — which is
- * the only thing a loading bar over a live picture can honestly say.
+ * Un flux live nu are o durată în care spectatorul s-ar putea deplasa, deci
+ * bara nu trebuie să pretindă că este un scrubber pentru înregistrări. Linia
+ * arată doar cât de mult s-a descărcat înaintea imaginii.
  */
 export function liveFill(liveWindow: LiveWindow | null | undefined): number {
   if (!liveWindow) return 0;
@@ -70,36 +50,24 @@ export function liveFill(liveWindow: LiveWindow | null | undefined): number {
 }
 
 /* ------------------------------------------------------------------ *
- * One control size
+ *Dimensiunile controlilor
  * ------------------------------------------------------------------ */
 
+/** Toate butoanele cu pictogramă au exact 44×44 px. */
+const CONTROL = "size-11 shrink-0 p-0";
+
+/** Toate cipurile cu etichetă au aceeași înălțime de 44 px. */
+const CONTROL_PILL = "h-11 shrink-0 px-3.5";
+
+/** Pictogramele rămân compacte, chiar dacă zona de apăsare este de 44 px. */
+const CONTROL_ICON = "size-[18px]";
+const CONTROL_ICON_LEAD = "size-5";
+
 /**
- * The single control size of the bar.
+ * Marcajul de direct.
  *
- * The bar used to carry three at once: a large round play button, small
- * square buttons beside it, then small chips — so nothing lined up with
- * anything, and the row read as three rows. Now every control is the
- * same round target: 36px on a desktop, where a mouse is happy with it,
- * and 40px on a phone, where a finger is not. The gold play button keeps
- * its lead through colour, never through size, and a labelled pill
- * („Flux următor”, the way back to live) shares the same height with the
- * same radius. Only the LIVE badge keeps its own small shape: it is a
- * mark that says something, not a control that does something.
- */
-const CONTROL = "size-9 max-sm:size-10";
-
-/** The same size, spelled for a control that carries a word. */
-const CONTROL_PILL = "h-9 max-sm:h-10 px-3";
-
-/** The icon inside a control — the play glyph leads by a hair. */
-const CONTROL_ICON = "size-4 max-sm:size-[18px]";
-const CONTROL_ICON_LEAD = "size-4.5 max-sm:size-5";
-
-/**
- * The LIVE badge: the mark that says this is the live edge and not a
- * recording. A red lens with its halo, the word in the display face —
- * flat now, because it sits on the transport bar rather than on the
- * picture, and a glass pill floating over the frame says nothing here.
+ * Este o informație, nu un control, deci păstrează o formă compactă. Textul
+ * este în limba română și spune exact ce este: „În direct”.
  */
 export function LiveBadge({ className }: { className?: string }) {
   return (
@@ -114,129 +82,74 @@ export function LiveBadge({ className }: { className?: string }) {
         <span aria-hidden className="fx-live-eye fx-live-eye-pulse absolute inset-0" />
         <span aria-hidden className="relative size-2 rounded-full bg-live" />
       </span>
-      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-live-soft">
-        Live
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-live-soft">
+        În direct
       </span>
     </span>
   );
 }
 
 export type LiveBarProps = {
-  /** How full the bar reads, 0..1. */
+  /** Cât de plină este linia, între 0 și 1. */
   fill: number;
-  /** The window the playhead may be moved through. */
-  liveWindow?: LiveWindow | null;
-  /** Moves the playhead through the window — desktop only. */
-  onSeek?: (time: number) => void;
-  /** Reports a drag of the scrubber, so the bar can stay awake for it. */
-  onScrubChange?: (scrubbing: boolean) => void;
   className?: string;
 };
 
 /**
- * The live bar.
+ * Linia live.
  *
- * The track is the buffer, drawn from what the stream has put ahead of
- * the playhead. The range input over it is the DVR scrubber, and it only
- * appears where there is a pointer to drive it: a phone gets the filled
- * track and the LIVE badge, and nothing to drag.
+ * Nu este interactivă: la marginea live nu există o poziție în care
+ * spectatorul să se poată deplasa. Ea spune, în schimb, cât de sănătoasă
+ * este legătura, prin tamponul aflat înaintea imaginii.
  */
-function LiveBar({
-  fill,
-  liveWindow = null,
-  onSeek,
-  onScrubChange,
-  className,
-}: LiveBarProps) {
-  const scrubId = useId();
-  const [scrubbing, setScrubbing] = useState(false);
-  const [scrubValue, setScrubValue] = useState(0);
-
-  const span = liveWindow ? liveWindow.to - liveWindow.from : 0;
-  const scrubbable = Boolean(liveWindow && onSeek && span > 1);
+function LiveBar({ fill, className }: LiveBarProps) {
   const width = Math.max(0, Math.min(1, fill)) * 100;
 
   return (
     <div className={cn("flex min-w-0 flex-1 items-center", className)}>
-      <div className="relative h-1.5 w-full rounded-full bg-white/15">
+      <div
+        role="progressbar"
+        aria-label="Bufferul fluxului live"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(width)}
+        title="Bufferul fluxului live"
+        className="relative h-1.5 w-full rounded-full bg-white/15"
+      >
         <div
+          aria-hidden
           className={cn(
             "absolute inset-y-0 left-0 rounded-full bg-signal",
             "shadow-[0_0_14px_rgb(242_167_27/0.5)] transition-[width] duration-500 ease-out",
           )}
           style={{ width: `${width}%` }}
         />
-
-        {liveWindow && scrubbable ? (
-          <>
-            <label htmlFor={scrubId} className="sr-only">
-              Poziția în flux
-            </label>
-            <input
-              id={scrubId}
-              type="range"
-              min={liveWindow.from}
-              max={liveWindow.to}
-              step={0.5}
-              value={scrubbing ? scrubValue : liveWindow.current}
-              onChange={(event) => setScrubValue(Number(event.target.value))}
-              onPointerDown={() => {
-                setScrubValue(liveWindow.current);
-                setScrubbing(true);
-                onScrubChange?.(true);
-              }}
-              onPointerUp={() => {
-                setScrubbing(false);
-                onScrubChange?.(false);
-                onSeek?.(scrubValue);
-              }}
-              onKeyUp={() => {
-                setScrubbing(false);
-                onScrubChange?.(false);
-                onSeek?.(scrubValue);
-              }}
-              aria-label="Poziția în flux"
-              className={cn(
-                "pointer-events-auto absolute inset-0 hidden h-full w-full cursor-pointer appearance-none bg-transparent md:block",
-                // `appearance-none` takes the native thumb away, so it is
-                // drawn here — in both engines.
-                "[&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink",
-                "[&::-moz-range-track]:bg-transparent",
-                "[&::-webkit-slider-runnable-track]:bg-transparent",
-                "[&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
-              )}
-            />
-          </>
-        ) : null}
       </div>
     </div>
   );
 }
 
-/**
- * The jump back to the edge, offered by the live mark itself.
- *
- * The viewer sits behind the live edge, and one press walks them home.
- * It carries the same red lens as the badge — the eye reads it as the
- * same mark — but it is a button, so it is set as type rather than as
- * another pill: two red chips side by side say the same thing twice. On
- * a phone the words shorten to the destination, and the lens stays.
- */
+/** Butonul care readuce spectatorul la marginea live. */
 function LiveJump({ onJump, className }: { onJump: () => void; className?: string }) {
   return (
     <Button
+      type="button"
       variant="ghost"
       size="sm"
       onClick={onJump}
       aria-label="Înapoi la direct"
       title="Înapoi la direct"
-      className={cn(CONTROL_PILL, "gap-1.5 text-live-soft", "hover:bg-live/12 hover:text-live", className)}
+      className={cn(
+        CONTROL_PILL,
+        "gap-1.5 text-live-soft hover:bg-live/12 hover:text-live",
+        className,
+      )}
     >
       <span className="relative grid size-2 place-items-center">
         <span aria-hidden className="fx-live-eye absolute inset-0" />
         <span aria-hidden className="relative size-2 rounded-full bg-live" />
       </span>
-      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em]">
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.12em]">
         <span className="sm:hidden">Direct</span>
         <span className="hidden sm:inline">Înapoi la direct</span>
       </span>
@@ -245,51 +158,46 @@ function LiveJump({ onJump, className }: { onJump: () => void; className?: strin
 }
 
 export type PlayerControlsProps = {
-  /** True while frames are on screen. */
+  /** True cât timp imaginile sunt pe ecran. */
   playing: boolean;
   muted: boolean;
   volume: number;
-  /** True while the player is looking for a working link. */
+  /** True cât timp playerul caută sau încearcă un flux. */
   busy?: boolean;
-  /** True when the picture fills the screen: the bar floats over it. */
+  /** True când imaginea umple ecranul. */
   fullscreen?: boolean;
-  /** True while the bar is resting: faded out and inert until a move. */
+  /** True când bara este adormită și nu trebuie folosită. */
   asleep?: boolean;
-  /** False when the browser cannot go full screen at all. */
+  /** False când browserul nu poate intra în ecran complet. */
   canFullscreen?: boolean;
-  /** Shown only when another link is available. */
+  /** True când există un alt flux disponibil. */
   canSwitch?: boolean;
-  /** True when the browser can put the picture in a floating window. */
+  /** True când browserul poate afișa imaginea într-o fereastră flotantă. */
   canPictureInPicture?: boolean;
-  /** True when the browser has the Remote Playback API for a smart TV. */
+  /** True când imaginea este deja într-o fereastră flotantă. */
+  pictureInPictureActive?: boolean;
+  /** True când browserul are Remote Playback API pentru un smart TV. */
   canCast?: boolean;
-  /** True while a smart TV is playing the picture. */
+  /** True când un smart TV redă imaginea. */
   castConnected?: boolean;
-  /** True while the lights are down: the page around is near-black. */
+  /** True când luminile din pagină sunt stinse. */
   cinema?: boolean;
-  /** False where there is nothing to dim — fullscreen is already the page. */
+  /** False când nu există nimic de întunecat. */
   canCinema?: boolean;
-  /** True while the viewer sits behind the live edge. */
+  /** True când spectatorul se află în spatele marginii live. */
   behindLive?: boolean;
-  /** What the stream has buffered, and where the live edge is right now. */
+  /** Ce a descărcat fluxul și unde este marginea live. */
   liveWindow?: LiveWindow | null;
-  /** Moves the playhead through the buffered window — desktop only. */
-  onSeek?: (time: number) => void;
-  /** Reports a drag of the live scrubber, so the bar stays awake for it. */
-  onScrubChange?: (scrubbing: boolean) => void;
-  /**
-   * What is on now — the channel and the marks of the programme it is
-   * playing. It heads the bar, the way every player names what it shows.
-   */
+  /** Ce rulează acum înaintea transportului. */
   nowPlaying?: ReactNode;
-  /** The quality badge, on the right of the track. */
+  /** Cipul de calitate, în dreapta liniei live. */
   quality?: ReactNode;
   onTogglePlay: () => void;
   onToggleMute: () => void;
   onVolumeChange: (value: number) => void;
   onToggleFullscreen: () => void;
   onTogglePictureInPicture?: () => void;
-  /** Opens the browser's own picker of remote screens. */
+  /** Deschide selectorul nativ al browserului pentru ecrane externe. */
   onToggleCast?: () => void;
   onToggleCinema?: () => void;
   onJumpToLive?: () => void;
@@ -299,25 +207,12 @@ export type PlayerControlsProps = {
 };
 
 /**
- * The transport bar.
+ * Bara de transport.
  *
- * Every control is a real button with a label; the toggles carry
- * `aria-pressed` so a screen reader can tell their state.
- *
- * The bar holds the live chrome as well: what is on now at its head, the
- * LIVE badge and the live bar under it, and the quality chip at the end of
- * the track. On a phone the chrome takes a row of its own above the
- * transport — a 360px screen cannot seat six controls and a scrubber side
- * by side, and squeezing them would leave the bar no room to say anything.
- * From `sm` up the two rows become one: the transport on the left, the
- * track filling what is left, the picture controls on the right — the
- * arrangement every player in the industry uses.
- *
- * The bar rests while the picture runs: the player fades it out after a
- * moment of stillness and brings it back at the first move, exactly as it
- * does in fullscreen. The space is held rather than released, because a
- * bar that changed the height of the page every time the pointer came to
- * rest would move the content under the visitor's hands.
+ * Gruparea este gândită de la cea mai mare acțiune spre cele secundare: pe
+ * mobil, redarea și sunetul stau singure, starea live are propria linie, iar
+ * reluarea și comenzile pentru imagine stau la rândul lor. Pe desktop, toate
+ * grupurile se așază pe un singur rând.
  */
 export function PlayerControls({
   playing,
@@ -329,14 +224,13 @@ export function PlayerControls({
   canFullscreen = true,
   canSwitch = false,
   canPictureInPicture = false,
+  pictureInPictureActive = false,
   canCast = false,
   castConnected = false,
   cinema = false,
   canCinema = false,
   behindLive = false,
   liveWindow = null,
-  onSeek,
-  onScrubChange,
   nowPlaying,
   quality,
   onTogglePlay,
@@ -352,31 +246,52 @@ export function PlayerControls({
   className,
 }: PlayerControlsProps) {
   const volumeId = useId();
+  const volumePercent = muted ? 0 : Math.round(Math.max(0, Math.min(1, volume)) * 100);
 
-  /**
-   * The cast button, said honestly.
-   *
-   * The Remote Playback API is a Chromium thing: where it is missing the
-   * button does not pretend. It stays, dimmed and inert, with a title
-   * that names the reason — a visitor learns that their browser cannot
-   * hand the picture to a TV, rather than pressing a button that does
-   * nothing at all.
-   */
   const castLabel = canCast
     ? castConnected
       ? "Se redă pe TV"
       : "Trimite pe TV"
-    : "Castarea pe TV nu e disponibilă în acest browser";
+    : "Castarea pe TV nu este disponibilă în acest browser";
   const castTitle = canCast
     ? castConnected
       ? "Se redă pe un ecran extern"
       : "Trimite imaginea pe un smart TV"
     : "Castarea pe TV necesită Chrome, Edge sau Opera";
 
-  const cinemaLabel = cinema ? "Aprinde lumina" : "Mod cinema — stinge lumina";
+  const pictureInPictureAvailable = canPictureInPicture && Boolean(onTogglePictureInPicture);
+  const pictureInPictureLabel = pictureInPictureAvailable
+    ? pictureInPictureActive
+      ? "Ieși din imaginea flotantă"
+      : "Deschide imaginea într-o fereastră flotantă"
+    : "Imaginea într-o fereastră flotantă nu este disponibilă în acest browser";
+  const pictureInPictureTitle = pictureInPictureAvailable
+    ? pictureInPictureActive
+      ? "Înapoi la imaginea din player"
+      : "Continuă redarea într-o fereastră flotantă"
+    : "Browserul nu permite redarea într-o fereastră flotantă";
+
+  const cinemaLabel = cinema
+    ? "Aprinde lumina"
+    : canCinema
+      ? "Mod cinema — stinge lumina"
+      : "Mod cinema nu este disponibil în ecran complet";
   const cinemaTitle = cinema
     ? "Aprinde lumina în pagină"
-    : "Mod cinema: pagina înnegrită, imaginea la fel";
+    : canCinema
+      ? "Mod cinema: pagina înnegrită, imaginea la fel"
+      : "Ecranul complet ocupă deja toată imaginea";
+
+  const fullscreenLabel = canFullscreen
+    ? fullscreen
+      ? "Ieși din ecran complet"
+      : "Ecran complet"
+    : "Ecran complet nu este disponibil în acest browser";
+  const fullscreenTitle = canFullscreen
+    ? fullscreen
+      ? "Ieși din ecran complet"
+      : "Afișează imaginea pe tot ecranul"
+    : "Browserul nu permite afișarea în ecran complet";
 
   return (
     <div
@@ -384,18 +299,12 @@ export function PlayerControls({
       className={cn(
         "flex flex-col transition-opacity duration-300",
         fullscreen
-          ? // Fullscreen: the bar floats over the bottom of the picture on
-             // a gradient, so the buttons stay readable over any frame.
-             "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))]"
-          : // The bar sits at the bottom of the sheet on a phone, clear of
-             // the home indicator.
-             "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
-        // The picture runs alone until the visitor reaches for it.
+          ? "absolute inset-x-0 bottom-0 z-30 border-t-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+          : "border-t border-white/8 bg-canvas-raised max-sm:pb-[max(0.625rem,env(safe-area-inset-bottom))]",
         asleep && "pointer-events-none opacity-0",
         className,
       )}
     >
-      {/* What is on now. */}
       {nowPlaying ? (
         <div className="flex min-w-0 items-center gap-x-2.5 px-3 pt-2.5 sm:px-4 sm:pt-3">
           {nowPlaying}
@@ -404,34 +313,24 @@ export function PlayerControls({
 
       <div
         className={cn(
-          "flex flex-wrap items-center gap-x-1.5 gap-y-1.5 px-3 pb-2.5 sm:flex-nowrap sm:items-center sm:gap-3 sm:px-4 sm:pb-2.5",
+          "grid grid-cols-2 items-center gap-x-2 gap-y-2 px-3 pb-2.5 sm:px-4",
+          "xl:grid-cols-[auto_minmax(220px,1fr)_auto] xl:gap-x-3",
           nowPlaying ? "pt-1.5" : "pt-2.5",
         )}
       >
-        {/* The live chrome: the badge, the buffer bar, the quality chip and
-            the way back to the edge. On a phone it takes a row of its own
-            above the transport — six controls and a scrubber will not seat
-            themselves on 360px, and squeezing them would leave the bar no
-            room to say anything. From `sm` up the two rows become one: the
-            transport on the left, the track filling what is left, the
-            picture controls on the right. */}
-        <div className="flex min-w-0 basis-full items-center gap-2.5 sm:basis-auto sm:flex-1 sm:order-2 sm:gap-3">
+        {/* Starea live: pe mobil are un rând propriu, iar pe desktop ocupă
+            partea care rămâne între transport și comenzile pentru imagine. */}
+        <div className="order-1 col-span-2 flex min-w-0 items-center gap-2.5 xl:order-2 xl:col-span-1">
           <LiveBadge />
-          <LiveBar
-            fill={liveFill(liveWindow)}
-            liveWindow={liveWindow}
-            onSeek={onSeek}
-            onScrubChange={onScrubChange}
-          />
+          <LiveBar fill={liveFill(liveWindow)} />
           {quality}
-          {behindLive && onJumpToLive ? (
-            <LiveJump onJump={onJumpToLive} />
-          ) : null}
+          {behindLive && onJumpToLive ? <LiveJump onJump={onJumpToLive} /> : null}
         </div>
 
-        {/* The transport. */}
-        <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:order-1 sm:flex-none sm:gap-2">
+        {/* Acțiunile principale. */}
+        <div className="order-2 col-span-2 flex min-w-0 items-center gap-2 xl:order-1 xl:col-span-1">
           <Button
+            type="button"
             variant="primary"
             size="icon"
             onClick={onTogglePlay}
@@ -447,48 +346,71 @@ export function PlayerControls({
           </Button>
 
           <Button
+            type="button"
             variant="ghost"
             size="icon"
             onClick={onToggleMute}
             aria-label={muted ? "Pornește sunetul" : "Dezactivează sunetul"}
             aria-pressed={muted}
             title={muted ? "Pornește sunetul" : "Dezactivează sunetul"}
-            className={CONTROL}
+            className={cn(CONTROL, muted && "bg-white/8 text-ink")}
           >
             {muted ? <VolumeX className={CONTROL_ICON} /> : <Volume2 className={CONTROL_ICON} />}
           </Button>
 
-          <label htmlFor={volumeId} className="sr-only">
-            Volum
-          </label>
-          <input
-            id={volumeId}
-            type="range"
-            min={0}
-            max={1}
-            step={0.05}
-            value={muted ? 0 : volume}
-            onChange={(event) => onVolumeChange(Number(event.target.value))}
-            aria-label="Volum"
-            className={cn(
-              // The slider owns a full control's height so the thumb has
-              // somewhere to be grabbed; the track drawn inside it is the
-              // thin line the eye reads. `appearance-none` takes the native
-              // rendering away in both engines, so both are redrawn here.
-              "hidden h-9 w-24 cursor-pointer appearance-none bg-transparent lg:block",
-              "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-white/15",
-              "[&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink",
-              "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-white/15",
-              "[&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
-            )}
-          />
+          <div className="flex h-11 min-w-0 items-center gap-2">
+            <label htmlFor={volumeId} className="sr-only">
+              Volum
+            </label>
+            <div className="relative h-11 w-24 sm:w-28">
+              <div
+                aria-hidden
+                className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-white/15"
+              >
+                <div
+                  className="h-full rounded-full bg-signal"
+                  style={{ width: `${volumePercent}%` }}
+                />
+              </div>
+              <input
+                id={volumeId}
+                type="range"
+                min={0}
+                max={1}
+                step={0.05}
+                value={muted ? 0 : volume}
+                onChange={(event) => onVolumeChange(Number(event.target.value))}
+                aria-label={`Volum: ${volumePercent}%`}
+                aria-valuetext={`${volumePercent}%`}
+                className={cn(
+                  "absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
+                  "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent",
+                  "[&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-ink [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-md",
+                  "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent",
+                  "[&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md",
+                )}
+              />
+            </div>
+            <span
+              aria-hidden
+              className="w-9 shrink-0 text-right text-[11px] font-medium tabular-nums text-ink-muted"
+            >
+              {volumePercent}%
+            </span>
+          </div>
+        </div>
 
+        {/* Reluarea, următorul flux și comenzile pentru imagine. */}
+        <div className="order-3 col-span-2 flex min-w-0 items-center gap-2 xl:order-3 xl:col-span-1 xl:justify-self-end">
           <Button
+            type="button"
             variant="ghost"
             size="icon"
             onClick={onRetry}
-            aria-label="Reîncearcă fluxul"
-            title="Reîncearcă fluxul"
+            disabled={busy}
+            aria-label={busy ? "Se încearcă fluxul" : "Reîncearcă fluxul"}
+            title={busy ? "Se încearcă fluxul" : "Reîncearcă fluxul"}
             className={CONTROL}
           >
             <RotateCcw className={cn(CONTROL_ICON, busy && "animate-spin")} />
@@ -496,6 +418,7 @@ export function PlayerControls({
 
           {canSwitch && onNextSource ? (
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               onClick={onNextSource}
@@ -504,14 +427,13 @@ export function PlayerControls({
               className={cn(CONTROL_PILL, "gap-1.5")}
             >
               <SkipForward className={CONTROL_ICON} />
-              <span className="hidden lg:inline">Flux următor</span>
+              <span className="hidden xl:inline">Flux următor</span>
             </Button>
           ) : null}
 
-          {/* The picture controls: what the picture can be handed to, and
-              how much of the room it takes. */}
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:order-3 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             <Button
+              type="button"
               variant="ghost"
               size="icon"
               onClick={onToggleCast}
@@ -521,64 +443,74 @@ export function PlayerControls({
               title={castTitle}
               className={cn(
                 CONTROL,
-                // A disabled button swallows its own tooltip in some
-                // engines; the cast button keeps the pointer so the reason
-                // it is dimmed can still be read.
-                "disabled:pointer-events-auto disabled:cursor-not-allowed",
-                castConnected && "text-signal",
+                "disabled:cursor-not-allowed",
+                castConnected && "bg-signal/12 text-signal",
               )}
             >
               <Cast className={CONTROL_ICON} />
             </Button>
 
-            {canPictureInPicture && onTogglePictureInPicture ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onTogglePictureInPicture}
-                aria-label="Picture in Picture"
-                title="Picture in Picture"
-                className={CONTROL}
-              >
-                <PictureInPicture2 className={CONTROL_ICON} />
-              </Button>
-            ) : null}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onTogglePictureInPicture}
+              disabled={!pictureInPictureAvailable}
+              aria-label={pictureInPictureLabel}
+              aria-pressed={pictureInPictureAvailable ? pictureInPictureActive : undefined}
+              title={pictureInPictureTitle}
+              className={cn(
+                CONTROL,
+                "disabled:cursor-not-allowed",
+                pictureInPictureActive && "bg-signal/12 text-signal",
+              )}
+            >
+              <PictureInPicture2 className={CONTROL_ICON} />
+            </Button>
 
-            {canCinema && onToggleCinema ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onToggleCinema}
-                aria-label={cinemaLabel}
-                aria-pressed={cinema}
-                title={cinemaTitle}
-                className={cn(CONTROL, cinema && "text-signal")}
-              >
-                {cinema ? (
-                  <Projector className={CONTROL_ICON} />
-                ) : (
-                  <Lightbulb className={CONTROL_ICON} />
-                )}
-              </Button>
-            ) : null}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onToggleCinema}
+              disabled={!canCinema && !cinema}
+              aria-label={cinemaLabel}
+              aria-pressed={cinema}
+              title={cinemaTitle}
+              className={cn(
+                CONTROL,
+                "disabled:cursor-not-allowed",
+                cinema && "bg-signal/12 text-signal",
+              )}
+            >
+              {cinema ? (
+                <LightbulbOff className={CONTROL_ICON} />
+              ) : (
+                <Lightbulb className={CONTROL_ICON} />
+              )}
+            </Button>
 
-            {canFullscreen ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onToggleFullscreen}
-                aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-                aria-pressed={fullscreen}
-                title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
-                className={CONTROL}
-              >
-                {fullscreen ? (
-                  <Minimize className={CONTROL_ICON} />
-                ) : (
-                  <Maximize className={CONTROL_ICON} />
-                )}
-              </Button>
-            ) : null}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onToggleFullscreen}
+              disabled={!canFullscreen}
+              aria-label={fullscreenLabel}
+              aria-pressed={canFullscreen ? fullscreen : undefined}
+              title={fullscreenTitle}
+              className={cn(
+                CONTROL,
+                "disabled:cursor-not-allowed",
+                fullscreen && "bg-signal/12 text-signal",
+              )}
+            >
+              {fullscreen ? (
+                <Minimize className={CONTROL_ICON} />
+              ) : (
+                <Maximize className={CONTROL_ICON} />
+              )}
+            </Button>
           </div>
         </div>
       </div>

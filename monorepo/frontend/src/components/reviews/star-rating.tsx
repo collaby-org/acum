@@ -57,6 +57,9 @@ export function StarPicker({
   disabled?: boolean;
 }) {
   return (
+    // The gap is between the hit areas, not between the stars: every
+    // button is 44×44, and the six pixels between them keep a finger from
+    // pressing the wrong one.
     <div
       role="radiogroup"
       aria-label="Rating"
@@ -74,7 +77,9 @@ export function StarPicker({
             disabled={disabled}
             onClick={() => onChange(star)}
             className={cn(
-              "grid place-items-center rounded-full p-1.5 transition-[transform,color] duration-200 ease-[var(--ease-spring)]",
+              // The hit area is 44×44 — the size a thumb needs — and the
+              // star inside it keeps the size it had.
+              "grid size-11 place-items-center rounded-full transition-[transform,color] duration-200 ease-[var(--ease-spring)]",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
               "disabled:pointer-events-none",
               active ? "scale-105" : "hover:scale-110",

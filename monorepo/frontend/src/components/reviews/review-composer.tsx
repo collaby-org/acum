@@ -37,6 +37,25 @@ type NowProgramme = {
   endsAt: string | null;
 } | null;
 
+/**
+ * What the server says is on, on the channel the composer is about.
+ *
+ * The server reads the guide against the real clock; the browser does not
+ * have the guide, and what it has is a second late. So the composer takes
+ * the server's answer when there is one.
+ */
+export type ComposerProgramme = {
+  title: string;
+  startsAt: string | null;
+  endsAt: string | null;
+  /**
+   * The channel the programme belongs to, when the caller knows it. A
+   * composer opened for one channel may still let the visitor pick
+   * another, and the other channel is then read on its own.
+   */
+  channelId?: string;
+};
+
 /** The draft the composer hands to the section. */
 export type ComposerDraft = {
   rating: number;
@@ -61,6 +80,16 @@ export type ReviewComposerProps = {
   origin?: ZoomPoint | null;
   /** Which face: writing, or the session a write needs. */
   face?: "write" | "session";
+  /**
+   * The programme the server resolved, or `null` when the server says the
+   * guide has nothing for this channel now.
+   *
+   * Left out, the composer asks the channel endpoint itself — a fallback,
+   * not the source of truth. Given, the browser invents nothing: the
+   * server's answer is shown, and the server's "there is no programme" is
+   * shown as exactly that.
+   */
+  programme?: ComposerProgramme | null;
   /** Called when the visitor closes. The panel animates out first. */
   onClose: () => void;
   /** Called with the draft, and answers with whatever the server said. */
@@ -80,11 +109,23 @@ const BODY_MAX = 1200;
 const inputClass =
   "mt-2 h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-[14px] text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25";
 
+/**
+ * The comment field, which is not a field but a page.
+ *
+ * A comment of twelve hundred characters is not something anybody writes
+ * in a line and a half, so the field is a page of its own: 152 pixels on a
+ * phone, where the keyboard takes the rest, and a little less on a wide
+ * screen. The counter sits under it, in the flow, and never over it.
+ */
+const textareaClass =
+  "mt-2 min-h-[9.5rem] w-full resize-none appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-[14px] leading-relaxed text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:min-h-[8.5rem]";
+
 export function ReviewComposer({
   channels,
   open,
   origin = null,
   face = "write",
+  programme,
   onClose,
   onSubmit,
 }: ReviewComposerProps) {
@@ -111,6 +152,19 @@ export function ReviewComposer({
   }, [face, sending]);
 
   /**
+   * The server's answer about the programme, flattened.
+   *
+   * The prop is an object, and an object rebuilt on every render of the
+   * parent would ask the browser to look the programme up again and again.
+   * So what the effect depends on are the values themselves.
+   */
+  const programmeKnown = programme !== undefined;
+  const programmeTitle = programme?.title ?? null;
+  const programmeStartsAt = programme?.startsAt ?? null;
+  const programmeEndsAt = programme?.endsAt ?? null;
+  const programmeChannel = programme?.channelId ?? null;
+
+  /**
    * What is on, on the channel the visitor picks.
    *
    * Read from the endpoint that already answers with it, rather than
@@ -118,14 +172,38 @@ export function ReviewComposer({
    * about the schedule, and the schedule is the server's to read. A
    * review with no programme in the guide is a review of the channel and
    * says so.
+   *
+   * When the server has already resolved the programme, that answer is
+   * the one used — including its "there is nothing on now". The browser
+   * lookup below is the fallback for a channel the server did not answer
+   * for, and it never invents a title of its own either.
    */
   useEffect(() => {
     if (!channelId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reset for the "no channel" branch only
       setNow(null);
-       
+      
       setNowState("idle");
       return;
+    }
+
+    if (programmeKnown) {
+      const forThisChannel =
+        programmeChannel === null || programmeChannel === channelId;
+
+      if (forThisChannel) {
+        setNow(
+          programmeTitle
+            ? {
+                title: programmeTitle,
+                startsAt: programmeStartsAt,
+                endsAt: programmeEndsAt,
+              }
+            : null,
+        );
+        setNowState("ready");
+        return;
+      }
     }
 
     let live = true;
@@ -143,14 +221,18 @@ export function ReviewComposer({
           return;
         }
         const detail = (await response.json()) as {
-          now?: { title?: string; startsAt?: string | null } | null;
+          now?: {
+            title?: string;
+            startsAt?: string | null;
+            endsAt?: string | null;
+          } | null;
         };
         setNow(
           detail.now?.title
             ? {
                 title: detail.now.title,
                 startsAt: detail.now.startsAt ?? null,
-                endsAt: null,
+                endsAt: detail.now.endsAt ?? null,
               }
             : null,
         );
@@ -165,7 +247,14 @@ export function ReviewComposer({
     return () => {
       live = false;
     };
-  }, [channelId]);
+  }, [
+    channelId,
+    programmeChannel,
+    programmeEndsAt,
+    programmeKnown,
+    programmeStartsAt,
+    programmeTitle,
+  ]);
 
   const canWrite = rating > 0 && body.trim().length >= BODY_MIN && Boolean(channelId);
 
@@ -248,7 +337,7 @@ export function ReviewComposer({
           type="button"
           onClick={onClose}
           aria-label="Închide"
-          className="grid size-8 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink"
+          className="grid size-11 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
         >
           <X aria-hidden className="size-4" />
         </button>
@@ -324,7 +413,7 @@ export function ReviewComposer({
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">
               Rating
             </p>
-            <div className="mt-2 flex items-center gap-3">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
               <StarPicker value={rating} onChange={setRating} disabled={sending} />
               <span className="text-[12px] tabular-nums text-ink-faint">
                 {rating > 0 ? `${rating} din 5` : "Fără rating"}
@@ -342,17 +431,24 @@ export function ReviewComposer({
             </label>
             <textarea
               id="review-body"
-              rows={4}
+              rows={5}
               value={body}
               maxLength={BODY_MAX}
               onChange={(event) => setBody(event.target.value)}
               disabled={sending}
               placeholder="Ce ți s-a părut. Despre ce a fost, nu despre site."
-              className={cn(inputClass, "resize-none")}
+              className={textareaClass}
             />
-            <p className="mt-1.5 text-right text-[11px] tabular-nums text-ink-faint">
-              {body.trim().length}/{BODY_MAX}
-            </p>
+            <div className="mt-1.5 flex items-baseline justify-between gap-3">
+              <span className="text-[11px] text-ink-faint">
+                {body.trim().length < BODY_MIN
+                  ? "Încă puține cuvinte — scrie cel puțin două."
+                  : "Recenzia rămâne legată de canalul ales."}
+              </span>
+              <span className="shrink-0 text-[11px] tabular-nums text-ink-faint">
+                {body.trim().length}/{BODY_MAX}
+              </span>
+            </div>
           </div>
 
           {error ? (
@@ -372,7 +468,7 @@ export function ReviewComposer({
           type="button"
           onClick={onClose}
           disabled={sending}
-          className="h-10 rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink disabled:pointer-events-none disabled:opacity-40"
+          className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal disabled:pointer-events-none disabled:opacity-40"
         >
           Renunță
         </button>
@@ -381,7 +477,7 @@ export function ReviewComposer({
           onClick={() => void submit()}
           disabled={sending || !canWrite}
           className={cn(
-            "inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full px-5 text-[14px] font-semibold transition-[background-color,transform] duration-300",
+            "inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full px-5 text-[14px] font-semibold transition-[background-color,transform] duration-300",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
             "bg-signal text-signal-ink hover:bg-signal-bright active:scale-[0.98]",
             "disabled:pointer-events-none disabled:opacity-40",

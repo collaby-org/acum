@@ -175,7 +175,7 @@ export function GrantSheet({
                       type="date"
                       value={until}
                       onChange={(event) => setUntil(event.target.value)}
-                      className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-sm text-ink transition-colors duration-300 hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25"
+                      className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-base text-ink transition-colors duration-300 hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:text-sm"
                     />
                     <p className="mt-1.5 text-[12px] text-ink-faint">
                       Lăsat gol, planul lunar primește o lună.

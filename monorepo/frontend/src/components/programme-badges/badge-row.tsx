@@ -30,9 +30,8 @@ import { cn } from "@/lib/utils";
  * Every pill is painted from `resolveBadges`, which paints only what a
  * source we hold states. Quality is the catalogue's own measured feed
  * resolution; audio format, HDR and closed captions have no source and
- * are therefore absent rather than guessed. The genre is a descriptor
- * rather than a badge, so it rides along after the accessibility
- * services as a plain pill.
+ * are therefore absent rather than guessed. The genre is context, not a
+ * badge, so it rides along after the accessibility services as plain text.
  *
  * An empty row is no row at all: the whole component returns null
  * rather than holding space open for a pill that never comes.
@@ -70,9 +69,9 @@ const PILL =
 const RATING_PILL =
   "inline-flex h-[19px] items-center gap-1 rounded-[6px] border border-white/14 bg-white/[0.08] px-1.5 text-[10.5px] font-semibold tabular-nums leading-none text-ink backdrop-blur-sm";
 
-/** The genre is a descriptor, not a badge: a soft capsule with no icon. */
-const GENRE_PILL =
-  "inline-flex h-[19px] items-center rounded-full border border-white/12 bg-white/[0.06] px-2 text-[10.5px] font-medium leading-none tracking-[0.02em] text-ink-muted backdrop-blur-sm";
+/** The genre is context, not a badge: plain text with no capsule around it. */
+const GENRE_TEXT =
+  "inline-flex items-center text-[10.5px] font-medium leading-none tracking-[0.02em] text-ink-faint";
 
 /** One icon-and-label pill. */
 function BadgePill({ badge }: { badge: Badge }) {
@@ -122,7 +121,7 @@ export function ProgrammeBadgeRow({
         key="genre"
         data-slot="programme-badge"
         data-badge="genre"
-        className={GENRE_PILL}
+        className={GENRE_TEXT}
       >
         {genre}
       </span>,

@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { MessageSquare, PenLine } from "lucide-react";
+import { Loader2, MessageSquare, PenLine, RefreshCw, type LucideIcon } from "lucide-react";
 import { useAccount } from "@/hooks/use-account";
 import { useReviews } from "@/hooks/use-reviews";
 import { ReviewCard } from "@/components/reviews/review-card";
 import {
   ReviewComposer,
   type ComposerChannel,
+  type ComposerProgramme,
 } from "@/components/reviews/review-composer";
 import type { ZoomPoint } from "@/components/reviews/zoom-overlay";
 
@@ -35,13 +36,25 @@ export type PopularReviewsProps = {
   /** The catalogue, as ids and names. Passed in rather than imported, so
    *  the browser bundle holds the names and none of the sources. */
   channels: ComposerChannel[];
+  /**
+   * The programme the server resolved, when the page knows it.
+   *
+   * Handed to the composer, which then shows the server's answer and
+   * asks the browser for nothing. Left out, the composer falls back to
+   * the channel endpoint on its own.
+   */
+  programme?: ComposerProgramme | null;
   className?: string;
 };
 
 /** What a press hands over: the thing that was pressed. */
 type PressEvent = { currentTarget: HTMLElement };
 
-export function PopularReviews({ channels, className }: PopularReviewsProps) {
+export function PopularReviews({
+  channels,
+  programme,
+  className,
+}: PopularReviewsProps) {
   const { signedIn } = useAccount();
   // `start` is bound out of the store because it is the stable function
   // (a useCallback), and an effect that depends on a stable function runs
@@ -117,7 +130,12 @@ export function PopularReviews({ channels, className }: PopularReviewsProps) {
     [reviews],
   );
 
-  const empty = reviews.loaded && reviews.reviews.length === 0;
+  // Three states, and they are three different things: the list is still
+  // being read, the desk cannot be read at all, or the desk is fine and
+  // nobody has written yet. A failed read is never painted as an empty
+  // shelf.
+  const unavailable = reviews.loaded && !reviews.configured;
+  const empty = reviews.loaded && reviews.configured && reviews.reviews.length === 0;
 
   return (
     <section
@@ -139,7 +157,7 @@ export function PopularReviews({ channels, className }: PopularReviewsProps) {
           <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
             Ce spun privitorii despre ce rulează acum, pe fiecare canal.
             Ordonate după reacții — aplauze, iubiri, aprecieri — și după
-            cât de recente sunt, ca nu primul review scris să rămână sus
+            cât de recente sunt, ca nu prima recenzie scrisă să rămână sus
             pentru totdeauna.
           </p>
         </div>
@@ -169,18 +187,24 @@ export function PopularReviews({ channels, className }: PopularReviewsProps) {
 
       <div className="mt-8 min-h-[8rem]">
         {!reviews.loaded ? (
-          <p className="text-[13px] text-ink-faint">Se citesc recenziile…</p>
-        ) : !reviews.configured ? (
+          <p className="inline-flex items-center gap-2 text-[13px] text-ink-faint">
+            <Loader2 aria-hidden className="size-4 animate-spin" />
+            Se citesc recenziile…
+          </p>
+        ) : unavailable ? (
           <EmptyState
+            icon={RefreshCw}
+            actionIcon={RefreshCw}
             title="Recenziile nu pot fi citite acum"
             detail={
               reviews.reason ??
               "Ceva nu merge la server. Încearcă din nou într-un moment."
             }
-            action={{ label: "Scrie o recenzie", onPress: ask }}
+            action={{ label: "Încearcă din nou", onPress: () => void reviews.reload() }}
           />
         ) : empty ? (
           <EmptyState
+            icon={PenLine}
             title="Nicio recenzie încă"
             detail="Fii primul care scrie despre ce rulează acum. O recenzie e un rating și câteva cuvinte — și rămâne legată de emisiunea despre care a fost scrisă."
             action={{ label: "Scrie prima recenzie", onPress: ask }}
@@ -211,6 +235,7 @@ export function PopularReviews({ channels, className }: PopularReviewsProps) {
         open={open}
         origin={origin}
         face={face}
+        programme={programme}
         onClose={close}
         onSubmit={write}
       />
@@ -222,15 +247,20 @@ export function PopularReviews({ channels, className }: PopularReviewsProps) {
  * An empty section, and what it offers.
  *
  * Two empty states, and they are different: one is about us (the desk
- * cannot be read) and one is about the shelf (nobody has written yet).
- * Pretending they are the same would be the small lie this whole section
- * exists to avoid.
+ * cannot be read, and the way out is to try again) and one is about the
+ * shelf (nobody has written yet, and the way out is to write the first
+ * one). Pretending they are the same would be the small lie this whole
+ * section exists to avoid.
  */
 function EmptyState({
+  icon: Icon = MessageSquare,
+  actionIcon: ActionIcon = PenLine,
   title,
   detail,
   action,
 }: {
+  icon?: LucideIcon;
+  actionIcon?: LucideIcon;
   title: string;
   detail: string;
   action: {
@@ -241,7 +271,7 @@ function EmptyState({
   return (
     <div className="rounded-[var(--radius-card)] border border-white/[0.07] bg-white/[0.02] p-6 sm:p-8">
       <span className="grid size-10 place-items-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-ink-faint">
-        <MessageSquare aria-hidden className="size-4.5" />
+        <Icon aria-hidden className="size-4.5" />
       </span>
       <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em] text-ink">
         {title}
@@ -253,9 +283,9 @@ function EmptyState({
         type="button"
         data-testid="review-composer-empty-trigger"
         onClick={(event) => action.onPress(event)}
-        className="mt-5 inline-flex h-10 items-center gap-2 rounded-full bg-signal px-5 text-[14px] font-semibold text-signal-ink transition-transform duration-300 ease-[var(--ease-spring)] hover:bg-signal-bright active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+        className="mt-5 inline-flex h-11 items-center gap-2 rounded-full bg-signal px-5 text-[14px] font-semibold text-signal-ink transition-transform duration-300 ease-[var(--ease-spring)] hover:bg-signal-bright active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
       >
-        <PenLine aria-hidden className="size-4" />
+        <ActionIcon aria-hidden className="size-4" />
         {action.label}
       </button>
     </div>

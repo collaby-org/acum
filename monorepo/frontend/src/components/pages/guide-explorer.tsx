@@ -118,7 +118,7 @@ export function GuideExplorer({
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Filtrează canalele…"
             aria-label="Filtrează canalele ghidului"
-            className="min-w-0 flex-1 bg-transparent text-[13.5px] text-ink outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:appearance-none"
+            className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-[13.5px] [&::-webkit-search-cancel-button]:appearance-none"
           />
           {query ? (
             <button

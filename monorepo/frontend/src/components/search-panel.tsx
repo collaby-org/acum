@@ -169,7 +169,7 @@ export function SearchPanel<T extends ChannelLike>({
           placeholder="Caută un canal, o familie, o categorie…"
           aria-label="Caută un canal"
           aria-describedby="search-panel-count"
-          className="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-ink-faint [&::-webkit-search-cancel-button]:appearance-none"
+          className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-[15px] [&::-webkit-search-cancel-button]:appearance-none"
         />
         {query && (
           <button

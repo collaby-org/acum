@@ -1,6 +1,6 @@
 {
   "name": "acum",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -17,7 +17,6 @@
     "data:resolve": "node scripts/resolve-streams.mjs",
     "data:build": "node scripts/build-dataset.mjs",
     "data:epg": "node scripts/scrape-epg.mjs",
-
     "data:stills": "node scripts/capture-posters.mjs"
   },
   "dependencies": {

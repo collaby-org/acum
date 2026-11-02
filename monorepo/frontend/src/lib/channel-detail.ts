@@ -23,14 +23,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import {
   matchGuideChannels,
-  normalizeGuide,
   resolveSchedule,
-  type EpgGuide,
   type EpgProgramme,
 } from "@/components/now-next";
 import { catalogueChannel } from "@/lib/catalogue";
 import { categoryLabel } from "@/lib/navigation";
 import { liveAudience } from "@/lib/audience";
+import { loadFullGuide } from "@/lib/guide";
 
 /* ------------------------------------------------------------------ *
  * The shape the endpoint answers with
@@ -110,42 +109,17 @@ function isoInBucharest(moment: number): string {
 
 /* ------------------------------------------------------------------ *
  * The guide
+ *
+ * The guide is read from the source itself, behind Next's cache, and the
+ * committed file is the fallback — the same two sources, in the same
+ * order, that the catalogue pages read. It used to be read here straight
+ * off the disk, which meant the panel answered from a snapshot while the
+ * catalogue beside it answered from the source: two different schedules
+ * on one screen, and a panel with no programme at all once the snapshot
+ * had expired.
  * ------------------------------------------------------------------ */
 
-let guideCache: EpgGuide | null = null;
-let guidePending: Promise<EpgGuide | null> | null = null;
-
 /**
- * Today's guide, read once per process.
- *
- * The file is a snapshot of one day; it does not change while the server
- * runs, so it is parsed once and kept.
- */
-async function loadGuide(): Promise<EpgGuide | null> {
-  if (guideCache) return guideCache;
-  if (guidePending) return guidePending;
-
-  guidePending = (async () => {
-    try {
-      const raw = await readFile(
-        path.join(process.cwd(), "data", "epg.json"),
-        "utf8",
-      );
-      return normalizeGuide(JSON.parse(raw));
-    } catch {
-      // A missing guide is not a broken channel: the panel simply has no
-      // programme to show.
-      return null;
-    }
-  })();
-
-  const guide = await guidePending;
-  guideCache = guide;
-  guidePending = null;
-  return guide;
-}
-
-/* ------------------------------------------------------------------ *
  * The second source's directory
  *
  * Two copies of the same directory, read in two ways.
@@ -377,7 +351,7 @@ export async function loadChannelDetail(
   if (!channel) return null;
 
   const [guide, live, snapshot] = await Promise.all([
-    loadGuide(),
+    loadFullGuide(),
     loadSecondaryMeta(),
     loadSnapshot(),
   ]);

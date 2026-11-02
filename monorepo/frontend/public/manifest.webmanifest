@@ -5,7 +5,7 @@
   "lang": "ro",
   "dir": "ltr",
   "id": "/",
-  "start_url": "/canale",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
@@ -36,6 +36,28 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icons/acum-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Toate canalele",
+      "short_name": "Canale",
+      "description": "Catalogul complet al canalelor",
+      "url": "/canale/toate",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Caută",
+      "short_name": "Caută",
+      "description": "Caută un canal sau o emisiune",
+      "url": "/canale",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [

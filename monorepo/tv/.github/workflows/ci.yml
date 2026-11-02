@@ -1,4 +1,11 @@
 # CI — ACUM TV app
+#
+# NOTE: this file does NOT run while the TV app lives inside this monorepo.
+# GitHub only reads the workflows in the repository root's `.github/workflows`
+# folder, so the job that actually builds and checks the television is the
+# `tv` job in `/.github/workflows/ci.yml`. This copy is kept for the day the
+# television is split into its own repository — when that happens it becomes
+# the pipeline, and it must be kept identical to the root's `tv` job.
 
 name: CI
 

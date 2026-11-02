@@ -95,10 +95,12 @@ export function InstallPrompt() {
     [],
   );
 
-  // Safari belongs to the mobile path too — it is the one case where the
-  // recipe is also the only option. On a desktop browser with no install
-  // event there is nothing honest to offer, so the card stays away.
-  const manual = device.mobile;
+  // The browser's own install event, where there is one. Chromium fires it
+  // on a phone exactly as it fires it on a desktop, and that event is the
+  // better path: the browser does the work and the card goes away. The
+  // recipe is the fallback for the browsers that never fire it — Safari,
+  // or Chrome on a page that was too slow to catch the event.
+  const withEvent = canInstall;
 
   useEffect(() => {
     if (standalone || dismissedRecently()) return;
@@ -113,8 +115,10 @@ export function InstallPrompt() {
   };
 
   if (!ready || standalone) return null;
-  // Nothing to offer: no install event and no share-sheet recipe.
-  if (!canInstall && !manual) return null;
+  // The offer belongs to the phone. A desktop browser does not need a card
+  // asking it to become an app: there the catalogue is a website, and it
+  // should stay one.
+  if (!device.mobile) return null;
 
   return (
     <div className="pointer-events-auto w-full max-w-sm animate-fade-up rounded-2xl border border-white/10 bg-canvas-raised/95 p-4 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:p-5">
@@ -127,16 +131,16 @@ export function InstallPrompt() {
           <p className="font-display text-[15px] font-semibold tracking-tight">
             Instalează {SITE_NAME}
           </p>
-          {manual ? (
+          {withEvent ? (
+            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
+              Adaugă aplicația pe ecranul principal și pornește-o ca pe telefon,
+              fără bara de adresă.
+            </p>
+          ) : (
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
               {device.recipe === "ios"
                 ? "În Safari, apasă butonul de partajare și apoi „Adaugă pe ecranul de pornire”."
                 : "În meniul Chrome, alege „Instalează aplicația” sau „Adaugă pe ecranul principal”."}
-            </p>
-          ) : (
-            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
-              Adaugă aplicația pe ecranul principal și pornește-o ca pe telefon,
-              fără bara de adresă.
             </p>
           )}
         </div>
@@ -145,27 +149,27 @@ export function InstallPrompt() {
           type="button"
           onClick={dismiss}
           aria-label="Nu instala acum"
-          className="-mr-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-full text-ink-faint transition duration-200 hover:bg-white/8 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          className="-mr-2 -mt-2 grid size-11 shrink-0 place-items-center rounded-full text-ink-faint transition duration-200 hover:bg-white/8 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
         >
           <X className="size-4" />
         </button>
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        {manual ? (
-          <Button size="sm" variant="secondary" onClick={dismiss}>
-            <Share className="size-3.5" aria-hidden />
-            Am înțeles
-          </Button>
-        ) : (
+        {withEvent ? (
           <>
-            <Button size="sm" onClick={() => void install()}>
+            <Button className="min-h-11" onClick={() => void install()}>
               Instalează
             </Button>
-            <Button size="sm" variant="ghost" onClick={dismiss}>
+            <Button className="min-h-11" variant="ghost" onClick={dismiss}>
               Nu, mulțumesc
             </Button>
           </>
+        ) : (
+          <Button className="min-h-11" variant="secondary" onClick={dismiss}>
+            <Share className="size-3.5" aria-hidden />
+            Am înțeles
+          </Button>
         )}
       </div>
     </div>

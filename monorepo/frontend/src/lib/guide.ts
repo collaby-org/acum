@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cacheLife } from "next/cache";
-import { prepareGuide, type EpgGuide } from "@/components/now-next";
+import { normalizeGuide, prepareGuide, type EpgGuide } from "@/components/now-next";
 import { readChannelProgrammes, type EpgProgramme } from "@/lib/epg-source";
 import type { Channel } from "@/data/types";
 
@@ -34,6 +34,35 @@ export async function loadGuide(channels: Channel[]): Promise<EpgGuide | null> {
       "utf8",
     );
     return prepareGuide(JSON.parse(raw), channels, Date.now(), 8).guide;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The whole guide, with every description intact.
+ *
+ * The guide the hero receives is slimmed on purpose: the file is large and
+ * the hero prints one channel, so only the featured channel keeps its
+ * descriptions. The channel panel needs the opposite — it prints one
+ * channel too, but it prints that channel's *programme* descriptions, and
+ * the programme it prints is not the featured one.
+ *
+ * Same two sources, same order: the source itself first, the committed
+ * file as the fallback. A panel that read the file on its own would show
+ * yesterday's schedule while the catalogue beside it showed today's — the
+ * two answers would disagree in front of the same visitor.
+ */
+export async function loadFullGuide(): Promise<EpgGuide | null> {
+  const live = await loadLiveGuide();
+  if (live) return normalizeGuide(live);
+
+  try {
+    const raw = await readFile(
+      path.join(process.cwd(), "data", "epg.json"),
+      "utf8",
+    );
+    return normalizeGuide(JSON.parse(raw));
   } catch {
     return null;
   }

@@ -5,7 +5,6 @@ import { OfflineBadge } from "./offline-badge";
 import { PwaHead } from "./pwa-head";
 import { UpdateToast } from "./update-toast";
 import { useServiceWorker } from "./use-pwa";
-import { MOBILE_NAV_SPACE } from "@/components/mobile-nav";
 import { cn } from "@/lib/utils";
 
 type PwaRegisterProps = {
@@ -44,14 +43,16 @@ export function PwaRegister({ head = true }: PwaRegisterProps = {}) {
       {/* The prompt sits above the bottom bar of the phone layout, not under
           it: the bar is fixed at z-[60] and the grain overlay at z-[45]
           covers the viewport, so the container itself has to out-stack both
-          or its card is painted over them. The bar is also cleared by
-          MOBILE_NAV_SPACE, so nothing overlaps it either. */}
+          or its card is painted over them. The bar is also cleared by the
+          extra bottom padding below the phone breakpoint, so nothing
+          overlaps it either. Above that breakpoint there is no bar, and the
+          space would be dead room. */}
       <div
         className={cn(
           "pointer-events-none fixed inset-x-0 bottom-0 z-[61] flex flex-col items-center gap-2.5 px-4",
           "pb-[max(1rem,env(safe-area-inset-bottom))]",
-          "sm:items-start sm:px-6 sm:pb-[max(1rem,env(safe-area-inset-bottom))]",
-          MOBILE_NAV_SPACE,
+          "max-sm:pb-[calc(4.5rem+env(safe-area-inset-bottom))]",
+          "sm:items-start sm:px-6",
         )}
       >
         <InstallPrompt />

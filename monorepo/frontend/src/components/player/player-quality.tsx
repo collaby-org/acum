@@ -93,7 +93,7 @@ function formatBitrate(bitrate: number): string | null {
 /** One row of the ladder: the check marks what is in use, never colour. */
 function rungClassName(active: boolean): string {
   return cn(
-    "flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-[12px] text-ink-muted",
+    "flex min-h-11 w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-[12px] text-ink-muted",
     "transition-colors duration-200 hover:bg-white/8 hover:text-ink",
     "focus-visible:bg-white/8 focus-visible:text-ink focus-visible:outline-none",
     active && "text-ink",
@@ -112,14 +112,12 @@ const MENU_GAP = 8;
 const MENU_MIN_HEIGHT = 180;
 
 /**
- * The chip's own size — the bar's control size, spelled once more.
+ * Dimensiunea cipului de calitate.
  *
- * `36px` on a desktop and `40px` on a phone, the same as every button in
- * the bar. It is what makes the chip read as a control rather than as a
- * label: a badge can be any height it likes, but a control has to sit
- * beside its neighbours and share their weight.
+ * Are 44 px înălțime, ca toate celelalte cipuri cu etichetă din bară. Asta
+ * îl face să se citească drept control, nu drept o simplă etichetă.
  */
-const CHIP = "size-9 max-sm:size-10";
+const CHIP = "inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-3";
 
 /** Where the menu sits, in viewport pixels. */
 type MenuSpot = {
@@ -318,7 +316,7 @@ export function PlayerQualityBadge({
         title="Calitate"
         className={cn(
           CHIP,
-          "items-center justify-center gap-1.5 rounded-full border border-white/12",
+          "border border-white/12",
           "bg-black/55 text-ink/90 backdrop-blur-md",
           "transition-[background-color,border-color,color,transform] duration-300",
           "hover:border-white/20 hover:bg-black/75",

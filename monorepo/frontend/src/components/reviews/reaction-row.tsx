@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Hand, Heart, ThumbsUp } from "lucide-react";
 import {
   REACTION_KINDS,
@@ -30,6 +31,59 @@ const ICONS: Record<ReactionKind, typeof Hand> = {
   love: Heart,
   like: ThumbsUp,
 };
+
+/** The query that says the visitor asked for less movement. */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+/**
+ * A counter that moves when it changes.
+ *
+ * A number that jumps from one glyph position to another with nothing in
+ * between reads as a glitch, not as a change: the eye sees the digits
+ * replace themselves rather than the number moving. So the number is
+ * animated where it stands — it lifts a little and settles back — and the
+ * motion is skipped entirely when the visitor asked for less of it.
+ *
+ * The value itself is the server's, or the optimistic copy of it while a
+ * write is in the air. This component never changes a number; it only
+ * shows that the number it was given is a different one.
+ */
+function Counter({ value }: { value: number }) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const previous = useRef(value);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    if (previous.current === value) return;
+    previous.current = value;
+
+    // Less movement asked for: the new number is simply there.
+    if (
+      typeof window === "undefined" ||
+      !window.matchMedia ||
+      window.matchMedia(REDUCED_QUERY).matches
+    ) {
+      return;
+    }
+
+    if (typeof node.animate !== "function") return;
+
+    node.animate(
+      [
+        { transform: "translateY(-0.3em) scale(0.82)", opacity: 0.35 },
+        { transform: "translateY(0) scale(1)", opacity: 1 },
+      ],
+      { duration: 280, easing: "cubic-bezier(0.22, 1.14, 0.36, 1)" },
+    );
+  }, [value]);
+
+  return (
+    <span ref={ref} className="min-w-4 text-center tabular-nums">
+      {value}
+    </span>
+  );
+}
 
 export type ReactionRowProps = {
   review: Review;
@@ -80,7 +134,9 @@ export function ReactionRow({
               onReact(review.id, own ? null : kind);
             }}
             className={cn(
-              "inline-flex min-h-8 items-center gap-1.5 rounded-full border px-2.5 py-1",
+              // The hit area is 44×44 — the size a thumb needs — while the
+              // icon and the number inside keep the size they had.
+              "inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border px-2.5 py-1",
               "text-[12px] tabular-nums transition-[color,border-color,background-color] duration-300 ease-[var(--ease-swift)]",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
               own
@@ -95,7 +151,7 @@ export function ReactionRow({
                 own && "scale-110",
               )}
             />
-            <span className="min-w-4 text-center">{review.counts[kind]}</span>
+            <Counter value={review.counts[kind]} />
           </button>
         );
       })}

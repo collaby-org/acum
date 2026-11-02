@@ -26,6 +26,9 @@ import type {
  * favourites and the account are: one request, many readers.
  */
 
+/** How many reviews the browser asks for. The server caps it anyway. */
+const POPULAR_LIMIT = 6;
+
 /** The state the interface works with. */
 export type ReviewsState = {
   /** True once the server has answered. Until then nothing is claimed. */
@@ -67,6 +70,15 @@ const EMPTY: ReviewsState = {
  */
 let server: ReviewsState = EMPTY;
 let reading: ReviewsState = EMPTY;
+
+/**
+ * The channel the list was last asked for.
+ *
+ * The store is one list for the whole page, so a write has to know what to
+ * read again afterwards: the channel the visitor is looking at, not the
+ * one that happened to be current when the module loaded.
+ */
+let currentChannel: string | null = null;
 
 /**
  * The optimistic copies, by review id.
@@ -134,16 +146,30 @@ function applyReaction(
 /** Read the list again, with the session the browser holds. */
 async function load(channelId?: string | null): Promise<void> {
   const token = await accountToken();
+  currentChannel = channelId ?? null;
 
   try {
     const search = new URLSearchParams();
     if (channelId) search.set("channel", channelId);
-    search.set("limit", "6");
+    search.set("limit", String(POPULAR_LIMIT));
 
     const response = await fetch(`/api/reviews?${search.toString()}`, {
       headers: token ? { authorization: `Bearer ${token}` } : {},
       cache: "no-store",
     });
+
+    if (!response.ok) {
+      // The desk did not answer. That is a fact about us, and the section
+      // says so — an empty shelf would be a different, and false, fact.
+      publish({
+        ...server,
+        loaded: true,
+        configured: false,
+        reason:
+          "Recenziile nu au putut fi citite acum. Încearcă din nou într-un moment.",
+      });
+      return;
+    }
 
     const payload = (await response.json()) as ReviewsPayload;
     patches = new Map();
@@ -155,9 +181,15 @@ async function load(channelId?: string | null): Promise<void> {
       busy: [],
     });
   } catch {
-    // The list is a nicety, not a promise: the old one stays and the
-    // next read tries again.
-    publish({ ...server, loaded: true });
+    // The same story: the request never arrived, so nothing is claimed
+    // about the reviews themselves.
+    publish({
+      ...server,
+      loaded: true,
+      configured: false,
+      reason:
+        "Recenziile nu au putut fi citite acum. Încearcă din nou într-un moment.",
+    });
   }
 }
 
@@ -283,10 +315,128 @@ async function submit(draft: {
 
     // A new review changes the ranking, and the ranking is the server's:
     // the list is read again rather than patched.
-    await load();
+    await load(currentChannel);
 
     const settled = payload.review;
     return { ok: true, review: settled };
+  } catch {
+    return {
+      ok: false,
+      error: "Nu am putut contacta serverul. Încearcă din nou.",
+      needsSession: false,
+    };
+  }
+}
+
+/** What an edit answers with. */
+export type ReviewEditAnswer =
+  | { ok: true; review: Review }
+  | { ok: false; error: string; needsSession: boolean };
+
+/** What a delete answers with. */
+export type ReviewDeleteAnswer =
+  | { ok: true; id: string }
+  | { ok: false; error: string; needsSession: boolean };
+
+/** The shape an edit or a delete answers with on the wire. */
+type MutationWire = {
+  review?: Review;
+  error?: string;
+  needsSession?: boolean;
+};
+
+/**
+ * Change one of the visitor's own reviews.
+ *
+ * The server decides whether the change is allowed — it checks the
+ * session against the row — and answers with the row it now holds. That
+ * answer replaces the copy in the list, so the interface shows the
+ * server's version and not the one that was typed.
+ */
+async function update(
+  reviewId: string,
+  changes: { rating?: number; body?: string },
+): Promise<ReviewEditAnswer> {
+  try {
+    const response = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}`, {
+      method: "PATCH",
+      headers: {
+        ...(await authHeaders()),
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(changes),
+      cache: "no-store",
+    });
+
+    const payload = (await response
+      .json()
+      .catch(() => null)) as MutationWire | null;
+
+    if (!response.ok || !payload?.review) {
+      return {
+        ok: false,
+        error: payload?.error ?? "Recenzia nu a putut fi modificată.",
+        needsSession: Boolean(payload?.needsSession),
+      };
+    }
+
+    const settled = payload.review;
+    // Any optimistic copy of this review is dropped: the server's answer
+    // is the whole row, and a copy of the old one would put the old text
+    // back on the screen.
+    patches.delete(reviewId);
+    publish({
+      ...server,
+      reviews: server.reviews.map((review) =>
+        review.id === settled.id ? settled : review,
+      ),
+      busy: [...patches.keys()],
+    });
+
+    return { ok: true, review: settled };
+  } catch {
+    return {
+      ok: false,
+      error: "Nu am putut contacta serverul. Încearcă din nou.",
+      needsSession: false,
+    };
+  }
+}
+
+/**
+ * Delete one of the visitor's own reviews.
+ *
+ * The server says yes or no; the browser only takes the row out of the
+ * list once the server has confirmed it. A refusal leaves the list as it
+ * was, because the review is still there.
+ */
+async function remove(reviewId: string): Promise<ReviewDeleteAnswer> {
+  try {
+    const response = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}`, {
+      method: "DELETE",
+      headers: await authHeaders(),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const payload = (await response
+        .json()
+        .catch(() => null)) as MutationWire | null;
+      return {
+        ok: false,
+        error: payload?.error ?? "Recenzia nu a putut fi ștearsă.",
+        needsSession: Boolean(payload?.needsSession),
+      };
+    }
+
+    patches.delete(reviewId);
+    publish({
+      ...server,
+      reviews: server.reviews.filter((review) => review.id !== reviewId),
+      busy: [...patches.keys()],
+    });
+
+    return { ok: true, id: reviewId };
   } catch {
     return {
       ok: false,
@@ -342,6 +492,11 @@ export function useReviews(channelId?: string | null) {
       react: (reviewId: string, kind: ReactionKind | null) =>
         react(reviewId, kind),
       submit,
+      /** Change one of the visitor's own reviews. */
+      update: (reviewId: string, changes: { rating?: number; body?: string }) =>
+        update(reviewId, changes),
+      /** Delete one of the visitor's own reviews. */
+      remove: (reviewId: string) => remove(reviewId),
     }),
     [state, reload, start],
   );

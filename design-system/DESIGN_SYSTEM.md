@@ -274,6 +274,39 @@ Every animation is disabled under `prefers-reduced-motion: reduce`.
 | Rail | `src/components/channel-rail.tsx` | Horizontal scroller with edge arrows that hide at the ends. |
 | Player | `src/components/player-modal.tsx` | Iframe stage, status notice, copy-link and source actions. |
 
+### The badges
+
+A badge says one thing about a programme or a channel, and it says it the
+way the industry says it. The vocabulary lives in
+`src/lib/programme-badges.ts` and is painted by
+`src/components/programme-badges/badge-row.tsx`; every surface that badges
+anything reads the same types from that one place.
+
+| Group | The pills | What they claim |
+| ----- | --------- | --------------- |
+| Quality | `UHD`, `FHD`, `HD`, `SD` | The measured picture quality of the feed. |
+| Audio | `5.1`, `Atmos`, `Spatial` | The decoded audio format of the feed. |
+| Accessibility | `AD`, `S`, `SSL`, `CC` | The service, spelled as a broadcaster writes it. |
+| Maturity | The **US** set (TV-Y, TV-Y7, G, TV-G, TV-PG, PG, PG-13, TV-14, R, TV-MA, NC-17) and the **UK** set (U, PG, 12, 12A, 15, 18) | The age rating of the programme. |
+
+The rules that keep it honest:
+
+1. **One quality per channel.** A channel has one best quality, and that is
+   the one that is named. A card never stacks HD, FHD and UHD on the same
+   channel — three labels for one picture is noise, and the eye reads the
+   noise instead of the show.
+2. **Only what the data supports is claimed.** The upstream guide carries a
+   title, times and a description — no quality, no audio format, no rating,
+   no HDR. Quality may be derived from the decoded stream; audio format,
+   HDR, Dolby and CC may not. They render **absent**, never guessed.
+3. **The category is not a badge.** "Generaliste", "Sport", "Știri" are
+   context, printed as plain text beside the pills. A pill says something
+   about the *programme*; the category says what the *channel* is.
+4. **Lucide only.** Every pill carries a Lucide glyph and a text label —
+   never an emoji, never a drawn character. Status is never colour alone.
+5. **One order, everywhere.** The row fixes the order; a surface never
+   re-sorts the pills to suit its own layout.
+
 ### The hero screen
 
 The signature surface. A 16:9 panel of glass:
@@ -299,6 +332,30 @@ The signature surface. A 16:9 panel of glass:
 - The live dot animation is decorative and marked `aria-hidden`.
 - The wall clock renders `--:--` on the server and fills in after mount, so
   the server and client markup always agree.
+
+### Touch
+
+A phone is not a small desktop, and the rules follow from that.
+
+- **44×44 is the floor** for anything a finger touches: buttons, stars,
+  reaction pills, the player's controls, the rails' scroll arrows. A
+  smaller *glyph* inside a 44px hit area is fine; a smaller hit area is
+  not. The desktop may keep a compact control, because a mouse does not
+  need the room.
+- **Inputs are never below 16px on mobile.** Anything smaller makes iOS
+  Safari zoom the page on focus and leaves the visitor zoomed in.
+- **Hover lives behind `@media (hover: hover)`.** A finger leaves a hover
+  behind, and a phone must not keep a card lifted after the tap.
+- **`touch-action: manipulation`** on the interactive elements: no 300ms
+  wait, no double-tap zoom, no callout.
+- **The keyboard never covers the field.** The viewport resizes for the
+  on-screen keyboard (`interactiveWidget: "resizes-content"`), and the
+  bottom sheet follows `window.visualViewport`.
+- **The page is an app, not a document.** No pull-to-refresh inside the
+  installed shell, no rubber band, no text inflation of its own.
+- **The height is the real height.** `min-h-dvh`, not `min-h-screen`: on a
+  mobile browser the large viewport is taller than the visible one, and
+  the bottom bar drifts under the browser chrome.
 
 ## Icons
 

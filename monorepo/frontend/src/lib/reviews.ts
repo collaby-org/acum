@@ -36,8 +36,10 @@ import {
 } from "@/components/reviews/types";
 import {
   getPublicClient,
+  getServiceClient,
   getUserClient,
   hasPublicConfig,
+  hasServiceRole,
   readUser,
 } from "@/lib/supabase/server";
 
@@ -577,4 +579,219 @@ async function oneReview(
       ownKind,
     ),
   };
+}
+
+/* ------------------------------------------------------------------ *
+ * Editing and deleting
+ * ------------------------------------------------------------------ */
+
+/** What a review may be changed into. */
+export type ReviewChanges = {
+  rating?: number;
+  body?: string;
+};
+
+/**
+ * Whose review this is.
+ *
+ * Read before anything is written, under the visitor's own token, and
+ * compared with the account behind the token. The answer is what the
+ * route turns into a `403`: a review that belongs to somebody else is
+ * not editable, and the check happens here rather than in the browser.
+ */
+async function ownerOf(
+  client: ReturnType<typeof getUserClient>,
+  reviewId: string,
+  userId: string,
+): Promise<{ ok: true } | { ok: false; error: string; status: number }> {
+  const { data, error } = await client
+    .from("reviews")
+    .select("id,user_id")
+    .eq("id", reviewId)
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      error: "Recenzia nu a putut fi citită. Încearcă din nou.",
+      status: 500,
+    };
+  }
+
+  if (!data) {
+    return { ok: false, error: "Recenzia nu a fost găsită.", status: 404 };
+  }
+
+  const owner = (data as { user_id?: unknown }).user_id;
+  if (owner !== userId) {
+    return {
+      ok: false,
+      error: "Recenzia nu îți aparține.",
+      status: 403,
+    };
+  }
+
+  return { ok: true };
+}
+
+/**
+ * Change one review, and answer with the row the server now holds.
+ *
+ * The rating and the body are the only things a review can be changed
+ * into: the channel, the programme and the author are facts about the
+ * moment the review was written, and a review that could change its
+ * channel would be a review of something else.
+ *
+ * The write runs under the visitor's own token first, so the row level
+ * policies have the last word. When the policies do not allow an update
+ * at all, the desk's own key does the write — but only after the same
+ * check, and only for the row that was found to be the visitor's.
+ */
+export async function editReview(
+  token: string,
+  reviewId: string,
+  changes: ReviewChanges,
+): Promise<
+  | { ok: true; review: Review }
+  | { ok: false; error: string; status: number }
+> {
+  const user = await readUser(token);
+  if (!user) {
+    return {
+      ok: false,
+      error: "Sesiunea a expirat. Autentifică-te din nou.",
+      status: 401,
+    };
+  }
+
+  const id = readId(reviewId);
+  if (!id) {
+    return { ok: false, error: "Recenzia nu a putut fi găsită.", status: 400 };
+  }
+
+  const patch: { rating?: number; body?: string } = {};
+
+  if (changes.rating !== undefined) {
+    const rating = readRating(changes.rating);
+    if (rating === null) {
+      return {
+        ok: false,
+        error: "Alege un rating de la 1 la 5 stele.",
+        status: 400,
+      };
+    }
+    patch.rating = rating;
+  }
+
+  if (changes.body !== undefined) {
+    const text = readText(changes.body, BODY_MIN, BODY_MAX);
+    if (text === null) {
+      return {
+        ok: false,
+        error: `Scrie câteva cuvinte — cel puțin ${BODY_MIN}, cel mult ${BODY_MAX}.`,
+        status: 400,
+      };
+    }
+    patch.body = text;
+  }
+
+  if (Object.keys(patch).length === 0) {
+    return { ok: false, error: "Nu s-a schimbat nimic.", status: 400 };
+  }
+
+  const client = getUserClient(token);
+
+  const owned = await ownerOf(client, id, user.id);
+  if (!owned.ok) return owned;
+
+  const { error: ownWrite } = await client
+    .from("reviews")
+    .update(patch)
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (ownWrite) {
+    if (!hasServiceRole()) {
+      // The policies do not allow an update, and the desk's own key is
+      // not there to do it. That is a fact about the server, said as
+      // such.
+      return {
+        ok: false,
+        error:
+          "Modificarea recenziilor nu este disponibilă acum. Încearcă mai târziu.",
+        status: 503,
+      };
+    }
+
+    const { error: deskWrite } = await getServiceClient()
+      .from("reviews")
+      .update(patch)
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (deskWrite) {
+      return {
+        ok: false,
+        error: "Recenzia nu a putut fi modificată. Încearcă din nou.",
+        status: 500,
+      };
+    }
+  }
+
+  const answer = await oneReview(client, id, user.id);
+  if (!answer.review) {
+    return { ok: false, error: "Recenzia nu a fost găsită.", status: 404 };
+  }
+
+  return { ok: true, review: answer.review };
+}
+
+/**
+ * Delete one review, and say so plainly.
+ *
+ * The delete runs under the visitor's own token, so the policy is the
+ * last word: the row may only go when it is the visitor's row. The
+ * reactions go with it — they belong to the review, not to the visitor.
+ */
+export async function deleteReview(
+  token: string,
+  reviewId: string,
+): Promise<
+  | { ok: true; id: string }
+  | { ok: false; error: string; status: number }
+> {
+  const user = await readUser(token);
+  if (!user) {
+    return {
+      ok: false,
+      error: "Sesiunea a expirat. Autentifică-te din nou.",
+      status: 401,
+    };
+  }
+
+  const id = readId(reviewId);
+  if (!id) {
+    return { ok: false, error: "Recenzia nu a putut fi găsită.", status: 400 };
+  }
+
+  const client = getUserClient(token);
+
+  const owned = await ownerOf(client, id, user.id);
+  if (!owned.ok) return owned;
+
+  const { error } = await client
+    .from("reviews")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    return {
+      ok: false,
+      error: "Recenzia nu a putut fi ștearsă. Încearcă din nou.",
+      status: 500,
+    };
+  }
+
+  return { ok: true, id };
 }

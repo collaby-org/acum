@@ -409,7 +409,7 @@ export function ChannelRail<T extends ChannelLike>({
             type="button"
             onClick={() => nudge(-1)}
             aria-label="Derulează la stânga"
-            className="absolute left-1 top-1/2 z-30 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-canvas/85 text-ink backdrop-blur-md fx-edge fx-press transition-[background-color,transform] duration-200 hover:bg-canvas hover:text-signal-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none"
+            className="absolute left-1 top-1/2 z-30 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-canvas/85 text-ink backdrop-blur-md fx-edge fx-press transition-[background-color,transform] duration-200 hover:bg-canvas hover:text-signal-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none sm:size-10"
           >
             <ChevronLeft aria-hidden className="size-5" />
           </button>
@@ -420,7 +420,7 @@ export function ChannelRail<T extends ChannelLike>({
             type="button"
             onClick={() => nudge(1)}
             aria-label="Derulează la dreapta"
-            className="absolute right-1 top-1/2 z-30 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-canvas/85 text-ink backdrop-blur-md fx-edge fx-press transition-[background-color,transform] duration-200 hover:bg-canvas hover:text-signal-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none"
+            className="absolute right-1 top-1/2 z-30 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-canvas/85 text-ink backdrop-blur-md fx-edge fx-press transition-[background-color,transform] duration-200 hover:bg-canvas hover:text-signal-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal motion-reduce:transition-none sm:size-10"
           >
             <ChevronRight aria-hidden className="size-5" />
           </button>

@@ -57,6 +57,11 @@ jobs:
         run: npm run data:epg
 
       - name: Commit when the guide changed
+        env:
+          # A token with write access, when the repository has one. With it
+          # the guide lands on main by itself and the pull request is not
+          # needed; without it the run falls through to the branch below.
+          EPG_PUSH_TOKEN: ${{ secrets.EPG_PUSH_TOKEN }}
         run: |
           if git diff --quiet -- data/epg.json; then
             echo "data/epg.json unchanged — nothing to commit"
@@ -64,12 +69,23 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # A branch of its own, force-moved each morning: the guide is a
-          # generated file, so its history on that branch is noise.
-          git checkout -B chore/epg-refresh
           git add data/epg.json
-          git commit -m "chore: refresh data/epg.json (daily scrape)"
-          git push --force origin chore/epg-refresh
+          git commit -m "chore: refresh data/epg.json (scrape)"
+
+          if [ -n "$EPG_PUSH_TOKEN" ]; then
+            git remote set-url origin \
+              "https://x-access-token:${EPG_PUSH_TOKEN}@github.com/${{ github.repository }}.git"
+            git push origin HEAD:main
+            echo "Pushed to main with the repository token."
+            exit 0
+          fi
+
+          # A branch of its own, force-moved each run: the guide is a
+          # generated file, so its history on that branch is noise. The
+          # lease keeps the push from overwriting a commit that arrived
+          # from somewhere else in the meantime.
+          git checkout -B chore/epg-refresh
+          git push --force-with-lease origin chore/epg-refresh
 
       - name: Open the pull request
         env:

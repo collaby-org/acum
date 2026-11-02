@@ -30,12 +30,10 @@ create table if not exists public.reviews (
   programme_ends_at timestamptz,
   rating smallint not null check (rating between 1 and 5),
   body text not null,
-  --
-   * The author in the words the account goes by, copied at write time.
-   * The profile row is nobody else's business, so the label travels with
-   * the review instead of being joined back. It is a label, not an
-   * identity, and it is never invented.
-   */
+  -- The author in the words the account goes by, copied at write time.
+  -- The profile row is nobody else's business, so the label travels with
+  -- the review instead of being joined back. It is a label, not an
+  -- identity, and it is never invented.
   author_label text not null default 'Vizionator',
   created_at timestamptz not null default now()
 );
@@ -63,10 +61,8 @@ create index if not exists reviews_recent_idx
 create table if not exists public.review_reactions (
   review_id uuid not null references public.reviews (id) on delete cascade,
   user_id uuid not null references public.profiles (id) on delete cascade,
-  --
-   * `like`, `love` or `clap`. The weights differ, so the three are three
-   * kinds and not one counter with a bigger number in it.
-   */
+  -- `like`, `love` or `clap`. The weights differ, so the three are three
+  -- kinds and not one counter with a bigger number in it.
   kind text not null check (kind in ('like', 'love', 'clap')),
   created_at timestamptz not null default now(),
   -- One reaction per visitor per review. The row is replaced, not added to. 

@@ -11,8 +11,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { connection } from "next/server";
+import { headers } from "next/headers";
 import { ArrowRight, Radio, ShieldCheck, Users } from "lucide-react";
 import { AcumMark } from "@/components/brand";
+import { ReviewDraftBridge } from "@/components/channel/channel-panel";
 import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
@@ -20,6 +23,7 @@ import { PopularReviews, type ComposerChannel } from "@/components/reviews";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT, CHANNELS } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
+import { getRegionFromHeaders } from "@/lib/shared/pricing-utils";
 import {
   SITE_NAME,
   SITE_PROMISE,
@@ -88,16 +92,16 @@ async function copyrightYear() {
 }
 
 export default async function LandingPage() {
-  // A signed-in account never reaches this render: the middleware sends
-  // it to the catalogue before the route is even matched, which is what
-  // keeps this page static for everybody else.
-  const year = await copyrightYear();
+  // The prices depend on the visitor's country, so this page is rendered
+  // for the request that is being answered. The same geo-header pattern
+  // the pricing page uses keeps the server and the first client render on
+  // one region and one set of prices.
+  await connection();
+  const region = getRegionFromHeaders(await headers());
 
-  // The plans are priced the way the visitor's own country pays, read from
-  // the geo header — the same prime reading the pricing page uses.
-  // The visitor's own region: the grid prices it in the browser, so this
-  // page stays prerenderable (the same first-paint tradeoff the pricing
-  // hook documents — the visitor only ever sees their own prices).
+  // A signed-in account never reaches this render: the middleware sends
+  // it to the catalogue before the route is even matched.
+  const year = await copyrightYear();
 
   return (
     <main className="relative isolate min-h-dvh bg-canvas">
@@ -217,7 +221,7 @@ export default async function LandingPage() {
             {/* The light the wall throws on the page. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-x-8 -bottom-10 -z-10 h-32 rounded-full opacity-70 mix-blend-screen"
+              className="pointer-events-none absolute inset-x-0 -bottom-10 -z-10 h-32 rounded-full opacity-70 mix-blend-screen"
               style={{
                 background:
                   "radial-gradient(50% 60% at 50% 40%, rgba(242,167,27,0.28) 0%, transparent 72%)",
@@ -263,11 +267,13 @@ export default async function LandingPage() {
           </p>
         </div>
 
-        <PlansGrid className="mt-10" />
+        <PlansGrid region={region} className="mt-10" />
       </section>
 
-      {/* What the viewers said about what was on. */}
+      {/* What the viewers said about what was on. The bridge keeps a
+          signed-out visitor's draft while they make a session. */}
       <section className="mx-auto max-w-[1800px] px-4 pb-24 sm:px-8 lg:px-12">
+        <ReviewDraftBridge />
         <PopularReviews channels={REVIEW_CHANNELS} />
       </section>
 

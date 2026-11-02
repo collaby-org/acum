@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Search, X } from "lucide-react";
+import { Heart, MessageSquare, Search, X } from "lucide-react";
 import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { Button } from "@/components/ui/button";
@@ -108,17 +108,35 @@ export function Header({
 
         {/* Nav links — visible when signed in */}
         {account.signedIn && (
-          <nav aria-label="Principal" className="hidden md:flex items-center gap-1">
-            <Link href="/canale" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Catalog</Link>
-            <Link href="/canale/toate" className="rounded-full px-3 py-1.5 text-[13px] font-medium text-ink-muted hover:text-ink transition-colors">Toate canalele</Link>
+          <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+            <Link
+              href="/canale"
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              Catalog
+            </Link>
+            <Link
+              href="/canale/toate"
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              Toate canalele
+            </Link>
+            <Link
+              href="/canale#recenzii"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              <MessageSquare aria-hidden className="size-3.5" />
+              Recenzii
+            </Link>
           </nav>
         )}
 
         {/* Search */}
         <div
           className={cn(
-            "group relative flex h-10 items-center gap-2 rounded-full border transition-[width,background-color,border-color,box-shadow] duration-500 ease-spring",
+            "group relative flex h-11 items-center gap-2 rounded-full border transition-[width,background-color,border-color,box-shadow] duration-500 ease-spring",
             "border-white/[0.08] bg-white/[0.04] backdrop-blur-xl",
+            "focus-within:border-signal/60 focus-within:ring-2 focus-within:ring-signal/25",
             expanded
               ? "w-full max-w-md border-signal/45 bg-canvas/70 shadow-[0_0_0_4px_rgba(242,167,27,0.10),0_18px_40px_-22px_rgba(0,0,0,0.95)]"
               : "w-10 hover:border-white/20 hover:bg-white/[0.07] sm:w-60",
@@ -140,14 +158,14 @@ export function Header({
             onBlur={() => setFocused(false)}
             placeholder="Caută un canal…"
             aria-label="Caută un canal"
-            className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint placeholder:transition-colors placeholder:duration-300 focus:placeholder:text-ink-muted/60 [&::-webkit-search-cancel-button]:appearance-none"
+            className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint placeholder:transition-colors placeholder:duration-300 focus:placeholder:text-ink-muted/60 sm:text-sm [&::-webkit-search-cancel-button]:appearance-none"
           />
           {query ? (
             <button
               type="button"
               onClick={() => onQueryChange("")}
               aria-label="Șterge căutarea"
-              className="mr-2 grid size-6 shrink-0 place-items-center rounded-full text-ink-faint transition duration-300 ease-spring hover:bg-white/10 hover:text-ink"
+              className="mr-2 grid size-11 shrink-0 place-items-center rounded-full text-ink-faint transition duration-300 ease-spring hover:bg-white/10 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal sm:size-6"
             >
               <X className="size-3.5" />
             </button>

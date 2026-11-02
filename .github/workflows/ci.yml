@@ -49,10 +49,42 @@ jobs:
       - name: Build
         run: npm run build
 
-  # NOTE: the TV app (monorepo/tv) has no package.json yet, so a CI job for it
-  # has nothing to install and nothing to check. Its `cache-dependency-path`
-  # pointed at monorepo/tv/package-lock.json, which does not exist, so
-  # setup-node failed with "Some specified paths were not resolved" before any
-  # step could report and took the whole run down with it. The job comes back
-  # with the app itself; the QR-auth design it will exercise lives in docs/tv/
-  # and prompts/tv/.
+  # TV CI - runs from monorepo/tv. Its own job, its own install, its own
+  # build: a television release must not wait on the phone, and it must not
+  # be able to break it.
+  #
+  # The `verify:nav` harness (the D-pad and the cursor rule) is deliberately
+  # NOT part of this job: it drives a real Edge over the DevTools protocol
+  # and it needs the browser binary of the machine it runs on, which a Linux
+  # runner does not have. It stays a local gate, run against the production
+  # build before a television release.
+  tv:
+    name: TV - Lint, type-check and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: monorepo/tv
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: monorepo/tv/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build

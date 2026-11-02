@@ -157,6 +157,10 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const overBarRef = useRef(false);
     const focusInBarRef = useRef(false);
     const [playing, setPlaying] = useState(false);
+    /** True când spectatorul a oprit el imaginea, nu când conexiunea așteaptă. */
+    const [paused, setPaused] = useState(false);
+    /** True cât timp decoderul așteaptă următoarea imagine. */
+    const [waiting, setWaiting] = useState(false);
     const [muted, setMuted] = useState(true);
     const [volume, setVolume] = useState(1);
     const [fullscreen, setFullscreen] = useState(false);
@@ -206,8 +210,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // open — the menu is portaled out of the bar, so nothing about it can
     // be seen from here except what the badge says.
     const [qualityOpen, setQualityOpen] = useState(false);
-    // A drag of the live scrubber holds it awake for the same reason.
-    const [scrubbing, setScrubbing] = useState(false);
     // Cast: whether this browser can hand the picture to a smart TV, and
     // whether one is playing it right now. Both answers only exist in the
     // browser, so both wait for the mount — the way the
@@ -271,6 +273,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       if (gatedRef.current) return;
       try {
         await video.play();
+        setPaused(false);
         setBlocked(false);
       } catch {
         // The browser refused sound; the picture matters more than the audio.
@@ -278,6 +281,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         setMuted(true);
         try {
           await video.play();
+          setPaused(false);
           setBlocked(false);
         } catch {
           // The browser refused the picture as well. Only a tap can start
@@ -299,6 +303,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       setMuted(false);
       try {
         await video.play();
+        setPaused(false);
+        setWaiting(false);
         setBlocked(false);
       } catch {
         video.muted = true;
@@ -640,7 +646,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
      *
      * Anything the visitor may be in the middle of: a paused picture, a
      * stream still being found, the browser's own refusal, the quality
-     * menu open, the scrubber under the finger, the picture already handed
+     * menu open, the picture already handed
      * to a TV, and the lights being down — the bar is the only way back
      * up out of the dark. The pointer resting on the bar counts too, and
      * so does the focus ring inside it: a bar that faded while the mouse
@@ -823,6 +829,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         pause: () => {
           videoRef.current?.pause();
           setPlaying(false);
+          setPaused(true);
+          setWaiting(false);
         },
         retry: () => {
           player.retry();
@@ -842,13 +850,45 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const busy = status === "resolving" || status === "retrying";
     const failed = status === "error" && !block;
     const hasNext = sourceIndex + 1 < sources.length;
+    const connecting =
+      !embedded &&
+      !failed &&
+      !blocked &&
+      (busy || waiting || (sourceUrl !== null && !playing && !paused));
+
+    /**
+     * Gardianul conexiunii.
+     *
+     * Dacă nici serverul, nici fluxul nu răspund, starea nu trebuie să
+     * rămână pentru totdeauna pe „Se conectează”. După douăzeci de secunde
+     * fără o imagine pregătită, playerul declară eșecul și oferă reluarea.
+     */
+    useEffect(() => {
+      if (!busy && !waiting) return;
+      if (blocked || paused) return;
+      const startedAt = Date.now();
+      const timer = window.setInterval(() => {
+        if (Date.now() - startedAt < 20_000) return;
+        const video = videoRef.current;
+        if (
+          video &&
+          video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA &&
+          !video.paused
+        ) {
+          return;
+        }
+        window.clearInterval(timer);
+        failRef.current("Fluxul nu a răspuns la timp.");
+      }, 1_000);
+      return () => window.clearInterval(timer);
+    }, [blocked, busy, paused, waiting, sourceUrl]);
 
     /**
      * What holds the bar awake.
      *
      * Anything the visitor may be in the middle of: a paused picture, a
      * stream still being found, the browser's own refusal, the quality
-     * menu open, the scrubber under the finger, the picture already handed
+     * menu open, the picture already handed
      * to a TV, and the lights being down — the bar is the only way back
      * up out of the dark. The pointer resting on the bar counts too, and
      * so does the focus ring inside it: a bar that faded while the mouse
@@ -862,11 +902,10 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         failed ||
         cinema ||
         qualityOpen ||
-        scrubbing ||
         overBarRef.current ||
         focusInBarRef.current ||
         Boolean(document.pictureInPictureElement),
-      [playing, busy, blocked, failed, cinema, qualityOpen, scrubbing],
+      [playing, busy, blocked, failed, cinema, qualityOpen],
     );
 
     // The bar rests while the picture runs: a moment of stillness and it
@@ -891,7 +930,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           );
         }
         if (event?.type === "focusout") {
-          focusInBarRef.current = false;
+          const next = (event as FocusEvent).relatedTarget as Element | null;
+          focusInBarRef.current = Boolean(next?.closest?.("[data-player-controls]"));
         }
         setAsleep(false);
         if (timer) {
@@ -912,21 +952,32 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       // visitor reaching for the bar. The key is the one exception — a
       // keystroke that reaches the player is a keystroke that belongs to
       // it, wherever it was aimed.
+      const leave = () => {
+        overBarRef.current = false;
+        wake();
+      };
+
       shell.addEventListener("pointermove", wake);
       shell.addEventListener("pointerdown", wake);
+      shell.addEventListener("pointerup", wake);
+      shell.addEventListener("pointerleave", leave);
       shell.addEventListener("wheel", wake, { passive: true });
       shell.addEventListener("focusin", wake);
       shell.addEventListener("focusout", wake);
       shell.addEventListener("keydown", wake);
+      shell.addEventListener("keyup", wake);
 
       return () => {
         if (timer) window.clearTimeout(timer);
         shell.removeEventListener("pointermove", wake);
         shell.removeEventListener("pointerdown", wake);
+        shell.removeEventListener("pointerup", wake);
+        shell.removeEventListener("pointerleave", leave);
         shell.removeEventListener("wheel", wake);
         shell.removeEventListener("focusin", wake);
         shell.removeEventListener("focusout", wake);
         shell.removeEventListener("keydown", wake);
+        shell.removeEventListener("keyup", wake);
       };
     }, [fullscreen, holdsBarAwake]);
 
@@ -934,6 +985,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       const video = videoRef.current;
       if (!video) return;
       if (video.paused) {
+        setPaused(false);
         void startPlaybackRef.current();
       } else {
         video.pause();
@@ -1009,8 +1061,23 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // The channel page renders the player on the server, so the flag waits
     // for the mount.
     const [canPictureInPicture, setCanPictureInPicture] = useState(false);
+    const [pictureInPictureActive, setPictureInPictureActive] = useState(false);
     useEffect(() => {
-      setCanPictureInPicture("pictureInPictureEnabled" in document);
+      const video = videoRef.current;
+      const supported =
+        "pictureInPictureEnabled" in document &&
+        typeof video?.requestPictureInPicture === "function";
+      setCanPictureInPicture(supported);
+      if (!supported) return;
+
+      const onEnter = () => setPictureInPictureActive(true);
+      const onLeave = () => setPictureInPictureActive(false);
+      document.addEventListener("enterpictureinpicture", onEnter);
+      document.addEventListener("leavepictureinpicture", onLeave);
+      return () => {
+        document.removeEventListener("enterpictureinpicture", onEnter);
+        document.removeEventListener("leavepictureinpicture", onLeave);
+      };
     }, []);
 
     const togglePictureInPicture = useCallback(() => {
@@ -1037,12 +1104,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       const remote = video?.remote;
       if (!remote) return;
       void remote.prompt().catch(() => undefined);
-    }, []);
-
-    const seek = useCallback((time: number) => {
-      const video = videoRef.current;
-      if (!video) return;
-      video.currentTime = time;
     }, []);
 
     const jumpToLive = useCallback(() => {
@@ -1134,10 +1195,22 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             onLoadedMetadata={readStreamSize}
             onPlaying={() => {
               setPlaying(true);
+              setPaused(false);
+              setWaiting(false);
               player.markPlaying();
             }}
-            onPause={() => setPlaying(false)}
-            onWaiting={() => setPlaying(false)}
+            onPause={() => {
+              setPlaying(false);
+              setPaused(true);
+              setWaiting(false);
+            }}
+            onWaiting={() => {
+              setPlaying(false);
+              setWaiting(true);
+            }}
+            onCanPlay={() => {
+              if (!videoRef.current?.paused) setWaiting(false);
+            }}
             onError={() => failRef.current("Fluxul nu poate fi redat.")}
           />
 
@@ -1167,14 +1240,27 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               the quality chip — lives in the transport bar, where every
               player in the industry keeps it. */}
 
-          {busy && !failed && !embedded && !blocked ? (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/55 rounded-2xl">
-              <div className="flex flex-col items-center gap-3 text-center">
-                <Loader2 className="size-7 animate-spin text-signal" />
-                <p className="text-sm text-ink/85">
-                  {status === "retrying"
-                    ? "Se încearcă următorul flux…"
-                    : "Se caută fluxul…"}
+          {connecting ? (
+            <div
+              role="status"
+              aria-live="polite"
+              className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_center,rgb(240_165_0/0.11),transparent_38%),rgb(5_5_5/0.94)]"
+            >
+              <div
+                aria-hidden
+                className="absolute inset-x-[12%] top-1/2 h-20 -translate-y-1/2 animate-pulse rounded-2xl bg-white/[0.035]"
+              />
+              <div className="relative flex flex-col items-center gap-3 px-6 text-center">
+                <Loader2 className="size-8 animate-spin text-signal" aria-hidden />
+                <p className="font-display text-sm font-semibold text-ink">
+                  {waiting
+                    ? "Se reia conexiunea la flux…"
+                    : status === "retrying"
+                      ? "Se încearcă următorul flux…"
+                      : "Se conectează la fluxul live…"}
+                </p>
+                <p className="max-w-xs text-[12px] leading-relaxed text-ink-muted">
+                  Pregătim imaginea. Prima imagine poate dura câteva secunde.
                 </p>
                 {attempts > 0 ? (
                   <p className="text-[11px] uppercase tracking-[0.18em] text-ink-faint">
@@ -1195,13 +1281,25 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                 <p className="mt-1.5 text-[13px] leading-relaxed text-ink-muted">
                   {error ?? "Niciun flux nu a răspuns."}
                 </p>
-                <div className="mt-5 flex justify-center gap-2">
-                  <Button variant="primary" size="sm" onClick={player.retry}>
-                    Încearcă din nou
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={player.retry}
+                    className="h-11 px-4"
+                  >
+                    Reîncearcă fluxul
                   </Button>
                   {hasNext ? (
-                    <Button variant="outline" size="sm" onClick={player.advance}>
-                      Flux următor
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={player.advance}
+                      className="h-11 px-4"
+                    >
+                      Treci la următorul flux
                     </Button>
                   ) : null}
                 </div>
@@ -1213,8 +1311,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-2xl">
               <div className="flex flex-col items-center gap-2 text-ink-faint">
                 <Radio className="size-6" />
-                <p className="text-[11px] uppercase tracking-[0.2em]">
-                  apasă redare
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em]">
+                  Apasă redare
                 </p>
               </div>
             </div>
@@ -1238,6 +1336,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             onEnable={() => {
               void enableSound();
             }}
+            className="min-h-11"
           />
 
           {/* Ten minutes before the wall: the line says so, once a day, and
@@ -1281,6 +1380,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             canFullscreen={fullscreenMode !== "none"}
             canSwitch={hasNext}
             canPictureInPicture={canPictureInPicture}
+            pictureInPictureActive={pictureInPictureActive}
             canCast={castSupported}
             castConnected={castConnected}
             cinema={cinema}
@@ -1310,8 +1410,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                 onOpenChange={setQualityOpen}
               />
             }
-            onSeek={seek}
-            onScrubChange={setScrubbing}
             onTogglePlay={togglePlay}
             onToggleMute={toggleMute}
             onVolumeChange={changeVolume}

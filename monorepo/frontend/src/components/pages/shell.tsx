@@ -81,7 +81,7 @@ export type PageShellProps = {
  */
 export function PageShell({ children }: PageShellProps) {
   return (
-    <div id="top" className="flex min-h-screen flex-col">
+    <div id="top" className="flex min-h-dvh flex-col">
       <PageBar />
       <main className="flex-1">{children}</main>
       <Footer />

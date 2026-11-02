@@ -1,0 +1,88 @@
+{
+  "lanes": [
+    {
+      "id": "reviews-core",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/components/reviews",
+        "monorepo/frontend/src/lib/reviews.ts",
+        "monorepo/frontend/src/lib/review-rank.ts",
+        "monorepo/frontend/src/lib/review-channels.ts",
+        "monorepo/frontend/src/hooks/use-reviews.ts",
+        "monorepo/frontend/src/app/api/reviews"
+      ],
+      "outputs": [
+        "reviews components meet the 44px touch target, keyboard and reduced-motion rules",
+        "honest read-error state, DELETE/PATCH review routes, correct channel list"
+      ]
+    },
+    {
+      "id": "reviews-integration",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/app/canale/page.tsx",
+        "monorepo/frontend/src/app/page.tsx",
+        "monorepo/frontend/src/app/layout.tsx",
+        "monorepo/frontend/src/components/channel/channel-panel.tsx",
+        "monorepo/frontend/src/components/channel-card.tsx",
+        "monorepo/frontend/src/components/header.tsx",
+        "monorepo/frontend/src/components/player/player-modal.tsx",
+        "monorepo/frontend/src/components/player/index.ts",
+        "monorepo/frontend/src/lib/programme-badges.ts",
+        "monorepo/frontend/src/components/programme-badges/badge-row.tsx"
+      ],
+      "outputs": [
+        "landing hydration fixed, reviews reachable, programme leads the panel, one quality badge per channel"
+      ]
+    },
+    {
+      "id": "player-controls",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/components/player/player-controls.tsx",
+        "monorepo/frontend/src/components/player/video-player.tsx",
+        "monorepo/frontend/src/components/player/player-quality.tsx"
+      ],
+      "outputs": [
+        "player controls are 44px on touch, the live scrubber is usable, the connecting state reads as connecting"
+      ]
+    },
+    {
+      "id": "schema-mirror",
+      "role": "write",
+      "paths": [
+        "supabase/schema.sql",
+        "supabase/migrations",
+        "monorepo/frontend/supabase",
+        "monorepo/tv/supabase"
+      ],
+      "outputs": [
+        "one schema of record for reviews, valid SQL migrations everywhere"
+      ]
+    },
+    {
+      "id": "orchestrator",
+      "role": "write",
+      "paths": [
+        ".github/workflows",
+        "monorepo/frontend/data/epg.json",
+        "docs/VERSION",
+        "docs/changelog.md",
+        "monorepo/frontend/package.json",
+        "monorepo/tv/package.json",
+        ".agents/lanes.json"
+      ],
+      "outputs": [
+        "scheduled EPG refresh, one version line, changelog, release notes"
+      ]
+    },
+    {
+      "id": "audit-readers",
+      "role": "read",
+      "paths": [
+        "monorepo/frontend/src",
+        "monorepo/tv/src"
+      ]
+    }
+  ]
+}

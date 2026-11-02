@@ -68,6 +68,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#04050a",
   colorScheme: "dark",
+  // The on-screen keyboard resizes the viewport instead of covering the
+  // field the visitor is writing in.
+  interactiveWidget: "resizes-content",
   // The standalone app draws edge to edge, behind the notch and the home
   // indicator; without `cover` every env(safe-area-inset-*) is 0.
   viewportFit: "cover",

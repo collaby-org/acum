@@ -18,6 +18,7 @@ import { formatClock } from "@/components/now-next";
 import { ProgrammeBadges } from "@/components/player/programme-badges";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
+import { useAccount } from "@/hooks/use-account";
 
 /** One slot of the guide, as the endpoint prints it. */
 export type PanelProgramme = {
@@ -56,18 +57,85 @@ export type ChannelPanelProps = {
   className?: string;
 };
 
+/* ------------------------------------------------------------------ *
+ *  Review draft bridge types
+ * ------------------------------------------------------------------ */
+
+/** The shape of a review draft that the composer hands to the section. */
+export type ReviewDraft = {
+  rating: number;
+  body: string;
+  channelId: string;
+  programmeTitle: string | null;
+  programmeStartsAt: string | null;
+  programmeEndsAt: string | null;
+};
+
+/** Props for the draft bridge component. */
+export type ReviewDraftBridgeProps = {
+  /** The draft the visitor wrote while signed out. */
+  draft?: ReviewDraft | null;
+  /** Called when the visitor dismisses the draft. */
+  onClose?: () => void;
+};
+
+/** The draft bridge component. */
+export function ReviewDraftBridge({
+  draft,
+  onClose,
+}: { draft?: ReviewDraft | null; onClose?: () => void }) {
+  const account = useAccount();
+
+  if (!draft) return null;
+
+  // When the user signs in, the bridge shows the draft as a session face
+  // so they can submit it. The composer handles the actual submission.
+  if (account.signedIn) {
+    return null;
+  }
+
+  return (
+    <div
+      className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5"
+      data-slot="review-draft-bridge"
+    >
+      <div className="flex items-center justify-between">
+        <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-signal/85">
+          <Radio className="size-3" aria-hidden />
+          Recenzie Salvată
+        </p>
+        <button
+          onClick={onClose}
+          className="p-1 rounded-lg hover:bg-white/[0.06] transition-colors"
+          aria-label="Închide recenzia salvată"
+        >
+          <span className="text-ink-faint">×</span>
+        </button>
+      </div>
+      <p className="mt-2 font-display text-[15px] font-semibold leading-tight tracking-tight text-ink">
+        {draft.programmeTitle ?? "Program nedefinit"}
+      </p>
+      <div className="mt-2 flex items-center gap-2">
+        <span className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/[0.05] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          {draft.channelId}
+        </span>
+      </div>
+      <p className="mt-3 text-[13px] leading-relaxed text-ink-muted line-clamp-3">
+        {draft.body}
+      </p>
+      <p className="mt-2 text-[11px] text-ink-faint">
+        Te conectezi pentru a o trimite.
+      </p>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ *  Main ChannelPanel component
+ * ------------------------------------------------------------------ */
+
 const NUMBER = new Intl.NumberFormat("ro-RO");
 
-/**
- * Two different numbers, and the panel says which is which.
- *
- * `liveViewers` is ours: the number of browsers watching this channel here,
- * counted at the proxy over the last minute and a half. That is a crowd.
- *
- * `views` is the directory's own counter, and it is cumulative — sampled
- * twice, seventy seconds apart, it had barely moved. It is a popularity
- * ranking, and it is never dressed up as an audience.
- */
 function liveLabel(count: number): string | null {
   if (!count || count <= 0) return null;
   return `${NUMBER.format(count)} în direct acum`;
@@ -78,7 +146,6 @@ function popularityLabel(views: number | null): string | null {
   return `popularitate ${NUMBER.format(views)}`;
 }
 
-/** The clock of a stamp, in Romanian time. */
 function clockOf(stamp: string | null): string | null {
   if (!stamp) return null;
   const moment = Date.parse(stamp);
@@ -102,14 +169,17 @@ export function ChannelPanel({
     failed: boolean;
   }>({ id: channelId, sheet: null, failed: false });
 
-  /**
-   * The sheet is read from the server, so it is the server's clock that
-   * decides what is on. The minute tick is what makes it move: once a
-   * minute the panel asks again, and the answer is the programme that is on
-   * air now — not the one that was on when the panel was opened.
-   */
-  const tick = useMinuteTick();
+  const [draftState, setDraftState] = useState<{
+    draft: ReviewDraft | null;
+    signedIn: boolean;
+  }>({ draft: null, signedIn: false });
 
+  const tick = useMinuteTick();
+  const account = useAccount();
+
+  /* -------------------------------------------------------------- *
+   *  Load the channel sheet from the server
+   * -------------------------------------------------------------- */
   useEffect(() => {
     let live = true;
 
@@ -120,6 +190,11 @@ export function ChannelPanel({
       })
       .then((data) => {
         if (live) setState({ id: channelId, sheet: data, failed: false });
+        // Update draft state based on current sign-in status
+        setDraftState(prev => ({
+          ...prev,
+          signedIn: account.signedIn,
+        }));
       })
       .catch(() => {
         if (live) setState({ id: channelId, sheet: null, failed: true });
@@ -128,11 +203,13 @@ export function ChannelPanel({
     return () => {
       live = false;
     };
-  }, [channelId, tick]);
+  }, [channelId, tick, account.signedIn]);
 
+  /* -------------------------------------------------------------- *
+   *  Main render
+   * -------------------------------------------------------------- */
   const sheet = state.id === channelId ? state.sheet : null;
   const failed = state.id === channelId ? state.failed : false;
-
   const name = sheet?.name ?? channelName ?? "";
   const live = liveLabel(sheet?.liveViewers ?? 0);
   const popular = popularityLabel(sheet?.views ?? null);
@@ -241,8 +318,7 @@ export function ChannelPanel({
           />
           {nowClock ? (
             <p className="mt-1 font-mono text-[11px] tabular-nums tracking-wide text-ink-faint">
-              {nowClock}
-              {nowEnd ? ` — ${nowEnd}` : ""}
+              {nowClock}{nowEnd ? ` — ${nowEnd}` : ""}
             </p>
           ) : null}
           {sheet.now.description ? (
@@ -280,6 +356,14 @@ export function ChannelPanel({
           </ul>
         </div>
       ) : null}
+
+      {/* The draft bridge - show when signed out */}
+      {!account.signedIn && draftState.draft && (
+        <ReviewDraftBridge
+          draft={draftState.draft}
+          onClose={() => setDraftState(prev => ({...prev, draft: null}))}
+        />
+      )}
     </section>
   );
 }

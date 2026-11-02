@@ -14,7 +14,7 @@ import { SITE_NAME } from "@/lib/site";
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-dvh bg-canvas">
       {/* The rail. */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[264px] flex-col border-r border-white/[0.07] bg-canvas-raised/80 backdrop-blur-2xl lg:flex">
         <div className="flex h-[72px] items-center gap-3 border-b border-white/[0.06] px-6">

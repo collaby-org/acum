@@ -9,6 +9,8 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.6.0] — 2026-11-02
+
 ### Added — the ten-foot layer (`monorepo/tv`)
 
 - **A design system for three metres.** A type scale that starts where the web
@@ -141,6 +143,115 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
   channels.
 - **Some upstream hosts are spelled in Unicode**, and a signature computed
   over one spelling does not match the other.
+
+### Fixed — the programme was gone from the channel page
+
+- **The panel answered with yesterday's schedule while the catalogue beside
+  it answered with today's.** The catalogue pages read the guide from the
+  source at runtime, behind Next's cache, one walk of the source every three
+  hours; the channel panel read the committed snapshot off the disk. The
+  snapshot had expired, so `/canal/pro-tv` showed the channel's long
+  description and **no programme at all** — the one thing a channel page is
+  for. Both now read the same guide through the same two sources, in the
+  same order, and the panel gets a guide that keeps its descriptions.
+- **The panel led with the channel instead of the programme.** It now opens
+  with what is on: the title, the hours it runs, its own description; then
+  what follows; and only then the channel's own words, under "Despre
+  canal". A channel the guide has nothing for says so — it never falls
+  back to the channel blurb as if that were the programme.
+
+### Fixed — the landing page
+
+- **React error #418 on every visit to `/`.** The prices are regional, and
+  the grid was rendered without a region: the server painted euros, the
+  browser painted the visitor's own currency, and the two trees disagreed.
+  The region is now read from the geo header on the server, the way the
+  pricing page reads it, so there is one price painted once.
+- **Sixteen pixels of horizontal overflow on a phone.** The glow under the
+  pricing section was drawn wider than the screen, so the landing page
+  could be dragged sideways and its right edge was cut.
+
+### Fixed — the phone and the installed app
+
+- **The install offer was shown on a desktop.** A desktop browser is a
+  website and should stay one; the offer belongs to the phone. Where the
+  browser fires its own install event, that is the path — the share-sheet
+  recipe is the fallback, not the other way round — and the card's own
+  controls are 44px.
+- **The shell was taller than the screen.** `min-h-screen` is the *large*
+  viewport on a phone, so the bottom bar and the last rail drifted under
+  the browser chrome. It is `min-h-dvh` now, everywhere.
+- **The inputs were small enough to make iOS zoom the page.** Every field
+  is at least 16px on a phone.
+- **The hover effects stayed on after a tap.** A finger leaves a hover
+  behind, so every hover rule now lives behind `@media (hover: hover)`.
+- **The app pulled to refresh and inflated its own type.** The page is an
+  app, not a document: no pull-to-refresh, no rubber band, no text
+  inflation of its own, and a tap answers at once.
+- **The service worker kept every old release forever.** The hashed assets
+  are evicted on each activation; the shell and the pages stay.
+
+### Fixed — the player
+
+- **The live bar pretended to be a scrubber.** At the live edge there is no
+  position to seek to, and the 6px range input was untouchable. It is now
+  an honest buffer line, labelled in Romanian, with the "În direct" mark
+  beside it.
+- **Every control was 36×36.** They are 44×44 now, on the desktop and on
+  the phone, with one size for the icons and one for the labelled chips,
+  and the volume slider has a 24px thumb and a visible value.
+- **"Se caută fluxul…" could sit there for ten seconds.** The connecting
+  state now says what it is doing, with a spinner over the black frame,
+  and a watchdog gives up after twenty seconds instead of hanging.
+
+### Changed
+
+- **The installed app opens on the landing page**, with shortcuts to the
+  full catalogue and to search.
+- **One quality label per channel.** The trending rows used to print four
+  pills in a row — `SD · AD · S · Știri` — and three of them were about
+  the channel rather than the programme. A channel now carries one quality,
+  the category is plain text, and the vocabulary is the industry's: UHD /
+  FHD / HD / SD, 5.1 / Atmos / Spatial, AD / S / SSL / CC, and the US and
+  UK maturity scales. Nothing is claimed that the data cannot support.
+- **One version line.** `docs/VERSION` said 1.3.0 while the packages said
+  1.5.1 — the monorepo restructure had rolled it back. The line is 1.6.0
+  in all three places, and the changelog carries the four releases that
+  shipped without an entry.
+
+### Added
+
+- **A production-readiness issue** (#17) covering every flow, the player
+  and its buffering, the navigation, the errors, the consistency and the
+  badge vocabulary — each item marked as observed on the live site or
+  found in the source.
+- **The television app gets the same CI.** Lint, type check and build are
+  now a job of their own, so a television release cannot be broken by the
+  web app and cannot break it.
+
+## [1.5.1] — 2026-10-22
+
+The stream token, the failover chain, the directory, the player modal and the
+stills. This release shipped with a version line but without a changelog
+entry; the summary is recovered from the release commit.
+
+## [1.5.0] — 2026-10-22
+
+A signed-in visitor is visible to the server. This release shipped with a
+version line but without a changelog entry; the summary is recovered from
+the release commit.
+
+## [1.4.0] — 2026-10-22
+
+Accounts, the admin desk, twenty-two pages, the intro, the real clock and the
+measured audience. This release shipped with a version line but without a
+changelog entry; the summary is recovered from the release commit.
+
+## [1.3.0] — 2026-10-22
+
+A third source, a new name and a measured audience. This release shipped with
+a version line but without a changelog entry; the summary is recovered from
+the release commit.
 
 ## [1.2.0] — 2026-10-22
 

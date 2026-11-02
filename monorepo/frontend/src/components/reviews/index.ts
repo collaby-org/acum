@@ -9,7 +9,11 @@
 
 export { PopularReviews } from "./popular-reviews";
 export { ReviewCard } from "./review-card";
-export { ReviewComposer, type ComposerChannel } from "./review-composer";
+export {
+  ReviewComposer,
+  type ComposerChannel,
+  type ComposerProgramme,
+} from "./review-composer";
 export { ReactionRow } from "./reaction-row";
 export { Stars, StarPicker } from "./star-rating";
 export { ZoomOverlay, type ZoomPoint } from "./zoom-overlay";
