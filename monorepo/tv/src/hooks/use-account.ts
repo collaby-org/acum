@@ -306,10 +306,10 @@ function encodeSession(token: string): string {
 function syncSessionCookie(token: string | null): void {
   if (typeof document === "undefined") return;
   if (!token) {
-    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
+    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax; secure`;
     return;
   }
-  document.cookie = `${SESSION_COOKIE}=${encodeSession(token)}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; samesite=lax`;
+  document.cookie = `${SESSION_COOKIE}=${encodeSession(token)}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; samesite=lax; secure`;
 }
 
 /* ------------------------------------------------------------------ *

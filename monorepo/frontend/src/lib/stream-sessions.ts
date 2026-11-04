@@ -20,8 +20,19 @@
  */
 import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getUserClient } from "@/lib/supabase/server";
+import { getServiceClient, getUserClient } from "@/lib/supabase/server";
 import { bindsHousehold, streamLimit, type Plan } from "@/lib/supabase/plans";
+
+/**
+ * This module talks to the account registry on the server. It must never be
+ * loaded in a browser bundle, where the node-only imports and the server
+ * Supabase client would not belong.
+ */
+if (typeof window !== "undefined") {
+  throw new Error(
+    "Sesiunile de streaming sunt server-only și nu pot fi importate în browser.",
+  );
+}
 
 /**
  * How long a session counts as alive without a heartbeat.
@@ -114,14 +125,15 @@ async function readLive(
   return (data as LiveRow[] | null) ?? [];
 }
 
-/** Bind the house to this device. Best-effort: the row may not exist yet. */
-async function bindDevice(
-  client: SupabaseClient,
-  userId: string,
-  device: string,
-): Promise<void> {
+/**
+ * Bind the house to this device. Best-effort: the row may not exist yet.
+ *
+ * The write uses the service role because the profile trigger deliberately
+ * rejects self-service changes to `household_device`.
+ */
+async function bindDevice(userId: string, device: string): Promise<void> {
   try {
-    await client
+    await getServiceClient()
       .from("profiles")
       .update({ household_device: device })
       .eq("id", userId);
@@ -219,7 +231,7 @@ export async function claimStream(input: {
   if (bindsHousehold(plan)) {
     const bound = profile.household_device;
     if (!bound) {
-      await bindDevice(client, input.userId, input.device);
+      await bindDevice(input.userId, input.device);
     } else if (bound !== input.device) {
       return { allowed: false, reason: "verify_device" };
     }
@@ -305,7 +317,7 @@ export async function rebindHousehold(input: {
   if (!bindsHousehold(profile.plan as Plan)) return false;
 
   try {
-    const { error } = await client
+    const { error } = await getServiceClient()
       .from("profiles")
       .update({ household_device: input.device })
       .eq("id", input.userId);

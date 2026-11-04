@@ -78,7 +78,7 @@ graph TB
         Q -->|click| R[<Player><br/>modal]
         
         R -->|GET /api/stream?t=…| S[<api/stream><br/>upstream relay]
-        R -->|GET /api/player?u=…| T[<api/player><br/>upstream page]
+        R -->|POST /api/player { channel }| T[<api/player><br/>gate + manifest]
         
         S --> U[cool-etv.net<br/>HLS manifests]
         T --> U

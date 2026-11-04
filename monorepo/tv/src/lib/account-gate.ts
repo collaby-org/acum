@@ -8,10 +8,11 @@
  * So the gate stands in front of the **manifest** — the route that mints the
  * signed address of a stream. A visitor whose allowance is spent gets no
  * address at all: there is nothing to pull, so there is nothing to bypass.
- * The check is the server's own, it uses the account's own token, and the
- * browser never gets a say in it.
+ * The check is the server's own: the account is authenticated first, then
+ * its state is read with the service role because the state RPC is not
+ * exposed to browser sessions. The browser never gets a say in it.
  */
-import { bearerToken, getUserClient, readUser } from "@/lib/supabase/server";
+import { bearerToken, getServiceClient, readUser } from "@/lib/supabase/server";
 
 export type GateVerdict = {
   /** True when the picture may play. */
@@ -61,15 +62,28 @@ export async function gate(request: Request): Promise<GateVerdict> {
     if (cached) return cached;
   }
 
-  let verdict: GateVerdict = { allowed: true, reason: "signed_in", userId };
+  // Access is denied until a trusted read says otherwise. An RPC error must
+  // never turn into an unrestricted stream.
+  let verdict: GateVerdict = {
+    allowed: false,
+    reason: "unknown",
+    userId,
+  };
 
   try {
-    const client = getUserClient(token);
+    const client = getServiceClient();
     const { data, error } = await client.rpc("account_state", {
       p_user: userId,
     });
 
-    if (!error && data && typeof data === "object") {
+    if (error) {
+      console.error("[account-gate] account_state failed", {
+        userId,
+        message: error.message,
+      });
+    } else if (!data || typeof data !== "object") {
+      console.error("[account-gate] account_state returned no state", { userId });
+    } else {
       const state = data as {
         bypass?: boolean;
         plan?: string;
@@ -86,10 +100,11 @@ export async function gate(request: Request): Promise<GateVerdict> {
         userId,
       };
     }
-  } catch {
-    // The database could not be read. The safe answer is the wall: a stream
-    // is worth more than a playback, and the visitor can sign in again.
-    verdict = { allowed: false, reason: "unknown", userId };
+  } catch (error) {
+    console.error("[account-gate] account state could not be read", {
+      userId,
+      message: error instanceof Error ? error.message : String(error),
+    });
   }
 
   lastRead.set(userId, Date.now());

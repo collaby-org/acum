@@ -63,15 +63,25 @@ Three paths, chosen per server, in this order.
 `Server.hlsUrl` holds a resolved HLS playlist. The app plays it with its own
 `hls.js` instance and its own controls.
 
-`GET /api/stream?u=<absolute url>`
+`GET /api/stream?t=<signed token>`
 
+- takes **only** an opaque token minted by `/api/player` for an account that
+  passed the gate; there is no form in which the browser names an upstream
+  address;
 - fetches server-side, spoofing a referer: the target URL's own origin
   first, `https://www.cool-etv.net/` as the fallback;
-- rewrites every URI in an HLS playlist back through `/api/stream`, so the
-  whole segment chain keeps the referer;
-- streams everything else through untouched;
-- refuses any host outside the upstream allowlist (SSRF guard);
-- never caches — playlists are tokenised and short-lived.
+- rewrites every URI in an HLS playlist back through `/api/stream` — as a
+  fresh signed token, never as a plain address — so the whole segment chain
+  keeps the referer;
+- refuses any host outside the exact upstream allowlist (SSRF guard): the
+  hosts in `data/canale-tv-streams.json`, `data/resolved-streams.json`,
+  `data/embed-health.json` and `src/data/channels.ts`, compared whole. Shared
+  suffixes such as `.cfd` or `.shop` are not accepted;
+- follows redirects by hand, at most three hops, checking every hop again —
+  including the resolved address, which must not be private, loopback or
+  link-local;
+- never caches — playlists are tokenised and short-lived, and every response
+  that carries a token is `no-store`.
 
 The playlist URL is discovered by `scripts/resolve-streams.mjs`, which drives
 headless Edge over the DevTools protocol, loads the panel with the cool-etv
@@ -79,25 +89,28 @@ referer, clicks the poster and reads the captured `.m3u8` request. The
 result is committed as `data/resolved-streams.json` and folded into the
 catalogue.
 
-### Path B — sandboxed upstream page (fallback)
+### Path B — the upstream panel, read by the server (fallback)
 
-For a feed with no resolved HLS URL, embed the upstream player page through
-`GET /api/player?u=<absolute url>`:
+For a feed with no resolved HLS URL, the **server** reads the upstream panel
+to find one. The browser never names the address: it names a channel id, and
+the catalogue holds the addresses.
 
-- the server fetches the page and strips every ad and tracker: scripts on
-  `acscdn.com`, `adexchangerapid.com`, `usrpubtrk.com` and
-  `googletagmanager.com`, and any inline `aclib.runPop`, `gtag(` or
-  `dataLayer` call;
-- relative asset references are rewritten to absolute upstream URLs and a
-  `<base href>` is injected;
-- a first-party script auto-clicks `#click-to-play` and neutralises
-  `window.open`;
-- the response carries
-  `Content-Security-Policy: sandbox allow-scripts allow-same-origin allow-presentation`,
-  so the framed document cannot open a popup or navigate the top even if the
-  injected script is stripped.
+`POST /api/player { channel }`
 
-**Scope:** `canale-tv.net`, `canale-tv.com` and `www.youtube.com` only.
+- the account is authenticated and passed through the paywall gate before
+  anything is resolved;
+- the feeds of that channel come from the catalogue, not from the caller —
+  the branch that accepted a `servers[]` list from the browser is deleted;
+- the server probes the panel (a page on `canale-tv.net`, `canale-tv.com` or
+  a host in the allowlist) for the playlist it hides, strips every ad and
+  tracker from what it reads — scripts on `acscdn.com`,
+  `adexchangerapid.com`, `usrpubtrk.com` and `googletagmanager.com`, and any
+  inline `aclib.runPop`, `gtag(` or `dataLayer` call — and answers with a
+  signed manifest;
+- the response is `no-store`.
+
+The earlier form, `GET /api/player?u=<absolute url>`, is gone: a browser that
+can name an address can point the server anywhere.
 
 ### Path C — the cool-etv channel page (last resort)
 
@@ -117,13 +130,34 @@ One component, one click to play. The parent hands it a `Channel`; it picks
 the best server and starts immediately.
 
 - `hls.js` for HLS, native `<video>`; Safari plays HLS natively.
-- Own controls: play/pause, a breathing live indicator, a live-edge-locked
-  scrubber (a TV app does not let you scrub into the past), volume and mute,
-  fullscreen, Picture-in-Picture where supported.
+- Own controls, **in one bar inside the frame**: play/pause, a breathing live
+  indicator, a live-edge-locked scrubber (a TV app does not let you scrub into
+  the past), volume and mute, fullscreen, Picture-in-Picture where supported.
+  The bar reveals itself on hover on a desktop and hides after three seconds;
+  on a phone one tap reveals it and it hides after four seconds, and that tap
+  never toggles the video by accident.
 - **Fallback is automatic**: a playback error or a stall advances to the next
   server in `channel.servers`, and the UI says so ("Server 2/3").
 - Escape closes, the backdrop closes, focus is trapped and restored, body
   scroll locks.
+
+## The security boundary
+
+The proxy is the one place in the app that talks to the upstream, so it is
+also the one place that has to be strict.
+
+- **The token is the only key.** `/api/stream` takes `?t=` and nothing else.
+  The token carries the upstream address, the channel, the viewer and an
+  expiry; it is signed with a key that lives in the environment — or is
+  derived from the Supabase service key — and never in the source.
+- **The gate is in front of the manifest.** `/api/player` authenticates the
+  account, reads its state with the service role, and only then resolves a
+  feed. A visitor whose allowance is spent gets no address at all.
+- **The allowlist is exact.** Whole hosts from the repository's own
+  inventories, never suffixes, never addresses from the caller.
+- **The viewer is not a parameter.** The audience count comes from the signed
+  payload, so it cannot be forged by a query string.
+- **Nothing that carries a token is cached.**
 
 ## The cost, stated plainly
 

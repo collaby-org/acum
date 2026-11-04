@@ -21,9 +21,11 @@ import {
   fetchPlayerPage,
   isAllowedMediaUrl,
   isResolvablePageUrl,
+  isStreamTokenConfigured,
   probePlaylist,
   resolveStreamUrls,
   signStreamToken,
+  StreamPolicyError,
   pickServer,
 } from "@/lib/stream";
 import { catalogueChannel } from "@/lib/catalogue";
@@ -116,50 +118,59 @@ export async function POST(request: Request) {
   if (!verdict.allowed) {
     return Response.json(
       { error: "paywall", reason: verdict.reason },
-      { status: 403 },
+      { status: 403, headers: { "cache-control": "no-store", pragma: "no-cache" } },
+    );
+  }
+
+  if (!isStreamTokenConfigured()) {
+    return Response.json(
+      { error: "Serviciul de streaming nu este configurat." },
+      { status: 503, headers: { "cache-control": "no-store", pragma: "no-cache" } },
     );
   }
 
   let payload: {
     channel?: unknown;
-    servers?: ServerInput[];
     viewer?: unknown;
   };
   try {
     payload = (await request.json()) as {
       channel?: unknown;
-      servers?: ServerInput[];
       /** The viewer, as the browser named them. */
       viewer?: unknown;
     };
   } catch {
-    return Response.json({ error: "Cerere invalidă." }, { status: 400 });
+    return Response.json(
+      { error: "Cerere invalidă." },
+      { status: 400, headers: { "cache-control": "no-store", pragma: "no-cache" } },
+    );
   }
 
-  // The catalogue is the source of truth for the feeds.
-  let servers: ResolvedServer[];
-  let channelId: string | null = null;
-  if (typeof payload.channel === "string") {
-    const channel = catalogueChannel(payload.channel);
-    if (!channel) {
-      return Response.json({ error: "Canal necunoscut." }, { status: 404 });
-    }
-    // The catalogue's feeds, ordered by how likely they are to play: a
-    // resolved playlist first, then the directory's own address, then the
-    // pages whose obfuscation we can undo. Feeds that cannot produce a URL
-    // (an acestream id, a dead page) are dropped here rather than shipped to
-    // the browser to fail on.
-    servers = pickServer(channel).map(readServer);
-    channelId = channel.id;
-  } else {
-    servers = (payload.servers ?? [])
-      .filter(
-        (value): value is ServerInput =>
-          Boolean(value) && typeof value === "object",
-      )
-      .map(readServer)
-      .slice(0, 12);
+  // The catalogue is the source of truth for the feeds. Browser-supplied
+  // server objects are deliberately ignored: they would turn this endpoint
+  // into a request forwarder for arbitrary upstream pages.
+  if (typeof payload.channel !== "string") {
+    return Response.json(
+      { error: "Canalul este obligatoriu." },
+      { status: 400, headers: { "cache-control": "no-store", pragma: "no-cache" } },
+    );
   }
+
+  const channel = catalogueChannel(payload.channel);
+  if (!channel) {
+    return Response.json(
+      { error: "Canal necunoscut." },
+      { status: 404, headers: { "cache-control": "no-store", pragma: "no-cache" } },
+    );
+  }
+
+  // The catalogue's feeds, ordered by how likely they are to play: a
+  // resolved playlist first, then the directory's own address, then the
+  // pages whose obfuscation we can undo. Feeds that cannot produce a URL
+  // (an acestream id, a dead page) are dropped here rather than shipped to
+  // the browser to fail on.
+  const servers = pickServer(channel).map(readServer);
+  const channelId = channel.id;
 
   /**
    * The stream itself.
@@ -190,7 +201,10 @@ export async function POST(request: Request) {
           limit: claim.limit,
           active: claim.active,
         },
-        { status: 429, headers: { "cache-control": "no-store" } },
+        {
+          status: 429,
+          headers: { "cache-control": "no-store", pragma: "no-cache" },
+        },
       );
     }
 
@@ -200,7 +214,10 @@ export async function POST(request: Request) {
           "Acest dispozitiv nu este cel înregistrat pentru casă. Confirmă dispozitivul și reluăm.",
         reason: claim.reason,
       },
-      { status: 403, headers: { "cache-control": "no-store" } },
+      {
+        status: 403,
+        headers: { "cache-control": "no-store", pragma: "no-cache" },
+      },
     );
   }
 
@@ -218,12 +235,26 @@ export async function POST(request: Request) {
       ? payload.viewer
       : null;
 
-  const perServer = await Promise.all(
-    servers.map(async (server) => ({
-      server,
-      candidates: await candidatesOf(server),
-    })),
-  );
+  let perServer: { server: ResolvedServer; candidates: string[] }[];
+  try {
+    perServer = await Promise.all(
+      servers.map(async (server) => ({
+        server,
+        candidates: await candidatesOf(server),
+      })),
+    );
+  } catch (error) {
+    if (error instanceof StreamPolicyError) {
+      return Response.json(
+        { error: "Adresă nepermisă." },
+        {
+          status: 403,
+          headers: { "cache-control": "no-store", pragma: "no-cache" },
+        },
+      );
+    }
+    throw error;
+  }
 
   const seen = new Set<string>();
   const links: { server: ResolvedServer; candidate: string }[] = [];
@@ -236,25 +267,47 @@ export async function POST(request: Request) {
     }
   }
 
-  const sources = await Promise.all(
-    links.map(async ({ server, candidate }) => {
-      const url = `/api/stream?t=${signStreamToken(
-        candidate,
-        channelId ?? undefined,
-        undefined,
-        sessionId ?? undefined,
-      )}`;
-      return {
-        id: server.id,
-        label: server.label,
-        kind: "hls" as const,
-        // The channel and the viewer travel with the address, so the proxy
-        // can count the audience per channel as the segments arrive.
-        url: viewer ? `${url}&v=${encodeURIComponent(viewer)}` : url,
-        playable: await probePlaylist(candidate, 6_000),
-      };
-    }),
-  );
+  let sources: {
+    id: string;
+    label: string;
+    kind: "hls";
+    url: string;
+    playable: boolean;
+  }[];
+  try {
+    sources = await Promise.all(
+      links.map(async ({ server, candidate }) => {
+        const url = `/api/stream?t=${signStreamToken(
+          candidate,
+          channelId ?? undefined,
+          undefined,
+          sessionId ?? undefined,
+          viewer ?? undefined,
+        )}`;
+        return {
+          id: server.id,
+          label: server.label,
+          kind: "hls" as const,
+          // The channel, session and viewer are signed into the address, so
+          // the proxy can count the audience per channel without trusting a
+          // browser-supplied query parameter.
+          url,
+          playable: await probePlaylist(candidate, 6_000),
+        };
+      }),
+    );
+  } catch (error) {
+    if (error instanceof StreamPolicyError) {
+      return Response.json(
+        { error: "Adresă nepermisă." },
+        {
+          status: 403,
+          headers: { "cache-control": "no-store", pragma: "no-cache" },
+        },
+      );
+    }
+    throw error;
+  }
 
   // Only answering links are handed over when there is at least one: the
   // player would otherwise sit eight seconds on a dead address before it
@@ -262,10 +315,15 @@ export async function POST(request: Request) {
   // can be wrong, and the browser is the better judge.
   const playable = sources.filter((source) => source.playable);
 
-  return Response.json({
-    sources: playable.length > 0 ? playable : sources,
-    session: sessionId,
-  });
+  return Response.json(
+    {
+      sources: playable.length > 0 ? playable : sources,
+      session: sessionId,
+    },
+    {
+      headers: { "cache-control": "no-store", pragma: "no-cache" },
+    },
+  );
 }
 
 export type { Server };

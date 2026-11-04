@@ -1,6 +1,6 @@
 {
   "name": "acum",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "verify:ui": "node scripts/verify-ui.mjs",
     "verify:player": "node scripts/verify-player.mjs",
+    "verify:mobile": "node scripts/verify-mobile.mjs",
     "verify:fallback": "node scripts/verify-fallback.mjs",
     "verify:acum": "node scripts/verify-acum.mjs",
     "data:scrape": "node scripts/scrape-channels.mjs",

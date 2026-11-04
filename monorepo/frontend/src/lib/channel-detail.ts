@@ -23,13 +23,19 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import {
   matchGuideChannels,
+  normalizeGuide,
   resolveSchedule,
+  type EpgGuide,
   type EpgProgramme,
 } from "@/components/now-next";
 import { catalogueChannel } from "@/lib/catalogue";
 import { categoryLabel } from "@/lib/navigation";
 import { liveAudience } from "@/lib/audience";
-import { loadFullGuide } from "@/lib/guide";
+import {
+  readChannelProgrammes,
+  readChannelProgrammesById,
+  type EpgProgramme as SourceProgramme,
+} from "@/lib/epg-source";
 
 /* ------------------------------------------------------------------ *
  * The shape the endpoint answers with
@@ -140,6 +146,19 @@ type SecondaryMeta = {
   views: number | null;
   description: string | null;
   category: string | null;
+  /**
+   * The source's own number for this channel.
+   *
+   * It is the door to the fast guide: the source's JSON endpoint answers
+   * with a channel's rows when it is asked by number, and by nothing else.
+   */
+  channelId: number | null;
+  /** The source's own name for the channel. */
+  name: string | null;
+  /** What the directory says is on air right now. */
+  epgTitle: string | null;
+  epgStart: string | null;
+  epgEnd: string | null;
 };
 
 const SECONDARY_URL = "https://canaletvlive.online/api/channels";
@@ -170,8 +189,34 @@ function readMeta(entry: Record<string, unknown>): SecondaryMeta | null {
     typeof entry.category_name === "string" && entry.category_name.trim()
       ? entry.category_name.trim()
       : null;
+  const channelId =
+    typeof entry.id === "number" && Number.isFinite(entry.id) ? entry.id : null;
+  const name =
+    typeof entry.name === "string" && entry.name.trim() ? entry.name.trim() : null;
+  const epgTitle =
+    typeof entry.epg_title === "string" && entry.epg_title.trim()
+      ? entry.epg_title.trim()
+      : null;
+  const epgStart =
+    typeof entry.start_time === "string" && entry.start_time.trim()
+      ? entry.start_time.trim()
+      : null;
+  const epgEnd =
+    typeof entry.end_time === "string" && entry.end_time.trim()
+      ? entry.end_time.trim()
+      : null;
 
-  return { slug, views, description, category };
+  return {
+    slug,
+    views,
+    description,
+    category,
+    channelId,
+    name,
+    epgTitle,
+    epgStart,
+    epgEnd,
+  };
 }
 
 /**
@@ -250,7 +295,13 @@ async function loadSnapshot(): Promise<Map<string, SecondaryMeta>> {
       "utf8",
     );
     const payload = JSON.parse(raw) as {
-      channels?: { slug?: string; description?: string; category?: string }[];
+      channels?: {
+        slug?: string;
+        description?: string;
+        category?: string;
+        id?: number;
+        name?: string;
+      }[];
     };
     for (const entry of payload.channels ?? []) {
       if (!entry || typeof entry.slug !== "string") continue;
@@ -258,6 +309,8 @@ async function loadSnapshot(): Promise<Map<string, SecondaryMeta>> {
         slug: entry.slug,
         description: entry.description,
         category_name: entry.category,
+        id: entry.id,
+        name: entry.name,
       });
       if (meta) bySlug.set(meta.slug, meta);
     }
@@ -337,12 +390,88 @@ function programmeOf(programme: EpgProgramme): ChannelProgramme {
   };
 }
 
+/* ------------------------------------------------------------------ *
+ * The guide of one channel
+ * ------------------------------------------------------------------ */
+
+/**
+ * The committed guide, read once per process.
+ *
+ * It is the last door: a snapshot of a day's schedule, but a schedule is
+ * better than an empty panel. It is opened only when the source cannot
+ * answer, so the file is read at most once.
+ */
+let committedGuide: EpgGuide | null | undefined;
+
+async function loadCommittedGuide(): Promise<EpgGuide | null> {
+  if (committedGuide !== undefined) return committedGuide;
+  try {
+    const raw = await readFile(
+      path.join(process.cwd(), "data", "epg.json"),
+      "utf8",
+    );
+    committedGuide = normalizeGuide(JSON.parse(raw));
+  } catch {
+    committedGuide = null;
+  }
+  return committedGuide;
+}
+
+/**
+ * One channel's rows, in the shape the guide is read from.
+ *
+ * The same shape `normalizeGuide` already reads, so the panel resolves the
+ * schedule on the same code path whether the rows came from the source or
+ * from the committed file.
+ */
+function guideFromRows(
+  programmes: SourceProgramme[],
+  slug: string | null,
+  name: string | null,
+): EpgGuide {
+  const key = slug ?? "channel";
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Bucharest",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+  return normalizeGuide({
+    channels: {
+      [key]: {
+        date: today,
+        name: name ?? key,
+        epgId: null,
+        now: null,
+        next: [],
+        programmes,
+      },
+    },
+  });
+}
+
+/** True when one of the rows is the programme that is on air right now. */
+function coversNow(programmes: SourceProgramme[]): boolean {
+  const moment = Date.now();
+  return programmes.some((programme) => {
+    const start = Date.parse(programme.startsAt);
+    const end = Date.parse(programme.endsAt);
+    if (!Number.isFinite(start) || !Number.isFinite(end)) return false;
+    return moment >= start && moment < end;
+  });
+}
+
 /**
  * The sheet of one channel, or null when the catalogue has no such
  * channel.
  *
  * The clock is read here, on the server: what is on now is a property of
  * the request, not of the component that shows it.
+ *
+ * The guide is read for THIS channel only. Walking every channel's guide
+ * to answer a question about one of them is what used to make the panel
+ * wait three seconds for a sheet about one programme.
  */
 export async function loadChannelDetail(
   id: string,
@@ -350,11 +479,46 @@ export async function loadChannelDetail(
   const channel = catalogueChannel(id);
   if (!channel) return null;
 
-  const [guide, live, snapshot] = await Promise.all([
-    loadFullGuide(),
+  // The snapshot is on disk and answers at once. It carries the source's
+  // own number for every channel, and that number is the door to the fast
+  // guide — so the guide is asked for while the live directory is still on
+  // its way.
+  const snapshot = await loadSnapshot();
+  const fallback = secondaryMetaFor(channel, snapshot);
+
+  const [live, rows] = await Promise.all([
     loadSecondaryMeta(),
-    loadSnapshot(),
+    fallback?.channelId
+      ? readChannelProgrammesById(fallback.channelId)
+      : Promise.resolve([] as SourceProgramme[]),
   ]);
+
+  const meta = secondaryMetaFor(channel, live);
+  const slug = meta?.slug ?? fallback?.slug ?? null;
+
+  let programmes: SourceProgramme[] = rows;
+  if (
+    programmes.length === 0 &&
+    meta?.channelId &&
+    meta.channelId !== fallback?.channelId
+  ) {
+    programmes = await readChannelProgrammesById(meta.channelId);
+  }
+  if (programmes.length === 0 && slug) {
+    programmes = await readChannelProgrammes(slug);
+  }
+  if (programmes.length > 0 && !coversNow(programmes) && slug) {
+    // The fast answer starts after this moment. The watch page carries the
+    // whole day, so it is asked when the rows do not cover the moment the
+    // panel is asking about.
+    const wholeDay = await readChannelProgrammes(slug);
+    if (wholeDay.length > 0) programmes = wholeDay;
+  }
+
+  const guide =
+    programmes.length > 0
+      ? guideFromRows(programmes, slug, meta?.name ?? fallback?.name ?? null)
+      : await loadCommittedGuide();
 
   let now: ChannelProgramme | null = null;
   let next: ChannelProgramme[] = [];
@@ -369,10 +533,28 @@ export async function loadChannelDetail(
     }
   }
 
+  // The directory says what is on air in its own words. When the rows do
+  // not cover this very moment, the directory's answer is the honest one.
+  if (!now && meta?.epgTitle && meta.epgStart && meta.epgEnd) {
+    const start = Date.parse(meta.epgStart);
+    const end = Date.parse(meta.epgEnd);
+    if (
+      Number.isFinite(start) &&
+      Number.isFinite(end) &&
+      Date.now() >= start &&
+      Date.now() < end
+    ) {
+      now = {
+        title: meta.epgTitle,
+        startsAt: isoInBucharest(start),
+        endsAt: isoInBucharest(end),
+        description: null,
+      };
+    }
+  }
+
   // The live list knows the numbers; the snapshot knows the words. Either
   // one can be missing, and the other one fills the gap.
-  const meta = secondaryMetaFor(channel, live);
-  const fallback = secondaryMetaFor(channel, snapshot);
 
   return {
     id: channel.id,

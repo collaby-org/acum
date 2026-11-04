@@ -338,6 +338,11 @@ begin
     new.plan_until := old.plan_until;
     new.bypass := old.bypass;
     new.household_id := old.household_id;
+    new.household_device := old.household_device;
+    new.note := old.note;
+    new.email := old.email;
+    new.last_seen_at := old.last_seen_at;
+    new.created_at := old.created_at;
   end if;
   return new;
 end;
@@ -455,9 +460,11 @@ create policy "messages can be written"
   with check (true);
 
 drop policy if exists "messages can be read by their author" on public.messages;
-create policy "messages can be read by their author"
+drop policy if exists "messages are the desk's alone" on public.messages;
+drop policy if exists "messages can be read by the desk" on public.messages;
+create policy "messages can be read by the desk"
   on public.messages for select
-  using (auth.uid() is not null);
+  using (false);
 
 -- The statistics are the desk's alone.
 drop policy if exists "stats are the desk's" on public.daily_stats;
@@ -522,5 +529,11 @@ as $$
   where p.id = p_user;
 $$;
 
-grant execute on function public.account_state(uuid) to anon, authenticated;
-grant execute on function public.minutes_watched_today(uuid) to anon, authenticated;
+-- Account state contains plan, bypass, household and watch-time details. The
+-- server reads it with the service role after authenticating the caller; a
+-- browser session must not be able to invoke it for an arbitrary user id.
+revoke execute on function public.account_state(uuid) from public, anon, authenticated;
+grant execute on function public.account_state(uuid) to service_role;
+
+revoke execute on function public.minutes_watched_today(uuid) from public, anon, authenticated;
+grant execute on function public.minutes_watched_today(uuid) to service_role;

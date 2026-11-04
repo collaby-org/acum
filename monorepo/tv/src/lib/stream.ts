@@ -5,9 +5,20 @@
  * that the browser hands back to `/api/stream`.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
-import type { UpstreamChannel, UpstreamServer } from "@/data/types";
+import { lookup } from "node:dns/promises";
+import { isIP } from "node:net";
 import type { Quality } from "@/data/types";
 import { QUALITY_META } from "@/lib/channel-meta";
+
+/**
+ * This module signs server-side stream tokens and reaches upstream hosts.
+ * It must never be loaded in a browser bundle.
+ */
+if (typeof window !== "undefined") {
+  throw new Error(
+    "Modulul de flux este server-only și nu poate fi importat în browser.",
+  );
+}
 
 /**
  * The upstream media hosts answer with a 300 kB HTML cloaking page unless the
@@ -66,36 +77,47 @@ export const SECONDARY_HOSTS = [
 /** The Referer the second source's media host accepts. */
 export const SECONDARY_REFERER = "https://canaletvlive.online/";
 
-/** Host suffixes the media proxy is allowed to pull bytes from. */
-export const MEDIA_HOST_SUFFIXES = [
-  ".cfd",
-  ".shop",
-  ".live",
-  ".top",
-  ".xyz",
-  ".site",
-  ".io",
-  ".tv",
-  ".cc",
-  ".pw",
-  ".stream",
-];
-
 /**
- * Hosts that do not sit under a shared suffix but are ours to relay.
+ * The exact upstream media hosts used by the checked-in catalogue.
  *
- * Two upstream media hosts are named this way — one on a `.com`, one on a
- * punycode `.space` label. They are listed whole on purpose: allowing the
- * whole suffix would turn the proxy into an egress for any host on a
- * general-purpose TLD.
+ * This list is the union of the real upstream hosts in the repository's
+ * stream inventories (`data/canale-tv-streams.json`, `data/resolved-streams.json`,
+ * `data/embed-health.json`) and `src/data/channels.ts`. Suffixes are not
+ * accepted: a shared suffix would turn the proxy into an open egress.
+ * Punycode names are kept exactly as the URL parser exposes them.
  */
-const MEDIA_HOSTS = ["alpha1.cool-itv.com", "iron1.xn--x2rw19a.space"];
+export const MEDIA_HOSTS = [
+  "alpha1.cool-itv.com",
+  "alpha1.yozefina.cfd",
+  "arwen1.panaka001.cfd",
+  "arwen1.panaka1.cfd",
+  "atlantida1.aquax001.shop",
+  "ceres1.vizionman.cfd",
+  "cronos.mangora1.cfd",
+  "epsilon1.visionxman1.cfd",
+  "flash1.bogulus.cfd",
+  "flash1.bogulus1.cfd",
+  "galandriel1.thobias001.cfd",
+  "galandriel1.thobias11.cfd",
+  "hulky.lozixy.cfd",
+  "iron1.jarvisx1.cfd",
+  "iron1.xn--x2rw19a.space",
+  "kuruk1.xn--okq6e.shop",
+  "omega1.visionxmans1.cfd",
+  "onyx1.mofta001.cfd",
+  "onyx1.mofta1.cfd",
+  "pulse1.sanseny001.shop",
+  "pulse1.xn--x2rv05jjkg.shop",
+  "saruman1.tharen001.cfd",
+  "thor1.syndula001.cfd",
+  "ultra3.ronanx001.shop",
+];
 
 /** How long a proxy token stays usable. */
 const TOKEN_TTL_SECONDS = 60 * 60 * 6;
 
-/** Signs the proxy tokens. Server-side only; never shipped to the browser. */
-const TOKEN_SECRET = "acum-stream-proxy-v1";
+/** The label used when the token key is derived from the Supabase key. */
+const TOKEN_SECRET_LABEL = "acum-stream-token-v1";
 
 /* ------------------------------------------------------------------ *
  * URL policy
@@ -108,6 +130,8 @@ export function isAllowedPlayerUrl(url: string | null | undefined): url is strin
     const parsed = new URL(url);
     return (
       parsed.protocol === "https:" &&
+      !parsed.username &&
+      !parsed.password &&
       PLAYER_HOSTS.includes(parsed.hostname.toLowerCase())
     );
   } catch {
@@ -120,11 +144,11 @@ export function isAllowedMediaUrl(url: string | null | undefined): boolean {
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    if (parsed.protocol !== "https:") return false;
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password) {
+      return false;
+    }
     const host = parsed.hostname.toLowerCase();
-    if (SECONDARY_HOSTS.includes(host)) return true;
-    if (MEDIA_HOSTS.includes(host)) return true;
-    return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
+    return SECONDARY_HOSTS.includes(host) || MEDIA_HOSTS.includes(host);
   } catch {
     return false;
   }
@@ -135,10 +159,11 @@ export function isAllowedEmbedUrl(url: string | null | undefined): url is string
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    if (parsed.protocol !== "https:") return false;
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password) {
+      return false;
+    }
     const host = parsed.hostname.toLowerCase();
-    if (EMBED_HOSTS.includes(host)) return true;
-    return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
+    return EMBED_HOSTS.includes(host) || MEDIA_HOSTS.includes(host);
   } catch {
     return false;
   }
@@ -147,18 +172,19 @@ export function isAllowedEmbedUrl(url: string | null | undefined): url is string
 /**
  * True for an upstream page we can read and try to resolve.
  *
- * That is the player pages on canale-tv.net and the panels on the `.cfd` and
- * `.shop` hosts — all of them hide their playlist behind the same
+ * That is the player pages on canale-tv.net and the panel hosts from the
+ * checked-in catalogue — all of them hide their playlist behind the same
  * obfuscation.
  */
 export function isResolvablePageUrl(url: string | null | undefined): url is string {
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    if (parsed.protocol !== "https:") return false;
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password) {
+      return false;
+    }
     const host = parsed.hostname.toLowerCase();
-    if (PLAYER_HOSTS.includes(host)) return true;
-    return MEDIA_HOST_SUFFIXES.some((suffix) => host.endsWith(suffix));
+    return PLAYER_HOSTS.includes(host) || MEDIA_HOSTS.includes(host);
   } catch {
     return false;
   }
@@ -234,9 +260,156 @@ function orderedReferers(url: string): string[] {
   return [cached, ...chain.filter((referer) => referer !== cached)];
 }
 
-/** True when the upstream sent us to Google instead of the bytes. */
-function isGoogleRedirect(url: string): boolean {
-  return url.includes("google.com");
+/** The largest number of redirects an upstream request may follow. */
+const MAX_REDIRECTS = 3;
+
+/** An upstream request that violated the network policy. */
+export class StreamPolicyError extends Error {
+  /** The URL that was refused, when there was one. */
+  readonly target: string | null;
+
+  constructor(message = "Adresă nepermisă.", target: string | null = null) {
+    super(message);
+    this.name = "StreamPolicyError";
+    this.target = target;
+  }
+}
+
+/** True for an IPv4 address that must never be reached from the proxy. */
+function isPrivateIpv4(address: string): boolean {
+  const parts = address.split(".").map(Number);
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part))) {
+    return true;
+  }
+  const [a, b] = parts;
+  return (
+    a === 0 ||
+    a === 10 ||
+    a === 127 ||
+    (a === 100 && b >= 64 && b <= 127) ||
+    (a === 169 && b === 254) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 168) ||
+    (a === 192 && b === 0 && parts[2] === 0) ||
+    (a === 198 && (b === 18 || b === 19)) ||
+    a >= 224
+  );
+}
+
+/** True for an IPv6 address that must never be reached from the proxy. */
+function isPrivateIpv6(address: string): boolean {
+  const normalized = address.toLowerCase();
+  if (normalized === "::" || normalized === "::1") return true;
+  if (normalized.startsWith("fc") || normalized.startsWith("fd")) return true;
+  if (normalized.startsWith("fe8") || normalized.startsWith("fe9")) return true;
+  if (normalized.startsWith("fea") || normalized.startsWith("feb")) return true;
+  if (normalized.startsWith("ff")) return true;
+
+  const mapped = normalized.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+  return mapped ? isPrivateIpv4(mapped[1]) : false;
+}
+
+/** True when an IP address is loopback, private, link-local or multicast. */
+function isPrivateAddress(address: string): boolean {
+  const family = isIP(address);
+  if (family === 4) return isPrivateIpv4(address);
+  if (family === 6) return isPrivateIpv6(address);
+  return true;
+}
+
+/**
+ * True when every address behind a hostname is publicly routable.
+ *
+ * The allowlist is an exact hostname list, but a hostname can still resolve
+ * to a private address. The DNS answer is checked before the socket is
+ * opened and again after every redirect.
+ */
+async function isPublicHost(hostname: string): Promise<boolean> {
+  const bare = hostname.replace(/^\[|\]$/g, "");
+  if (isIP(bare)) return !isPrivateAddress(bare);
+
+  try {
+    const addresses = await lookup(hostname, { all: true, verbatim: true });
+    return (
+      addresses.length > 0 &&
+      addresses.every(({ address }) => !isPrivateAddress(address))
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Validate one URL before an upstream request is made. */
+async function assertPublicUrl(
+  url: string,
+  isAllowed: (candidate: string) => boolean,
+): Promise<void> {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new StreamPolicyError();
+  }
+
+  if (
+    parsed.protocol !== "https:" ||
+    parsed.username ||
+    parsed.password ||
+    !isAllowed(parsed.toString())
+  ) {
+    throw new StreamPolicyError("Adresă nepermisă.", parsed.toString());
+  }
+
+  if (!(await isPublicHost(parsed.hostname))) {
+    throw new StreamPolicyError("Adresă nepermisă.", parsed.toString());
+  }
+}
+
+/**
+ * Fetch an upstream URL while following redirects by hand.
+ *
+ * Every hop is checked against the same exact-host policy and its DNS
+ * answer before the next request is made. A redirect can therefore never
+ * take the proxy from an allowed host to an internal address.
+ */
+async function fetchWithValidatedRedirects(
+  initialUrl: string,
+  isAllowed: (candidate: string) => boolean,
+  init: RequestInit,
+): Promise<Response | null> {
+  let current = initialUrl;
+  let redirects = 0;
+
+  for (;;) {
+    await assertPublicUrl(current, isAllowed);
+    const response = await fetch(current, {
+      ...init,
+      redirect: "manual",
+    });
+
+    if (![301, 302, 303, 307, 308].includes(response.status)) {
+      return response;
+    }
+
+    const location = response.headers.get("location");
+    if (!location || redirects >= MAX_REDIRECTS) {
+      throw new StreamPolicyError();
+    }
+
+    current = new URL(location, current).toString();
+    redirects += 1;
+  }
+}
+
+/** True when a refused redirect is the upstream's known Google fallback. */
+function isGoogleFallback(target: string | null): boolean {
+  if (!target) return false;
+  try {
+    const host = new URL(target).hostname.toLowerCase();
+    return host === "google.com" || host.endsWith(".google.com");
+  } catch {
+    return false;
+  }
 }
 
 /** Resolve a playlist-relative URI against the playlist it came from. */
@@ -329,9 +502,62 @@ export function rewritePlaylist(
  * Proxy tokens
  * ------------------------------------------------------------------ */
 
-function sign(payload: string): string {
-  return createHmac("sha256", TOKEN_SECRET).update(payload).digest("base64url");
+/** The derived token key, cached for the lifetime of this process. */
+let cachedTokenSecret: string | null = null;
+
+/**
+ * The token key for this deployment.
+ *
+ * `STREAM_TOKEN_SECRET` is used when it is present. Otherwise the key is
+ * derived from the server-only Supabase service-role key with a distinct
+ * label, so rotating the service-role key also invalidates old stream
+ * tokens. The derived value is cached and remains stable for this process.
+ */
+function configuredTokenSecret(): string | null {
+  const explicit = process.env.STREAM_TOKEN_SECRET;
+  if (explicit) return explicit;
+
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) return null;
+
+  if (!cachedTokenSecret) {
+    cachedTokenSecret = createHmac("sha256", serviceRoleKey)
+      .update(TOKEN_SECRET_LABEL)
+      .digest("base64url");
+  }
+  return cachedTokenSecret;
 }
+
+/** True when this deployment can mint and verify stream tokens. */
+export function isStreamTokenConfigured(): boolean {
+  return configuredTokenSecret() !== null;
+}
+
+/** Sign a token payload, or fail closed when this deployment has no key. */
+function sign(payload: string): string {
+  const secret = configuredTokenSecret();
+  if (!secret) {
+    throw new Error(
+      "Cheia de semnare a tokenurilor de streaming nu este configurată.",
+    );
+  }
+  return createHmac("sha256", secret).update(payload).digest("base64url");
+}
+
+type StreamTokenPayload = {
+  /** Payload format version. */
+  v: 1;
+  /** Expiry time, in seconds since the Unix epoch. */
+  exp: number;
+  /** The upstream address. */
+  url: string;
+  /** The catalogue channel the address belongs to. */
+  channelId?: string;
+  /** The registered stream session. */
+  sessionId?: string;
+  /** The audience identifier for this playback. */
+  viewerId?: string;
+};
 
 /**
  * Wrap an upstream URL into an opaque, signed token.
@@ -339,25 +565,30 @@ function sign(payload: string): string {
  * The browser only ever sees `/api/stream?t=…`, so the upstream hosts stay
  * invisible to it and the proxy cannot be pointed at an arbitrary address.
  *
- * The token also carries the **channel** the address belongs to. That is
- * what lets the proxy count the audience per channel: the segment requests
- * arrive without a name, and the name is signed into the address they came
- * from.
+ * The token also carries the channel, stream session and viewer id. Those
+ * values are signed, so the audience count cannot be moved to another
+ * channel or viewer by editing the URL.
  */
 export function signStreamToken(
   url: string,
   channelId?: string,
   ttlSeconds = TOKEN_TTL_SECONDS,
   sessionId?: string,
+  viewerId?: string,
 ): string {
-  const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
-  // The session field is only written when there is one, so a token without
-  // it has the same shape it always had.
-  const payload = Buffer.from(
-    `${expires}:${channelId ?? ""}:${sessionId ? `${sessionId}:` : ""}${url}`,
-    "utf8",
-  ).toString("base64url");
-  return `${payload}.${sign(payload)}`;
+  const payload: StreamTokenPayload = {
+    v: 1,
+    exp: Math.floor(Date.now() / 1000) + ttlSeconds,
+    url,
+  };
+  if (channelId) payload.channelId = channelId;
+  if (sessionId) payload.sessionId = sessionId;
+  if (viewerId) payload.viewerId = viewerId;
+
+  const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString(
+    "base64url",
+  );
+  return `${encoded}.${sign(encoded)}`;
 }
 
 /** What a token stands for. */
@@ -370,10 +601,11 @@ export type StreamToken = {
    * The registered stream this token belongs to, when it has one.
    *
    * It is what the player's heartbeat keeps alive, and what a second screen
-   * is counted against. Tokens minted before the registry existed do not
-   * carry one, and they still open — the address is what matters.
+   * is counted against.
    */
   sessionId: string | null;
+  /** The signed audience identifier used for the live-viewer count. */
+  viewerId: string | null;
 };
 
 /** Unwrap a token back into the upstream URL, or null when it is not ours. */
@@ -383,43 +615,44 @@ export function readStreamToken(token: string): StreamToken | null {
   const payload = token.slice(0, separator);
   const signature = token.slice(separator + 1);
 
-  const given = Buffer.from(signature);
-  const expected = Buffer.from(sign(payload));
-  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+  let expected: string;
+  try {
+    expected = sign(payload);
+  } catch {
     return null;
   }
 
-  const decoded = Buffer.from(payload, "base64url").toString("utf8");
-  const firstColon = decoded.indexOf(":");
-  if (firstColon <= 0) return null;
-
-  const expires = Number(decoded.slice(0, firstColon));
-  if (!Number.isFinite(expires) || expires * 1000 < Date.now()) return null;
-
-  const rest = decoded.slice(firstColon + 1);
-  const secondColon = rest.indexOf(":");
-  // A token written before the channel was carried still opens: the
-  // address is what matters, and the channel is only used for the count.
-  const channelId = secondColon > 0 ? rest.slice(0, secondColon) : "";
-  const tail = secondColon > 0 ? rest.slice(secondColon + 1) : rest;
-
-  // The session sits between the channel and the address. A tail that opens
-  // with the address itself carries none — and a token minted with an empty
-  // session field opens with its own separator, which is dropped the same way.
-  let sessionId = "";
-  let url = tail;
-  if (!/^https?:/i.test(tail)) {
-    const thirdColon = tail.indexOf(":");
-    if (thirdColon === 0) {
-      url = tail.slice(1);
-    } else if (thirdColon > 0) {
-      sessionId = tail.slice(0, thirdColon);
-      url = tail.slice(thirdColon + 1);
-    }
+  const given = Buffer.from(signature);
+  const wanted = Buffer.from(expected);
+  if (given.length !== wanted.length || !timingSafeEqual(given, wanted)) {
+    return null;
   }
 
-  if (!isAllowedMediaUrl(url)) return null;
-  return { url, channelId: channelId || null, sessionId: sessionId || null };
+  let decoded: StreamTokenPayload;
+  try {
+    decoded = JSON.parse(
+      Buffer.from(payload, "base64url").toString("utf8"),
+    ) as StreamTokenPayload;
+  } catch {
+    return null;
+  }
+
+  if (
+    decoded.v !== 1 ||
+    !Number.isFinite(decoded.exp) ||
+    decoded.exp * 1000 < Date.now() ||
+    typeof decoded.url !== "string"
+  ) {
+    return null;
+  }
+
+  if (!isAllowedMediaUrl(decoded.url)) return null;
+  return {
+    url: decoded.url,
+    channelId: decoded.channelId || null,
+    sessionId: decoded.sessionId || null,
+    viewerId: decoded.viewerId || null,
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -471,38 +704,6 @@ const AUTO_PLAY_SCRIPT = `<script>(function(){
 })();</script>`;
 
 /**
- * Sends the upstream's own player through our proxy.
- *
- * Served from our origin, the page would fetch its playlist with our
- * Referer, which the media hosts refuse. This puts the proxy in front of
- * every playlist URL the page asks for.
- */
-const STREAM_REWRITER = `<script>(function(){
-  function rewrite(url){
-    if (typeof url !== 'string') return url;
-    if (!/\\.m3u8/i.test(url)) return url;
-    if (url.indexOf('/api/stream') === 0) return url;
-    return '/api/stream?u=' + encodeURIComponent(url);
-  }
-  try {
-    if (window.Hls && window.Hls.prototype) {
-      var loadSource = window.Hls.prototype.loadSource;
-      window.Hls.prototype.loadSource = function(url, ctx){ return loadSource.call(this, rewrite(url), ctx); };
-    }
-  } catch (e) {}
-  try {
-    var desc = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
-    if (desc && desc.set) {
-      Object.defineProperty(HTMLMediaElement.prototype, 'src', {
-        get: desc.get,
-        set: function(value){ desc.set.call(this, rewrite(value)); },
-        configurable: true,
-      });
-    }
-  } catch (e) {}
-})();</script>`;
-
-/**
  * Strip the ad scripts and the trackers out of an upstream player page.
  *
  * The page is served from our own origin with a sandboxed content-security
@@ -532,11 +733,8 @@ export function sanitizeUpstreamPage(html: string, baseUrl: string): string {
   // A base tag, so the relative assets still resolve against the upstream.
   out = out.replace(/<head([^>]*)>/i, `<head$1><base href="${baseUrl}">`);
 
-  // Our helpers go last, after the upstream's own scripts.
-  out = out.replace(
-    /<\/body>/i,
-    `${STREAM_REWRITER}${AUTO_PLAY_SCRIPT}</body>`,
-  );
+  // Our helper goes last, after the upstream's own scripts.
+  out = out.replace(/<\/body>/i, `${AUTO_PLAY_SCRIPT}</body>`);
 
   return out;
 }
@@ -549,24 +747,29 @@ export function sanitizeUpstreamPage(html: string, baseUrl: string): string {
 export async function fetchPlayerPage(url: string): Promise<string | null> {
   for (const referer of orderedReferers(url)) {
     try {
-      const response = await fetch(url, {
-        headers: {
-          "user-agent": UPSTREAM_USER_AGENT,
-          referer,
-          accept: "text/html,application/xhtml+xml",
+      const response = await fetchWithValidatedRedirects(
+        url,
+        isResolvablePageUrl,
+        {
+          headers: {
+            "user-agent": UPSTREAM_USER_AGENT,
+            referer,
+            accept: "text/html,application/xhtml+xml",
+          },
+          cache: "no-store",
+          signal: AbortSignal.timeout(15_000),
         },
-        cache: "no-store",
-        redirect: "follow",
-        signal: AbortSignal.timeout(15_000),
-      });
-      if (!response.ok) continue;
-      // A host that does not know our Referer sends us to Google.
-      if (isGoogleRedirect(response.url)) continue;
+      );
+      if (!response?.ok) continue;
       const body = await response.text();
       if (!body.includes("cat1")) continue;
       rememberReferer(hostOf(url), referer);
       return body;
-    } catch {
+    } catch (error) {
+      if (error instanceof StreamPolicyError) {
+        if (isGoogleFallback(error.target)) continue;
+        throw error;
+      }
       /* try the next Referer */
     }
   }
@@ -577,23 +780,22 @@ export async function fetchPlayerPage(url: string): Promise<string | null> {
 export async function fetchEmbedPage(url: string): Promise<string | null> {
   for (const referer of orderedReferers(url)) {
     try {
-      const response = await fetch(url, {
+      const response = await fetchWithValidatedRedirects(url, isAllowedEmbedUrl, {
         headers: {
           "user-agent": UPSTREAM_USER_AGENT,
           referer,
           accept: "text/html,application/xhtml+xml",
         },
         cache: "no-store",
-        redirect: "follow",
         signal: AbortSignal.timeout(15_000),
       });
-      if (!response.ok) continue;
-      if (isGoogleRedirect(response.url)) continue;
+      if (!response?.ok) continue;
       const body = await response.text();
       if (!body.trimStart().startsWith("<")) continue;
       rememberReferer(hostOf(url), referer);
       return body;
-    } catch {
+    } catch (error) {
+      if (error instanceof StreamPolicyError) throw error;
       /* try the next Referer */
     }
   }
@@ -638,6 +840,8 @@ export type UpstreamStream = {
   head: Uint8Array;
   rest: ReadableStream<Uint8Array>;
   referer: string;
+  /** The final URL, after any validated redirect. */
+  finalUrl: string;
 };
 
 /**
@@ -651,21 +855,23 @@ export async function openUpstream(url: string): Promise<UpstreamStream | null> 
   for (const referer of orderedReferers(url)) {
     let response: Response;
     try {
-      response = await fetch(url, {
+      response = (await fetchWithValidatedRedirects(url, isAllowedMediaUrl, {
         headers: {
           "user-agent": UPSTREAM_USER_AGENT,
           referer,
         },
         cache: "no-store",
-        redirect: "follow",
         signal: AbortSignal.timeout(30_000),
-      });
-    } catch {
+      })) as Response;
+    } catch (error) {
+      if (error instanceof StreamPolicyError) {
+        if (isGoogleFallback(error.target)) continue;
+        throw error;
+      }
       continue;
     }
 
     if (!response.ok || !response.body) continue;
-    if (isGoogleRedirect(response.url)) continue;
 
     const { head, rest } = await splitFirstChunk(response.body);
     const probe = new TextDecoder().decode(head.slice(0, 32)).trimStart();
@@ -674,7 +880,7 @@ export async function openUpstream(url: string): Promise<UpstreamStream | null> 
     if (probe.startsWith("<")) continue;
 
     rememberReferer(hostOf(url), referer);
-    return { head, rest, referer };
+    return { head, rest, referer, finalUrl: response.url || url };
   }
 
   return null;
@@ -702,17 +908,25 @@ export async function probePlaylist(
     const left = deadline - Date.now();
     if (left <= 0) return false;
     try {
-      const response = await fetch(url, {
-        headers: {
-          "user-agent": UPSTREAM_USER_AGENT,
-          referer,
+      const response = await fetchWithValidatedRedirects(
+        url,
+        isAllowedMediaUrl,
+        {
+          headers: {
+            "user-agent": UPSTREAM_USER_AGENT,
+            referer,
+          },
+          cache: "no-store",
+          signal: AbortSignal.timeout(Math.min(left, 8_000)),
         },
-        cache: "no-store",
-        signal: AbortSignal.timeout(Math.min(left, 8_000)),
-      });
-      if (!response.ok) continue;
+      );
+      if (!response?.ok) continue;
       if (isPlaylist(await response.text())) return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof StreamPolicyError) {
+        if (isGoogleFallback(error.target)) continue;
+        throw error;
+      }
       /* try the next Referer */
     }
   }

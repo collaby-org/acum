@@ -157,6 +157,12 @@
    browser rather than shipped as an image. */
 :root {
   --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* iOS safe areas, shared by the player, the modal and the mobile nav. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 }
 
 /* ------------------------------------------------------------------ *
@@ -749,3 +755,46 @@
  * Keep additions inside this block so the layer above stays
  * reviewable and self-contained.
  * ================================================================== */
+
+/* The player chrome has one owner: the surface around the picture. It
+   stays out of sight until the mouse moves (desktop) or until the picture
+   is tapped (phone). The rules below win over the player's own resting
+   state so the two clocks cannot fight each other. */
+[data-player-chrome]:not([data-chrome-visible="true"])
+  [data-player-controls-bar] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0.375rem, 0);
+}
+
+[data-player-chrome][data-chrome-visible="true"] [data-player-controls-bar] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+/* The player controls draw their own compact loading state. The old
+   full-frame loader remains scoped to that exact legacy element, while the
+   new “Se conectează…” status inside the controls stays visible. */
+[data-player-chrome]
+  .fx-player-frame
+  > [role="status"][data-player-loading-overlay="legacy"] {
+  display: none;
+}
+
+/* The installed iOS app draws edge to edge. The bottom navigation keeps
+   its controls above the home indicator and inside the landscape sides. */
+[data-slot="mobile-nav"] {
+  padding-right: max(0.5rem, var(--safe-right));
+  padding-bottom: max(0.5rem, var(--safe-bottom));
+  padding-left: max(0.5rem, var(--safe-left));
+}
+
+/* The modal close button is the only control in the top-right corner of
+   the phone player. It clears the island and keeps a 44px touch target. */
+[data-slot="player-dialog"] > button[aria-label="Închide"] {
+  top: calc(var(--safe-top) + 0.75rem);
+  right: calc(var(--safe-right) + 0.75rem);
+  width: 2.75rem;
+  height: 2.75rem;
+}

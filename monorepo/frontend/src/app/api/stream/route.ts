@@ -6,29 +6,23 @@
  * Google or an HTML cloaking page. A browser cannot set a Referer, so the
  * stream is relayed here instead.
  *
- * Three ways in:
- *
- *   GET /api/stream?s=<channelId>.<serverId>   the address stays on the server
- *   GET /api/stream?t=<token>                 the same URL, signed and opaque
- *   GET /api/stream?u=<absolute url>          the same URL, plain
- *
- * The first is what the app uses: the browser names a feed and never learns
- * where it comes from. All three are checked against the upstream allowlist,
- * so the route can never be pointed at an address of the caller's choosing.
+ * There is one way in: `GET /api/stream?t=<token>`. The token is minted by
+ * the entitled player endpoint, is bound to an allowlisted upstream URL, and
+ * carries the channel, session and signed viewer id. Raw URLs and catalogue
+ * references are deliberately not accepted here.
  *
  * The proxy is also the only place that can see the whole audience: every
  * segment of every stream passes through here, so this is where the number
  * of people watching a channel is counted.
  */
 import {
-  isAllowedMediaUrl,
   isPlaylist,
   openUpstream,
   readStreamToken,
   rewritePlaylist,
   signStreamToken,
+  StreamPolicyError,
 } from "@/lib/stream";
-import { resolveServerRef } from "@/lib/catalogue";
 import { touchAudience } from "@/lib/audience";
 
 const PLAYLIST_CONTENT_TYPE = "application/vnd.apple.mpegurl";
@@ -37,34 +31,52 @@ const SEGMENT_CONTENT_TYPE = "video/mp2t";
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const token = params.get("t");
-  const plain = params.get("u");
-  const reference = params.get("s");
-  /** The viewer, as the browser named them. */
-  const viewer = params.get("v");
+
+  // Only a signed token opens this route. In particular, a raw `u=` or a
+  // catalogue `s=` reference is not an alternative spelling of the same
+  // request: accepting either would turn the proxy into open egress.
+  if (params.has("u") || params.has("s")) {
+    return new Response("Adresă nepermisă.", {
+      status: 400,
+      headers: { "cache-control": "no-store", pragma: "no-cache" },
+    });
+  }
 
   const signed = token ? readStreamToken(token) : null;
-  let upstream = signed?.url ?? plain;
-  let channelId = signed?.channelId ?? null;
+  if (!signed) {
+    return new Response("Token invalid sau expirat.", {
+      status: 403,
+      headers: { "cache-control": "no-store", pragma: "no-cache" },
+    });
+  }
 
-  if (!upstream && reference) {
-    const resolved = await resolveServerRef(reference);
-    if (resolved?.kind === "hls") {
-      upstream = resolved.url;
-      channelId = resolved.channel.id;
+  const upstream = signed.url;
+  const channelId = signed.channelId;
+  const viewerId = signed.viewerId;
+
+  // The count happens only on the signed-token path. The viewer id is part
+  // of the signed payload, so it cannot be supplied or changed by the
+  // browser as an unsigned query parameter.
+  if (channelId && viewerId) touchAudience(channelId, viewerId);
+
+  let opened;
+  try {
+    opened = await openUpstream(upstream);
+  } catch (error) {
+    if (error instanceof StreamPolicyError) {
+      return new Response("Adresă nepermisă.", {
+        status: 403,
+        headers: { "cache-control": "no-store", pragma: "no-cache" },
+      });
     }
+    throw error;
   }
 
-  if (!upstream || !isAllowedMediaUrl(upstream)) {
-    return new Response("Adresă nepermisă.", { status: 400 });
-  }
-
-  // The count. It happens here because here is the only place that sees
-  // every viewer of every channel.
-  if (channelId && viewer) touchAudience(channelId, viewer);
-
-  const opened = await openUpstream(upstream);
   if (!opened) {
-    return new Response("Flux indisponibil.", { status: 502 });
+    return new Response("Flux indisponibil.", {
+      status: 502,
+      headers: { "cache-control": "no-store", pragma: "no-cache" },
+    });
   }
 
   const { head, rest } = opened;
@@ -89,30 +101,29 @@ export async function GET(request: Request) {
 
     const body = new TextDecoder().decode(merged);
     if (!isPlaylist(body)) {
-      return new Response("Flux indisponibil.", { status: 502 });
+      return new Response("Flux indisponibil.", {
+        status: 502,
+        headers: { "cache-control": "no-store", pragma: "no-cache" },
+      });
     }
 
-    // Every URI goes back through the proxy, so the whole segment chain
-    // keeps its Referer — and so every segment request carries the channel
-    // and the viewer with it.
-    const extra: Record<string, string> = {};
-    if (channelId) extra.c = channelId;
-    if (viewer) extra.v = viewer;
-
-    const rewritten = rewritePlaylist(
-      body,
-      upstream,
-      (absolute) =>
-        token
-          ? `/api/stream?t=${signStreamToken(absolute, channelId ?? undefined)}`
-          : `/api/stream?u=${encodeURIComponent(absolute)}`,
-      extra,
+    // Every URI goes back through the proxy with a fresh signed token. The
+    // channel, stream session and viewer remain bound into every segment.
+    const rewritten = rewritePlaylist(body, opened.finalUrl, (absolute) =>
+      `/api/stream?t=${signStreamToken(
+        absolute,
+        channelId ?? undefined,
+        undefined,
+        signed.sessionId ?? undefined,
+        viewerId ?? undefined,
+      )}`,
     );
 
     return new Response(rewritten, {
       headers: {
         "content-type": `${PLAYLIST_CONTENT_TYPE}; charset=utf-8`,
         "cache-control": "no-store",
+        pragma: "no-cache",
       },
     });
   }
@@ -121,6 +132,7 @@ export async function GET(request: Request) {
     headers: {
       "content-type": SEGMENT_CONTENT_TYPE,
       "cache-control": "no-store",
+      pragma: "no-cache",
     },
   });
 }

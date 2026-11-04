@@ -20,6 +20,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import {
+  encodeSessionCookie,
+  SESSION_COOKIE,
+  SESSION_COOKIE_MAX_AGE,
+  type MirroredSession,
+} from "@/lib/session-token";
 import { FREE_ALLOWANCE_SECONDS, type Plan } from "@/lib/supabase/plans";
 
 /** The state the interface works with. Mirrors the server's answer. */
@@ -35,6 +41,15 @@ export type AccountState = {
   gated: boolean;
   reason: "signed_out" | "allowance_spent" | null;
   householdId: string | null;
+  /**
+   * Whether the desk door is open for this account.
+   *
+   * The server decides: the browser only shows the door when the server
+   * says so. The rule itself lives on the server, where the environment
+   * allowlist and the desk's own plans are known — a hardcoded address in
+   * the bundle would tell every visitor who owns the site.
+   */
+  isAdmin: boolean;
   ready: boolean;
 };
 
@@ -51,6 +66,7 @@ const UNKNOWN: AccountState = {
   gated: false,
   reason: null,
   householdId: null,
+  isAdmin: false,
   ready: false,
 };
 
@@ -115,14 +131,24 @@ export function accountError(code?: string, message?: string): string {
     : "Ceva nu a mers. Încearcă din nou.";
 }
 
-/** The session token of the current session, when there is one. */
-async function currentToken(): Promise<string | null> {
+/** The session the browser holds, or null when there is none. */
+async function currentSession(): Promise<MirroredSession | null> {
   try {
     const { data } = await getSupabaseClient().auth.getSession();
-    return data.session?.access_token ?? null;
+    const session = data.session;
+    if (!session?.access_token) return null;
+    // Only the access token is mirrored. The refresh token stays in the
+    // browser: the auth server rotates it, and a refresh token used from
+    // two places can get the whole session revoked.
+    return { access_token: session.access_token };
   } catch {
     return null;
   }
+}
+
+/** The session token of the current session, when there is one. */
+async function currentToken(): Promise<string | null> {
+  return (await currentSession())?.access_token ?? null;
 }
 
 /**
@@ -167,6 +193,8 @@ let current: AccountState = UNKNOWN;
 let started = false;
 let pollTimer: number | null = null;
 let purchaseTimer: number | null = null;
+let authSubscription: { unsubscribe: () => void } | null = null;
+let visibilityHandler: (() => void) | null = null;
 
 function emit(): void {
   for (const listener of listeners) listener();
@@ -184,10 +212,10 @@ function setState(next: AccountState): void {
  * so itself — the browser does not guess.
  */
 async function refresh(): Promise<void> {
-  const token = await currentToken();
-  syncSessionCookie(token);
+  const session = await currentSession();
+  syncSessionCookie(session);
 
-  if (!token) {
+  if (!session) {
     if (!current.signedIn && current.ready) return;
     setState(SIGNED_OUT);
     return;
@@ -195,7 +223,7 @@ async function refresh(): Promise<void> {
 
   try {
     const response = await fetch("/api/account", {
-      headers: { authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
     if (!response.ok) return;
@@ -240,13 +268,14 @@ function start(): void {
 
   const client = getSupabaseClient();
 
-  client.auth.onAuthStateChange(() => {
+  const { data: authData } = client.auth.onAuthStateChange(() => {
     // The callback runs while the provider holds a lock, so the read is put
     // on the next tick rather than made right here.
     window.setTimeout(() => {
       void refresh();
     }, 0);
   });
+  authSubscription = authData.subscription;
 
   void client.auth.getSession().then(() => {
     void refresh();
@@ -255,9 +284,39 @@ function start(): void {
   schedulePolls();
 
   // The tab comes back to the front: the state may have moved on.
-  document.addEventListener("visibilitychange", () => {
+  visibilityHandler = () => {
     if (document.visibilityState === "visible") void refresh();
-  });
+  };
+  document.addEventListener("visibilitychange", visibilityHandler);
+}
+
+/**
+ * Stop the store: the listeners go with it.
+ *
+ * The store is started by the first subscriber and stopped by the last one
+ * leaving, so a page that mounts the account and unmounts it again leaves
+ * nothing behind — neither a listener on the document nor a poll that keeps
+ * asking the server for an answer nobody reads.
+ */
+function stop(): void {
+  authSubscription?.unsubscribe();
+  authSubscription = null;
+
+  if (visibilityHandler) {
+    document.removeEventListener("visibilitychange", visibilityHandler);
+    visibilityHandler = null;
+  }
+
+  if (pollTimer !== null) {
+    window.clearInterval(pollTimer);
+    pollTimer = null;
+  }
+  if (purchaseTimer !== null) {
+    window.clearInterval(purchaseTimer);
+    purchaseTimer = null;
+  }
+
+  started = false;
 }
 
 function subscribe(listener: () => void): () => void {
@@ -265,6 +324,7 @@ function subscribe(listener: () => void): () => void {
   start();
   return () => {
     listeners.delete(listener);
+    if (listeners.size === 0) stop();
   };
 }
 
@@ -280,36 +340,35 @@ function getServerSnapshot(): AccountState {
  * The session cookie
  *
  * The desk gate runs on the server, and a server cannot read localStorage —
- * which is where the session lives. So the access token is mirrored into a
- * cookie the moment it is read. It is the same token, with the same lifetime
- * and the same exposure, and it is what lets `/admin` answer with a real
- * refusal instead of pretending the visitor is signed out.
+ * which is where the session lives. So the session is mirrored into a
+ * cookie the moment it is read. It is the same session, with the same
+ * exposure, and it is what lets `/admin` answer with a real refusal
+ * instead of pretending the visitor is signed out.
  *
  * The cookie holds a base64url JSON payload (`{ access_token }`), the shape
  * the desk's own reader already understands.
+ *
+ * The refresh token does not travel with it. The auth server rotates the
+ * refresh token on every renewal and treats a second use as a possible
+ * theft, so it belongs to the browser alone: the browser refreshes, and
+ * this cookie carries the new access token to the server.
  * ------------------------------------------------------------------ */
 
-const SESSION_COOKIE = "acum-session";
-
-/** One hour: every account refresh rewrites it, so it never goes stale. */
-const SESSION_COOKIE_MAX_AGE = 60 * 60;
-
-/** Base64url, without the padding a cookie does not need. */
-function encodeSession(token: string): string {
-  const bytes = new TextEncoder().encode(JSON.stringify({ access_token: token }));
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-/** Mirror the session into the cookie, or clear it. */
-function syncSessionCookie(token: string | null): void {
+/**
+ * Mirror the session into the cookie, or clear it.
+ *
+ * The cookie is `secure`, so it never travels over plain HTTP, and
+ * `samesite=lax`, so it does not ride along on a cross-site request. It
+ * cannot be `httpOnly`: it is written from here, and the desk needs to
+ * read it.
+ */
+function syncSessionCookie(session: MirroredSession | null): void {
   if (typeof document === "undefined") return;
-  if (!token) {
-    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
+  if (!session) {
+    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax; secure`;
     return;
   }
-  document.cookie = `${SESSION_COOKIE}=${encodeSession(token)}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; samesite=lax`;
+  document.cookie = `${SESSION_COOKIE}=${encodeSessionCookie(session)}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; samesite=lax; secure`;
 }
 
 /* ------------------------------------------------------------------ *
@@ -453,6 +512,8 @@ export function useAccount() {
       /** Why the picture is gated. */
       reason: state.reason,
       householdId: state.householdId,
+      /** True when the desk door is open — the server's answer. */
+      isAdmin: state.isAdmin,
       signIn,
       signUp,
       signInWithGoogle,

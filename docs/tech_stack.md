@@ -27,17 +27,18 @@ television-only files are never overwritten by a sync.
 | `react` | 19.3.0 | Server Components, `useSyncExternalStore` |
 | `react-dom` | 19.3.0 | — |
 | `typescript` | 5.9.3 | Type check (`node node_modules/typescript/bin/tsc --noEmit`) |
-| `tailwindcss` | 4.3.3 | CSS-first config, `@theme` tokens |
+| `tailwindcss` | 4.3.4 | CSS-first config, `@theme` tokens |
 | `@tailwindcss/turbopack` | ^4 | The Turbopack CSS loader |
 
 The television app runs the same versions: Next 16.4.2, React 19.3.0,
-TypeScript 5.9.3, Tailwind 4.3.3.
+TypeScript 5.9.3, Tailwind 4.3.3 — its own installed copy, one patch
+behind the web app.
 
 ## UI
 
 | Package | Version | Why |
 | ------- | ------- | --- |
-| `lucide-react` | 1.60.0 | The only icon set in the project |
+| `lucide-react` | 1.67.0 | The only icon set in the project |
 | `canvas-confetti` | 1.9.4 | Celebration particle physics |
 | `@radix-ui/react-dialog` | ^1.3.1 | Accessible modal (focus trap, escape, scroll lock) |
 | `@radix-ui/react-slot` | ^1.5.0 | `asChild` on the button primitive |
@@ -49,14 +50,31 @@ TypeScript 5.9.3, Tailwind 4.3.3.
 
 | Package | Version | Why |
 | ------- | ------- | --- |
-| `hls.js` | 1.7.3 | The HLS engine for the live streams |
+| `hls.js` | 1.7.4 | The HLS engine for the live streams |
 | `@supabase/supabase-js` | ^2.118.0 | Accounts, plans, favourites and reviews |
 
 - The browser never sees an upstream address: every stream is resolved and
-  proxied by `/api/stream`.
+  proxied by `/api/stream`, and the proxy only opens a **signed** token —
+  the raw address doors are gone.
 - The review counters are **server truth**: the `review_reaction_counts`
   function in `supabase/schema.sql` publishes the counts, and the client
   reconciles against it after a write.
+
+## Environment
+
+| Variable | Where | What it is |
+| -------- | ----- | ---------- |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | both apps | the project's address and its publishable key — public by design, they reach the browser |
+| `SUPABASE_SERVICE_ROLE_KEY` | server only | the service-role key; it never leaves the server |
+| `STREAM_TOKEN_SECRET` | server only, optional | the key the stream proxy signs its tokens with. When it is absent the proxy **derives** a per-deployment key from `SUPABASE_SERVICE_ROLE_KEY`, so no new variable is needed to run the app |
+| `ADMIN_EMAILS` | server only, optional | comma-separated e-mails allowed to open the desk (`/admin`, `/api/admin/*`) |
+| `ACUM_DEVICE_SALT` | server only, optional | the salt of the household device fingerprint |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | server only | the payments |
+| `ACUM_HARNESS_EMAIL`, `ACUM_HARNESS_PASSWORD` | local only | the account the verification harnesses sign in with; never on the server |
+
+None of the server-only values is ever committed. The secret scan in
+`.github/workflows/secret-scan.yml` runs on every pull request and on
+every push to `main`.
 
 ## Tooling
 

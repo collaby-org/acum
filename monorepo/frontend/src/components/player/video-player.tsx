@@ -28,6 +28,7 @@ import {
   useImperativeHandle,
   useRef,
   useState,
+  type MouseEvent,
 } from "react";
 import type { CSSProperties } from "react";
 import { Loader2, Radio, TriangleAlert } from "lucide-react";
@@ -275,18 +276,42 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         await video.play();
         setPaused(false);
         setBlocked(false);
-      } catch {
-        // The browser refused sound; the picture matters more than the audio.
+      } catch (error) {
+        // The browser refused. Most of the time it is the sound: a phone
+        // will not start an unmuted picture by itself. The picture matters
+        // more than the audio, so it is muted and tried again — and the
+        // muted ATTRIBUTE is set as well, because that is what a phone
+        // reads when it decides whether a picture may start on its own.
+        const name = error instanceof DOMException ? error.name : "";
+        if (name === "AbortError") {
+          // The link changed under us. The new one plays on its own.
+          return;
+        }
+        if (name !== "NotAllowedError") {
+          // Not a policy refusal: the media itself is not playable here,
+          // and no tap would change that. The chain moves on instead of
+          // waiting for a visitor who has nothing to press.
+          failRef.current("Fluxul nu poate fi redat. Se încearcă următorul.");
+          return;
+        }
+
+        video.setAttribute("muted", "");
         video.muted = true;
         setMuted(true);
         try {
           await video.play();
           setPaused(false);
           setBlocked(false);
-        } catch {
-          // The browser refused the picture as well. Only a tap can start
-          // it now, so the overlay goes up and waits.
-          setBlocked(true);
+        } catch (retryError) {
+          const retryName =
+            retryError instanceof DOMException ? retryError.name : "";
+          if (retryName === "NotAllowedError") {
+            // The browser refused the picture as well. Only a tap can start
+            // it now, so the overlay goes up and waits.
+            setBlocked(true);
+          } else {
+            failRef.current("Fluxul nu poate fi redat. Se încearcă următorul.");
+          }
         }
       }
     }, []);
@@ -1136,10 +1161,18 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       [fullscreenMode, toggleFullscreen],
     );
 
-    const onFrameDoubleClick = useCallback(() => {
-      if (fullscreenMode === "none") return;
-      toggleFullscreen();
-    }, [fullscreenMode, toggleFullscreen]);
+    const onFrameDoubleClick = useCallback(
+      (event: MouseEvent<HTMLDivElement>) => {
+        if (fullscreenMode === "none") return;
+
+        // On a touch screen, two taps can arrive as a double click. The
+        // mobile chrome already uses the first tap to reveal the controls,
+        // so a second tap must not also throw the picture into fullscreen.
+        if (event.detail > 1) return;
+        toggleFullscreen();
+      },
+      [fullscreenMode, toggleFullscreen],
+    );
 
     /**
      * Pin the picture to one rung of the ladder, or hand the choice back
@@ -1244,6 +1277,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             <div
               role="status"
               aria-live="polite"
+              data-player-loading-overlay="legacy"
               className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_center,rgb(240_165_0/0.11),transparent_38%),rgb(5_5_5/0.94)]"
             >
               <div
@@ -1367,61 +1401,62 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             minutesWatchedToday={account.minutesWatchedToday}
             allowanceMinutes={account.allowanceMinutes}
           />
-        </div>
 
-        {bare || embedded ? null : (
-          <PlayerControls
-            playing={playing}
-            muted={muted}
-            volume={volume}
-            busy={busy}
-            fullscreen={fullscreen}
-            asleep={asleep}
-            canFullscreen={fullscreenMode !== "none"}
-            canSwitch={hasNext}
-            canPictureInPicture={canPictureInPicture}
-            pictureInPictureActive={pictureInPictureActive}
-            canCast={castSupported}
-            castConnected={castConnected}
-            cinema={cinema}
-            canCinema={!fullscreen}
-            behindLive={behindLive}
-            liveWindow={liveWindow}
-            nowPlaying={
-              <>
-                <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
-                  {channelName}
-                </span>
-                <ProgrammeBadges
-                  channelId={channelId}
-                  title={programmeTitle}
-                  className="min-w-0"
+          {bare || embedded ? null : (
+            <PlayerControls
+              playing={playing}
+              muted={muted}
+              volume={volume}
+              busy={busy}
+              connecting={connecting}
+              fullscreen={fullscreen}
+              error={failed}
+              canFullscreen={fullscreenMode !== "none"}
+              canSwitch={hasNext}
+              canPictureInPicture={canPictureInPicture}
+              pictureInPictureActive={pictureInPictureActive}
+              canCast={castSupported}
+              castConnected={castConnected}
+              cinema={cinema}
+              canCinema={!fullscreen}
+              behindLive={behindLive}
+              liveWindow={liveWindow}
+              nowPlaying={
+                <>
+                  <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
+                    {channelName}
+                  </span>
+                  <ProgrammeBadges
+                    channelId={channelId}
+                    title={programmeTitle}
+                    className="min-w-0"
+                  />
+                </>
+              }
+              quality={
+                <PlayerQualityBadge
+                  variants={qualityLevels}
+                  currentLevel={currentLevel}
+                  stream={stream}
+                  onLevelChange={selectLevel}
+                  // The bar is told: the menu is portaled out of it, so
+                  // this is the only way it can know to stay awake.
+                  onOpenChange={setQualityOpen}
                 />
-              </>
-            }
-            quality={
-              <PlayerQualityBadge
-                variants={qualityLevels}
-                currentLevel={currentLevel}
-                stream={stream}
-                onLevelChange={selectLevel}
-                // The bar is told: the menu is portaled out of it, so
-                // this is the only way it can know to stay awake.
-                onOpenChange={setQualityOpen}
-              />
-            }
-            onTogglePlay={togglePlay}
-            onToggleMute={toggleMute}
-            onVolumeChange={changeVolume}
-            onToggleFullscreen={toggleFullscreen}
-            onTogglePictureInPicture={togglePictureInPicture}
-            onToggleCast={toggleCast}
-            onToggleCinema={() => setCinema((value) => !value)}
-            onJumpToLive={jumpToLive}
-            onRetry={player.retry}
-            onNextSource={player.advance}
-          />
-        )}
+              }
+              onTogglePlay={togglePlay}
+              onToggleMute={toggleMute}
+              onVolumeChange={changeVolume}
+              onToggleFullscreen={toggleFullscreen}
+              onTogglePictureInPicture={togglePictureInPicture}
+              onToggleCast={toggleCast}
+              onToggleCinema={() => setCinema((value) => !value)}
+              onJumpToLive={jumpToLive}
+              onRetry={player.retry}
+              onNextSource={player.advance}
+            />
+          )}
+        </div>
 
         {/* The lights, while they are down. Portaled to the body and
             measured against this shell: the picture is the hole in the

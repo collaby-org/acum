@@ -91,6 +91,21 @@ export function PlansGrid({
   );
 }
 
+/**
+ * Ordinea planurilor, de la cel mai mic la cel mai cuprinzător.
+ *
+ * Ordinea nu este calculată din suma plătită: planul de viață este o plată
+ * unică, deci ar părea „mai ieftin” decât un abonament lunar într-o lună.
+ * Comparația urmărește nivelul de acces, exact cum este comunicat în vitrine.
+ */
+const PLAN_RANK: Record<Plan, number> = {
+  free: 0,
+  monthly: 1,
+  household: 2,
+  lifetime: 3,
+  comp: 4,
+};
+
 export function PlanCard({
   plan,
   pricing,
@@ -116,7 +131,12 @@ export function PlanCard({
   // This card is the plan the account is on. `comp` is the desk's own, and
   // it holds the same promise a paid plan does, so it is named as the plan
   // rather than sent back to a shop it has no business in.
-  const isCurrent = current === plan.id && plan.id !== "free";
+  const isCurrent = current === plan.id;
+  const hasCurrentPlan = current !== null;
+  const isCheaper =
+    hasCurrentPlan && PLAN_RANK[plan.id] < PLAN_RANK[current];
+  const isUpgrade =
+    hasCurrentPlan && !isCurrent && PLAN_RANK[plan.id] > PLAN_RANK[current];
 
   const buy = async () => {
     if (free) return;
@@ -258,14 +278,27 @@ export function PlanCard({
              paid visitor is left wondering whether anything was charged.
              The desk's own comp plan is named too, because being told you
              are on it is the only reason it is not a mystery. */
-          <p className="flex items-center justify-center gap-2 rounded-[var(--radius)] border border-signal/30 bg-signal/[0.08] px-3 py-2.5 text-[13px] font-semibold text-signal-bright">
+          <p className="flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius)] border border-signal/30 bg-signal/[0.08] px-3 py-2.5 text-[13px] font-semibold text-signal-bright">
             <CheckCircle2 className="size-4 shrink-0" aria-hidden />
             {plan.id === "comp"
               ? "Planul tău, oferit de echipă"
               : "Planul tău"}
           </p>
+        ) : isCheaper ? (
+          /* A plan inferior nu este o ofertă: ar înlocui accesul pe care
+             vizitatorul îl are deja. Starea rămâne totuși în buton, ca
+             grila să nu își schimbe înălțimea când planul curent se
+             încarcă sau când sesiunea se schimbă. */
+          <Button
+            variant="outline"
+            size="md"
+            disabled
+            className="min-h-11 w-full"
+          >
+            Ești deja pe un plan superior
+          </Button>
         ) : free ? (
-          <Button asChild variant="secondary" size="md" className="w-full">
+          <Button asChild variant="secondary" size="md" className="min-h-11 w-full">
             <Link href="/conturi?intent=register">
               Creează un cont
               <ArrowRight className="size-4" />
@@ -277,10 +310,10 @@ export function PlanCard({
             size="md"
             onClick={buy}
             disabled={working}
-            className="w-full"
+            className="min-h-11 w-full"
           >
             {working ? <Loader2 className="size-4 animate-spin" /> : null}
-            Alege {plan.name}
+            {isUpgrade ? `Treci la ${plan.name}` : `Alege ${plan.name}`}
           </Button>
         )}
 

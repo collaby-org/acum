@@ -12,7 +12,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { isAdmin } from "@/lib/admin-access";
 import { LogOut, Ticket, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";
@@ -185,7 +184,7 @@ export function AccountButton({ className }: { className?: string }) {
             Contul meu
           </Link>
 
-          {isAdmin(account.email, account.plan) ? (
+          {account.isAdmin ? (
             <Link
               href="/admin"
               role="menuitem"

@@ -19,6 +19,18 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/client";
 
+/**
+ * This module owns the service role key. A browser bundle must never load it,
+ * so the module refuses to initialise outside the server. The project does
+ * not currently depend on the `server-only` package; this explicit guard is
+ * the equivalent protection until that dependency can be added safely.
+ */
+if (typeof window !== "undefined") {
+  throw new Error(
+    "Clientul Supabase de server nu poate fi importat în browser. Cheile de server nu ajung niciodată în browser.",
+  );
+}
+
 /** The service role key. Server-only; never sent to the browser. */
 export const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -123,6 +135,10 @@ export async function readUser(
   assertServer("readUser()");
 
   let response: Response;
+  let body: {
+    id?: unknown;
+    email?: unknown;
+  };
   try {
     response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: {
@@ -131,19 +147,20 @@ export async function readUser(
       },
       cache: "no-store",
     });
+
+    if (!response.ok) return null;
+
+    body = (await response.json()) as {
+      id?: unknown;
+      email?: unknown;
+    };
   } catch {
-    // The auth server is unreachable. A visitor is not signed in for as
-    // long as that lasts — the caller decides what a blip means for this
-    // route, but the fetch itself must not crash the page.
+    // The auth server is unreachable or answered with a malformed body. A
+    // visitor is not signed in for as long as that lasts — the caller
+    // decides what a blip means for this route, but the read itself must not
+    // crash the page.
     return null;
   }
-
-  if (!response.ok) return null;
-
-  const body = (await response.json()) as {
-    id?: unknown;
-    email?: unknown;
-  };
 
   if (typeof body.id !== "string" || body.id.length === 0) return null;
 

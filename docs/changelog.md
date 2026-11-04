@@ -9,6 +9,85 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.0] — 2026-11-04
+
+### Fixed
+
+- **The landing page no longer flashes for a signed-in visitor.** The front door
+  used to redirect on the mere *presence* of a session cookie, so a visitor
+  returning with an expired token was bounced to the catalogue, refused there,
+  sent back to the accounts page, and sent round again. The cookie is now read
+  as a session: while the access token is still fresh the visitor goes straight
+  to the catalogue; when it has expired the browser refreshes it and the gate
+  replaces the history entry with `/canale`. The server never touches the
+  refresh token — Supabase rotates refresh tokens and treats a reuse as a
+  possible theft, so the browser keeps it and the server keeps the access
+  token alone.
+- **The pricing cards tell the truth about the plan you are on.** The plan you
+  already hold reads **"Planul tău"**; a cheaper plan is refused with
+  **"Ești deja pe un plan superior"** and its button is disabled; a richer plan
+  reads **"Treci la \<Plan\>"**. Every button is at least 44 px tall, and the
+  grid keeps its height so the page does not jump.
+- **The catalogue answers in a fraction of a second.** The programme guide used
+  to walk all 74 channel slugs on every request — five to seven seconds of
+  waiting for one channel. The guide is now read from the upstream's
+  per-channel JSON endpoint, one request for the channel that was asked for.
+  `/api/channel/<id>` answers in well under a second.
+- **The player's controls live in one bar inside the frame.** There is no more
+  bar under the video and no more row of icons that shifted on hover. The bar
+  reveals itself on hover on a desktop and hides after three seconds; on a
+  phone one tap reveals it and it hides after four seconds, and that tap never
+  starts or stops the video by accident. Every control is at least 44 × 44 px.
+- **The iPhone safe area is respected.** `viewport-fit=cover` is set, and the
+  player frame, the control bar, the mobile navigation and the player dialog
+  all keep their distance from the notch and the home indicator.
+- **The stream starts on a phone and in the installed app.** When iOS refuses
+  to play an unmuted stream (`NotAllowedError`), the player mutes itself and
+  retries the same source, then walks to the next source when that source is
+  dead. The Romanian loading notice sits on the picture, small and readable.
+
+### Security
+
+- **The stream proxy answers only to a signed token.** `/api/stream` takes the
+  opaque token minted by `/api/player` and nothing else; the plain `?u=`
+  address form is gone.
+- **The browser can no longer name an upstream address.** `/api/player` takes
+  a channel id and resolves the feed from the catalogue; the branch that
+  accepted a list of `servers[]` from the caller is deleted, and `/api/resolve`
+  answers under the same paywall gate.
+- **The upstream allowlist is an exact list of hosts.** Shared suffixes such as
+  `.cfd` or `.shop` are no longer accepted — that suffix list had turned the
+  proxy into an open egress. Redirects are followed by hand, at most three
+  hops, and every hop is checked again, including against private, loopback
+  and link-local addresses.
+- **The token key is no longer in the source.** `STREAM_TOKEN_SECRET` is used
+  when it is set; otherwise the key is derived from the Supabase service key
+  with HMAC-SHA256. When neither is available the proxy fails closed instead
+  of guessing.
+- **The desk is an allowlist, not a flag.** `profiles.bypass` lifts the
+  paywall and nothing else. The desk is opened by the `ADMIN_EMAILS` list or
+  by the `comp` plan, the browser is told only whether the door is open, and
+  the owner's e-mail is no longer written into the client bundle.
+- **The account-state functions are server-only.** `account_state` and
+  `minutes_watched_today` are revoked from `anon` and `authenticated` and
+  granted to `service_role`, so a browser cannot read another account's plan
+  or watch time.
+- **Messages are readable only by the desk.** The `messages` select policy no
+  longer answers every signed-in visitor.
+- **The account gate fails closed.** A failed read is a refusal, not a
+  permission.
+
+### Changed
+
+- **Next.js 16 renamed the front door.** `middleware.ts` is now `proxy.ts`
+  (`proxy` is the new export), because the old file convention is deprecated
+  in the framework version this app runs on.
+- **The secret scan runs again.** The workflow downloaded Gitleaks from a URL
+  that no longer exists, so the job died before it scanned anything. It now
+  installs the pinned release `v8.30.1` and verifies its checksum.
+- **Version 1.7.0** — the frontend app, the TV app and `docs/VERSION` move
+  together, because the architecture changed as well as the behaviour.
+
 ## [1.6.0] — 2026-11-02
 
 ### Added — the ten-foot layer (`monorepo/tv`)

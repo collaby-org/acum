@@ -16,7 +16,6 @@ import type { ChannelLike } from "@/lib/navigation";
 import { cn, formatViewers } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAccount } from "@/hooks/use-account";
-import { isAdmin } from "@/lib/admin-access";
 import { ProgrammeBadgeRow } from "@/components/programme-badges/badge-row";
 
 /* ------------------------------------------------------------------ *
@@ -210,9 +209,7 @@ export function ChannelScreen({
 
   const account = useAccount();
   const showUpgrade =
-    account.ready &&
-    account.plan === "free" &&
-    !isAdmin(account.email, account.plan);
+    account.ready && account.plan === "free" && !account.isAdmin;
 
   const viewers = views ?? 0;
   const popularity = popularityProp ?? channel.views ?? 0;

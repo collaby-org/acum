@@ -21,7 +21,13 @@
  * row, the row level policies keep the visitor's hand off it, and the
  * trigger in the schema throws if a signed-in visitor tries to change it.
  */
-import { bearerToken, getUserClient, readUser } from "@/lib/supabase/server";
+import {
+  bearerToken,
+  getServiceClient,
+  getUserClient,
+  readUser,
+} from "@/lib/supabase/server";
+import { adminEmails, isAdmin } from "@/lib/admin";
 import {
   allowanceMinutes,
   FREE_ALLOWANCE_SECONDS,
@@ -52,6 +58,8 @@ export type AccountState = {
   reason: "signed_out" | "allowance_spent" | null;
   /** The household this account belongs to, when it belongs to one. */
   householdId: string | null;
+  /** True when this account may open the desk. */
+  isAdmin: boolean;
   /** True when the state was read from the server. */
   ready: boolean;
 };
@@ -88,6 +96,7 @@ function anonymousState(): AccountState {
     gated: true,
     reason: "signed_out",
     householdId: null,
+    isAdmin: false,
     ready: true,
   };
 }
@@ -206,6 +215,7 @@ function buildState(input: {
     gated: !input.bypass && spent,
     reason: !input.bypass && spent ? "allowance_spent" : null,
     householdId: input.householdId,
+    isAdmin: isAdmin(input.email, input.plan, adminEmails()),
     ready: true,
   };
 }
@@ -222,16 +232,16 @@ type RawState = {
 /**
  * Read the account state.
  *
- * The read runs under the visitor's own token, so the row level policies
- * decide what is visible: their row and nothing else.
+ * The caller is authenticated before this read. The state RPC is restricted
+ * to the service role, so the server reads exactly the authenticated
+ * account's row and nothing else.
  */
 async function readState(
-  accessToken: string,
   userId: string,
   email: string | null,
   now: Date,
 ): Promise<AccountState> {
-  const client = getUserClient(accessToken);
+  const client = getServiceClient();
 
   const { data, error } = await client.rpc("account_state", {
     p_user: userId,
@@ -287,17 +297,13 @@ async function readState(
  * The account may only be signing in to look at the catalogue, so the moment
  * is worth keeping — but a write every minute would be noise.
  */
-async function touchLastSeen(
-  accessToken: string,
-  userId: string,
-  now: Date,
-): Promise<void> {
+async function touchLastSeen(userId: string, now: Date): Promise<void> {
   const previous = lastSeen.get(userId) ?? 0;
   if (now.getTime() - previous < LAST_SEEN_INTERVAL_MS) return;
   lastSeen.set(userId, now.getTime());
 
   try {
-    await getUserClient(accessToken)
+    await getServiceClient()
       .from("profiles")
       .update({ last_seen_at: now.toISOString() })
       .eq("id", userId);
@@ -349,8 +355,8 @@ export async function GET(request: Request) {
     });
   }
 
-  const state = await readState(token, user.id, user.email, now);
-  await touchLastSeen(token, user.id, now);
+  const state = await readState(user.id, user.email, now);
+  await touchLastSeen(user.id, now);
 
   return Response.json(state, { headers: { "cache-control": "no-store" } });
 }
@@ -426,8 +432,8 @@ export async function POST(request: Request) {
     }
   }
 
-  const state = await readState(token, user.id, user.email, now);
-  await touchLastSeen(token, user.id, now);
+  const state = await readState(user.id, user.email, now);
+  await touchLastSeen(user.id, now);
 
   return Response.json(state, { headers: { "cache-control": "no-store" } });
 }

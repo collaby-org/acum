@@ -14,6 +14,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAccount } from "@/hooks/use-account";
 import type { Channel } from "@/data/types";
 import { VideoPlayer } from "@/components/player/video-player";
+import { PlayerChrome } from "@/components/player/player-controls";
 import { ChannelPanel } from "@/components/channel/channel-panel";
 import { MOBILE_NAV_SPACE, MobileNav } from "@/components/mobile-nav";
 import { cn } from "@/lib/utils";
@@ -36,13 +37,18 @@ export function CanalScreen({ channel }: CanalScreenProps) {
   const goHome = () => router.push(signedIn ? "/canale" : "/");
 
   return (
-    <div className={cn("min-h-dvh bg-canvas", MOBILE_NAV_SPACE)}>
+    <div
+      className={cn(
+        "min-h-dvh bg-canvas pt-[var(--safe-top)]",
+        MOBILE_NAV_SPACE,
+      )}
+    >
       {/* The top bar: the way back. The channel names itself in the panel
           below the picture, so it is not repeated here. */}
       <header
         className={cn(
-          "sticky top-0 z-40 flex items-center gap-3 border-b border-white/[0.07] bg-canvas/85 backdrop-blur-xl",
-          "px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3",
+          "sticky top-[var(--safe-top)] z-40 flex items-center gap-3 border-b border-white/[0.07] bg-canvas/85 backdrop-blur-xl",
+          "px-3 pt-3 pb-3",
         )}
       >
         <button
@@ -59,14 +65,22 @@ export function CanalScreen({ channel }: CanalScreenProps) {
         </button>
       </header>
 
-      {/* The picture — pinned; only the panel scrolls. */}
-      <div className="sticky top-0 z-30 bg-black">
-        <VideoPlayer
-          channelName={channel.name}
-          channelId={channel.id}
-          autoPlay
-          className="rounded-none border-0"
-        />
+      {/* The picture — pinned; only the panel scrolls. The safe area stays
+          outside the frame, so the video never reaches under the island. */}
+      <div
+        className={cn(
+          "sticky top-[var(--safe-top)] z-30 bg-black",
+          "pl-[var(--safe-left)] pr-[var(--safe-right)]",
+        )}
+      >
+        <PlayerChrome className="block">
+          <VideoPlayer
+            channelName={channel.name}
+            channelId={channel.id}
+            autoPlay
+            className="rounded-none border-0"
+          />
+        </PlayerChrome>
       </div>
 
       {/* The channel panel. */}

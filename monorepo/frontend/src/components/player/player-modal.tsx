@@ -24,6 +24,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { VideoPlayer, type PlayerHandle } from "@/components/player/video-player";
+import { PlayerChrome } from "@/components/player/player-controls";
 import { ChannelPanel } from "@/components/channel/channel-panel";
 import type { PlayerStatus } from "@/hooks/use-player";
 import { cn } from "@/lib/utils";
@@ -56,6 +57,7 @@ export function PlayerModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        data-slot="player-dialog"
         className={cn(
           // On a phone the player is the whole screen: no margins, no
           // rounded frame, the picture as large as the viewport allows.
@@ -63,6 +65,11 @@ export function PlayerModal({
           "max-sm:border-0 max-sm:bg-black max-sm:shadow-none",
           "max-sm:left-0 max-sm:top-0 max-sm:translate-x-0 max-sm:translate-y-0",
           "max-sm:overscroll-contain",
+          // The installed iOS app draws edge to edge. The frame, the close
+          // control and the panel all stay inside the notch and the home
+          // indicator instead of hiding beneath them.
+          "max-sm:pl-[var(--safe-left)] max-sm:pr-[var(--safe-right)]",
+          "max-sm:pt-[var(--safe-top)] max-sm:pb-[var(--safe-bottom)]",
           // Everywhere else it is the dialog it has always been. The one
           // radius belongs to this shell: the picture and the panel are
           // clipped by it, so nothing inside is rounded on its own.
@@ -84,14 +91,16 @@ export function PlayerModal({
         <div className="relative flex min-h-0 flex-col overflow-hidden md:flex-row">
           {/* The picture */}
           <div className="flex min-h-0 flex-1 flex-col bg-black md:pr-[340px]">
-            <VideoPlayer
-              ref={playerRef}
-              channelName={channel.name}
-              channelId={channel.id}
-              autoPlay={open}
-              onStatusChange={onStatusChange}
-              className="rounded-none border-0 max-sm:min-h-0 max-sm:flex-1"
-            />
+            <PlayerChrome className="flex min-h-0 flex-1 flex-col">
+              <VideoPlayer
+                ref={playerRef}
+                channelName={channel.name}
+                channelId={channel.id}
+                autoPlay={open}
+                onStatusChange={onStatusChange}
+                className="rounded-none border-0 max-sm:min-h-0 max-sm:flex-1"
+              />
+            </PlayerChrome>
           </div>
 
           {/* The channel panel */}

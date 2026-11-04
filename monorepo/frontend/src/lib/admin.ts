@@ -2,11 +2,13 @@
  * The desk: who may enter, and what they may read.
  *
  * A desk account is an ordinary account — the same sign-in the visitor uses
- * — that carries one of three marks:
+ * — that carries one of two marks:
  *
  *   1. its e-mail is listed in `ADMIN_EMAILS`;
- *   2. its plan is `comp`;
- *   3. its bypass is on.
+ *   2. its plan is `comp`.
+ *
+ * A desk-granted `bypass` lifts the paywall but is never an administrative
+ * credential.
  *
  * The check lives here, on the server, and every route under `/api/admin`
  * calls it before it reads a single row. A desk that is only hidden behind
@@ -35,6 +37,7 @@ import {
   hasServiceRole,
   readUser,
 } from "@/lib/supabase/server";
+import { isAdmin } from "@/lib/admin-access";
 
 export type { Plan };
 
@@ -50,12 +53,10 @@ export const PLAN_IDS: readonly Plan[] = [
 /**
  * The desk mark.
  *
- * The rule itself lives in `@/lib/admin-access`, which the browser is allowed
- * to import — this module reads the cookie jar and the service role, so it
- * must never reach a client bundle. Re-exported here so the server can keep
- * importing one module.
+ * The rule itself lives in `@/lib/admin-access`. This module reads the cookie
+ * jar and the service role, so it must never reach a client bundle.
  */
-export { ADMIN_EMAIL, isAdmin } from "@/lib/admin-access";
+export { isAdmin };
 
 export function planLabel(plan: Plan): string {
   if (plan === "comp") return "Concediat";
@@ -155,7 +156,6 @@ export type AuthSession = {
 
 type SessionCookie = {
   access_token?: string;
-  refresh_token?: string;
 };
 
 /** Parse a JSON payload, or give up quietly. */
@@ -277,8 +277,8 @@ export async function readSession(request?: Request): Promise<AuthSession | null
 export type DeskSession = {
   userId: string;
   email: string | null;
-  /** Which of the three marks let this account in. */
-  via: "email" | "plan" | "bypass";
+  /** Which mark let this account in. */
+  via: "email" | "plan";
 };
 
 export type DeskState =
@@ -291,7 +291,7 @@ export type DeskState =
 export function adminEmails(): Set<string> {
   const raw = process.env.ADMIN_EMAILS ?? "";
   const list = raw
-    .split(/[,;\s]+/)
+    .split(",")
     .map((entry) => entry.trim().toLowerCase())
     .filter(Boolean);
   return new Set(list);
@@ -325,16 +325,16 @@ async function readProfile(userId: string): Promise<ProfileRow | null> {
  *
  * The order matters. A signed-in visitor is checked against
  * `ADMIN_EMAILS` first, because that list needs no database. The service
- * role is needed for the plan and the bypass, so when it is missing the
- * desk cannot open at all — and says so, rather than showing an empty
- * product.
+ * role is needed for the desk-granted plan, so when it is missing the desk
+ * cannot open at all — and says so, rather than showing an empty product.
  */
 export async function deskState(request?: Request): Promise<DeskState> {
   const session = await readSession(request);
   if (!session) return { status: "signed-out" };
 
   const email = session.email?.toLowerCase() ?? null;
-  if (email && adminEmails().has(email)) {
+  const allowedEmails = adminEmails();
+  if (email && allowedEmails.has(email)) {
     if (!hasServiceRole()) return { status: "no-key" };
     return { status: "ok", session: { ...session, via: "email" } };
   }
@@ -347,11 +347,8 @@ export async function deskState(request?: Request): Promise<DeskState> {
 
   if (!profile) return { status: "forbidden", email };
 
-  if (profile.plan === "comp") {
+  if (isAdmin(email, profile.plan, allowedEmails)) {
     return { status: "ok", session: { ...session, via: "plan" } };
-  }
-  if (profile.bypass) {
-    return { status: "ok", session: { ...session, via: "bypass" } };
   }
 
   return { status: "forbidden", email };

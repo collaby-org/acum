@@ -30,7 +30,7 @@ export function DeskDenied({
         icon={<LogIn className="size-5 text-signal" aria-hidden />}
         eyebrow="Panou de administrare"
         title="Conectează-te"
-        lead="Panoul se deschide cu același cont ca aplicația. Contul trebuie să fie unul de panou: planul «Concediat», bypass activ, sau e-mailul în lista ADMIN_EMAILS."
+        lead="Panoul se deschide cu același cont ca aplicația. Contul trebuie să fie unul de panou: planul «Concediat» sau e-mailul în lista ADMIN_EMAILS."
       >
         <SignInForm
           initialMode="signin"
@@ -82,10 +82,10 @@ export function DeskDenied({
         }
       >
         <p className="text-[13px] leading-relaxed text-ink-muted">
-          Un cont de panou are unul dintre trei semne: planul{" "}
-          <span className="text-ink">Concediat</span>, bypass activ, sau
-          e-mailul în lista <code>ADMIN_EMAILS</code> din mediul aplicației.
-          Cere-i proprietarului să îți dea unul dintre ele.
+          Un cont de panou are unul dintre două semne: planul{" "}
+          <span className="text-ink">Concediat</span> sau e-mailul în lista{" "}
+          <code>ADMIN_EMAILS</code> din mediul aplicației. Cere-i
+          proprietarului să îți dea unul dintre ele.
         </p>
       </Shell>
     );

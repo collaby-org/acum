@@ -36,7 +36,12 @@ export type EpgProgramme = {
  * HTTP
  * ------------------------------------------------------------------ */
 
-async function get(url: string, tries = 3, as: "text" | "json" = "text") {
+async function get(
+  url: string,
+  tries = 3,
+  as: "text" | "json" = "text",
+  patience = 45_000,
+) {
   for (let i = 0; i < tries; i++) {
     try {
       const res = await fetch(url, {
@@ -49,7 +54,7 @@ async function get(url: string, tries = 3, as: "text" | "json" = "text") {
           referer: `${BASE}/`,
         },
         redirect: "follow",
-        signal: AbortSignal.timeout(45_000),
+        signal: AbortSignal.timeout(patience),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.text();
@@ -290,6 +295,34 @@ export async function readChannelProgrammes(
       `${BASE}/api/epg?channel_id=${encodeURIComponent(slug)}`,
       2,
       "json",
+    );
+    return findEpg(json);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * The day a channel is showing, read by its number instead of by its page.
+ *
+ * The source's JSON endpoint answers with the rows the channel airs from
+ * this moment on — a few kilobytes, in tens of milliseconds. The watch page
+ * answers with the whole day, but it is a hundred and fifty kilobytes of
+ * flight payload to be read and parsed.
+ *
+ * The number is not the slug: the directory hands every channel its own id,
+ * and the endpoint ignores anything else. That is why the id has to come
+ * from the directory (`/api/channels`) and not be guessed.
+ */
+export async function readChannelProgrammesById(
+  channelId: number,
+): Promise<EpgProgramme[]> {
+  try {
+    const json = await get(
+      `${BASE}/api/epg?channel_id=${encodeURIComponent(String(channelId))}`,
+      2,
+      "json",
+      8_000,
     );
     return findEpg(json);
   } catch {

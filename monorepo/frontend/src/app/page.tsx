@@ -11,7 +11,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { connection } from "next/server";
 import { headers } from "next/headers";
 import { ArrowRight, Radio, ShieldCheck, Users } from "lucide-react";
 
@@ -20,6 +19,7 @@ import { AcumMark } from "@/components/brand";
 import { ReviewDraftBridge } from "@/components/channel/channel-panel";
 import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
+import { SessionGate } from "@/components/account/session-gate";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { PopularReviews, type ComposerChannel } from "@/components/reviews";
 import { Button } from "@/components/ui/button";
@@ -115,12 +115,16 @@ export default async function LandingPage() {
     region = "DEFAULT";
   }
 
-  // A signed-in account never reaches this render: the middleware sends
+  // A signed-in account never reaches this render: the proxy sends
   // it to the catalogue before the route is even matched.
   const year = await copyrightYear();
 
   return (
     <main className="relative isolate min-h-dvh bg-canvas">
+      {/* A visitor whose session came back while the page was open goes
+          straight to the catalogue. The address is replaced, not pushed, so
+          the back button never walks them through this door again. */}
+      <SessionGate />
 
       {/* The light the page stands in. Screen-blended, so it stays
           luminous over the near-black surface. */}

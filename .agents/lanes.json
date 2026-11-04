@@ -1,63 +1,96 @@
 {
   "lanes": [
     {
-      "id": "reviews-core",
+      "id": "security-stream",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/components/reviews",
-        "monorepo/frontend/src/lib/reviews.ts",
-        "monorepo/frontend/src/lib/review-rank.ts",
-        "monorepo/frontend/src/lib/review-channels.ts",
-        "monorepo/frontend/src/hooks/use-reviews.ts",
-        "monorepo/frontend/src/app/api/reviews"
+        "monorepo/frontend/src/app/api/stream/route.ts",
+        "monorepo/frontend/src/app/api/resolve/route.ts",
+        "monorepo/frontend/src/app/api/player/route.ts",
+        "monorepo/frontend/src/lib/stream.ts",
+        "monorepo/tv/src/app/api/stream/route.ts",
+        "monorepo/tv/src/app/api/resolve/route.ts",
+        "monorepo/tv/src/app/api/player/route.ts",
+        "monorepo/tv/src/lib/stream.ts"
       ],
       "outputs": [
-        "reviews components meet the 44px touch target, keyboard and reduced-motion rules",
-        "honest read-error state, DELETE/PATCH review routes, correct channel list"
+        "the stream proxy opens only a signed token, behind the entitlement gate",
+        "the upstream allowlist is an exact host list and every redirect hop is re-checked",
+        "the signing key comes from the environment, the token answers are no-store"
       ]
     },
     {
-      "id": "reviews-integration",
+      "id": "security-admin",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/app/canale/page.tsx",
-        "monorepo/frontend/src/app/page.tsx",
-        "monorepo/frontend/src/app/layout.tsx",
-        "monorepo/frontend/src/components/channel/channel-panel.tsx",
-        "monorepo/frontend/src/components/channel-card.tsx",
-        "monorepo/frontend/src/components/header.tsx",
-        "monorepo/frontend/src/components/player/player-modal.tsx",
-        "monorepo/frontend/src/components/player/index.ts",
-        "monorepo/frontend/src/lib/programme-badges.ts",
-        "monorepo/frontend/src/components/programme-badges/badge-row.tsx"
+        "monorepo/frontend/src/app/api/account/route.ts",
+        "monorepo/frontend/src/lib/admin.ts",
+        "monorepo/frontend/src/lib/admin-access.ts",
+        "monorepo/frontend/src/lib/account-gate.ts",
+        "monorepo/frontend/src/lib/stream-sessions.ts",
+        "monorepo/frontend/src/lib/supabase/server.ts",
+        "monorepo/tv/src/app/api/account/route.ts",
+        "monorepo/tv/src/lib/admin.ts",
+        "monorepo/tv/src/lib/admin-access.ts",
+        "monorepo/tv/src/lib/account-gate.ts",
+        "monorepo/tv/src/lib/stream-sessions.ts",
+        "monorepo/tv/src/lib/supabase/server.ts",
+        "supabase/schema.sql",
+        "supabase/migrations"
       ],
       "outputs": [
-        "landing hydration fixed, reviews reachable, programme leads the panel, one quality badge per channel"
+        "profiles.bypass never grants the desk, the desk is an e-mail allowlist or the comp plan",
+        "the account RPCs are no longer callable with the public key for another account",
+        "the household device binding and created_at can no longer be self-written",
+        "the paywall gate fails closed"
       ]
     },
     {
-      "id": "player-controls",
+      "id": "player-ui",
       "role": "write",
       "paths": [
         "monorepo/frontend/src/components/player/player-controls.tsx",
         "monorepo/frontend/src/components/player/video-player.tsx",
-        "monorepo/frontend/src/components/player/player-quality.tsx"
+        "monorepo/frontend/src/components/player/player-modal.tsx",
+        "monorepo/frontend/src/components/channel/canal-screen.tsx",
+        "monorepo/frontend/src/app/globals.css",
+        "monorepo/frontend/src/app/layout.tsx",
+        "monorepo/frontend/src/components/account/plans-grid.tsx"
       ],
       "outputs": [
-        "player controls are 44px on touch, the live scrubber is usable, the connecting state reads as connecting"
+        "one control bar inside the video frame that keeps every existing player action",
+        "44px touch targets, Romanian copy, Lucide icons only, no emoji",
+        "iOS safe-area insets respected in the player, the modal and the mobile nav",
+        "pricing cards show the current, inferior and superior plan states without changing grid height"
       ]
     },
     {
-      "id": "schema-mirror",
+      "id": "auth-session",
       "role": "write",
       "paths": [
-        "supabase/schema.sql",
-        "supabase/migrations",
-        "monorepo/frontend/supabase",
-        "monorepo/tv/supabase"
+        "monorepo/frontend/src/middleware.ts",
+        "monorepo/frontend/src/proxy.ts",
+        "monorepo/frontend/src/lib/session-token.ts",
+        "monorepo/frontend/src/hooks/use-account.ts",
+        "monorepo/tv/src/hooks/use-account.ts",
+        "monorepo/frontend/src/components/account/session-gate.tsx",
+        "monorepo/frontend/src/app/page.tsx"
       ],
       "outputs": [
-        "one schema of record for reviews, valid SQL migrations everywhere"
+        "no redirect loop between the landing page and the catalogue",
+        "expired access tokens are renewed by the browser instead of bouncing the visitor"
+      ]
+    },
+    {
+      "id": "perf-epg",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/lib/epg-source.ts",
+        "monorepo/frontend/src/lib/guide.ts",
+        "monorepo/frontend/src/lib/channel-detail.ts"
+      ],
+      "outputs": [
+        "a channel detail request reads one channel's guide instead of walking every slug"
       ]
     },
     {
@@ -65,15 +98,23 @@
       "role": "write",
       "paths": [
         ".github/workflows",
-        "monorepo/frontend/data/epg.json",
         "docs/VERSION",
         "docs/changelog.md",
+        "docs/tech_stack.md",
+        "docs/specs",
         "monorepo/frontend/package.json",
+        "monorepo/frontend/.env.example",
+        "monorepo/frontend/README.md",
+        "monorepo/frontend/scripts",
+        "monorepo/frontend/src/components/channel-card.tsx",
+        "monorepo/frontend/src/components/account/account-button.tsx",
+        "monorepo/frontend/src/components/admin/denied.tsx",
         "monorepo/tv/package.json",
         ".agents/lanes.json"
       ],
       "outputs": [
-        "scheduled EPG refresh, one version line, changelog, release notes"
+        "version bump, changelog entry, pinned tech stack and the proof harnesses",
+        "the admin door is shown from the server's answer, not from a hardcoded address"
       ]
     },
     {
@@ -81,7 +122,8 @@
       "role": "read",
       "paths": [
         "monorepo/frontend/src",
-        "monorepo/tv/src"
+        "monorepo/tv/src",
+        "supabase"
       ]
     }
   ]
