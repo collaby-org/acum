@@ -180,11 +180,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       width: number;
       height: number;
     } | null>(null);
-    const [liveWindow, setLiveWindow] = useState<{
-      from: number;
-      to: number;
-      current: number;
-    } | null>(null);
     const [behindLive, setBehindLive] = useState(false);
     // The ladder the manifest carries, and the rung in use right now. Both
     // belong to the hls.js instance, and both are read off it — see the
@@ -211,6 +206,9 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // open — the menu is portaled out of the bar, so nothing about it can
     // be seen from here except what the badge says.
     const [qualityOpen, setQualityOpen] = useState(false);
+    // The connection panel is portaled out of the bar, so the bar is told
+    // when it is open and stays awake while the visitor reads it.
+    const [connectionOpen, setConnectionOpen] = useState(false);
     // Cast: whether this browser can hand the picture to a smart TV, and
     // whether one is playing it right now. Both answers only exist in the
     // browser, so both wait for the mount — the way the
@@ -697,12 +695,10 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       const read = () => {
         const ranges = video.buffered;
         if (ranges.length === 0) {
-          setLiveWindow(null);
+          setBehindLive(false);
           return;
         }
-        const from = ranges.start(0);
         const to = ranges.end(ranges.length - 1);
-        setLiveWindow({ from, to, current: video.currentTime });
         setBehindLive(to - video.currentTime > 1.5);
       };
 
@@ -927,10 +923,11 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         failed ||
         cinema ||
         qualityOpen ||
+        connectionOpen ||
         overBarRef.current ||
         focusInBarRef.current ||
         Boolean(document.pictureInPictureElement),
-      [playing, busy, blocked, failed, cinema, qualityOpen],
+      [playing, busy, blocked, failed, cinema, qualityOpen, connectionOpen],
     );
 
     // The bar rests while the picture runs: a moment of stillness and it
@@ -1267,34 +1264,36 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             </p>
           ) : null}
 
-          {/* The picture is left to the picture: the loading spinner and
-              the failure states below are the only things drawn over the
-              frame. The live chrome — the LIVE badge, the buffer bar and
-              the quality chip — lives in the transport bar, where every
-              player in the industry keeps it. */}
+          {/* The picture is left to the picture: the centred buffering
+              animation and the failure states below are the only things
+              drawn over the frame. Connection and quality stay in the
+              transport bar, without a progress strip. */}
 
           {connecting ? (
             <div
               role="status"
               aria-live="polite"
-              data-player-loading-overlay="legacy"
-              className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_center,rgb(240_165_0/0.11),transparent_38%),rgb(5_5_5/0.94)]"
+              data-player-buffering-overlay={waiting ? "buffering" : "connecting"}
+              className="pointer-events-none absolute inset-0 z-20 grid place-items-center overflow-hidden rounded-2xl bg-[radial-gradient(circle_at_center,rgb(240_165_0/0.13),transparent_34%),rgb(5_5_5/0.86)] backdrop-blur-[2px]"
             >
-              <div
-                aria-hidden
-                className="absolute inset-x-[12%] top-1/2 h-20 -translate-y-1/2 animate-pulse rounded-2xl bg-white/[0.035]"
-              />
               <div className="relative flex flex-col items-center gap-3 px-6 text-center">
-                <Loader2 className="size-8 animate-spin text-signal" aria-hidden />
+                <div className="relative grid size-16 place-items-center" aria-hidden>
+                  <span className="absolute inset-0 rounded-full border border-signal/35 animate-ping" />
+                  <span className="absolute inset-2 rounded-full border border-signal/45 animate-pulse" />
+                  <span className="absolute inset-3 rounded-full bg-signal/10" />
+                  <Loader2 className="relative size-7 animate-spin text-signal" />
+                </div>
                 <p className="font-display text-sm font-semibold text-ink">
                   {waiting
-                    ? "Se reia conexiunea la flux…"
+                    ? "Se reia…"
                     : status === "retrying"
                       ? "Se încearcă următorul flux…"
-                      : "Se conectează la fluxul live…"}
+                      : "Se conectează…"}
                 </p>
                 <p className="max-w-xs text-[12px] leading-relaxed text-ink-muted">
-                  Pregătim imaginea. Prima imagine poate dura câteva secunde.
+                  {waiting
+                    ? "Imaginea reia imediat ce bufferul este gata."
+                    : "Pregătim imaginea. Prima imagine poate dura câteva secunde."}
                 </p>
                 {attempts > 0 ? (
                   <p className="text-[11px] uppercase tracking-[0.18em] text-ink-faint">
@@ -1404,11 +1403,12 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
           {bare || embedded ? null : (
             <PlayerControls
-              playing={playing}
+              playing={playing || (waiting && !paused)}
               muted={muted}
               volume={volume}
               busy={busy}
               connecting={connecting}
+              buffering={waiting}
               fullscreen={fullscreen}
               error={failed}
               canFullscreen={fullscreenMode !== "none"}
@@ -1420,7 +1420,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               cinema={cinema}
               canCinema={!fullscreen}
               behindLive={behindLive}
-              liveWindow={liveWindow}
+              qualityAutomatic={currentLevel === -1}
               nowPlaying={
                 <>
                   <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
@@ -1454,6 +1454,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
               onJumpToLive={jumpToLive}
               onRetry={player.retry}
               onNextSource={player.advance}
+              onConnectionOpenChange={setConnectionOpen}
             />
           )}
         </div>

@@ -114,10 +114,11 @@ const MENU_MIN_HEIGHT = 180;
 /**
  * Dimensiunea cipului de calitate.
  *
- * Are 44 px înălțime, ca toate celelalte cipuri cu etichetă din bară. Asta
- * îl face să se citească drept control, nu drept o simplă etichetă.
+ * Cipul este o informație compactă lângă pictogramele barei, nu un buton
+ * gigant. Păstrează 32 px înălțime vizuală într-un buton de 44×44 px și
+ * lasă controlile din bară să dețină vizual greutatea.
  */
-const CHIP = "inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-3";
+const CHIP = "inline-flex h-8 min-w-8 shrink-0 items-center justify-center gap-1.5 rounded-lg px-2.5";
 
 /** Where the menu sits, in viewport pixels. */
 type MenuSpot = {
@@ -276,7 +277,10 @@ export function PlayerQualityBadge({
     currentLevel >= 0
       ? (variants.find((variant) => variant.index === currentLevel)?.height ?? 0)
       : 0;
-  const label = QUALITY_META[qualityOfHeight(decoded || pinned)].label || "Automată";
+  const label =
+    currentLevel === -1
+      ? "Auto"
+      : QUALITY_META[qualityOfHeight(decoded || pinned)].label || "Auto";
 
   const moveFocus = (step: number) => {
     const menu = menuRef.current;
@@ -315,25 +319,30 @@ export function PlayerQualityBadge({
         aria-label={`Calitate: ${label}`}
         title="Calitate"
         className={cn(
-          CHIP,
-          "border border-white/12",
-          "bg-black/55 text-ink/90 backdrop-blur-md",
-          "transition-[background-color,border-color,color,transform] duration-300",
-          "hover:border-white/20 hover:bg-black/75",
+          "group grid size-11 shrink-0 place-items-center rounded-full p-0",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
         )}
       >
-        <Signal className="size-3.5 text-signal max-sm:size-4" aria-hidden />
-        <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] max-sm:text-[11px]">
-          {label}
-        </span>
-        <ChevronDown
-          aria-hidden
+        <span
           className={cn(
-            "size-3 text-ink-faint transition-transform duration-300 ease-spring max-sm:size-3.5",
-            open && "rotate-180",
+            CHIP,
+            "border border-white/10 bg-white/[0.06] text-ink/85",
+            "transition-[background-color,border-color,color,transform] duration-200",
+            "group-hover:border-white/20 group-hover:bg-white/10 group-hover:text-ink",
           )}
-        />
+        >
+          <Signal className="size-3.5 text-signal" aria-hidden />
+          <span className="hidden font-display text-[10px] font-semibold tracking-tight min-[768px]:inline">
+            {label}
+          </span>
+          <ChevronDown
+            aria-hidden
+            className={cn(
+              "hidden size-3 text-ink-faint transition-transform duration-200 ease-spring min-[768px]:block",
+              open && "rotate-180",
+            )}
+          />
+        </span>
       </button>
 
       {open
@@ -383,7 +392,7 @@ export function PlayerQualityBadge({
                     <Check className="size-3.5 text-signal" />
                   ) : null}
                 </span>
-                <span className="truncate">Automată</span>
+                <span className="truncate">Auto</span>
                 <span className="ml-auto font-mono text-[10px] tabular-nums text-ink-faint">
                   după conexiune
                 </span>

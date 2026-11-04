@@ -9,6 +9,31 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.2] — 2026-11-04
+
+### Changed
+
+- **The player's bar is one line, and every control is the same size.** The
+  buttons are no longer a row of different-sized objects: play/pause carries
+  the same weight as the rest, every control keeps a 44 × 44 px target, and
+  the bar never wraps — not at 390 px, not at 320 px. Below 768 px the line
+  holds the transport and the connection/quality pair; the picture actions
+  (cast, Picture-in-Picture, cinema, fullscreen) move into the connection
+  panel, one press away, and the line still holds.
+- **The loading strip is gone, and the buffering sits in the middle of the
+  picture.** The bar carries no progress strip. While the picture waits, a
+  calm centred animation appears over the frame and says **"Se reia…"**,
+  **"Se conectează…"** or **"Se încearcă următorul flux…"**.
+- **The live badge became a connection chip.** It no longer takes permanent
+  width in the bar: a compact chip with a state-coloured dot. A press opens a
+  small Romanian panel — *"În direct — conexiune bună"*, *"Se reia…"*,
+  *"Flux indisponibil"* — and the quality choice lives in the same place.
+- **The quality control is a chip, not a button.** It reads the rung the
+  picture actually has, opens a menu with **Auto** and the manifest's real
+  rungs, and below 768 px shows only its icon. Its 44 × 44 px target stays.
+- **Version 1.7.2** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.1] — 2026-11-04
 
 ### Added
