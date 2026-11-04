@@ -9,6 +9,27 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.3] — 2026-11-04
+
+### Added
+
+- **The player's bar has a harness of its own.** `scripts/verify-player-bar.mjs`
+  (`npm run verify:player:bar`) opens the live player, wakes the bar with a
+  pointer move and measures it against the owner's words: one line, one size,
+  every target at least 44 × 44 px, no loading strip, no live badge taking
+  space in the bar, the connection chip in place. Against the deployed 1.7.2
+  it answers **PASS** — 1440 × 105 px, **1 line**, 8 visible controls, the
+  smallest target **44 × 44 px**.
+
+### Changed
+
+- **The verification log carries the result**, with two honest notes: the
+  quality chip is not offered while a manifest carries no rung (the player
+  refuses to open an empty menu), and the buffering animation was not
+  observed on that run because the picture was not waiting.
+- **Version 1.7.3** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.2] — 2026-11-04
 
 ### Changed

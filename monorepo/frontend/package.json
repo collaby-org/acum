@@ -1,6 +1,6 @@
 {
   "name": "acum",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "verify:ui": "node scripts/verify-ui.mjs",
     "verify:player": "node scripts/verify-player.mjs",
+    "verify:player:bar": "node scripts/verify-player-bar.mjs",
     "verify:mobile": "node scripts/verify-mobile.mjs",
     "verify:live": "node scripts/verify-live.mjs",
     "verify:mobile:stream": "node scripts/verify-mobile-stream.mjs",

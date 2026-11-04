@@ -59,7 +59,41 @@ node monorepo/frontend/scripts/verify-live.mjs https://acum-weld.vercel.app/
 
 ---
 
-## 4. The picture and the interface
+## 4. The player's bar
+
+```bash
+node monorepo/frontend/scripts/verify-player-bar.mjs https://acum-weld.vercel.app/
+```
+
+The harness opens the live player, wakes the bar with a pointer move and
+measures it against the owner's words — one line, one size, 44px targets, no
+loading strip, no live badge taking space in the bar.
+
+Against the deployed 1.7.2:
+
+```text
+=== the checks ===
+  PASS  the bar is on the page — 1440×105px
+  PASS  the bar is one line — 1 line(s), 8 visible controls
+  PASS  every target is at least 44px — smallest 44×44px
+  PASS  no loading strip in the bar — none
+  PASS  no live badge taking space in the bar — none
+  PASS  the connection chip is there — Conexiune: …
+  NOTE  the quality chip — not offered: the manifest carries no rung yet
+
+RESULT: PASS
+```
+
+Two honest notes about that run: the bar is 105 px tall because it carries
+the programme row above the control row, and the **quality chip was not
+offered** — that channel's manifest carried no rung at that moment, and the
+player refuses to open an empty menu. The **buffering animation was not
+observed** on that run either: the picture was up and not waiting, so there
+was nothing to buffer.
+
+---
+
+## 5. The picture and the interface
 
 ```bash
 node monorepo/frontend/scripts/verify-player.mjs https://acum-weld.vercel.app/
@@ -77,9 +111,9 @@ node monorepo/frontend/scripts/verify-acum.mjs --app=https://acum-weld.vercel.ap
 
 ---
 
-## 5. The phone harnesses
+## 6. The phone harnesses
 
-### 5.1 The playhead on a slow line
+### 6.1 The playhead on a slow line
 
 ```bash
 node monorepo/frontend/scripts/verify-mobile-stream.mjs https://acum-weld.vercel.app/
@@ -128,7 +162,7 @@ Two facts come out of it:
    answered only when the slowest probe finished. The fix is to answer in the
    catalogue's own order with a short, explicit probe budget.
 
-### 5.2 The bottom bar
+### 6.2 The bottom bar
 
 ```bash
 node monorepo/frontend/scripts/verify-mobile-nav.mjs https://acum-weld.vercel.app/
@@ -159,7 +193,7 @@ the route change.
 
 ---
 
-## 6. The repository gates
+## 7. The repository gates
 
 Run from `monorepo/frontend` and `monorepo/tv`:
 
@@ -183,7 +217,7 @@ The build prints `ƒ Proxy (Middleware)` — the Next 16 convention is
 
 ---
 
-## 7. The database
+## 8. The database
 
 The live Supabase project was migrated directly with
 `supabase/migrations/20261103_security_policies.sql`, and the result was read
@@ -199,7 +233,7 @@ back with a query:
 
 ---
 
-## 8. What is still open
+## 9. What is still open
 
 | Question | Status |
 | -------- | ------ |

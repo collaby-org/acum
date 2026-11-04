@@ -109,4 +109,6 @@ Each push adds a line here.
 | Version | Commit | What it carries |
 | ------- | ------ | --------------- |
 | 1.7.0 | `2ec2e68` | the six production bugs and the security wave, live and verified |
-| 1.7.1 | see `git log` | the programme-guide refresh, the verification harnesses, the diagrams and this documentation set |
+| 1.7.1 | `decff00` | the programme-guide refresh, the verification harnesses, the diagrams and this documentation set |
+| 1.7.2 | `eec0d83` | the player bar: one line, one size, the buffering in the middle of the picture, the connection chip |
+| 1.7.3 | see `git log` | the player-bar harness, measured against the live site |
