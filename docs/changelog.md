@@ -9,6 +9,49 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.1] — 2026-11-04
+
+### Added
+
+- **The proof is a harness, not a promise.** `scripts/verify-live.mjs` asks the
+  deployed site eleven questions — the front door's redirect, the proxy's
+  refusal of a plain address, the forged token, the gate, the plan, the cache
+  header — and fails on the first wrong answer. Two more harnesses were added
+  for the phone: `verify-mobile-stream.mjs` opens a channel in a 390×844
+  Android profile on a throttled line and watches the playhead for thirty
+  seconds, and `verify-mobile-nav.mjs` asks what sits under the bottom bar's
+  "Acasă" button and how long the route takes to change after a real tap.
+- **The three paths are drawn.** `docs/diagrams/stream-path.md` carries the
+  stream, the session and the phone-navigation paths in Mermaid, and
+  `docs/diagrams/stream-path.html` carries the stream path as a single
+  self-contained graphic in the product's own palette — near-black canvas,
+  gold for the one focal thing, red for nothing.
+- **The wave is written down.** `docs/work-log.md` carries the owner's two
+  reports, the lanes, the prompts and what came back; `docs/verification.md`
+  carries every command, every output and the before-and-after numbers;
+  `docs/backlog.md` carries what is still open, mapped to the GitHub issues.
+
+### Changed
+
+- **The programme guide is current.** `npm run data:epg` refreshed
+  `data/epg.json`: 77 of 83 channels carry a guide, 1226 programmes, 76
+  channels are airing right now. The six channels that carry no guide say so
+  instead of showing a stale programme.
+- **The README was telling the story twice.** The architecture diagram appeared
+  twice and the section numbers repeated themselves. It now appears once, it
+  shows the current stream path — the browser names a channel, never an
+  address — and it links the new documents.
+- **Version 1.7.1** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
+### Fixed
+
+- **The mobile harness was looking for the wrong words.** It searched for a
+  back control whose text was exactly "Înapoi acasă"; the control says "Înapoi
+  acasă" inside a longer label, so the harness reported a missing button on a
+  page that has one. It now matches any control whose text starts with
+  "Înapoi".
+
 ## [1.7.0] — 2026-11-04
 
 ### Fixed

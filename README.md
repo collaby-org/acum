@@ -20,70 +20,6 @@
 
 A Netflix-style directory of Romanian live TV channels, built from public embed addresses published by Romanian TV directories.
 
-```mermaid
-graph TB
-    subgraph "Build Time (Node, no server at runtime)"
-        direction TB
-        
-        A[cool-etv.net<br/>menu + channels] -->|scrape-channels.mjs<br/>74 families / 203 pages| B[data/channels.raw.json<br/>committed]
-        
-        C[embed hosts<br/>105 unique URLs] -->|check-embeds.mjs<br/>Referer-gated, serial| D[data/embed-health.json<br/>committed]
-        
-        E[player panels] -->|resolve-streams.mjs<br/>headless Edge| F[data/resolved-streams.json<br/>committed]
-        
-        G[taxonomy] -->|channel-taxonomy.json<br/>names, groups| G2[scripts/build-dataset.mjs]
-        
-        B --> G2
-        D --> G2
-        F --> G2
-        
-        G2 --> H[src/data/channels.ts<br/>203 feeds → N channels<br/>each with server list]
-        
-        H --> I[public/logos/<br/>194 PNG logos]
-    end
-    
-    subgraph "Runtime (browser)"
-        direction TB
-        
-        J[Browser] -->|can play| K[src/app/page.tsx<br/>server]
-        K -->|props| L[<Browse><br/>client island]
-        
-        L -->|props| M[<Hero>]
-        L -->|props| N[<Rail>]
-        L -->|props| O[<ChannelIndex>]
-        L -->|props| P[<SearchPanel>]
-        
-        M --> Q[<ChannelCard>]
-        N --> Q
-        
-        Q -->|click| R[<Player><br/>modal]
-        
-        R -->|GET /api/stream?t=…| S[<api/stream><br/>upstream relay]
-        R -->|GET /api/player?u=…| T[<api/player><br/>upstream page]
-        
-        S --> U[cool-etv.net<br/>HLS manifests]
-        T --> U
-    end
-    
-    style A fill:#e1f5e1
-    style B fill:#e1f5e1
-    style J fill:#fff3e0
-    style K fill:#fff3e0
-    style L fill:#fff3e0
-    style R fill:#ffe0e0
-    style S fill:#ffebee
-    style T fill:#ffebee
-    style U fill:#ffebee
-```
-
----
-
-## 1. What is ACUM
-
-**ACUM** — Romanian live TV streaming platform. No ads. Free tier: 120 minutes daily. Paid plans remove the limit.
-
-A Netflix-style directory of Romanian live TV channels, built from public embed addresses published by Romanian TV directories.
-
 ### Key Features
 
 - **One click to play.** Click a channel — video starts. No poster, no "click to start", no two-click tour.
@@ -103,47 +39,47 @@ A Netflix-style directory of Romanian live TV channels, built from public embed 
 graph TB
     subgraph "Build Time (Node, no server at runtime)"
         direction TB
-        
+
         A[cool-etv.net<br/>menu + channels] -->|scrape-channels.mjs<br/>74 families / 203 pages| B[data/channels.raw.json<br/>committed]
-        
+
         C[embed hosts<br/>105 unique URLs] -->|check-embeds.mjs<br/>Referer-gated, serial| D[data/embed-health.json<br/>committed]
-        
+
         E[player panels] -->|resolve-streams.mjs<br/>headless Edge| F[data/resolved-streams.json<br/>committed]
-        
+
         G[taxonomy] -->|channel-taxonomy.json<br/>names, groups| G2[scripts/build-dataset.mjs]
-        
+
         B --> G2
         D --> G2
         F --> G2
-        
+
         G2 --> H[src/data/channels.ts<br/>203 feeds → N channels<br/>each with server list]
-        
+
         H --> I[public/logos/<br/>194 PNG logos]
     end
-    
+
     subgraph "Runtime (browser)"
         direction TB
-        
+
         J[Browser] -->|can play| K[src/app/page.tsx<br/>server]
         K -->|props| L[<Browse><br/>client island]
-        
+
         L -->|props| M[<Hero>]
         L -->|props| N[<Rail>]
         L -->|props| O[<ChannelIndex>]
         L -->|props| P[<SearchPanel>]
-        
+
         M --> Q[<ChannelCard>]
         N --> Q
-        
+
         Q -->|click| R[<Player><br/>modal]
-        
-        R -->|GET /api/stream?t=…| S[<api/stream><br/>upstream relay]
-        R -->|GET /api/player?u=…| T[<api/player><br/>upstream page]
-        
-        S --> U[cool-etv.net<br/>HLS manifests]
-        T --> U
+
+        R -->|POST channel id| T[api/player<br/>gate · catalogue]
+        T -->|signed manifest| R
+        R -->|GET /api/stream?t=…| S[api/stream<br/>signed relay]
+        S -->|manifest + segments| U[cool-etv.net<br/>HLS manifests]
+        U -->|m3u8 · .ts| S
     end
-    
+
     style A fill:#e1f5e1
     style B fill:#e1f5e1
     style J fill:#fff3e0
@@ -155,9 +91,19 @@ graph TB
     style U fill:#ffebee
 ```
 
+The rule the picture carries: **the browser never names an upstream address.**
+It asks for a channel, the server resolves the feeds from the committed
+catalogue, and every byte afterwards travels under a signed token through
+`/api/stream`.
+
+- The full diagram, in the brand's own palette:
+  [`docs/diagrams/stream-path.html`](docs/diagrams/stream-path.html)
+- The same three paths (stream, session, phone navigation) in Mermaid:
+  [`docs/diagrams/stream-path.md`](docs/diagrams/stream-path.md)
+
 ---
 
-## 2. Technology Stack
+## 3. Technology Stack
 
 | Layer | Technology | Version | Role |
 |-------|-----------|---------|------|
@@ -173,7 +119,7 @@ graph TB
 
 ---
 
-## 3. Pricing & Plans
+## 4. Pricing & Plans
 
 | Plan | Price | Daily Limit | Streams | Seats |
 |------|-------|-------------|---------|-------|
@@ -184,7 +130,7 @@ graph TB
 
 ---
 
-## 3. How to Run
+## 5. How to Run
 
 ```bash
 # 1. Clone
@@ -200,20 +146,38 @@ cp .env.example .env   # fill: SUPABASE_URL, SUPABASE_ANON_KEY, etc.
 # 4. Development
 npm run dev            # http://localhost:3000
 
-# 4. Checks
+# 5. Checks
 npm run lint           # ESLint (flat config)
 npm run typecheck      # next typegen && tsc --noEmit
 npm run build          # Turbopack production build
-
-# 5. Runtime checks
-npm run verify:player    # one click → moving image, no popup, no ad host
-npm run verify:fallback  # kill first server → next one takes relay
-npm run verify:ui        # walk the app, capture docs/reviews/
 ```
+
+### Verification
+
+The proof is a set of headless harnesses that ask the deployed site the
+questions the bugs were about. They need the harness credentials in the
+environment (never in a `.env` file — the repository must not carry secrets).
+
+```bash
+export NEXT_PUBLIC_SUPABASE_URL='…'
+export NEXT_PUBLIC_SUPABASE_ANON_KEY='…'
+export ACUM_HARNESS_EMAIL='…'
+export ACUM_HARNESS_PASSWORD='…'
+
+npm run verify:live          # 11 questions about the live site
+npm run verify:player        # one click → moving picture, no popup, no ad host
+npm run verify:ui            # walk the app, fail on a console error
+npm run verify:mobile        # the phone: the channel page and the bottom bar
+npm run verify:mobile:stream # the playhead on a throttled line
+npm run verify:mobile:nav    # the bottom bar: is the tap eaten? how slow?
+```
+
+Every number these harnesses produced is written down in
+[`docs/verification.md`](docs/verification.md).
 
 ---
 
-## 4. How the Catalog is Built
+## 6. How the Catalog is Built
 
 The pipeline runs at build time, with no external dependencies at runtime:
 
@@ -222,6 +186,7 @@ npm run data:scrape    # cool-etv.net  → data/channels.raw.json
 npm run data:probe     # liveness probe  → data/embed-health.json
 npm run data:resolve   # Edge headless, HLS URLs → data/resolved-streams.json
 npm run data:build     # merge + logos   → src/data/channels.ts
+npm run data:epg       # the programme guide → data/epg.json
 ```
 
 `scripts/channel-taxonomy.json` is the editorial layer: the source obfuscates labels (`HB0 R0` = HBO, `Ant 1` = Antena 1, `L00K Tv` = LOOK TV), so each family and feed gets a corrected Romanian display name and category.
@@ -230,13 +195,13 @@ npm run data:build     # merge + logos   → src/data/channels.ts
 
 ---
 
-## 4. The Referer Gate (Why the Proxy Exists)
+## 7. The Referer Gate (Why the Proxy Exists)
 
 Upstream media hosts sit behind a Cloudflare `Referer` allowlist. With the correct referer they serve a real player; with any other they answer `301 → google.com`. A browser cannot set a `Referer`, so the stream is relayed through `/api/stream`. Full measurement is in [docs/specs/player-architecture.md](docs/specs/player-architecture.md).
 
 ---
 
-## 4. Pages and Routes
+## 8. Pages and Routes
 
 | Route | Purpose |
 |-------|---------|
@@ -255,7 +220,7 @@ Upstream media hosts sit behind a Cloudflare `Referer` allowlist. With the corre
 
 ---
 
-## 5. Installation (PWA — Mobile Only)
+## 9. Installation (PWA — Mobile Only)
 
 ACUM is a PWA **for mobile phones only**:
 
@@ -266,12 +231,17 @@ ACUM is a PWA **for mobile phones only**:
 
 ---
 
-## 6. Documentation
+## 10. Documentation
 
 | Document | Contents |
 |----------|----------|
 | [docs/project-doc.md](docs/project-doc.md) | What the project is and how it's built |
 | [docs/system_diagram.md](docs/system_diagram.md) | Architecture (diagrams) |
+| [docs/diagrams/stream-path.md](docs/diagrams/stream-path.md) | The stream, session and phone-navigation paths |
+| [docs/diagrams/stream-path.html](docs/diagrams/stream-path.html) | The stream path, in the brand's own palette |
+| [docs/work-log.md](docs/work-log.md) | This delivery wave: what was asked, what was done, what it measured |
+| [docs/verification.md](docs/verification.md) | Every command, every output, before and after |
+| [docs/backlog.md](docs/backlog.md) | What is open, mapped to the GitHub issues |
 | [docs/tech_stack.md](docs/tech_stack.md) | Pinned versions |
 | [docs/targets.md](docs/targets.md) | Scope and quality bar |
 | [docs/roadmap.md](docs/roadmap.md) | What's next |
@@ -282,9 +252,12 @@ ACUM is a PWA **for mobile phones only**:
 | [AGENTS.md](AGENTS.md) | Contract for agents and contributors |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 
+The delivery wave is also tracked as a living issue:
+[#22 — the delivery log](https://github.com/collaby-org/acum/issues/22).
+
 ---
 
-## 8. Contributing
+## 11. Contributing
 
 Every change goes through a pull request. The PR template asks for evidence and `version: before → after`.
 
@@ -297,14 +270,14 @@ Rules:
 
 ---
 
-## 8. Security
+## 12. Security
 
 See the [security policy](.github/SECURITY.md).  
 Report vulnerabilities privately via [GitHub's security advisory form](https://github.com/collaby-org/acum/security/advisories/new).
 
 ---
 
-## 9. License
+## 13. License
 
 MIT — see [LICENSE](LICENSE).
 

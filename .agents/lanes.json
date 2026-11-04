@@ -1,120 +1,72 @@
 {
   "lanes": [
     {
-      "id": "security-stream",
+      "id": "phone-latency",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/app/api/stream/route.ts",
-        "monorepo/frontend/src/app/api/resolve/route.ts",
         "monorepo/frontend/src/app/api/player/route.ts",
-        "monorepo/frontend/src/lib/stream.ts",
-        "monorepo/tv/src/app/api/stream/route.ts",
-        "monorepo/tv/src/app/api/resolve/route.ts",
         "monorepo/tv/src/app/api/player/route.ts",
-        "monorepo/tv/src/lib/stream.ts"
+        "monorepo/frontend/src/components/mobile-nav.tsx",
+        "monorepo/frontend/src/app/preturi/page.tsx",
+        "monorepo/frontend/src/lib/session-token.ts"
       ],
       "outputs": [
-        "the stream proxy opens only a signed token, behind the entitlement gate",
-        "the upstream allowlist is an exact host list and every redirect hop is re-checked",
-        "the signing key comes from the environment, the token answers are no-store"
+        "the manifest answers as fast as the catalogue knows, not as slowly as the slowest probe",
+        "the bottom bar is on the plans page and its home action never takes a redirect",
+        "the destination is decided locally from the mirrored session, in one step"
       ]
     },
     {
-      "id": "security-admin",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/app/api/account/route.ts",
-        "monorepo/frontend/src/lib/admin.ts",
-        "monorepo/frontend/src/lib/admin-access.ts",
-        "monorepo/frontend/src/lib/account-gate.ts",
-        "monorepo/frontend/src/lib/stream-sessions.ts",
-        "monorepo/frontend/src/lib/supabase/server.ts",
-        "monorepo/tv/src/app/api/account/route.ts",
-        "monorepo/tv/src/lib/admin.ts",
-        "monorepo/tv/src/lib/admin-access.ts",
-        "monorepo/tv/src/lib/account-gate.ts",
-        "monorepo/tv/src/lib/stream-sessions.ts",
-        "monorepo/tv/src/lib/supabase/server.ts",
-        "supabase/schema.sql",
-        "supabase/migrations"
-      ],
-      "outputs": [
-        "profiles.bypass never grants the desk, the desk is an e-mail allowlist or the comp plan",
-        "the account RPCs are no longer callable with the public key for another account",
-        "the household device binding and created_at can no longer be self-written",
-        "the paywall gate fails closed"
-      ]
-    },
-    {
-      "id": "player-ui",
+      "id": "player-bar",
       "role": "write",
       "paths": [
         "monorepo/frontend/src/components/player/player-controls.tsx",
-        "monorepo/frontend/src/components/player/video-player.tsx",
-        "monorepo/frontend/src/components/player/player-modal.tsx",
+        "monorepo/frontend/src/components/player/player-quality.tsx",
+        "monorepo/frontend/src/components/player/video-player.tsx"
+      ],
+      "outputs": [
+        "one control line that never wraps, one control size, compact chips",
+        "the buffering state is a centred animation over the picture, not a bar",
+        "the live badge becomes a connection chip that shares a container with the quality control"
+      ]
+    },
+    {
+      "id": "channel-panel",
+      "role": "write",
+      "paths": [
         "monorepo/frontend/src/components/channel/canal-screen.tsx",
-        "monorepo/frontend/src/app/globals.css",
-        "monorepo/frontend/src/app/layout.tsx",
-        "monorepo/frontend/src/components/account/plans-grid.tsx"
-      ],
-      "outputs": [
-        "one control bar inside the video frame that keeps every existing player action",
-        "44px touch targets, Romanian copy, Lucide icons only, no emoji",
-        "iOS safe-area insets respected in the player, the modal and the mobile nav",
-        "pricing cards show the current, inferior and superior plan states without changing grid height"
-      ]
-    },
-    {
-      "id": "auth-session",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/middleware.ts",
-        "monorepo/frontend/src/proxy.ts",
-        "monorepo/frontend/src/lib/session-token.ts",
-        "monorepo/frontend/src/hooks/use-account.ts",
-        "monorepo/tv/src/hooks/use-account.ts",
-        "monorepo/frontend/src/components/account/session-gate.tsx",
-        "monorepo/frontend/src/app/page.tsx"
-      ],
-      "outputs": [
-        "no redirect loop between the landing page and the catalogue",
-        "expired access tokens are renewed by the browser instead of bouncing the visitor"
-      ]
-    },
-    {
-      "id": "perf-epg",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/lib/epg-source.ts",
-        "monorepo/frontend/src/lib/guide.ts",
+        "monorepo/frontend/src/components/channel/channel-panel.tsx",
+        "monorepo/frontend/src/app/canal/[id]/page.tsx",
         "monorepo/frontend/src/lib/channel-detail.ts"
       ],
       "outputs": [
-        "a channel detail request reads one channel's guide instead of walking every slug"
+        "the channel panel leads with the programme and keeps the channel text as context",
+        "an honest empty state when there is no programme",
+        "the back control is findable by assistive technology"
       ]
     },
     {
       "id": "orchestrator",
       "role": "write",
       "paths": [
+        ".agents/lanes.json",
         ".github/workflows",
-        "docs/VERSION",
-        "docs/changelog.md",
-        "docs/tech_stack.md",
-        "docs/specs",
+        "README.md",
+        "docs",
+        "monorepo/frontend/README.md",
         "monorepo/frontend/package.json",
         "monorepo/frontend/.env.example",
-        "monorepo/frontend/README.md",
         "monorepo/frontend/scripts",
+        "monorepo/frontend/data/epg.json",
         "monorepo/frontend/src/components/channel-card.tsx",
         "monorepo/frontend/src/components/account/account-button.tsx",
         "monorepo/frontend/src/components/admin/denied.tsx",
-        "monorepo/tv/package.json",
-        ".agents/lanes.json"
+        "monorepo/tv/package.json"
       ],
       "outputs": [
-        "version bump, changelog entry, pinned tech stack and the proof harnesses",
-        "the admin door is shown from the server's answer, not from a hardcoded address"
+        "the changelog, the backlog, the verification log and the diagrams",
+        "the live proof scripts and the refreshed programme guide",
+        "the version line that moves with the change"
       ]
     },
     {

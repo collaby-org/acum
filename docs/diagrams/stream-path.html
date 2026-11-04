@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ACUM — the stream path</title>
+    <style>
+      /* The diagram wears the product's own palette: a near-black canvas,
+         gold for the one focal thing, red for nothing (red means "live"). */
+      :root {
+        --paper: #0b0d14;
+        --node: #14161e;
+        --node-edge: rgba(255, 255, 255, 0.14);
+        --veil: rgba(255, 255, 255, 0.05);
+        --ink: #f4f6fb;
+        --muted: #949cb2;
+        --accent: #f2a71b;
+        --accent-bright: #ffc95e;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 48px 24px 72px;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Space Grotesk", "Inter", system-ui, -apple-system,
+          "Segoe UI", sans-serif;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        font-family: ui-monospace, "Geist Mono", "SFMono-Regular", Consolas,
+          monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .standfirst {
+        margin: 0 0 28px;
+        max-width: 76ch;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .figure {
+        margin: 0;
+        padding: 24px 24px 8px;
+        border: 1px solid var(--node-edge);
+        border-radius: 10px;
+        background: #080a12;
+        overflow-x: auto;
+      }
+
+      svg {
+        display: block;
+        min-width: 1200px;
+        width: 100%;
+        height: auto;
+      }
+
+      figcaption {
+        margin: 8px 0 0;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 24px 0 0;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .note code {
+        font-family: ui-monospace, "Geist Mono", "SFMono-Regular", Consolas,
+          monospace;
+        font-size: 12px;
+        color: var(--accent-bright);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">ACUM · architecture · 1.7.1</p>
+      <h1>The stream path: a channel in, a picture out</h1>
+      <p class="standfirst">
+        The browser never names an upstream address. It asks for a
+        <strong>channel</strong>; the server resolves the feeds from the
+        catalogue and hands back a <strong>signed manifest</strong>; every byte
+        after that travels through <code>/api/stream</code> under a token that
+        carries the address. The catalogue is the only place an address is
+        written down, and the allowlist is exact.
+      </p>
+
+      <figure class="figure">
+        <svg
+          viewBox="0 0 1200 580"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-labelledby="stream-path-title stream-path-desc"
+          data-grammar="architecture"
+        >
+          <title id="stream-path-title">
+            The ACUM stream path, from the player to the upstream host
+          </title>
+          <desc id="stream-path-desc">
+            The player asks /api/player for a channel, the server reads the
+            feeds from the catalogue and answers with a signed manifest, and
+            the picture then travels through /api/stream, which relays the
+            upstream manifest and segments and rewrites them back for the
+            player.
+          </desc>
+
+          <defs>
+            <marker
+              id="sp-arrow"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#949cb2" />
+            </marker>
+            <marker
+              id="sp-arrow-accent"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#f2a71b" />
+            </marker>
+          </defs>
+
+          <!-- zones: drawn first, so every connector sits on top of them -->
+          <g>
+            <rect
+              x="32"
+              y="72"
+              width="256"
+              height="396"
+              rx="8"
+              fill="rgba(244,246,251,0.02)"
+              stroke="rgba(244,246,251,0.10)"
+              stroke-width="0.8"
+            />
+            <rect x="44" y="76" width="62" height="12" rx="2" fill="#0b0d14" />
+            <text
+              x="75"
+              y="85"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.16em"
+              text-anchor="middle"
+            >
+              BROWSER
+            </text>
+
+            <rect
+              x="336"
+              y="72"
+              width="464"
+              height="396"
+              rx="8"
+              fill="rgba(244,246,251,0.02)"
+              stroke="rgba(244,246,251,0.10)"
+              stroke-width="0.8"
+            />
+            <rect x="348" y="76" width="74" height="12" rx="2" fill="#0b0d14" />
+            <text
+              x="385"
+              y="85"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.16em"
+              text-anchor="middle"
+            >
+              ACUM · EDGE
+            </text>
+
+            <rect
+              x="824"
+              y="72"
+              width="344"
+              height="396"
+              rx="8"
+              fill="rgba(244,246,251,0.02)"
+              stroke="rgba(244,246,251,0.10)"
+              stroke-width="0.8"
+            />
+            <rect x="836" y="76" width="76" height="12" rx="2" fill="#0b0d14" />
+            <text
+              x="874"
+              y="85"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.16em"
+              text-anchor="middle"
+            >
+              UPSTREAM
+            </text>
+          </g>
+
+          <!-- connectors: arrows before boxes -->
+          <g
+            fill="none"
+            stroke="#949cb2"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          >
+            <!-- player → /api/player -->
+            <path
+              d="M 264,264 H 304 Q 312,264 312,256 V 172 Q 312,164 320,164 H 360"
+              marker-end="url(#sp-arrow)"
+            />
+            <!-- /api/player → player (signed manifest) -->
+            <path
+              d="M 360,196 H 348 Q 340,196 340,204 V 280 Q 340,288 332,288 H 264"
+              stroke-dasharray="4,3"
+              marker-end="url(#sp-arrow)"
+            />
+            <!-- player → /api/stream -->
+            <path d="M 264,312 H 360" marker-end="url(#sp-arrow)" />
+            <!-- /api/stream → player (rewritten manifest) -->
+            <path
+              d="M 360,344 H 338 Q 330,344 330,336 H 264"
+              stroke-dasharray="4,3"
+              marker-end="url(#sp-arrow)"
+            />
+            <!-- /api/player → catalogue -->
+            <path d="M 560,164 H 608" marker-end="url(#sp-arrow)" />
+            <!-- catalogue → /api/player -->
+            <path
+              d="M 608,196 H 560"
+              stroke-dasharray="4,3"
+              marker-end="url(#sp-arrow)"
+            />
+            <!-- /api/stream → catalogue (allowlist) -->
+            <path
+              d="M 460,272 V 262 Q 460,254 468,254 H 688 Q 696,254 696,246 V 236"
+              marker-end="url(#sp-arrow)"
+            />
+            <!-- /api/stream → upstream (the signed relay) -->
+            <path
+              d="M 560,296 H 844"
+              stroke="#f2a71b"
+              stroke-width="1.4"
+              marker-end="url(#sp-arrow-accent)"
+            />
+            <!-- upstream → /api/stream -->
+            <path
+              d="M 844,344 H 560"
+              stroke-dasharray="4,3"
+              marker-end="url(#sp-arrow)"
+            />
+          </g>
+
+          <!-- arrow labels: opaque masks break the stroke they sit on -->
+          <g
+            font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+            font-size="8"
+            letter-spacing="0.06em"
+            fill="#949cb2"
+            text-anchor="middle"
+          >
+            <rect x="289" y="208" width="46" height="12" rx="2" fill="#0b0d14" />
+            <text x="312" y="217">CANAL ID</text>
+
+            <rect x="315" y="236" width="50" height="12" rx="2" fill="#0b0d14" />
+            <text x="340" y="245">MANIFEST</text>
+
+            <rect x="278" y="306" width="52" height="12" rx="2" fill="#0b0d14" />
+            <text x="304" y="315">?t=TOKEN</text>
+
+            <rect x="273" y="330" width="46" height="12" rx="2" fill="#0b0d14" />
+            <text x="296" y="339">REWRITE</text>
+
+            <rect x="564" y="158" width="40" height="12" rx="2" fill="#0b0d14" />
+            <text x="584" y="167">FEEDS</text>
+
+            <rect x="561" y="190" width="46" height="12" rx="2" fill="#0b0d14" />
+            <text x="584" y="199">SERVERS</text>
+
+            <rect x="549" y="248" width="58" height="12" rx="2" fill="#0b0d14" />
+            <text x="578" y="257">ALLOWLIST</text>
+
+            <rect x="677" y="290" width="50" height="12" rx="2" fill="#0b0d14" />
+            <text x="702" y="299">MANIFEST</text>
+
+            <rect x="677" y="338" width="50" height="12" rx="2" fill="#0b0d14" />
+            <text x="702" y="347">SEGMENTS</text>
+          </g>
+
+          <!-- nodes -->
+          <g>
+            <!-- player -->
+            <rect
+              x="56"
+              y="240"
+              width="208"
+              height="120"
+              rx="6"
+              fill="#14161e"
+              stroke="rgba(255,255,255,0.14)"
+              stroke-width="1"
+            />
+            <rect
+              x="70"
+              y="252"
+              width="44"
+              height="14"
+              rx="2"
+              fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.10)"
+              stroke-width="0.8"
+            />
+            <text
+              x="92"
+              y="262"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.14em"
+              text-anchor="middle"
+            >
+              CLIENT
+            </text>
+            <text
+              x="70"
+              y="294"
+              fill="#f4f6fb"
+              font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+              font-size="14"
+              font-weight="600"
+            >
+              Player + hls.js
+            </text>
+            <text
+              x="70"
+              y="316"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              player/video-player.tsx
+            </text>
+            <text
+              x="70"
+              y="332"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              autoplay · mute fallback
+            </text>
+
+            <!-- /api/player -->
+            <rect
+              x="360"
+              y="140"
+              width="200"
+              height="96"
+              rx="6"
+              fill="#14161e"
+              stroke="rgba(255,255,255,0.14)"
+              stroke-width="1"
+            />
+            <rect
+              x="374"
+              y="152"
+              width="26"
+              height="14"
+              rx="2"
+              fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.10)"
+              stroke-width="0.8"
+            />
+            <text
+              x="387"
+              y="162"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.14em"
+              text-anchor="middle"
+            >
+              API
+            </text>
+            <text
+              x="374"
+              y="194"
+              fill="#f4f6fb"
+              font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+              font-size="14"
+              font-weight="600"
+            >
+              /api/player
+            </text>
+            <text
+              x="374"
+              y="214"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              gate · catalogue · probe 1.2 s
+            </text>
+
+            <!-- catalogue -->
+            <rect
+              x="608"
+              y="140"
+              width="176"
+              height="96"
+              rx="6"
+              fill="#0d0f16"
+              stroke="rgba(255,255,255,0.22)"
+              stroke-width="1"
+            />
+            <rect
+              x="622"
+              y="152"
+              width="32"
+              height="14"
+              rx="2"
+              fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.10)"
+              stroke-width="0.8"
+            />
+            <text
+              x="638"
+              y="162"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.14em"
+              text-anchor="middle"
+            >
+              DATA
+            </text>
+            <text
+              x="622"
+              y="194"
+              fill="#f4f6fb"
+              font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+              font-size="14"
+              font-weight="600"
+            >
+              Catalogue
+            </text>
+            <text
+              x="622"
+              y="214"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              channels.ts · streams.json
+            </text>
+
+            <!-- /api/stream : the focal node -->
+            <rect
+              x="360"
+              y="272"
+              width="200"
+              height="96"
+              rx="6"
+              fill="#1a1400"
+              stroke="#f2a71b"
+              stroke-width="1.5"
+            />
+            <rect
+              x="374"
+              y="284"
+              width="26"
+              height="14"
+              rx="2"
+              fill="rgba(242,167,27,0.14)"
+              stroke="rgba(242,167,27,0.36)"
+              stroke-width="0.8"
+            />
+            <text
+              x="387"
+              y="294"
+              fill="#ffc95e"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.14em"
+              text-anchor="middle"
+            >
+              API
+            </text>
+            <text
+              x="374"
+              y="326"
+              fill="#f4f6fb"
+              font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+              font-size="14"
+              font-weight="600"
+            >
+              /api/stream
+            </text>
+            <text
+              x="374"
+              y="346"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              token proxy · exact allowlist
+            </text>
+
+            <!-- upstream -->
+            <rect
+              x="844"
+              y="272"
+              width="304"
+              height="96"
+              rx="6"
+              fill="#0d0f16"
+              stroke="rgba(255,255,255,0.22)"
+              stroke-width="1"
+            />
+            <rect
+              x="858"
+              y="284"
+              width="56"
+              height="14"
+              rx="2"
+              fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.10)"
+              stroke-width="0.8"
+            />
+            <text
+              x="886"
+              y="294"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="7"
+              letter-spacing="0.14em"
+              text-anchor="middle"
+            >
+              UPSTREAM
+            </text>
+            <text
+              x="858"
+              y="326"
+              fill="#f4f6fb"
+              font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+              font-size="14"
+              font-weight="600"
+            >
+              HLS host
+            </text>
+            <text
+              x="858"
+              y="346"
+              fill="#949cb2"
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="9"
+            >
+              manifest · segments · redirects
+            </text>
+          </g>
+
+          <!-- two editorial asides, and nothing more -->
+          <g
+            font-family="'Inter', system-ui, sans-serif"
+            font-size="12"
+            font-style="italic"
+            fill="#949cb2"
+          >
+            <path
+              d="M 460,368 V 386"
+              stroke="rgba(244,246,251,0.20)"
+              stroke-width="1"
+              fill="none"
+            />
+            <text x="460" y="404">
+              Only a signed token names an address.
+            </text>
+
+            <path
+              d="M 996,368 V 386"
+              stroke="rgba(244,246,251,0.20)"
+              stroke-width="1"
+              fill="none"
+            />
+            <text x="844" y="404">
+              Every redirect hop is checked against the same allowlist.
+            </text>
+          </g>
+
+          <!-- legend: a horizontal strip, never floating inside the figure -->
+          <g>
+            <line
+              x1="40"
+              y1="500"
+              x2="1160"
+              y2="500"
+              stroke="rgba(244,246,251,0.10)"
+              stroke-width="1"
+            />
+            <g
+              font-family="ui-monospace, 'Geist Mono', Consolas, monospace"
+              font-size="8"
+              letter-spacing="0.1em"
+              fill="#949cb2"
+            >
+              <path
+                d="M 40,530 H 76"
+                stroke="#949cb2"
+                stroke-width="1.2"
+                fill="none"
+                marker-end="url(#sp-arrow)"
+              />
+              <text x="88" y="533">REQUEST</text>
+
+              <path
+                d="M 240,530 H 276"
+                stroke="#949cb2"
+                stroke-width="1.2"
+                stroke-dasharray="4,3"
+                fill="none"
+                marker-end="url(#sp-arrow)"
+              />
+              <text x="288" y="533">RETURN</text>
+
+              <path
+                d="M 440,530 H 476"
+                stroke="#f2a71b"
+                stroke-width="1.4"
+                fill="none"
+                marker-end="url(#sp-arrow-accent)"
+              />
+              <text x="488" y="533">SIGNED RELAY</text>
+
+              <rect
+                x="700"
+                y="520"
+                width="28"
+                height="16"
+                rx="4"
+                fill="#14161e"
+                stroke="rgba(255,255,255,0.14)"
+              />
+              <text x="740" y="533">OUR CODE</text>
+
+              <rect
+                x="880"
+                y="520"
+                width="28"
+                height="16"
+                rx="4"
+                fill="#0d0f16"
+                stroke="rgba(255,255,255,0.22)"
+              />
+              <text x="920" y="533">UPSTREAM / DATA</text>
+            </g>
+          </g>
+        </svg>
+
+        <figcaption>
+          The stream path after the 1.7.x fixes. The orange box is the only
+          place an upstream address exists at runtime, and it exists there
+          because a signed token said so.
+        </figcaption>
+      </figure>
+
+      <p class="note">
+        Source of truth: <code>monorepo/frontend/src/app/api/player/route.ts</code>,
+        <code>monorepo/frontend/src/app/api/stream/route.ts</code>,
+        <code>monorepo/frontend/src/lib/stream.ts</code>. The same picture is
+        written in Mermaid in <code>docs/diagrams/stream-path.md</code> so it
+        renders on GitHub. Type is set in Space Grotesk and Inter with the
+        platform's own faces as the fallback — the file loads nothing from the
+        network.
+      </p>
+    </main>
+  </body>
+</html>

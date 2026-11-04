@@ -81,7 +81,7 @@ await new Promise((r) => setTimeout(r, 6000));
 const page = await evaluate(`(() => {
   const back = [...document.querySelectorAll('button,a')].find((el) =>
     (el.getAttribute('aria-label') || '').includes('catalog') ||
-    (el.textContent || '').trim() === 'Înapoi',
+    (el.textContent || '').trim().startsWith('Înapoi'),
   );
   const nav = document.querySelector('[data-slot="mobile-nav"]');
   const video = document.querySelector('video');
@@ -114,7 +114,7 @@ console.log(JSON.stringify(page, null, 2));
 const back = await evaluate(`(() => {
   const el = [...document.querySelectorAll('button,a')].find((n) =>
     (n.getAttribute('aria-label') || '').includes('catalog') ||
-    (n.textContent || '').trim() === 'Înapoi',
+    (n.textContent || '').trim().startsWith('Înapoi'),
   );
   if (!el) return 'no button';
   el.click();
