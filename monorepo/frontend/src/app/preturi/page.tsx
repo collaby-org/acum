@@ -17,6 +17,7 @@ import { AcumMark } from "@/components/brand";
 import { AccountButton } from "@/components/account/account-button";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { EntrySection } from "@/components/preturi/entry-section";
+import { MOBILE_NAV_SPACE, MobileNav } from "@/components/mobile-nav";
 import { PLANS, freeHours } from "@/lib/supabase/plans";
 import {
   formatRegionalPrice,
@@ -24,6 +25,7 @@ import {
   getRegionFromHeaders,
 } from "@/lib/shared/pricing-utils";
 import { SITE_NAME, SITE_PROMISE } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 /**
  * The description is written from the prices themselves, so it cannot say
@@ -125,7 +127,12 @@ export default async function PricingPage() {
   const pricing = getRegionalPricing(region);
 
   return (
-    <div className="relative isolate min-h-dvh bg-canvas">
+    <div
+      className={cn(
+        "relative isolate min-h-dvh bg-canvas",
+        MOBILE_NAV_SPACE,
+      )}
+    >
       <div
         aria-hidden
         className="pointer-events absolute inset-0 -z-10 overflow-hidden"
@@ -229,6 +236,8 @@ export default async function PricingPage() {
           </section>
         ) : null}
       </main>
+
+      <MobileNav />
     </div>
   );
 }

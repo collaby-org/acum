@@ -69,6 +69,28 @@ export function decodeSessionCookie(
   }
 }
 
+/**
+ * The session mirrored into the browser's cookies, or null when there is none.
+ *
+ * The cookie is deliberately readable by the browser: it lets the interface
+ * choose the signed-in home page without waiting for the account request to
+ * come back, so the visitor does not take a redirect to get there. This
+ * helper is runtime-neutral so the edge can import the module too.
+ */
+export function mirroredSession(): MirroredSession | null {
+  if (typeof document === "undefined") return null;
+
+  for (const part of document.cookie.split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 0) continue;
+    const name = part.slice(0, separator).trim();
+    if (name !== SESSION_COOKIE) continue;
+    return decodeSessionCookie(part.slice(separator + 1));
+  }
+
+  return null;
+}
+
 /** The moment a token stops being accepted, or null when it cannot be read. */
 export function tokenExpiry(token: string): number | null {
   const claims = token.split(".")[1];

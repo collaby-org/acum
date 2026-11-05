@@ -55,7 +55,7 @@ Six lanes, one owner each, no two writers on the same file. The ledger is
 | performance | fixer | `lib/channel-detail.ts`, `app/api/channel/[id]/route.ts` | **landed** |
 | player UI (first pass) | fixer | `components/player/*` | **landed** |
 | player bar (owner report) | designer | `components/player/player-controls.tsx`, `player-quality.tsx`, `video-player.tsx` | **in correction** — the first pass wrapped onto a second row |
-| phone latency | fixer | `app/api/player/route.ts` (both apps), `components/mobile-nav.tsx`, `app/preturi/page.tsx`, `lib/session-token.ts` | **in flight** |
+| phone latency | fixer | `app/api/player/route.ts` (both apps), `components/mobile-nav.tsx`, `app/preturi/page.tsx`, `lib/session-token.ts` | **landed** (1.7.4) — probe budget 1.2 s, the bar on the plans page, "home" decided locally |
 | channel panel | designer | `components/channel/channel-panel.tsx`, `canal-screen.tsx`, `app/canal/[id]/page.tsx` | **in flight** |
 | verification + docs | orchestrator | `scripts/verify-*.mjs`, `docs/`, `README.md`, `data/epg.json` | **in flight** |
 
@@ -111,4 +111,5 @@ Each push adds a line here.
 | 1.7.0 | `2ec2e68` | the six production bugs and the security wave, live and verified |
 | 1.7.1 | `decff00` | the programme-guide refresh, the verification harnesses, the diagrams and this documentation set |
 | 1.7.2 | `eec0d83` | the player bar: one line, one size, the buffering in the middle of the picture, the connection chip |
-| 1.7.3 | see `git log` | the player-bar harness, measured against the live site |
+| 1.7.3 | `9756757` | the player-bar harness, measured against the live site |
+| 1.7.4 | see `git log` | the cold start (a 1.2 s probe budget), the bottom bar on the plans page, an instant "home" |

@@ -169,7 +169,7 @@ async function main() {
       );
     }
     {
-      const { response } = await timed(`${APP}/api/player`, {
+      const { response, ms } = await timed(`${APP}/api/player`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -184,7 +184,7 @@ async function main() {
         response.ok &&
           urls.length > 0 &&
           urls.every((url) => url.startsWith("/api/stream?t=")),
-        `${response.status}, ${urls.length} source(s)`,
+        `${response.status}, ${urls.length} source(s), ${ms}ms`,
       );
       const cacheControl = response.headers.get("cache-control") ?? "";
       record(

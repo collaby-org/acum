@@ -53,6 +53,15 @@ type ResolvedServer = {
   source: "primary" | "secondary" | "canale-tv";
 };
 
+/**
+ * How long one link may spend checking whether it answers.
+ *
+ * The catalogue already knows which feed is most likely to play. A probe is
+ * only a short hint, so it gets a small budget of its own: a slow upstream
+ * can never hold the phone's cold start open.
+ */
+const PROBE_BUDGET_MS = 1_200;
+
 function readServer(value: ServerInput): ResolvedServer {
   return {
     id: typeof value.id === "string" ? value.id : "",
@@ -275,7 +284,7 @@ export async function POST(request: Request) {
     playable: boolean;
   }[];
   try {
-    sources = await Promise.all(
+    const probed = await Promise.all(
       links.map(async ({ server, candidate }) => {
         const url = `/api/stream?t=${signStreamToken(
           candidate,
@@ -292,10 +301,18 @@ export async function POST(request: Request) {
           // the proxy can count the audience per channel without trusting a
           // browser-supplied query parameter.
           url,
-          playable: await probePlaylist(candidate, 6_000),
+          playable: await probePlaylist(candidate, PROBE_BUDGET_MS),
         };
       }),
     );
+
+    // A probe is a hint, never a veto. Links that answered are offered
+    // first, while the catalogue order is kept inside each group: a link
+    // that did not answer in the probe budget is still returned, so the
+    // browser can be the better judge without the route waiting for it.
+    const playable = probed.filter((source) => source.playable);
+    const unanswered = probed.filter((source) => !source.playable);
+    sources = [...playable, ...unanswered];
   } catch (error) {
     if (error instanceof StreamPolicyError) {
       return Response.json(
@@ -309,15 +326,9 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  // Only answering links are handed over when there is at least one: the
-  // player would otherwise sit eight seconds on a dead address before it
-  // moved on. When nothing answered, the whole list still goes out — a probe
-  // can be wrong, and the browser is the better judge.
-  const playable = sources.filter((source) => source.playable);
-
   return Response.json(
     {
-      sources: playable.length > 0 ? playable : sources,
+      sources,
       session: sessionId,
     },
     {

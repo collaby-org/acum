@@ -29,6 +29,15 @@ ships or changes shape.
       logos from Wikimedia, 21 of them genuine HD lockups.
 - [x] **v1.2.0 — Pinned channels and watch later**, local shelves.
 - [x] **v1.2.0 — Fullscreen on a phone**, and the hover clipping fixed.
+- [x] **v1.7.0 — The production bugs, closed.** The signed-in redirect loop,
+  the pricing cards that ignored the plan, the catalogue that walked every
+  slug, the player's second control bar, the iPhone safe area, and the stream
+  that would not start on a phone — with the security wave that went with
+  them: a token-only stream proxy, an exact host allowlist, and a desk that
+  is an allowlist rather than a flag.
+- [x] **v1.7.x — The channel page.** `/canal/<id>` is a shareable deep link:
+  the channel's programme leads, the channel's own text follows, and the
+  picture, the panel and the bottom bar fit one phone.
 
 ## Next
 
@@ -42,19 +51,24 @@ ships or changes shape.
 
 ### Deeper discovery
 
-- [ ] A channel detail view with the family, the sibling feeds and the
-      programme for the rest of the day.
 - [ ] Sort and filter inside a category rail (by status, by quality).
-- [ ] Shareable deep links: `/canal/<slug>` opens that channel's player
-      directly, still without an account.
 - [ ] A "tonight's highlights" view built from the guide, per category.
 
 ### Playback
 
-- [ ] Picture-in-picture on the phone layout.
 - [ ] Keyboard shortcuts: `←`/`→` move between channels in a rail, `f`
       toggles favourites, `/` focuses search.
 - [ ] Remember the last channel watched and offer "Continuă vizionarea".
+
+### The phone, finished
+
+The production-readiness checklist in
+[#17](https://github.com/collaby-org/acum/issues/17) is the list: the install
+offer only on a desktop, `min-h-dvh` on every full-height surface, 16px
+inputs, hover gated behind `@media (hover: hover)`, `touch-action:
+manipulation`, `text-size-adjust: 100%`, one vocabulary of radius, border,
+shadow and type, and three real states for every async surface. The current
+state is in [backlog.md](backlog.md).
 
 ### Stream cost
 
@@ -71,7 +85,9 @@ ships or changes shape.
 
 ## Not planned
 
-- Accounts, cloud sync, comments, ratings.
+- Cloud sync, comments, ratings — the social layer is scoped in
+  [#16](https://github.com/collaby-org/acum/issues/16) and is not part of the
+  production-readiness work.
 - Our own transcoding or stream proxy.
 - Recommendation algorithms.
 - Any advertising or analytics.

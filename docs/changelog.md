@@ -9,6 +9,34 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.4] — 2026-11-05
+
+### Fixed
+
+- **The phone no longer waits for the slowest probe.** `/api/player` probed
+  every candidate feed with a six-second budget and answered only when the
+  slowest probe finished — on a throttled line the picture did not arrive
+  inside thirty seconds. The probe now has a budget of **1.2 seconds**, and the
+  answer keeps the catalogue's order: the links that answered come first, the
+  links that did not are still returned behind them, and the browser walks the
+  chain when one dies. A probe is a hint, never a veto.
+- **The bottom bar is on the plans page.** On `/preturi` there was no bottom
+  navigation at all, so a visitor standing there had no way back — the tap had
+  nothing to hit. The bar is rendered there now, with the same bottom padding
+  the other pages use, and the desktop layout is untouched.
+- **"Acasă" is one step, not a redirect.** The bar decided "home" from the
+  account state, which had not arrived yet, so it pointed at `/` — and the
+  server bounced a signed-in visitor to `/canale`. The destination is now read
+  locally from the mirrored session cookie at the moment of the tap, and the
+  client router goes straight there.
+
+### Changed
+
+- **The live harness prints the manifest's answer time**, so the route's
+  latency is visible in every run rather than inferred.
+- **Version 1.7.4** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.3] — 2026-11-04
 
 ### Added

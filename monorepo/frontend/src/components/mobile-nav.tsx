@@ -17,6 +17,7 @@ import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart, House, LayoutGrid, Search, type LucideIcon } from "lucide-react";
 import { useAccount } from "@/hooks/use-account";
+import { mirroredSession } from "@/lib/session-token";
 import { cn } from "@/lib/utils";
 
 /** The four places the bar can point at. */
@@ -55,11 +56,13 @@ const TABS: { id: MobileNavAction; label: string; icon: LucideIcon }[] = [
  * Where "home" is.
  *
  * The catalogue is the signed-in home page: a landing page full of plans
- * and heroes is not for somebody who already has an account. Until the
- * server has answered who is here, the visitor's side is assumed — the
- * catalogue itself asks.
+ * and heroes is not for somebody who already has an account. The mirrored
+ * session cookie answers that locally, before the account request has come
+ * back; the account state is the fallback, and a visitor without a session
+ * gets the landing page.
  */
 function homeDestination(signedIn: boolean): string {
+  if (mirroredSession()) return "/canale";
   return signedIn ? "/canale" : "/";
 }
 

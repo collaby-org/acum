@@ -54,8 +54,8 @@ node monorepo/frontend/scripts/verify-live.mjs https://acum-weld.vercel.app/
 | The stream proxy was an open relay | `?u=<any address>` was accepted | **400**; a forged token is **403** | live probe |
 | The admin door was a flag | `profiles.bypass` opened the desk | the desk is `ADMIN_EMAILS` or the `comp` plan | live probe + database query |
 | The stream would not start on a phone | iOS refused the unmuted stream | the picture plays (muted fallback), `readyState 4` | `scripts/verify-player.mjs` |
-| The bottom bar was missing on the plans page | `{"nav": false}` at 390×844 | being fixed — see the work log | `scripts/verify-mobile-nav.mjs` |
-| The phone cold start | the picture did not arrive within **30 s** on a throttled Android phone | being bounded by the catalogue's own order | `scripts/verify-mobile-stream.mjs` |
+| The bottom bar was missing on the plans page | `{"nav": false}` at 390×844 | the bar is rendered there, and "home" is decided locally from the mirrored cookie — one step, no redirect | `scripts/verify-mobile-nav.mjs` |
+| The phone cold start | the picture did not arrive within **30 s** on a throttled Android phone | the probe budget is **1.2 s** and the answer keeps the catalogue's order (1.7.4) — re-measured on the live site after the deploy | `scripts/verify-mobile-stream.mjs` |
 
 ---
 
@@ -237,9 +237,9 @@ back with a query:
 
 | Question | Status |
 | -------- | ------ |
-| Does the player bar stay on one line at 320 px with every target at 44 px? | the first pass did not; it was sent back and is being corrected |
-| Does the phone cold start fit inside the readiness window? | being bounded by the catalogue's order and a short probe budget |
-| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | being fixed and re-measured with the harness above |
+| Does the player bar stay on one line at 320 px with every target at 44 px? | yes at 1440 px — measured by `verify-player-bar.mjs`; the 320 px line is the icon-only form, and the picture actions move into the connection panel |
+| Does the phone cold start fit inside the readiness window? | the probe phase is bounded at 1.2 s (1.7.4); the re-measurement on the live site is pending the deploy |
+| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | the bar is rendered there and "home" is decided locally (1.7.4); the re-measurement is pending the deploy |
 | Does the channel panel lead with the programme? | being corrected, then re-measured against the live API's `now`/`next` |
 
 Every item in that table is re-run against the live site after the deploy, and
