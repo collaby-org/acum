@@ -62,6 +62,45 @@ type ResolvedServer = {
  */
 const PROBE_BUDGET_MS = 1_200;
 
+/**
+ * How long the route may spend resolving the feeds of a channel.
+ *
+ * A feed whose playlist is already in the catalogue is free. A feed that
+ * needs its page read — or the second source's fresh address — is worth a
+ * short wait and no more: a slow upstream must not hold the answer open.
+ * A feed that does not arrive inside the budget is left out of this answer,
+ * without an error and without a delay.
+ */
+const RESOLVE_BUDGET_MS = 2_500;
+
+/** The phases of the answer, in milliseconds. */
+type PhaseTimings = {
+  /** The paywall gate. */
+  gate: number;
+  /** The stream-session claim. */
+  claim: number;
+  /** The resolution of the feeds into addresses. */
+  resolve: number;
+  /** The check of each link. */
+  probe: number;
+};
+
+/**
+ * The phases of the answer, for the `Server-Timing` header.
+ *
+ * The header is the honest account of where the milliseconds went: the
+ * gate and the claim talk to the account server, the resolution and the
+ * probe talk to the upstream, and only one of them is ours to shorten.
+ */
+function serverTiming(timings: PhaseTimings): string {
+  return [
+    `gate;dur=${timings.gate}`,
+    `claim;dur=${timings.claim}`,
+    `resolve;dur=${timings.resolve}`,
+    `probe;dur=${timings.probe}`,
+  ].join(", ");
+}
+
 function readServer(value: ServerInput): ResolvedServer {
   return {
     id: typeof value.id === "string" ? value.id : "",
@@ -82,12 +121,18 @@ function readServer(value: ServerInput): ResolvedServer {
  * A playlist that was resolved at build time wins. Otherwise the feed's own
  * page is read and its obfuscation undone — that works for the player pages
  * on canale-tv.net and for the panels on the `.cfd` and `.shop` hosts alike.
+ *
+ * `deadline` is the moment the caller stops waiting, when it has one: the
+ * page is then read only for as long as there is time left.
  */
-async function candidatesOf(server: ResolvedServer): Promise<string[]> {
+async function candidatesOf(
+  server: ResolvedServer,
+  deadline?: number,
+): Promise<string[]> {
   // The second source's addresses are short-lived, so they are fetched fresh
   // rather than read from the catalogue.
   if (server.source === "secondary") {
-    const url = await secondaryStreamUrl(server.id);
+    const url = await secondaryStreamUrl(server.id, deadline);
     return url && isAllowedMediaUrl(url) ? [url] : [];
   }
   if (server.hlsUrl && isAllowedMediaUrl(server.hlsUrl)) {
@@ -95,10 +140,38 @@ async function candidatesOf(server: ResolvedServer): Promise<string[]> {
   }
   if (!isResolvablePageUrl(server.embedUrl)) return [];
 
-  const html = await fetchPlayerPage(server.embedUrl);
+  const html = await fetchPlayerPage(server.embedUrl, deadline);
   if (!html) return [];
 
   return resolveStreamUrls(html).filter(isAllowedMediaUrl);
+}
+
+/**
+ * The candidates of one feed, if they arrive before the deadline.
+ *
+ * The route answers with what it has. A feed that needs its page read and
+ * does not make it inside the budget is left out of this answer — no error,
+ * no delay — and the request still running in the background is abandoned:
+ * the response does not wait for it, and the deadline cuts the read short
+ * on its own.
+ */
+async function candidatesWithin(
+  server: ResolvedServer,
+  deadline: number,
+): Promise<string[]> {
+  const left = deadline - Date.now();
+  if (left <= 0) return [];
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const expired = new Promise<string[]>((resolve) => {
+    timer = setTimeout(() => resolve([]), left);
+  });
+
+  try {
+    return await Promise.race([candidatesOf(server, deadline), expired]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /**
@@ -123,7 +196,11 @@ export async function POST(request: Request) {
    * address at all — there is nothing to pull and nothing to bypass. The
    * client is told why, so it can show the wall.
    */
+  const timings: PhaseTimings = { gate: 0, claim: 0, resolve: 0, probe: 0 };
+
+  const gateStarted = Date.now();
   const verdict = await gate(request);
+  timings.gate = Date.now() - gateStarted;
   if (!verdict.allowed) {
     return Response.json(
       { error: "paywall", reason: verdict.reason },
@@ -190,6 +267,7 @@ export async function POST(request: Request) {
    * a wall over the picture — it is a sentence the player can act on.
    */
   const authorization = bearerToken(request);
+  const claimStarted = Date.now();
   const claim =
     authorization && verdict.userId
       ? await claimStream({
@@ -199,6 +277,7 @@ export async function POST(request: Request) {
           channelId,
         })
       : null;
+  timings.claim = Date.now() - claimStarted;
 
   if (claim && !claim.allowed) {
     if (claim.reason === "stream_limit") {
@@ -245,11 +324,13 @@ export async function POST(request: Request) {
       : null;
 
   let perServer: { server: ResolvedServer; candidates: string[] }[];
+  const resolveStarted = Date.now();
+  const resolveDeadline = resolveStarted + RESOLVE_BUDGET_MS;
   try {
     perServer = await Promise.all(
       servers.map(async (server) => ({
         server,
-        candidates: await candidatesOf(server),
+        candidates: await candidatesWithin(server, resolveDeadline),
       })),
     );
   } catch (error) {
@@ -264,6 +345,7 @@ export async function POST(request: Request) {
     }
     throw error;
   }
+  timings.resolve = Date.now() - resolveStarted;
 
   const seen = new Set<string>();
   const links: { server: ResolvedServer; candidate: string }[] = [];
@@ -283,6 +365,7 @@ export async function POST(request: Request) {
     url: string;
     playable: boolean;
   }[];
+  const probeStarted = Date.now();
   try {
     const probed = await Promise.all(
       links.map(async ({ server, candidate }) => {
@@ -325,6 +408,7 @@ export async function POST(request: Request) {
     }
     throw error;
   }
+  timings.probe = Date.now() - probeStarted;
 
   return Response.json(
     {
@@ -332,7 +416,12 @@ export async function POST(request: Request) {
       session: sessionId,
     },
     {
-      headers: { "cache-control": "no-store", pragma: "no-cache" },
+      headers: {
+        "cache-control": "no-store",
+        pragma: "no-cache",
+        // Where the milliseconds went, for the person who is waiting.
+        "server-timing": serverTiming(timings),
+      },
     },
   );
 }

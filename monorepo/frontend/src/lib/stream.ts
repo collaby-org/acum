@@ -743,9 +743,25 @@ export function sanitizeUpstreamPage(html: string, baseUrl: string): string {
  * Talking to the upstream
  * ------------------------------------------------------------------ */
 
-/** Fetch an upstream player page. Returns null when it cannot be read. */
-export async function fetchPlayerPage(url: string): Promise<string | null> {
+/** How long one attempt at reading an upstream player page may take. */
+const PAGE_TIMEOUT_MS = 15_000;
+
+/**
+ * Fetch an upstream player page. Returns null when it cannot be read.
+ *
+ * `deadline` is the moment the caller stops waiting, when it has one: every
+ * attempt is then cut short at that moment, so a slow upstream cannot hold
+ * the request open past it. Without a deadline the page is read with the
+ * full timeout, exactly as it was.
+ */
+export async function fetchPlayerPage(
+  url: string,
+  deadline?: number,
+): Promise<string | null> {
   for (const referer of orderedReferers(url)) {
+    const left =
+      deadline === undefined ? PAGE_TIMEOUT_MS : deadline - Date.now();
+    if (left <= 0) return null;
     try {
       const response = await fetchWithValidatedRedirects(
         url,
@@ -757,7 +773,7 @@ export async function fetchPlayerPage(url: string): Promise<string | null> {
             accept: "text/html,application/xhtml+xml",
           },
           cache: "no-store",
-          signal: AbortSignal.timeout(15_000),
+          signal: AbortSignal.timeout(Math.min(left, PAGE_TIMEOUT_MS)),
         },
       );
       if (!response?.ok) continue;

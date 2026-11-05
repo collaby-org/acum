@@ -9,6 +9,30 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.6] — 2026-11-05
+
+### Changed
+
+- **The manifest answer now says where its milliseconds went.** The
+  successful `/api/player` answer carries a `Server-Timing` header with one
+  entry per phase — `gate`, `claim`, `resolve`, `probe` — in milliseconds.
+  The cold start can now be measured instead of guessed at. The existing
+  `cache-control: no-store` is untouched.
+- **A slow upstream can no longer hold the answer open.** The resolution
+  phase — reading a feed's page, or asking the second source for a fresh
+  address — had no ceiling: 15 s per attempt, up to four attempts, and 20 s
+  for the directory. It now has a **2.5 s budget**. A feed whose playlist is
+  already in the catalogue is free and always in the answer; a feed that
+  needs the network is in the answer only if it arrives inside the budget,
+  and it is dropped otherwise — with no error and no delay. The catalogue's
+  order is preserved among the links that did resolve, and the abandoned
+  request is cut at the deadline instead of running on in the background.
+  The stream proxy, the token, the allowlist, the paywall gate and the
+  Romanian error strings are unchanged.
+- **The same change is mirrored into the TV app**, byte for byte.
+- **Version 1.7.6** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.5] — 2026-11-05
 
 ### Changed

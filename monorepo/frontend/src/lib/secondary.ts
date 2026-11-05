@@ -18,6 +18,9 @@ const CHANNELS_URL = "https://canaletvlive.online/api/channels";
 const REFERER = "https://canaletvlive.online/";
 const CACHE_MS = 90_000;
 
+/** How long the directory may take to answer. */
+const DIRECTORY_TIMEOUT_MS = 20_000;
+
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0";
 
@@ -61,14 +64,21 @@ function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-async function load(): Promise<Map<string, SecondaryChannel>> {
+async function load(deadline?: number): Promise<Map<string, SecondaryChannel>> {
   if (cache && Date.now() - cache.at < CACHE_MS) return cache.bySlug;
+
+  // A deadline is the moment the caller stops waiting. The directory is
+  // then read only for as long as there is time left, so a slow upstream
+  // cannot keep the request open.
+  const left =
+    deadline === undefined ? DIRECTORY_TIMEOUT_MS : deadline - Date.now();
+  if (left <= 0) return cache?.bySlug ?? new Map();
 
   let res: Response;
   try {
     res = await fetch(CHANNELS_URL, {
       headers: { "user-agent": UA, referer: REFERER },
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(Math.min(left, DIRECTORY_TIMEOUT_MS)),
     });
   } catch {
     // The directory is a bonus: the player works without it, and a stale
@@ -110,9 +120,15 @@ async function load(): Promise<Map<string, SecondaryChannel>> {
 /**
  * A fresh, playable address for one of the second source's channels, or null
  * when the channel is not offered any more.
+ *
+ * `deadline` is the moment the caller stops waiting, when it has one: the
+ * directory is then read only for as long as there is time left.
  */
-export async function secondaryStreamUrl(slug: string): Promise<string | null> {
-  const bySlug = await load();
+export async function secondaryStreamUrl(
+  slug: string,
+  deadline?: number,
+): Promise<string | null> {
+  const bySlug = await load(deadline);
   return bySlug.get(slug)?.streamUrl ?? null;
 }
 
