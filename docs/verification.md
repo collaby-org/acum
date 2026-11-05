@@ -233,14 +233,45 @@ back with a query:
 
 ---
 
-## 9. What is still open
+## 9. Where the manifest's milliseconds go
+
+The successful `/api/player` answer carries a `Server-Timing` header with one
+entry per phase. Measured against the deployed 1.7.6, with a signed-in
+harness account:
+
+```text
+=== pro-tv -> 200 in 2726ms ===
+server-timing: gate;dur=1037, claim;dur=401, resolve;dur=400, probe;dur=628
+cache-control: no-store
+
+=== antena-1 -> 200 in 1338ms ===
+server-timing: gate;dur=348, claim;dur=191, resolve;dur=1, probe;dur=632
+cache-control: no-store
+```
+
+What the numbers say, plainly:
+
+| Phase | `pro-tv` | `antena-1` | What it is |
+| ----- | -------- | ---------- | ---------- |
+| `gate` | 1037 ms | 348 ms | the account check (the token against the auth server, then the account RPC); it is cached for 5 s per account, so the first answer after a deploy or a token change is the slow one |
+| `claim` | 401 ms | 191 ms | the stream claim RPC |
+| `resolve` | 400 ms | 1 ms | finding the feeds — already capped at 2.5 s; a channel whose playlist is in the catalogue costs nothing |
+| `probe` | 628 ms | 632 ms | checking which feed actually plays — capped at 1.2 s |
+
+So the resolution phase is no longer the cold start's owner: the account gate
+and the probe are. The floor for the whole answer is the gate plus the probe
+— about 1 s warm, and under 3 s cold.
+
+---
+
+## 10. What is still open
 
 | Question | Status |
 | -------- | ------ |
 | Does the player bar stay on one line at 320 px with every target at 44 px? | yes at 1440 px — measured by `verify-player-bar.mjs`; the 320 px line is the icon-only form, and the picture actions move into the connection panel |
-| Does the phone cold start fit inside the readiness window? | the probe phase is bounded at 1.2 s (1.7.4); the re-measurement on the live site is pending the deploy |
-| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | the bar is rendered there and "home" is decided locally (1.7.4); the re-measurement is pending the deploy |
-| Does the channel panel lead with the programme? | being corrected, then re-measured against the live API's `now`/`next` |
+| Does the phone cold start fit inside the readiness window? | measured on the deployed 1.7.6: `gate` 1037 ms + `claim` 401 ms + `resolve` 400 ms + `probe` 628 ms (2726 ms cold; 1338 ms warm) — the resolution phase is capped at 2.5 s, the probe at 1.2 s, and the account gate is the remaining owner |
+| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | the bar is rendered there and "home" is decided locally (1.7.4); the measured tap still took 3656 ms, because the destination is a blocking dynamic route — the fix (prefetch on intent + a loading boundary) is in flight |
+| Does the channel panel lead with the programme? | yes since 1.7.5 — the programme, its clock range and its description come first, the channel's own text follows under "Despre canal", and an absent programme says so |
 
 Every item in that table is re-run against the live site after the deploy, and
 the result is written here and in issue #22.

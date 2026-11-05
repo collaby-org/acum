@@ -5,22 +5,24 @@
 # the app reads only when the source itself cannot be reached.
 #
 # The app no longer depends on this file: `src/lib/guide.ts` reads the
-# source directly at runtime, behind Next's own cache, so the guide keeps
-# itself without anyone merging a file. That runtime read is why this job
-# is manual now. It ran on a schedule until the branch protection and the
-# "Actions may not create pull requests" permission turned every morning
-# into a failed run — the token can neither push to main (GH006) nor open
-# a pull request, so nothing it wrote ever reached the branch that is
-# deployed.
+# source directly at runtime, behind Next's own cache, so the live guide keeps
+# itself without anyone merging a file. The committed fallback is still
+# refreshed twice a day (02:23 and 14:23 UTC), and it can also be run by hand:
+# Actions → EPG refresh → Run workflow.
 #
-# Run it by hand when you want the committed fallback refreshed:
-# Actions → EPG refresh → Run workflow. It still commits onto
-# chore/epg-refresh and tries to open a pull request.
+# An earlier version of this job ran on a schedule until the branch protection
+# and the "Actions may not create pull requests" permission turned every
+# morning into a failed run. It now pushes to main with EPG_PUSH_TOKEN when
+# one is available; without it, it commits onto chore/epg-refresh and tries to
+# open a pull request.
 
 name: EPG refresh
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "23 2 * * *"
+    - cron: "23 14 * * *"
 
 permissions:
   contents: write
@@ -54,9 +56,78 @@ jobs:
         run: npm ci
 
       - name: Scrape the guide
+        id: scrape
         run: npm run data:epg
 
+      - name: Report guide state
+        if: always()
+        continue-on-error: true
+        env:
+          SCRAPE_OUTCOME: ${{ steps.scrape.outcome }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+
+          if (!summaryPath) {
+            console.log("GITHUB_STEP_SUMMARY is unavailable; skipping the guide report.");
+            process.exit(0);
+          }
+
+          const append = (line) => fs.appendFileSync(summaryPath, `${line}\n`);
+
+          try {
+            if (process.env.SCRAPE_OUTCOME !== "success") {
+              append("## EPG guide state");
+              append("");
+              append(`- Refresh outcome: **${process.env.SCRAPE_OUTCOME || "not run"}**`);
+              append("- The guide was not refreshed, so its state is not reported.");
+              process.exit(0);
+            }
+
+            const guide = JSON.parse(fs.readFileSync("data/epg.json", "utf8"));
+            const channels = Object.values(guide.channels ?? {});
+            const programmeCount = channels.reduce(
+              (total, channel) =>
+                total + (Array.isArray(channel.programmes) ? channel.programmes.length : 0),
+              0,
+            );
+            const channelsWithGuide = channels.filter(
+              (channel) => Array.isArray(channel.programmes) && channel.programmes.length > 0,
+            ).length;
+            const channelsWithoutGuide = Array.isArray(guide.channelsWithoutGuide)
+              ? guide.channelsWithoutGuide.length
+              : 0;
+            const days = Array.isArray(guide.days)
+              ? guide.days.join(", ")
+              : (guide.date ?? "unknown");
+
+            append("## EPG guide state");
+            append("");
+            append(`- Guide date: **${guide.date ?? "unknown"}**`);
+            append(`- Generated at: **${guide.generatedAt ?? "unknown"}**`);
+            append(`- Days covered: **${days}**`);
+            append(`- Channels: **${guide.channelCount ?? channels.length}**`);
+            append(`- Channels with programmes: **${channelsWithGuide}**`);
+            append(`- Programmes: **${programmeCount}**`);
+            append(`- Channels without a guide: **${channelsWithoutGuide}**`);
+          } catch (error) {
+            try {
+              append("## EPG guide state");
+              append("");
+              append(`- Could not read the guide state: **${error.message}**`);
+            } catch {
+              console.error("Could not write the guide report to the job summary.");
+            }
+          }
+          NODE
+
       - name: Commit when the guide changed
+        # A scheduled run must never turn the workflow red: the guide is a
+        # fallback copy, and a branch-protection refusal is a fact to
+        # report, not a failure of the app.
+        id: commit
+        continue-on-error: true
         env:
           # A token with write access, when the repository has one. With it
           # the guide lands on main by itself and the pull request is not
@@ -88,6 +159,7 @@ jobs:
           git push --force-with-lease origin chore/epg-refresh
 
       - name: Open the pull request
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -107,6 +179,24 @@ jobs:
             --body "The daily scrape refreshed \`monorepo/frontend/data/epg.json\`. The app derives what is on now from these timestamps, so this is what keeps the hero, the channel screens and the URMEAZĂ badges honest. Merging it is the whole point — the earlier version of this job pushed straight to main and was refused by branch protection (GH006) every morning." \
             --base main \
             --head chore/epg-refresh; then
-            echo "::error::The refreshed guide is on the branch chore/epg-refresh, but no pull request could be opened. GitHub refuses Actions-created pull requests unless the repository allows it: Settings → Actions → General → Workflow permissions → 'Allow GitHub Actions to create and approve pull requests'. Or skip pull requests entirely: add a secret named EPG_PUSH_TOKEN holding a token with write access (a PAT with the repo scope) and change the push step to push HEAD to main with it."
-            exit 1
+            echo "::warning::The refreshed guide is on the branch chore/epg-refresh, but no pull request could be opened. GitHub refuses Actions-created pull requests unless the repository allows it: Settings → Actions → General → Workflow permissions → 'Allow GitHub Actions to create and approve pull requests'. Or skip pull requests entirely: add a secret named EPG_PUSH_TOKEN holding a token with write access (a PAT with the repo scope) and change the push step to push HEAD to main with it."
+            exit 0
           fi
+
+      - name: Report the outcome
+        if: always()
+        continue-on-error: true
+        env:
+          SCRAPE_OUTCOME: ${{ steps.scrape.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+        run: |
+          {
+            echo ""
+            echo "### Outcome"
+            echo ""
+            echo "- Refresh: **${{ steps.scrape.outcome || 'not run' }}**"
+            echo "- Commit: **${{ steps.commit.outcome || 'not run' }}**"
+            if [ "$COMMIT_OUTCOME" != "success" ]; then
+              echo "- The guide was refreshed but could not be committed. The app reads the live guide at runtime, so this does not affect what the visitor sees; the committed fallback stays as it was."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

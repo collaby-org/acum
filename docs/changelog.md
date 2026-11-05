@@ -9,6 +9,28 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.7] — 2026-11-05
+
+### Fixed
+
+- **The programme guide refreshes on a clock again.** The fallback guide
+  (the copy the app reads when the live source cannot be reached) now
+  refreshes **twice a day** — 02:23 and 14:23 UTC — and can still be run by
+  hand from the Actions tab. The job stays advisory: a scheduled run never
+  turns the workflow red. If the commit is refused (branch protection) or the
+  pull request cannot be opened, the run says so in its summary instead of
+  failing, and the live guide — which the app reads at runtime — keeps the
+  visitor's view correct either way.
+- **The run reports what it found.** Every run writes the guide's date, the
+  days it covers, the number of channels, the number of programmes and the
+  number of channels without a guide into the job summary, so the state of
+  the guide is readable without opening the log.
+
+### Changed
+
+- **Version 1.7.7** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.6] — 2026-11-05
 
 ### Changed
