@@ -112,4 +112,5 @@ Each push adds a line here.
 | 1.7.1 | `decff00` | the programme-guide refresh, the verification harnesses, the diagrams and this documentation set |
 | 1.7.2 | `eec0d83` | the player bar: one line, one size, the buffering in the middle of the picture, the connection chip |
 | 1.7.3 | `9756757` | the player-bar harness, measured against the live site |
-| 1.7.4 | see `git log` | the cold start (a 1.2 s probe budget), the bottom bar on the plans page, an instant "home" |
+| 1.7.4 | `5f3b22c` | the cold start (a 1.2 s probe budget), the bottom bar on the plans page, an instant "home" |
+| 1.7.5 | see `git log` | the channel panel leads with the programme; the channel's own text moves under "Despre canal" |

@@ -221,6 +221,81 @@ export function ChannelPanel({
       data-slot="channel-panel"
       className={cn("flex min-w-0 flex-col gap-4", className)}
     >
+      {/* The programme comes first: it is what the visitor came to see. */}
+      <div aria-live="polite">
+        {sheet?.now ? (
+          <div
+            data-slot="channel-programme"
+            className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5"
+          >
+            <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-signal/85">
+              <Radio className="size-3" aria-hidden />
+              Acum
+            </p>
+            <h2 className="mt-2 font-display text-[19px] font-semibold leading-tight tracking-tight text-ink">
+              {sheet.now.title}
+            </h2>
+            {nowClock ? (
+              <p className="mt-1 font-mono text-[11px] tabular-nums tracking-wide text-ink-faint">
+                {nowClock}
+                {nowEnd ? ` — ${nowEnd}` : ""}
+              </p>
+            ) : null}
+            {sheet.now.description ? (
+              <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-ink-muted">
+                {sheet.now.description}
+              </p>
+            ) : null}
+            <ProgrammeBadges
+              channelId={channelId}
+              title={sheet.now.title}
+              className="mt-2"
+            />
+          </div>
+        ) : sheet || failed ? (
+          <p
+            data-slot="channel-programme-empty"
+            className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5 text-[13px] leading-relaxed text-ink-faint"
+          >
+            Programul nu este disponibil pentru acest canal
+          </p>
+        ) : (
+          <div className="space-y-2 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5" aria-hidden>
+            <div className="h-3 w-1/3 animate-pulse rounded bg-white/[0.06]" />
+            <div className="h-5 w-4/5 animate-pulse rounded bg-white/[0.06]" />
+            <div className="h-3 w-full animate-pulse rounded bg-white/[0.06]" />
+          </div>
+        )}
+      </div>
+
+      {sheet && sheet.next.length > 0 ? (
+        <div data-slot="channel-next">
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
+            Urmează
+          </h3>
+          <ul className="mt-2 flex flex-col gap-2">
+            {sheet.next.map((programme, index) => {
+              const clock = clockOf(programme.startsAt);
+              return (
+                <li
+                  key={`${programme.startsAt ?? index}-${programme.title}`}
+                  className="flex min-w-0 items-baseline gap-2.5"
+                >
+                  {clock ? (
+                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-signal/85">
+                      {clock}
+                    </span>
+                  ) : null}
+                  <span className="truncate text-[13px] text-ink-muted">
+                    {programme.title}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
+
       {/* Name and the mark */}
       {showIdentity ? (
         <div className="flex items-start gap-3">
@@ -280,82 +355,30 @@ export function ChannelPanel({
         </div>
       ) : null}
 
-      {/* The description */}
-      {sheet?.description ? (
-        <p className="text-[13px] leading-relaxed text-ink-muted">
-          {sheet.description}
-        </p>
-      ) : failed ? (
-        <p className="text-[13px] leading-relaxed text-ink-faint">
-          Detaliile canalului nu pot fi citite acum.
-        </p>
-      ) : sheet ? (
-        <p className="text-[13px] leading-relaxed text-ink-faint">
-          Canalul nu are o descriere.
-        </p>
-      ) : (
-        <div className="space-y-2" aria-hidden>
-          <div className="h-3 w-full animate-pulse rounded bg-white/[0.06]" />
-          <div className="h-3 w-4/5 animate-pulse rounded bg-white/[0.06]" />
-          <div className="h-3 w-2/3 animate-pulse rounded bg-white/[0.06]" />
-        </div>
-      )}
-
-      {/* The guide */}
-      {sheet?.now ? (
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5">
-          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-signal/85">
-            <Radio className="size-3" aria-hidden />
-            Acum
+      {/* The channel's own text */}
+      <div data-slot="channel-about">
+        <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
+          Despre canal
+        </h3>
+        {sheet?.description ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">
+            {sheet.description}
           </p>
-          <p className="mt-2 font-display text-[15px] font-semibold leading-tight tracking-tight text-ink">
-            {sheet.now.title}
+        ) : failed ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-faint">
+            Detaliile canalului nu pot fi citite acum.
           </p>
-          <ProgrammeBadges
-            channelId={channelId}
-            title={sheet.now.title}
-            className="mt-2"
-          />
-          {nowClock ? (
-            <p className="mt-1 font-mono text-[11px] tabular-nums tracking-wide text-ink-faint">
-              {nowClock}{nowEnd ? ` — ${nowEnd}` : ""}
-            </p>
-          ) : null}
-          {sheet.now.description ? (
-            <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-ink-muted">
-              {sheet.now.description}
-            </p>
-          ) : null}
-        </div>
-      ) : null}
-
-      {sheet && sheet.next.length > 0 ? (
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-faint">
-            Urmează
+        ) : sheet ? (
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-faint">
+            Canalul nu are o descriere.
           </p>
-          <ul className="mt-2 flex flex-col gap-2">
-            {sheet.next.map((programme, index) => {
-              const clock = clockOf(programme.startsAt);
-              return (
-                <li
-                  key={`${programme.startsAt ?? index}-${programme.title}`}
-                  className="flex min-w-0 items-baseline gap-2.5"
-                >
-                  {clock ? (
-                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-signal/85">
-                      {clock}
-                    </span>
-                  ) : null}
-                  <span className="truncate text-[13px] text-ink-muted">
-                    {programme.title}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : null}
+        ) : (
+          <div className="mt-2 space-y-2" aria-hidden>
+            <div className="h-3 w-full animate-pulse rounded bg-white/[0.06]" />
+            <div className="h-3 w-4/5 animate-pulse rounded bg-white/[0.06]" />
+          </div>
+        )}
+      </div>
 
       {/* The draft bridge - show when signed out */}
       {!account.signedIn && draftState.draft && (

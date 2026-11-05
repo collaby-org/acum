@@ -46,6 +46,38 @@
       ]
     },
     {
+      "id": "audit-10",
+      "role": "read",
+      "paths": [
+        "monorepo/frontend/src",
+        "monorepo/tv/src",
+        "monorepo/frontend/data",
+        "supabase",
+        ".github/workflows"
+      ]
+    },
+    {
+      "id": "audit-17",
+      "role": "read",
+      "paths": [
+        "monorepo/frontend/src",
+        "monorepo/frontend/public",
+        "monorepo/tv/src",
+        "supabase",
+        ".github/workflows",
+        "docs"
+      ]
+    },
+    {
+      "id": "audit-16",
+      "role": "read",
+      "paths": [
+        "monorepo/frontend/src",
+        "monorepo/tv/src",
+        "supabase"
+      ]
+    },
+    {
       "id": "orchestrator",
       "role": "write",
       "paths": [
@@ -67,15 +99,6 @@
         "the changelog, the backlog, the verification log and the diagrams",
         "the live proof scripts and the refreshed programme guide",
         "the version line that moves with the change"
-      ]
-    },
-    {
-      "id": "audit-readers",
-      "role": "read",
-      "paths": [
-        "monorepo/frontend/src",
-        "monorepo/tv/src",
-        "supabase"
       ]
     }
   ]

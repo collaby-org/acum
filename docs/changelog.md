@@ -9,6 +9,27 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.5] — 2026-11-05
+
+### Changed
+
+- **The channel page leads with the programme.** The panel now opens with
+  **"Acum"** — the programme's title, the time range it runs right now
+  (20:30 — 23:29), its own description and its badges — and the channel's
+  own text follows underneath, under the heading **"Despre canal"**. The
+  **"Urmează"** list stays in order, each entry with its clock. The channel
+  blurb is no longer read as a programme, and the programme is no longer
+  buried under the channel's identity.
+- **The honest empty state.** When the guide carries nothing for a channel,
+  the panel says **"Programul nu este disponibil pentru acest canal"** —
+  never the channel description pretending to be a programme.
+- **The back control is findable.** The control on the channel page carries
+  the accessible name **"Înapoi la catalog"** (the visible text stays
+  "Înapoi acasă"), and it keeps its 44 px target. The same change is
+  mirrored into the TV app.
+- **Version 1.7.5** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.4] — 2026-11-05
 
 ### Fixed
