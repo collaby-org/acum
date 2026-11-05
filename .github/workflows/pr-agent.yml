@@ -57,7 +57,7 @@ jobs:
       - name: PR Agent action step
         id: pragent
         if: ${{ env.LLM_API_KEY != '' }}
-        uses: the-pr-agent/pr-agent@b7b979341a54fa0fdd57d7839d73d795ba302851 # v0.48.0
+        uses: the-pr-agent/pr-agent@8f6be9dc97dc1f31e6e0fd756a2943e2e0c334fb # v0.48.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI.KEY: ${{ secrets.LLM_API_KEY }}
