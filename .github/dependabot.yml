@@ -39,6 +39,12 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
         update-types: ["version-update:semver-major"]
+      # TypeScript 7 is out, but typescript-eslint (and eslint-config-next
+      # with it) declares a peer range of ">=4.8.4 <6.1.0" — the lint step
+      # cannot run against it yet. Bumping TypeScript alone turns the
+      # "minor-patch" group red, so it waits until the linter catches up.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # Supabase migrations (SQL)
   - package-ecosystem: "npm"

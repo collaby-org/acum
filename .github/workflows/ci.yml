@@ -88,3 +88,29 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # The gate the protected branch asks for by name: "Lint, type-check and
+  # build". The two jobs above are the real work; this one waits for both
+  # and gives the branch protection a single answer to read. It is written
+  # with `if: always()` on purpose — a skipped job would look like a pass,
+  # and a green gate must mean both apps were really checked.
+  gate:
+    name: Lint, type-check and build
+    needs: [frontend, tv]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Both apps are green
+        env:
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
+          TV_RESULT: ${{ needs.tv.result }}
+        run: |
+          echo "frontend: ${FRONTEND_RESULT}"
+          echo "tv: ${TV_RESULT}"
+          if [ "${FRONTEND_RESULT}" != "success" ] || [ "${TV_RESULT}" != "success" ]; then
+            echo "::error::The web app and the television app must both pass lint, type check and build."
+            exit 1
+          fi
+          echo "Both apps passed lint, type check and build."
