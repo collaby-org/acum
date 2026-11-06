@@ -1,80 +1,119 @@
 {
   "lanes": [
     {
-      "id": "phone-latency",
+      "id": "reviews-core",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/app/api/player/route.ts",
-        "monorepo/tv/src/app/api/player/route.ts",
-        "monorepo/frontend/src/components/mobile-nav.tsx",
-        "monorepo/frontend/src/app/preturi/page.tsx",
-        "monorepo/frontend/src/lib/session-token.ts"
+        "monorepo/frontend/src/components/reviews",
+        "monorepo/frontend/src/hooks/use-reviews.ts",
+        "monorepo/frontend/src/lib/reviews.ts",
+        "monorepo/frontend/src/lib/review-rank.ts",
+        "monorepo/frontend/src/lib/review-channels.ts"
       ],
       "outputs": [
-        "the manifest answers as fast as the catalogue knows, not as slowly as the slowest probe",
-        "the bottom bar is on the plans page and its home action never takes a redirect",
-        "the destination is decided locally from the mirrored session, in one step"
+        "the visitor sees their own review, edits it and deletes it",
+        "the composer is prefilled with the visitor's existing review and submits as an update",
+        "the sheet exits toward the control that dismissed it, drags down to close and closes on Escape",
+        "the composer's inputs are 16px on mobile and the review card prints an excerpt"
       ]
     },
     {
-      "id": "player-bar",
+      "id": "reviews-entry",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/components/player/player-controls.tsx",
-        "monorepo/frontend/src/components/player/player-quality.tsx",
-        "monorepo/frontend/src/components/player/video-player.tsx"
-      ],
-      "outputs": [
-        "one control line that never wraps, one control size, compact chips",
-        "the buffering state is a centred animation over the picture, not a bar",
-        "the live badge becomes a connection chip that shares a container with the quality control"
-      ]
-    },
-    {
-      "id": "channel-panel",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/components/channel/canal-screen.tsx",
         "monorepo/frontend/src/components/channel/channel-panel.tsx",
-        "monorepo/frontend/src/app/canal/[id]/page.tsx",
-        "monorepo/frontend/src/lib/channel-detail.ts"
+        "monorepo/frontend/src/components/header.tsx",
+        "monorepo/frontend/src/app/page.tsx",
+        "monorepo/frontend/src/app/canale/page.tsx",
+        "monorepo/frontend/src/app/canal/[id]/page.tsx"
       ],
       "outputs": [
-        "the channel panel leads with the programme and keeps the channel text as context",
-        "an honest empty state when there is no programme",
-        "the back control is findable by assistive technology"
+        "a discoverable 'Scrie o recenzie' on the channel surface",
+        "the dead draft bridge is gone",
+        "the header link points at the reviews section that exists",
+        "the popular reviews sit where the eye lands",
+        "the channel panel offers a retry and 44px targets"
       ]
     },
     {
-      "id": "audit-10",
-      "role": "read",
+      "id": "player-polish",
+      "role": "write",
       "paths": [
-        "monorepo/frontend/src",
-        "monorepo/tv/src",
-        "monorepo/frontend/data",
+        "monorepo/frontend/src/components/player",
+        "monorepo/frontend/src/components/programme-badges",
+        "monorepo/frontend/src/components/ui/dialog.tsx"
+      ],
+      "outputs": [
+        "the player offers 'Scrie o recenzie' for the programme on air",
+        "one badge vocabulary for the whole app",
+        "44px mute, warning, dialog and volume targets with a visible volume value",
+        "the browser's Back button closes the player"
+      ]
+    },
+    {
+      "id": "mobile-polish",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/app/error.tsx",
+        "monorepo/frontend/src/app/not-found.tsx",
+        "monorepo/frontend/src/app/global-error.tsx",
+        "monorepo/frontend/src/app/reset-password",
+        "monorepo/frontend/src/components/pages",
+        "monorepo/frontend/src/components/admin",
+        "monorepo/frontend/src/components/search-panel.tsx"
+      ],
+      "outputs": [
+        "no input zooms the page on iOS (16px on mobile)",
+        "the error shells use a dynamic viewport unit",
+        "every remaining touch target is at least 44px"
+      ]
+    },
+    {
+      "id": "db-grants",
+      "role": "write",
+      "paths": [
         "supabase",
-        ".github/workflows"
+        "monorepo/frontend/supabase",
+        "monorepo/tv/supabase"
+      ],
+      "outputs": [
+        "a migration that revokes direct writes on the review tables",
+        "three byte-identical schema copies with the stricter root privileges",
+        "a Docker proof of the grants and the revoked function privileges"
       ]
     },
     {
-      "id": "audit-17",
-      "role": "read",
+      "id": "epg-cron",
+      "role": "write",
       "paths": [
-        "monorepo/frontend/src",
-        "monorepo/frontend/public",
-        "monorepo/tv/src",
-        "supabase",
-        ".github/workflows",
-        "docs"
+        ".github/workflows/epg-refresh.yml"
+      ],
+      "outputs": [
+        "the guide refreshes twice a day on a clock",
+        "the run reports the guide's date and never turns the workflow red"
       ]
     },
     {
-      "id": "audit-16",
+      "id": "nav-bar",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/components/mobile-nav.tsx",
+        "monorepo/frontend/src/app/canale/loading.tsx"
+      ],
+      "outputs": [
+        "the bottom bar marks the current route",
+        "a tap on the bar lands the catalogue in under 1200ms",
+        "a loading boundary for /canale that does not jump"
+      ]
+    },
+    {
+      "id": "next-prefetch-research",
       "role": "read",
       "paths": [
-        "monorepo/frontend/src",
-        "monorepo/tv/src",
-        "supabase"
+        "monorepo/frontend/node_modules/next/dist/docs",
+        "monorepo/frontend/src/app/canale",
+        "monorepo/frontend/src/components/mobile-nav.tsx",
+        "monorepo/frontend/next.config.ts"
       ]
     },
     {
@@ -82,23 +121,17 @@
       "role": "write",
       "paths": [
         ".agents/lanes.json",
-        ".github/workflows",
-        "README.md",
         "docs",
+        "README.md",
         "monorepo/frontend/README.md",
         "monorepo/frontend/package.json",
-        "monorepo/frontend/.env.example",
-        "monorepo/frontend/scripts",
-        "monorepo/frontend/data/epg.json",
-        "monorepo/frontend/src/components/channel-card.tsx",
-        "monorepo/frontend/src/components/account/account-button.tsx",
-        "monorepo/frontend/src/components/admin/denied.tsx",
-        "monorepo/tv/package.json"
+        "monorepo/tv/package.json",
+        "monorepo/frontend/scripts"
       ],
       "outputs": [
-        "the changelog, the backlog, the verification log and the diagrams",
-        "the live proof scripts and the refreshed programme guide",
-        "the version line that moves with the change"
+        "the changelog, the backlog, the verification log, the README and the diagrams",
+        "the version line that moves with every release",
+        "the live proof scripts and the new review harness"
       ]
     }
   ]

@@ -9,6 +9,48 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.8] — 2026-11-06
+
+### Fixed
+
+- **The review tables are locked twice.** The rows a browser role may touch
+  were decided by row-level security alone; the table privileges behind
+  them still let an anonymous visitor attempt every write. Now an anonymous
+  visitor may only **read** the public reviews — no insert, update, delete
+  or truncate — while a signed-in visitor keeps exactly the row operations
+  their own token needs (read, write, change and delete their own rows) and
+  loses the three operations RLS cannot constrain. The aggregate counters
+  stay public through the count function, which is the only door to the
+  private reaction rows.
+- **A review can be changed by its author.** The edit path existed in the
+  app but the database had no policy for it: a review was written once and
+  deleted by its author, and never changed. The author's own update is now
+  allowed — and only the author's.
+- **The schema had never executed cleanly.** The root `schema.sql` carried
+  a syntax error in `handle_new_user()` (a stray semicolon before `on
+  conflict`), so the file could not be applied as written. It is fixed, and
+  the whole schema now runs end to end.
+- **The three copies of the schema are the same file.** The root copy and
+  the two copies inside the apps had drifted apart, and the drift carried
+  a live privilege difference: the app copies still handed the account
+  functions to anonymous and signed-in visitors while the root copy
+  (already applied to the live database) kept them for the service role
+  only. All three trees — schema and migrations — are now byte-identical,
+  and the missing files are mirrored.
+- **The branch protection can be satisfied.** The protected branch asked
+  for a check named "Lint, type-check and build" that no workflow ever
+  reported, so every pull request stayed blocked. The CI now reports that
+  gate by name, and it is green only when **both** the web app and the
+  television app really passed.
+- **Dependabot stops offering TypeScript 7.** The linter's peer range does
+  not reach TypeScript 7 yet, so the dependency pull request could only
+  turn the build red. It waits until the linter catches up.
+
+### Changed
+
+- **Version 1.7.8** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.7] — 2026-11-05
 
 ### Fixed

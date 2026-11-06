@@ -338,6 +338,11 @@ begin
     new.plan_until := old.plan_until;
     new.bypass := old.bypass;
     new.household_id := old.household_id;
+    new.household_device := old.household_device;
+    new.note := old.note;
+    new.email := old.email;
+    new.last_seen_at := old.last_seen_at;
+    new.created_at := old.created_at;
   end if;
   return new;
 end;
@@ -393,8 +398,8 @@ create policy "households are theirs"
   );
 
 -- Reviews: reading is open, writing is a signed-in act on one's own row.
--- There is no update policy: a review is written once, and its author may
--- delete it.
+-- A review may also be changed by its author while it remains the
+-- author's own row.
 drop policy if exists "reviews are readable by everybody" on public.reviews;
 create policy "reviews are readable by everybody"
   on public.reviews for select
@@ -403,6 +408,12 @@ create policy "reviews are readable by everybody"
 drop policy if exists "reviews are written by their author" on public.reviews;
 create policy "reviews are written by their author"
   on public.reviews for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "reviews are changed by their author" on public.reviews;
+create policy "reviews are changed by their author"
+  on public.reviews for update
+  using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
 drop policy if exists "reviews are deleted by their author" on public.reviews;
@@ -448,6 +459,21 @@ comment on function public.review_reaction_counts(uuid[]) is
 
 grant execute on function public.review_reaction_counts(uuid[]) to anon, authenticated;
 
+-- RLS chooses the rows a browser role may touch; table privileges choose
+-- the operations it may attempt at all. Anonymous visitors may read public
+-- reviews only. Signed-in visitors keep the row operations their own token
+-- needs, but never the operations RLS cannot constrain.
+revoke all privileges on table public.reviews from anon;
+revoke all privileges on table public.review_reactions from anon;
+
+grant select on table public.reviews to anon;
+
+revoke truncate, trigger, references on table public.reviews from authenticated;
+revoke truncate, trigger, references on table public.review_reactions from authenticated;
+
+grant select, insert, update, delete on table public.reviews to authenticated;
+grant select, insert, update, delete on table public.review_reactions to authenticated;
+
 -- Messages: written by anyone, read by nobody but the desk.
 drop policy if exists "messages can be written" on public.messages;
 create policy "messages can be written"
@@ -455,9 +481,11 @@ create policy "messages can be written"
   with check (true);
 
 drop policy if exists "messages can be read by their author" on public.messages;
-create policy "messages can be read by their author"
+drop policy if exists "messages are the desk's alone" on public.messages;
+drop policy if exists "messages can be read by the desk" on public.messages;
+create policy "messages can be read by the desk"
   on public.messages for select
-  using (auth.uid() is not null);
+  using (false);
 
 -- The statistics are the desk's alone.
 drop policy if exists "stats are the desk's" on public.daily_stats;
@@ -485,7 +513,7 @@ begin
       split_part(coalesce(new.email, ''), '@', 1)
     ),
     now()
-  );
+  )
   on conflict (id) do nothing;
   return new;
 end;
@@ -522,5 +550,11 @@ as $$
   where p.id = p_user;
 $$;
 
-grant execute on function public.account_state(uuid) to anon, authenticated;
-grant execute on function public.minutes_watched_today(uuid) to anon, authenticated;
+-- Account state contains plan, bypass, household and watch-time details. The
+-- server reads it with the service role after authenticating the caller; a
+-- browser session must not be able to invoke it for an arbitrary user id.
+revoke execute on function public.account_state(uuid) from public, anon, authenticated;
+grant execute on function public.account_state(uuid) to service_role;
+
+revoke execute on function public.minutes_watched_today(uuid) from public, anon, authenticated;
+grant execute on function public.minutes_watched_today(uuid) to service_role;
