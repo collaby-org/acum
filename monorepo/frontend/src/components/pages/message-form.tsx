@@ -265,6 +265,7 @@ export function MessageForm({ page, variant = "contact" }: MessageFormProps) {
           name="website"
           tabIndex={-1}
           autoComplete="off"
+          className="text-base sm:text-sm"
         />
       </div>
 
@@ -305,7 +306,7 @@ export function MessageForm({ page, variant = "contact" }: MessageFormProps) {
  * ------------------------------------------------------------------ */
 
 const INPUT =
-  "w-full rounded-[var(--radius-card)] border border-white/[0.09] bg-black/25 px-3.5 py-2.5 text-[14px] text-ink outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-ink-faint focus:border-signal/50 focus:bg-black/35 focus:shadow-[0_0_0_4px_rgba(242,167,27,0.10)]";
+  "w-full rounded-[var(--radius-card)] border border-white/[0.09] bg-black/25 px-3.5 py-2.5 text-base text-ink outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-ink-faint focus:border-signal/50 focus:bg-black/35 focus:shadow-[0_0_0_4px_rgba(242,167,27,0.10)] sm:text-sm";
 
 function Field({
   label,

@@ -38,6 +38,22 @@ ships or changes shape.
 - [x] **v1.7.x — The channel page.** `/canal/<id>` is a shareable deep link:
   the channel's programme leads, the channel's own text follows, and the
   picture, the panel and the bottom bar fit one phone.
+- [x] **v1.7.x — The release machine.** One version line that moves with
+  every push, the changelog entry in the same commit as the change, the
+  living documentation beside it, and a protected branch whose gate the CI
+  actually reports.
+- [x] **v1.7.x — The social layer.** A review is a star rating and a written
+  comment on the programme airing now; the visitor sees their own review and
+  can change and delete it; like, love and clap carry server-truth counters;
+  the popular reviews sit below the hero on the homepage. The database is
+  locked twice: row-level security for the rows, table privileges for the
+  operations.
+- [x] **v1.8.0 — The social layer in both apps, and the phone rules the
+  television app was missing.** The review engine is mirrored into
+  `monorepo/tv/`, the channel surface manages the visitor's own review, the
+  composer joins the history so Back closes it, and the television app
+  follows the same viewport, tap, overscroll and hover rules the web app
+  already had.
 
 ## Next
 
@@ -64,7 +80,7 @@ ships or changes shape.
 
 The production-readiness checklist in
 [#17](https://github.com/collaby-org/acum/issues/17) is the list: the install
-offer only on a desktop, `min-h-dvh` on every full-height surface, 16px
+offer only on the phone, `min-h-dvh` on every full-height surface, 16px
 inputs, hover gated behind `@media (hover: hover)`, `touch-action:
 manipulation`, `text-size-adjust: 100%`, one vocabulary of radius, border,
 shadow and type, and three real states for every async surface. The current
@@ -85,10 +101,8 @@ state is in [backlog.md](backlog.md).
 
 ## Not planned
 
-- Cloud sync, comments, ratings — the social layer is scoped in
-  [#16](https://github.com/collaby-org/acum/issues/16) and is not part of the
-  production-readiness work.
-- Our own transcoding or stream proxy.
+- Cloud sync — the reviews are the account's, and they travel with it.
+- Our own transcoding. The stream proxy is ours; the encoding is not.
 - Recommendation algorithms.
 - Any advertising or analytics.
 

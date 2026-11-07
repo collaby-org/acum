@@ -44,7 +44,7 @@ const DialogContent = React.forwardRef<
       {children}
       {!hideClose && (
         <DialogPrimitive.Close
-          className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-black/60 text-ink/80 backdrop-blur-md transition hover:bg-black/85 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          className="absolute right-3 top-3 z-10 grid size-11 place-items-center rounded-full bg-black/60 text-ink/80 backdrop-blur-md transition hover:bg-black/85 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
           aria-label="Închide"
         >
           <X className="size-4.5" />

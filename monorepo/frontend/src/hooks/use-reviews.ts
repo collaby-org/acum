@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useMemo, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { accountToken } from "@/hooks/use-account";
 import type {
   ReactionKind,
@@ -28,6 +35,9 @@ import type {
 
 /** How many reviews the browser asks for. The server caps it anyway. */
 const POPULAR_LIMIT = 6;
+
+/** How many own reviews a channel list asks for. */
+const MY_CHANNEL_LIMIT = 40;
 
 /** The state the interface works with. */
 export type ReviewsState = {
@@ -466,6 +476,174 @@ function getSnapshot(): ReviewsState {
 
 function getServerSnapshot(): ReviewsState {
   return EMPTY;
+}
+
+/**
+ * The visitor's own reviews for one channel.
+ *
+ * This list is deliberately separate from the module-level store above:
+ * the store is the homepage's popular list, while this is a narrow,
+ * channel-scoped read. Replacing the store from here would empty the
+ * homepage section whenever a channel panel was mounted.
+ */
+export function useMyChannelReviews(channelId: string | null): {
+  reviews: Review[];
+  loading: boolean;
+  failed: boolean;
+  reload: () => void;
+  update: (
+    reviewId: string,
+    changes: { rating?: number; body?: string },
+  ) => Promise<ReviewEditAnswer>;
+  remove: (reviewId: string) => Promise<ReviewDeleteAnswer>;
+} {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const requestId = useRef(0);
+
+  const read = useCallback(async () => {
+    const request = ++requestId.current;
+    if (!channelId) {
+      setReviews([]);
+      setFailed(false);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setFailed(false);
+
+    const currentRequest = request;
+    try {
+      const search = new URLSearchParams({
+        channel: channelId,
+        mine: "1",
+        limit: String(MY_CHANNEL_LIMIT),
+      });
+      const response = await fetch(`/api/reviews?${search.toString()}`, {
+        headers: await authHeaders(),
+        cache: "no-store",
+      });
+
+      if (currentRequest !== requestId.current) return;
+      if (!response.ok) {
+        setReviews([]);
+        setFailed(true);
+        return;
+      }
+
+      const payload = (await response.json()) as ReviewsPayload;
+      if (currentRequest !== requestId.current) return;
+      if (!payload.configured) {
+        setReviews([]);
+        setFailed(true);
+        return;
+      }
+
+      setReviews(Array.isArray(payload.reviews) ? payload.reviews : []);
+    } catch {
+      if (currentRequest !== requestId.current) return;
+      setReviews([]);
+      setFailed(true);
+    } finally {
+      if (currentRequest === requestId.current) setLoading(false);
+    }
+  }, [channelId]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void read(), 0);
+    return () => window.clearTimeout(timer);
+  }, [read]);
+
+  const update = useCallback(
+    async (
+      reviewId: string,
+      changes: { rating?: number; body?: string },
+    ): Promise<ReviewEditAnswer> => {
+      try {
+        const response = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}`, {
+          method: "PATCH",
+          headers: {
+            ...(await authHeaders()),
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(changes),
+          cache: "no-store",
+        });
+
+        const payload = (await response
+          .json()
+          .catch(() => null)) as MutationWire | null;
+
+        if (!response.ok || !payload?.review) {
+          return {
+            ok: false,
+            error: payload?.error ?? "Recenzia nu a putut fi modificată.",
+            needsSession: Boolean(payload?.needsSession),
+          };
+        }
+
+        const settled = payload.review;
+        setReviews((current) =>
+          current.map((review) => (review.id === settled.id ? settled : review)),
+        );
+        return { ok: true, review: settled };
+      } catch {
+        return {
+          ok: false,
+          error: "Nu am putut contacta serverul. Încearcă din nou.",
+          needsSession: false,
+        };
+      }
+    },
+    [],
+  );
+
+  const remove = useCallback(
+    async (reviewId: string): Promise<ReviewDeleteAnswer> => {
+      try {
+        const response = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}`, {
+          method: "DELETE",
+          headers: await authHeaders(),
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          const payload = (await response
+            .json()
+            .catch(() => null)) as MutationWire | null;
+          return {
+            ok: false,
+            error: payload?.error ?? "Recenzia nu a putut fi ștearsă.",
+            needsSession: Boolean(payload?.needsSession),
+          };
+        }
+
+        setReviews((current) => current.filter((review) => review.id !== reviewId));
+        return { ok: true, id: reviewId };
+      } catch {
+        return {
+          ok: false,
+          error: "Nu am putut contacta serverul. Încearcă din nou.",
+          needsSession: false,
+        };
+      }
+    },
+    [],
+  );
+
+  return useMemo(
+    () => ({
+      reviews,
+      loading,
+      failed,
+      reload: () => void read(),
+      update,
+      remove,
+    }),
+    [failed, loading, read, remove, reviews, update],
+  );
 }
 
 export function useReviews(channelId?: string | null) {

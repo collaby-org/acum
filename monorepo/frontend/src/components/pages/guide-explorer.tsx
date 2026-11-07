@@ -125,9 +125,11 @@ export function GuideExplorer({
               type="button"
               onClick={() => setQuery("")}
               aria-label="Șterge filtrul"
-              className="grid size-6 shrink-0 place-items-center rounded-full text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink"
+              className="-m-2.5 grid size-11 shrink-0 place-items-center"
             >
-              <X aria-hidden className="size-3.5" />
+              <span className="grid size-6 place-items-center rounded-full text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink">
+                <X aria-hidden className="size-3.5" />
+              </span>
             </button>
           ) : null}
         </div>

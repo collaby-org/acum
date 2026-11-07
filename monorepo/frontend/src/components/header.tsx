@@ -85,7 +85,7 @@ export function Header({
                 : "/canale"
               : "/"
           }
-          className="group flex shrink-0 items-center gap-3"
+          className="group flex min-h-11 shrink-0 items-center gap-3"
           aria-label={
             account.signedIn
               ? `${SITE_NAME} — catalog`
@@ -122,7 +122,7 @@ export function Header({
               Toate canalele
             </Link>
             <Link
-              href="/canale#recenzii"
+              href="/#recenzii"
               className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
             >
               <MessageSquare aria-hidden className="size-3.5" />
@@ -165,7 +165,7 @@ export function Header({
               type="button"
               onClick={() => onQueryChange("")}
               aria-label="Șterge căutarea"
-              className="mr-2 grid size-11 shrink-0 place-items-center rounded-full text-ink-faint transition duration-300 ease-spring hover:bg-white/10 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal sm:size-6"
+              className="mr-1 grid size-11 shrink-0 place-items-center rounded-full text-ink-faint transition duration-300 ease-spring hover:bg-white/10 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
             >
               <X className="size-3.5" />
             </button>
@@ -177,7 +177,7 @@ export function Header({
         </div>
 
         {/* The account: the way in, and what the plan is. */}
-        <AccountButton />
+        <AccountButton className="[&_a]:min-h-11 [&_button]:min-h-11" />
 
         {/* Favourites */}
         <Button
@@ -186,7 +186,7 @@ export function Header({
           onClick={onToggleFavorites}
           aria-pressed={favoritesActive}
           className={cn(
-            "hidden shrink-0 gap-2 sm:inline-flex",
+            "hidden h-11 shrink-0 gap-2 px-4 sm:inline-flex",
             "transition-[transform,box-shadow,background-color,color] duration-300 ease-spring",
             "hover:-translate-y-px",
             favoritesActive &&
@@ -215,6 +215,7 @@ export function Header({
             onClick={onToggleFavorites}
             aria-label={`Favorite (${favoritesCount})`}
             aria-pressed={favoritesActive}
+            className="size-11"
           >
             <Heart
               className={cn(

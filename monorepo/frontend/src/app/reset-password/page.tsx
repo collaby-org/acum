@@ -134,7 +134,7 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-sm text-ink",
+                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-base text-ink sm:text-sm",
                     "placeholder:text-ink-faint transition-colors duration-300",
                     "hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25",
                   )}
@@ -158,7 +158,7 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-sm text-ink",
+                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-base text-ink sm:text-sm",
                     "placeholder:text-ink-faint transition-colors duration-300",
                     "hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25",
                   )}
@@ -220,7 +220,7 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="nume@exemplu.ro"
                   className={cn(
-                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-sm text-ink",
+                    "h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-base text-ink sm:text-sm",
                     "placeholder:text-ink-faint transition-colors duration-300",
                     "hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25",
                   )}

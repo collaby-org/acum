@@ -24,7 +24,11 @@ import { cn } from "@/lib/utils";
 export type MobileNavAction = "home" | "categories" | "favorites" | "search";
 
 export type MobileNavProps = {
-  /** The tab that is open right now. `null` when none of them is. */
+  /**
+   * The in-page view that is open now. This is separate from the current
+   * route: the catalogue can show favourites while its address stays
+   * `/canale`.
+   */
   active?: MobileNavAction | null;
   /** Goes to the catalogue. */
   onHome?: () => void;
@@ -66,6 +70,44 @@ function homeDestination(signedIn: boolean): string {
   return signedIn ? "/canale" : "/";
 }
 
+/**
+ * The route represented by a tab.
+ *
+ * Favourites and search are views inside the catalogue, not addresses, so
+ * they never own the current-route marker. The other two tabs do.
+ */
+function routeDestination(pathname: string): MobileNavAction | null {
+  if (pathname === "/") return "home";
+  if (pathname === "/canale") return "home";
+  if (pathname === "/canale/toate" || pathname === "/canale/grupate") {
+    return "categories";
+  }
+  return null;
+}
+
+/**
+ * Warms the catalogue while the phone is idle.
+ *
+ * The catalogue is request-time data, so the prefetch asks Next.js for the
+ * route rather than trying to reproduce its server-side session check in
+ * the browser. It is deliberately best-effort: a prefetched route may still
+ * need a fresh server response when it is opened.
+ */
+function prefetchCatalogue(router: ReturnType<typeof useRouter>) {
+  const prefetch = () => {
+    router.prefetch("/canale");
+    router.prefetch("/canale/toate");
+  };
+
+  if (typeof window.requestIdleCallback === "function") {
+    const handle = window.requestIdleCallback(prefetch, { timeout: 1200 });
+    return () => window.cancelIdleCallback(handle);
+  }
+
+  const handle = window.setTimeout(prefetch, 400);
+  return () => window.clearTimeout(handle);
+}
+
 export function MobileNav({
   active = null,
   onHome,
@@ -94,6 +136,10 @@ export function MobileNav({
     input.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [pathname]);
 
+  // Give the router time to warm the catalogue before a finger reaches
+  // the bar. This does not gate the page or move authentication client-side.
+  useEffect(() => prefetchCatalogue(router), [router]);
+
   const focusSearch = () => {
     const input = document.querySelector<HTMLInputElement>('input[type="search"]');
     if (input) {
@@ -121,6 +167,8 @@ export function MobileNav({
     search: () => (onSearch ? onSearch() : focusSearch()),
   };
 
+  const currentRoute = routeDestination(pathname);
+
   return (
     <nav
       aria-label="Navigare"
@@ -137,26 +185,38 @@ export function MobileNav({
       <ul className="mx-auto grid max-w-lg grid-cols-4 gap-1">
         {TABS.map((tab) => {
           const Icon = tab.icon;
-          const isActive = active === tab.id;
+          const isActiveView = active === tab.id;
+          const isCurrentRoute = currentRoute === tab.id;
+          const isHighlighted = isActiveView || isCurrentRoute;
           return (
             <li key={tab.id}>
               <button
                 type="button"
                 onClick={actions[tab.id]}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isCurrentRoute ? "page" : undefined}
+                aria-pressed={isActiveView ? true : undefined}
                 className={cn(
-                  "flex w-full flex-col items-center gap-1 rounded-2xl px-2 py-1.5",
+                  "relative flex min-h-11 w-full flex-col items-center gap-1 rounded-2xl px-2 py-1.5",
                   "transition-colors duration-300 ease-out",
                   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
-                  isActive ? "text-signal" : "text-ink-faint hover:text-ink",
+                  isHighlighted ? "text-signal" : "text-ink-faint hover:text-ink",
                 )}
               >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute inset-x-3 top-0 h-0.5 origin-center rounded-full bg-signal transition-transform duration-300 ease-spring",
+                    isCurrentRoute
+                      ? "scale-x-100 opacity-100"
+                      : "scale-x-0 opacity-0",
+                  )}
+                />
                 <Icon
                   className={cn(
                     "size-5 transition-transform duration-300 ease-spring",
-                    isActive && "scale-110",
+                    isHighlighted && "scale-110",
                   )}
-                  strokeWidth={isActive ? 2.3 : 2}
+                  strokeWidth={isHighlighted ? 2.3 : 2}
                   aria-hidden
                 />
                 <span className="text-[10px] font-semibold tracking-[0.08em]">

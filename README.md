@@ -1,14 +1,14 @@
 # ACUM — Romanian Live TV, No Ads
 
 [![CI](https://github.com/collaby-org/acum/actions/workflows/ci.yml/badge.svg)](https://github.com/collaby-org/acum/actions/workflows/ci.yml)
-![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000?logo=next.js)
-![React](https://img.shields.io/badge/React-19.3-087ea4?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)
-![Tailwind](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss)
+![Next.js](https://img.shields.io/badge/Next.js-16.4.5-000?logo=next.js)
+![React](https://img.shields.io/badge/React-19.3.1-087ea4?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-4.3.4-06b6d4?logo=tailwindcss)
 ![Lucide Icons](https://img.shields.io/badge/Icons-Lucide-red)
 ![License](https://img.shields.io/badge/license-MIT-10b981)
-![Channels](https://img.shields.io/badge/Channels-156%20live-red)
-![Families](https://img.shields.io/badge/Families-74-red)
+![Channels](https://img.shields.io/badge/Channels-156-red)
+![Families](https://img.shields.io/badge/Families-76-red)
 ![Feeds](https://img.shields.io/badge/Feeds-370-red)
 ![Build](https://img.shields.io/badge/Build-passing-brightgreen)
 
@@ -23,12 +23,15 @@ A Netflix-style directory of Romanian live TV channels, built from public embed 
 ### Key Features
 
 - **One click to play.** Click a channel — video starts. No poster, no "click to start", no two-click tour.
-- **Own player.** Not the upstream's chrome — live-edge-locked scrubber, volume, Picture-in-Picture, fullscreen, breathing live indicator.
-- **Zero ads.** Upstream hosts call `aclib.runPop()` which opens ads in new windows. ACUM serves the upstream page with all ads and tracker scripts removed, under a `sandbox` CSP, and proxies media through its own proxy. Network log shows zero ad hosts, zero popups.
+- **Own player.** Not the upstream's chrome — our own HLS engine, the controls inside the frame, the connection chip, the quality cluster, a live indicator, picture-in-picture and fullscreen.
+- **Zero ads.** The upstream's own player page is never served and no third-party script is ever loaded: the browser plays a manifest our server resolves, and every byte travels under a signed token through `/api/stream`.
 - **One entry per channel.** The source lists the same broadcaster on multiple servers ("Antena 1 S1", "Antena 1 S2 HD", "Antena 1 S3"). ACUM folds them into one channel with a server list, and when one feed dies it falls back to the next automatically.
 - **Find anything, fast.** Ranked search, diacritic-insensitive, and A→Z jump bar.
 - **Free tier: 120 minutes daily.** Create an account, watch 2 hours free every day. Paid plans remove the limit.
+- **The programme leads.** On a channel page the visitor sees what is on right now — title, its clock range, its own description — before the channel's own text, and the guide says so honestly when there is nothing to show.
+- **A lived-in catalogue.** A review is a star rating and a written comment on the programme airing now. The visitor sees their own review — on the channel surface, not only on the homepage — and can change and delete it; like, love and clap carry counters that come from the database, not from a guess.
 - **Installable.** PWA with offline shell, real icons and safe-area chrome — behaves like an app on phone.
+- **A television app too.** The same catalogue, the same guide, the same badges, the same review engine, driven by a remote.
 - **No analytics, no trackers, no ad scripts of our own.** Interface says "no ads" because it's true.
 
 ---
@@ -67,17 +70,21 @@ graph TB
         L -->|props| N[<Rail>]
         L -->|props| O[<ChannelIndex>]
         L -->|props| P[<SearchPanel>]
+        L -->|props| P2[<PopularReviews>]
 
         M --> Q[<ChannelCard>]
         N --> Q
 
-        Q -->|click| R[<Player><br/>modal]
+        Q -->|click| R[<Player><br/>our own hls.js player]
 
-        R -->|POST channel id| T[api/player<br/>gate · catalogue]
+        R -->|POST channel id| T[api/player<br/>gate · claim · resolve · probe]
         T -->|signed manifest| R
         R -->|GET /api/stream?t=…| S[api/stream<br/>signed relay]
-        S -->|manifest + segments| U[cool-etv.net<br/>HLS manifests]
+        S -->|manifest + segments| U[upstream media hosts<br/>HLS manifests]
         U -->|m3u8 · .ts| S
+
+        J2[visitor's own token] -->|read · write · react| V[api/reviews]
+        V --> W[(Supabase<br/>RLS + table privileges)]
     end
 
     style A fill:#e1f5e1
@@ -89,6 +96,7 @@ graph TB
     style S fill:#ffebee
     style T fill:#ffebee
     style U fill:#ffebee
+    style W fill:#ffebee
 ```
 
 The rule the picture carries: **the browser never names an upstream address.**
@@ -107,15 +115,19 @@ catalogue, and every byte afterwards travels under a signed token through
 
 | Layer | Technology | Version | Role |
 |-------|-----------|---------|------|
-| Framework | Next.js | 16.4.2 | App Router, Turbopack |
-| Interface | React | 19.3.0 | Client island + server components |
-| Styling | Tailwind CSS | 4 | Design tokens, utilities |
-| Types | TypeScript | 5 | Strict type safety |
-| Icons | Lucide React | 1.60.0 | Lucide icons only |
-| Player | hls.js | 1.7.3 | HLS streams, failover |
+| Framework | Next.js | 16.4.5 | App Router, Turbopack |
+| Interface | React | 19.3.1 | Server components + client islands |
+| Styling | Tailwind CSS | 4.3.4 | Design tokens, utilities |
+| Types | TypeScript | 5.9.3 | Strict type safety |
+| Icons | Lucide React | 1.67.0 | Lucide icons only |
+| Player | hls.js | 1.7.4 | HLS streams, failover |
 | Base UI | shadcn/ui | — | Primitive components |
 | Fonts | Space Grotesk + Inter | — | Self-hosted, no CDN |
-| Auth | Supabase | — | Auth, plans, limits |
+| Data | Supabase (Auth + Postgres) | — | Accounts, plans, limits, reviews, counters |
+| Payments | Stripe | — | Checkout and the webhook |
+
+The television app (`monorepo/tv/`) runs its own installed copy of the same
+stack, one step behind: Next 16.4.2, React 19.3.0, ESLint 9.
 
 ---
 
@@ -166,10 +178,13 @@ export ACUM_HARNESS_PASSWORD='…'
 
 npm run verify:live          # 11 questions about the live site
 npm run verify:player        # one click → moving picture, no popup, no ad host
+npm run verify:player:bar    # the bar: one line, one size, 44px targets
 npm run verify:ui            # walk the app, fail on a console error
 npm run verify:mobile        # the phone: the channel page and the bottom bar
 npm run verify:mobile:stream # the playhead on a throttled line
 npm run verify:mobile:nav    # the bottom bar: is the tap eaten? how slow?
+npm run verify:acum          # the catalogue and the guide, against the live site
+npm run verify:fallback      # the failover chain, when a feed dies
 ```
 
 Every number these harnesses produced is written down in
@@ -205,17 +220,22 @@ Upstream media hosts sit behind a Cloudflare `Referer` allowlist. With the corre
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Hero + rails + grid (homepage) |
+| `/` | Hero + rails + grid + the popular reviews (homepage) |
+| `/canale` | The catalogue |
 | `/canale/[categorie]` | Channel by category |
 | `/canale/toate` | All channels (full directory) |
-| `/canal/[id]` | Channel page (panel, live) |
+| `/canale/grupate` | All channels, grouped by family |
+| `/canal/[id]` | Channel page (the programme first, then the player) |
 | `/ghid` | Interactive TV guide |
 | `/azi` | Today's program |
 | `/maine` | Tomorrow's program |
+| `/saptamana` | The week |
+| `/cauta-o-emisiune` | Search the guide |
+| `/top-emisiuni` | The most watched programmes |
 | `/trending` | What's trending now |
 | `/preturi` | Subscriptions (your plan if signed in) |
 | `/conturi` | Sign in / account |
-| `/admin` | Admin panel (desk) |
+| `/admin` | The desk |
 | `/tv` | TV-native page (Netflix-style, remote-first, QR login) |
 
 ---

@@ -23,16 +23,17 @@ television-only files are never overwritten by a sync.
 
 | Package | Version | Why |
 | ------- | ------- | --- |
-| `next` | 16.4.2 | App Router, Turbopack by default, Cache Components |
-| `react` | 19.3.0 | Server Components, `useSyncExternalStore` |
-| `react-dom` | 19.3.0 | — |
+| `next` | 16.4.5 | App Router, Turbopack by default, Cache Components |
+| `react` | 19.3.1 | Server Components, `useSyncExternalStore` |
+| `react-dom` | 19.3.1 | — |
 | `typescript` | 5.9.3 | Type check (`node node_modules/typescript/bin/tsc --noEmit`) |
 | `tailwindcss` | 4.3.4 | CSS-first config, `@theme` tokens |
 | `@tailwindcss/turbopack` | ^4 | The Turbopack CSS loader |
 
-The television app runs the same versions: Next 16.4.2, React 19.3.0,
-TypeScript 5.9.3, Tailwind 4.3.3 — its own installed copy, one patch
-behind the web app.
+The television app runs its own installed copy, a little behind the web app:
+Next 16.4.2, React 19.3.0, TypeScript 5.9.3, Tailwind 4.3.3, ESLint 9.39.5,
+Lucide 1.60.0, hls.js 1.7.3. The web app is the one Dependabot watches; the
+television app's pins move with it, deliberately, one step at a time.
 
 ## UI
 
@@ -78,7 +79,8 @@ every push to `main`.
 
 ## Tooling
 
-- **ESLint 9** (9.39.5), flat config (`eslint.config.mjs`). `next lint` was
+- **ESLint 10** (10.14.0) in the web app, **ESLint 9** (9.39.5) in the
+  television app; flat config (`eslint.config.mjs`) in both. `next lint` was
   removed in Next.js 16 — the script calls the ESLint CLI directly.
 - **Turbopack** is the default for `next dev` and `next build`. The
   `turbopack.rules` entry in `next.config.ts` wires the Tailwind CSS loader.
@@ -92,6 +94,15 @@ every push to `main`.
   `node node_modules/typescript/bin/tsc --noEmit`,
   `node node_modules/eslint/bin/eslint.js <paths>`,
   `node_modules\.bin\next.cmd build`.
+- **The proof is a script, not a claim.** `monorepo/frontend/scripts/verify-*.mjs`
+  drive the real app in headless Edge over the DevTools protocol and print the
+  measured value beside every assertion: `verify:live` (the catalogue and the
+  streams), `verify:player` and `verify:player:bar` (the transport bar),
+  `verify:mobile`, `verify:mobile:stream` and `verify:mobile:nav` (the
+  phone), `verify:ui`, `verify:fallback`, `verify:acum` and `verify:reviews`
+  (the whole life of a review, including the cleanup that leaves the database
+  as it was found). The television app keeps its own copies, and
+  `verify:nav` there is the D-pad and the cursor rule.
 
 ## Data pipeline
 
@@ -109,8 +120,9 @@ Plain Node scripts with no dependencies of their own, run from
 | `scripts/capture-posters.mjs` | `npm run data:stills` | the live streams | the card artwork |
 
 **The guide is refreshed by the clock, not by a human.**
-`.github/workflows/refresh-epg.yml` runs `scrape-epg.mjs` twice a day and
-commits `data/epg.json` only when it changed. A stale guide is a broken
+`.github/workflows/epg-refresh.yml` runs `scrape-epg.mjs` twice a day (02:23
+and 14:23 UTC) and commits `data/epg.json` only when it changed; every run
+prints the guide's state in the job summary. A stale guide is a broken
 product: the "Acum" surfaces resolve against the real clock, so a guide
 that has expired empties every one of them.
 

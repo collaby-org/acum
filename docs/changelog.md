@@ -9,6 +9,76 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.8.0] — 2026-11-07
+
+### Added
+
+- **The social layer reached the television app.** The same review engine —
+  the same star rating, the same written comment, the same three reaction
+  counters read from the server — now runs in `monorepo/tv/`: the popular
+  reviews sit below the hero on the television's front door, and the
+  channel panel offers **"Scrie o recenzie"** with the composer beside the
+  picture. Every write runs under the visitor's own token, exactly as in the
+  web app; there is no service-role path anywhere in it.
+- **The channel surface manages the visitor's own review.** Before, a second
+  review of the same programme was refused by the database with a 409 and the
+  visitor had no way to change what they had written: their review was
+  visible only inside the homepage section. Now the channel panel reads the
+  visitor's own review of the programme that is on air — a read of their own
+  rows, under their own token, filtered to their account — and shows it with
+  **"Editează recenzia"** and **"Șterge recenzia"**, the delete asking once
+  before it does anything. The trigger changes its name with the state:
+  **"Scrie o recenzie"** when there is no review, **"Editează recenzia"**
+  when there is one, and the composer opens on that review instead of
+  writing a second one.
+- **The composer stops asking a question it already knows the answer to.**
+  When the surface knows the channel — the channel panel, where there is
+  exactly one — the channel is shown and not chosen: the name, and the line
+  **"Recenzia rămâne legată de acest canal."** The catalogue-wide select is
+  still there for the homepage, where the choice is real.
+- **The review engine has a harness of its own.**
+  `monorepo/frontend/scripts/verify-reviews.mjs` drives the real site in
+  headless Edge and proves the whole life of a review: an anonymous read, a
+  refused anonymous write, a signed-in write, the visitor's own review read
+  back with its `mine` flag, a public read, the three counters, a reaction
+  moving instead of stacking, an edit, a delete — and the cleanup that
+  leaves the database as it was found. Every assertion prints the measured
+  value beside it, because a PASS without the numbers proves nothing.
+
+### Fixed
+
+- **Back closes the composer, and the page comes back where it was.** The
+  sheet that takes over the screen now joins the history: it pushes an entry
+  of its own when it opens, a Back press closes it, and a close the visitor
+  asked for takes the entry with it — so Back never walks into a page that
+  looks exactly like the one they are on. The scroll position behind the
+  sheet is remembered before the page is locked and restored when the sheet
+  leaves, and the restoration is instant: the page asked for a smooth
+  scroll everywhere, and this is the one moment it must not have one.
+- **The television app behaves like the web app on a phone.** The viewport
+  follows the browser chrome (`min-h-dvh` everywhere, no `min-h-screen` left),
+  iOS is told not to inflate the type on its own, a tap answers at once
+  (`touch-action: manipulation`), the page does not rubber-band or pull to
+  refresh, and every `:hover` rule now lives behind `@media (hover: hover)` —
+  so a card on a phone is not left lit after the finger has gone.
+- **The television player's controls are one size.** Every button in the
+  transport bar is the same 44 × 44 px, with one icon size across the bar,
+  and the two sliders have a thumb you can actually catch. The volume shows
+  its value beside it (**"63%"**) instead of asking the viewer to guess.
+- **The television app's service worker drops the dead asset cache.** The
+  cache of content-hashed files is emptied on every activation; the copies
+  from the last release are dead weight that nothing will ever ask for again,
+  and the cache name never changes, so they piled up for as long as the app
+  was installed.
+- **The television app's manifest opens the app where the app lives.** The
+  start URL is `/` again, and the two shortcuts are real routes in that app:
+  **"Toate canalele"** → `/canale/toate` and **"Caută"** → `/cauta-o-emisiune`.
+
+### Changed
+
+- **Version 1.8.0** — the frontend app, the TV app and `docs/VERSION` move
+  together, because the feature landed in both.
+
 ## [1.7.10] — 2026-11-07
 
 ### Fixed

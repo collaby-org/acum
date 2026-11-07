@@ -11,14 +11,37 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import Image from "next/image";
-import { Eye, Radio, TrendingUp } from "lucide-react";
+import {
+  Eye,
+  Pencil,
+  PenLine,
+  Radio,
+  RefreshCw,
+  Trash2,
+  TrendingUp,
+} from "lucide-react";
 import { formatClock } from "@/components/now-next";
 import { ProgrammeBadges } from "@/components/player/programme-badges";
+import {
+  ReviewComposer,
+  type ComposerChannel,
+  type ComposerProgramme,
+  type ZoomPoint,
+} from "@/components/reviews";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
-import { useAccount } from "@/hooks/use-account";
+import { accountToken, useAccount } from "@/hooks/use-account";
+import { useMyChannelReviews } from "@/hooks/use-reviews";
+import { Stars } from "@/components/reviews/star-rating";
+import type { Review } from "@/components/reviews/types";
 
 /** One slot of the guide, as the endpoint prints it. */
 export type PanelProgramme = {
@@ -58,79 +81,6 @@ export type ChannelPanelProps = {
 };
 
 /* ------------------------------------------------------------------ *
- *  Review draft bridge types
- * ------------------------------------------------------------------ */
-
-/** The shape of a review draft that the composer hands to the section. */
-export type ReviewDraft = {
-  rating: number;
-  body: string;
-  channelId: string;
-  programmeTitle: string | null;
-  programmeStartsAt: string | null;
-  programmeEndsAt: string | null;
-};
-
-/** Props for the draft bridge component. */
-export type ReviewDraftBridgeProps = {
-  /** The draft the visitor wrote while signed out. */
-  draft?: ReviewDraft | null;
-  /** Called when the visitor dismisses the draft. */
-  onClose?: () => void;
-};
-
-/** The draft bridge component. */
-export function ReviewDraftBridge({
-  draft,
-  onClose,
-}: { draft?: ReviewDraft | null; onClose?: () => void }) {
-  const account = useAccount();
-
-  if (!draft) return null;
-
-  // When the user signs in, the bridge shows the draft as a session face
-  // so they can submit it. The composer handles the actual submission.
-  if (account.signedIn) {
-    return null;
-  }
-
-  return (
-    <div
-      className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5"
-      data-slot="review-draft-bridge"
-    >
-      <div className="flex items-center justify-between">
-        <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-signal/85">
-          <Radio className="size-3" aria-hidden />
-          Recenzie Salvată
-        </p>
-        <button
-          onClick={onClose}
-          className="p-1 rounded-lg hover:bg-white/[0.06] transition-colors"
-          aria-label="Închide recenzia salvată"
-        >
-          <span className="text-ink-faint">×</span>
-        </button>
-      </div>
-      <p className="mt-2 font-display text-[15px] font-semibold leading-tight tracking-tight text-ink">
-        {draft.programmeTitle ?? "Program nedefinit"}
-      </p>
-      <div className="mt-2 flex items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/[0.05] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
-          {draft.channelId}
-        </span>
-      </div>
-      <p className="mt-3 text-[13px] leading-relaxed text-ink-muted line-clamp-3">
-        {draft.body}
-      </p>
-      <p className="mt-2 text-[11px] text-ink-faint">
-        Te conectezi pentru a o trimite.
-      </p>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ *
  *  Main ChannelPanel component
  * ------------------------------------------------------------------ */
 
@@ -153,6 +103,79 @@ function clockOf(stamp: string | null): string | null {
   return formatClock(moment);
 }
 
+/** The visitor's own review, with the actions it really supports. */
+function OwnReviewCard({
+  review,
+  confirming,
+  onEdit,
+  onAskDelete,
+  onCancelDelete,
+  onDelete,
+}: {
+  review: Review;
+  confirming: boolean;
+  onEdit: (event: ReactMouseEvent<HTMLButtonElement>) => void;
+  onAskDelete: () => void;
+  onCancelDelete: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div
+      data-testid="channel-own-review"
+      className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-3.5"
+    >
+      <div className="flex items-center gap-2">
+        <Stars value={review.rating} />
+        <span className="text-[11px] tabular-nums text-ink-faint">
+          {review.rating}/5
+        </span>
+      </div>
+      <p className="mt-2 whitespace-pre-line text-[13px] leading-relaxed text-ink">
+        {review.body}
+      </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          aria-label="Editează recenzia"
+          title="Editează recenzia"
+          onClick={onEdit}
+          className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+        >
+          <Pencil aria-hidden className="size-4" />
+        </button>
+        <button
+          type="button"
+          aria-label="Șterge recenzia"
+          title="Șterge recenzia"
+          onClick={onAskDelete}
+          className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-live/40 hover:text-[#ffb3b8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+        >
+          <Trash2 aria-hidden className="size-4" />
+        </button>
+      </div>
+      {confirming ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-live/30 bg-live/10 px-3 py-2.5">
+          <p className="text-[13px] font-medium text-ink">Ștergi recenzia?</p>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-live/40 bg-live/15 px-4 text-[13px] font-semibold text-[#ffb3b8] transition-colors duration-300 hover:bg-live/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          >
+            Șterge
+          </button>
+          <button
+            type="button"
+            onClick={onCancelDelete}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          >
+            Anulează
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function ChannelPanel({
   channelId,
   channelName,
@@ -167,15 +190,18 @@ export function ChannelPanel({
     id: string;
     sheet: ChannelSheet | null;
     failed: boolean;
-  }>({ id: channelId, sheet: null, failed: false });
+    loading: boolean;
+  }>({ id: channelId, sheet: null, failed: false, loading: true });
 
-  const [draftState, setDraftState] = useState<{
-    draft: ReviewDraft | null;
-    signedIn: boolean;
-  }>({ draft: null, signedIn: false });
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [composerOrigin, setComposerOrigin] = useState<ZoomPoint | null>(null);
+  const [reloadToken, setReloadToken] = useState(0);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const tick = useMinuteTick();
   const account = useAccount();
+  const myReviews = useMyChannelReviews(channelId);
 
   /* -------------------------------------------------------------- *
    *  Load the channel sheet from the server
@@ -189,32 +215,132 @@ export function ChannelPanel({
         return response.json() as Promise<ChannelSheet>;
       })
       .then((data) => {
-        if (live) setState({ id: channelId, sheet: data, failed: false });
-        // Update draft state based on current sign-in status
-        setDraftState(prev => ({
-          ...prev,
-          signedIn: account.signedIn,
-        }));
+        if (live) {
+          setState({
+            id: channelId,
+            sheet: data,
+            failed: false,
+            loading: false,
+          });
+        }
       })
       .catch(() => {
-        if (live) setState({ id: channelId, sheet: null, failed: true });
+        if (live) {
+          setState({
+            id: channelId,
+            sheet: null,
+            failed: true,
+            loading: false,
+          });
+        }
       });
 
     return () => {
       live = false;
     };
-  }, [channelId, tick, account.signedIn]);
+  }, [channelId, tick, reloadToken]);
+
+  const retry = useCallback(() => {
+    setState({
+      id: channelId,
+      sheet: null,
+      failed: false,
+      loading: true,
+    });
+    setReloadToken((value) => value + 1);
+  }, [channelId]);
+
+  const ownReview = useMemo(() => {
+    const now = state.id === channelId ? state.sheet?.now : null;
+    if (!now) return null;
+
+    const sameTitle = (value: string | null): string | null =>
+      value?.trim().toLocaleLowerCase("ro-RO") ?? null;
+    const sameInstant = (a: string | null, b: string | null): boolean => {
+      if (a === null || b === null) return a === b;
+      const first = new Date(a).getTime();
+      const second = new Date(b).getTime();
+      if (!Number.isFinite(first) || !Number.isFinite(second)) return a === b;
+      return first === second;
+    };
+
+    return (
+      myReviews.reviews.find(
+        (review) =>
+          review.mine &&
+          review.channelId === channelId &&
+          sameTitle(review.programmeTitle) === sameTitle(now.title) &&
+          (!review.programmeTitle ||
+            sameInstant(review.programmeStartsAt, now.startsAt)),
+      ) ?? null
+    );
+  }, [channelId, myReviews.reviews, state.id, state.sheet?.now]);
+
+  const openComposer = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement>) => {
+      const box = event.currentTarget.getBoundingClientRect();
+      setComposerOrigin({
+        x: box.left + box.width / 2,
+        y: box.top + box.height / 2,
+      });
+      setComposerOpen(true);
+    },
+    [],
+  );
+
+  const closeComposer = useCallback(() => setComposerOpen(false), []);
+
+  const updateReview = useCallback(
+    async (
+      reviewId: string,
+      changes: { rating?: number; body?: string },
+    ) => {
+      const answer = await myReviews.update(reviewId, changes);
+      if (!answer.ok) setNotice(answer.error);
+      else {
+        setNotice(null);
+        myReviews.reload();
+      }
+      return answer;
+    },
+    [myReviews],
+  );
+
+  const removeReview = useCallback(
+    async (reviewId: string) => {
+      const answer = await myReviews.remove(reviewId);
+      if (!answer.ok) {
+        setNotice(answer.error);
+        return answer;
+      }
+      setNotice(null);
+      setConfirmingDelete(false);
+      myReviews.reload();
+      return answer;
+    },
+    [myReviews],
+  );
 
   /* -------------------------------------------------------------- *
    *  Main render
    * -------------------------------------------------------------- */
   const sheet = state.id === channelId ? state.sheet : null;
   const failed = state.id === channelId ? state.failed : false;
+  const loading = state.id === channelId ? state.loading : true;
   const name = sheet?.name ?? channelName ?? "";
   const live = liveLabel(sheet?.liveViewers ?? 0);
   const popular = popularityLabel(sheet?.views ?? null);
   const nowClock = clockOf(sheet?.now?.startsAt ?? null);
   const nowEnd = clockOf(sheet?.now?.endsAt ?? null);
+  const composerChannels: ComposerChannel[] = [{ id: channelId, name }];
+  const composerProgramme: ComposerProgramme | null = sheet?.now
+    ? {
+        title: sheet.now.title,
+        startsAt: sheet.now.startsAt,
+        endsAt: sheet.now.endsAt,
+        channelId,
+      }
+    : null;
 
   return (
     <section
@@ -251,8 +377,87 @@ export function ChannelPanel({
               title={sheet.now.title}
               className="mt-2"
             />
+            <button
+              type="button"
+              data-testid="channel-review-trigger"
+              onClick={openComposer}
+              className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-signal px-5 text-[14px] font-semibold text-signal-ink transition-[background-color,transform] duration-300 ease-[var(--ease-spring)] hover:bg-signal-bright active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              {ownReview ? (
+                <Pencil aria-hidden className="size-4" />
+              ) : (
+                <PenLine aria-hidden className="size-4" />
+              )}
+              {ownReview ? "Editează recenzia" : "Scrie o recenzie"}
+            </button>
+
+            {myReviews.failed ? (
+              <div
+                role="alert"
+                className="mt-3 rounded-xl border border-live/30 bg-live/10 p-3.5"
+              >
+                <p className="text-[13px] font-medium leading-relaxed text-ink">
+                  Recenziile tale nu au putut fi citite acum.
+                </p>
+                <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">
+                  Încearcă din nou ca să poți vedea sau edita recenzia.
+                </p>
+                <button
+                  type="button"
+                  onClick={myReviews.reload}
+                  className="mt-3 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+                >
+                  <RefreshCw aria-hidden className="size-4" />
+                  Încearcă din nou
+                </button>
+              </div>
+            ) : null}
+
+            {ownReview ? (
+              <OwnReviewCard
+                review={ownReview}
+                confirming={confirmingDelete}
+                onEdit={openComposer}
+                onAskDelete={() => {
+                  setNotice(null);
+                  setConfirmingDelete(true);
+                }}
+                onCancelDelete={() => setConfirmingDelete(false)}
+                onDelete={() => void removeReview(ownReview.id)}
+              />
+            ) : null}
+
+            {notice ? (
+              <p
+                role="alert"
+                className="mt-3 rounded-xl border border-live/30 bg-live/10 px-3.5 py-2.5 text-[13px] leading-relaxed text-[#ffb3b8]"
+              >
+                {notice}
+              </p>
+            ) : null}
           </div>
-        ) : sheet || failed ? (
+        ) : failed ? (
+          <div
+            role="alert"
+            data-slot="channel-programme-error"
+            className="rounded-2xl border border-live/30 bg-live/10 p-3.5"
+          >
+            <p className="text-[13px] font-medium leading-relaxed text-ink">
+              Programul nu poate fi citit acum.
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">
+              Încearcă din nou ca să vezi ce rulează în acest moment.
+            </p>
+            <button
+              type="button"
+              onClick={retry}
+              className="mt-3 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              <RefreshCw aria-hidden className="size-4" />
+              Încearcă din nou
+            </button>
+          </div>
+        ) : sheet ? (
           <p
             data-slot="channel-programme-empty"
             className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5 text-[13px] leading-relaxed text-ink-faint"
@@ -260,7 +465,11 @@ export function ChannelPanel({
             Programul nu este disponibil pentru acest canal
           </p>
         ) : (
-          <div className="space-y-2 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5" aria-hidden>
+          <div
+            className="space-y-2 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5"
+            aria-label="Se citește programul canalului"
+            aria-busy={loading}
+          >
             <div className="h-3 w-1/3 animate-pulse rounded bg-white/[0.06]" />
             <div className="h-5 w-4/5 animate-pulse rounded bg-white/[0.06]" />
             <div className="h-3 w-full animate-pulse rounded bg-white/[0.06]" />
@@ -380,13 +589,48 @@ export function ChannelPanel({
         )}
       </div>
 
-      {/* The draft bridge - show when signed out */}
-      {!account.signedIn && draftState.draft && (
-        <ReviewDraftBridge
-          draft={draftState.draft}
-          onClose={() => setDraftState(prev => ({...prev, draft: null}))}
-        />
-      )}
+      <ReviewComposer
+        channels={composerChannels}
+        signedIn={account.signedIn}
+        open={composerOpen}
+        origin={composerOrigin}
+        face={account.signedIn ? "write" : "session"}
+        programme={composerProgramme}
+        review={ownReview}
+        reviews={myReviews.reviews}
+        onClose={closeComposer}
+        onSubmit={async (draft) => {
+          const token = await accountToken();
+          const response = await fetch("/api/reviews", {
+            method: "POST",
+            headers: {
+              ...(token ? { authorization: `Bearer ${token}` } : {}),
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(draft),
+            cache: "no-store",
+          });
+          const payload = (await response
+            .json()
+            .catch(() => null)) as {
+            review?: Review;
+            error?: string;
+            needsSession?: boolean;
+          } | null;
+
+          if (!response.ok || !payload?.review) {
+            return {
+              ok: false,
+              error: payload?.error ?? "Recenzia nu a putut fi salvată.",
+              needsSession: Boolean(payload?.needsSession),
+            };
+          }
+
+          myReviews.reload();
+          return { ok: true };
+        }}
+        onUpdate={updateReview}
+      />
     </section>
   );
 }

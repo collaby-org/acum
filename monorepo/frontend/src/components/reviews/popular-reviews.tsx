@@ -10,6 +10,7 @@ import {
   type ComposerChannel,
   type ComposerProgramme,
 } from "@/components/reviews/review-composer";
+import type { Review } from "@/components/reviews/types";
 import type { ZoomPoint } from "@/components/reviews/zoom-overlay";
 
 /**
@@ -64,10 +65,19 @@ export function PopularReviews({
   const startReviews = reviews.start;
 
   const [open, setOpen] = useState(false);
+  /**
+   * The review of the visitor's own that is being edited, when the panel
+   * was opened on one of their cards. It is the server's copy — the one
+   * the read store holds — and the composer fills itself from it.
+   */
+  const [editing, setEditing] = useState<Review | null>(null);
   // Named, not inline: the composer reads this in an effect keyed on the
   // panel's presence, and a new function identity on every render would
   // ask that effect to run again for no reason.
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => {
+    setOpen(false);
+    setEditing(null);
+  }, []);
   const [face, setFace] = useState<"write" | "session">("write");
   /** Where the panel was asked for: the press, or the centre of what was
    *  pressed when a keyboard did it. */
@@ -88,6 +98,22 @@ export function PopularReviews({
     setOrigin(
       from ? { x: from.left + from.width / 2, y: from.top + from.height / 2 } : null,
     );
+    setFace("write");
+    setEditing(null);
+    setOpen(true);
+  }, []);
+
+  /**
+   * Open the composer on one of the visitor's own reviews.
+   *
+   * The review handed over is the one the server sent, so the panel
+   * starts from the truth: its rating, its words, its channel, and the
+   * programme it was written about.
+   */
+  const edit = useCallback((review: Review, point: ZoomPoint) => {
+    setNotice(null);
+    setEditing(review);
+    setOrigin(point);
     setFace("write");
     setOpen(true);
   }, []);
@@ -126,6 +152,52 @@ export function PopularReviews({
         return { ok: false, error: answer.error, needsSession: answer.needsSession };
       }
       return { ok: true };
+    },
+    [reviews],
+  );
+
+  /**
+   * Change one of the visitor's own reviews.
+   *
+   * The composer sends the change; the server decides whether it is
+   * allowed, and the list is read again afterwards so the interface shows
+   * the server's copy and not the one that was typed.
+   */
+  const update = useCallback(
+    async (reviewId: string, changes: { rating: number; body: string }) => {
+      setNotice(null);
+      const answer = await reviews.update(reviewId, changes);
+      if (!answer.ok) {
+        if (answer.needsSession) {
+          setFace("session");
+          setOpen(true);
+          return { ok: false, error: answer.error, needsSession: true };
+        }
+        setNotice(answer.error);
+      }
+      return {
+        ok: answer.ok,
+        error: answer.ok ? undefined : answer.error,
+        needsSession: answer.ok ? false : answer.needsSession,
+      };
+    },
+    [reviews],
+  );
+
+  /**
+   * Remove one of the visitor's own reviews.
+   *
+   * The server decides whether it is allowed; the card disappears only
+   * because the list is read again and the row is not in it any more.
+   */
+  const remove = useCallback(
+    async (reviewId: string) => {
+      setNotice(null);
+      const answer = await reviews.remove(reviewId);
+      if (!answer.ok) {
+        setNotice(answer.error);
+      }
+      return { ok: answer.ok, error: answer.ok ? undefined : answer.error };
     },
     [reviews],
   );
@@ -218,6 +290,8 @@ export function PopularReviews({
                 busy={reviews.busy.includes(review.id)}
                 signedIn={signedIn}
                 onReact={react}
+                onEdit={edit}
+                onDelete={remove}
                 onRequireSession={(point) => {
                   setOrigin(point);
                   setFace("session");
@@ -236,8 +310,10 @@ export function PopularReviews({
         origin={origin}
         face={face}
         programme={programme}
+        review={editing}
         onClose={close}
         onSubmit={write}
+        onUpdate={update}
       />
     </section>
   );

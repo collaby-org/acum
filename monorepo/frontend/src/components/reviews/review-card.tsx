@@ -1,10 +1,11 @@
 "use client";
 
-import { Radio, Tv } from "lucide-react";
+import { useState } from "react";
+import { Pencil, Radio, Trash2, Tv } from "lucide-react";
 import type { Review } from "@/components/reviews/types";
 import { ReactionRow } from "@/components/reviews/reaction-row";
 import { Stars } from "@/components/reviews/star-rating";
-import type { ZoomPoint } from "@/components/reviews/zoom-overlay";
+import { pressPoint, type ZoomPoint } from "@/components/reviews/zoom-overlay";
 
 /**
  * One review.
@@ -18,6 +19,11 @@ import type { ZoomPoint } from "@/components/reviews/zoom-overlay";
  * schedule: the channel is a catalogue channel, and the programme is the
  * slot that was on when the review was written. When the schedule rolls
  * over, the review is still findable because it says which show it was.
+ *
+ * A review the visitor wrote is marked as theirs, and it carries the two
+ * things that can be done to it: edit it, delete it. Both act on the
+ * server's copy of the review — the one the read store holds — and the
+ * server has the last word on whether they are allowed.
  */
 
 /** A moment in the past, in the words a person counts with. */
@@ -63,6 +69,19 @@ export type ReviewCardProps = {
   signedIn: boolean;
   onReact: (reviewId: string, kind: Review["own"]) => void;
   onRequireSession: (point: ZoomPoint) => void;
+  /**
+   * Opens the composer on this review.
+   *
+   * The review handed over is the one the server sent, so the composer
+   * fills itself from the truth and not from a reconstruction.
+   */
+  onEdit?: (review: Review, point: ZoomPoint) => void;
+  /**
+   * Deletes the review through the server-backed store.
+   *
+   * The row leaves the list only once the server says it is gone.
+   */
+  onDelete?: (reviewId: string) => Promise<{ ok: boolean; error?: string }>;
 };
 
 export function ReviewCard({
@@ -71,8 +90,28 @@ export function ReviewCard({
   signedIn,
   onReact,
   onRequireSession,
+  onEdit,
+  onDelete,
 }: ReviewCardProps) {
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const slot = slotAt(review.programmeStartsAt);
+
+  /** Ask once, then let the server answer. */
+  const deleteReview = async () => {
+    if (!onDelete || deleting) return;
+    setDeleting(true);
+    setError(null);
+    const answer = await onDelete(review.id);
+    setDeleting(false);
+    if (answer.ok) {
+      // The row is gone from the store, and with it this card.
+      setConfirming(false);
+      return;
+    }
+    setError(answer.error ?? "Recenzia nu a putut fi ștearsă.");
+  };
 
   return (
     <li
@@ -81,8 +120,13 @@ export function ReviewCard({
     >
       {/* Who, and when. */}
       <div className="flex items-baseline justify-between gap-3">
-        <p className="min-w-0 truncate text-[12px] font-medium text-ink-muted">
-          {review.authorLabel}
+        <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-ink-muted">
+          <span className="truncate">{review.authorLabel}</span>
+          {review.mine ? (
+            <span className="shrink-0 rounded-full border border-signal/30 bg-signal/10 px-2 py-0.5 text-[10px] font-semibold text-signal">
+              Recenzia ta
+            </span>
+          ) : null}
         </p>
         <p className="shrink-0 text-[11px] tabular-nums text-ink-faint">
           {when(review.createdAt)}
@@ -112,10 +156,80 @@ export function ReviewCard({
         ) : null}
       </div>
 
-      {/* What they said. */}
-      <p className="mt-3 whitespace-pre-line text-[13px] leading-relaxed text-ink">
+      {/* What they said — the beginning of it, with the whole of it still
+          there for anyone who asks. */}
+      <p
+        className="mt-3 line-clamp-3 whitespace-pre-line text-[13px] leading-relaxed text-ink"
+        title={review.body}
+      >
         {review.body}
       </p>
+
+      {/* What can be done to a review of the visitor's own. */}
+      {review.mine && (onEdit || onDelete) ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {onEdit ? (
+            <button
+              type="button"
+              aria-label="Editează recenzia"
+              title="Editează recenzia"
+              onClick={(event) => onEdit(review, pressPoint(event))}
+              className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              <Pencil aria-hidden className="size-4" />
+            </button>
+          ) : null}
+          {onDelete ? (
+            <button
+              type="button"
+              aria-label="Șterge recenzia"
+              title="Șterge recenzia"
+              onClick={() => {
+                setError(null);
+                setConfirming(true);
+              }}
+              className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-live/40 hover:text-[#ffb3b8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              <Trash2 aria-hidden className="size-4" />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* The question that comes before the deletion. */}
+      {confirming ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-live/30 bg-live/10 px-3 py-2.5">
+          <p className="text-[13px] font-medium text-ink">Ștergi recenzia?</p>
+          <button
+            type="button"
+            onClick={() => void deleteReview()}
+            disabled={deleting}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-live/40 bg-live/15 px-4 text-[13px] font-semibold text-[#ffb3b8] transition-colors duration-300 hover:bg-live/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal disabled:pointer-events-none disabled:opacity-40"
+          >
+            Șterge
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setConfirming(false);
+              setError(null);
+            }}
+            disabled={deleting}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal disabled:pointer-events-none disabled:opacity-40"
+          >
+            Anulează
+          </button>
+        </div>
+      ) : null}
+
+      {error ? (
+        <p
+          role="alert"
+          className="mt-2 rounded-xl border border-live/30 bg-live/10 px-3.5 py-2.5 text-[13px] leading-relaxed text-[#ffb3b8]"
+        >
+          {error}
+        </p>
+      ) : null}
 
       {/* And how many people agree. */}
       <ReactionRow

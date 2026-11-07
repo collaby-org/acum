@@ -4,17 +4,19 @@
       "id": "reviews-core",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/components/reviews",
+        "monorepo/frontend/src/components/reviews/popular-reviews.tsx",
+        "monorepo/frontend/src/components/reviews/review-card.tsx",
+        "monorepo/frontend/src/components/reviews/review-composer.tsx",
+        "monorepo/frontend/src/components/reviews/types.ts",
+        "monorepo/frontend/src/components/reviews/index.ts",
         "monorepo/frontend/src/hooks/use-reviews.ts",
         "monorepo/frontend/src/lib/reviews.ts",
-        "monorepo/frontend/src/lib/review-rank.ts",
-        "monorepo/frontend/src/lib/review-channels.ts"
+        "monorepo/frontend/src/app/api/reviews"
       ],
       "outputs": [
-        "the visitor sees their own review, edits it and deletes it",
-        "the composer is prefilled with the visitor's existing review and submits as an update",
-        "the sheet exits toward the control that dismissed it, drags down to close and closes on Escape",
-        "the composer's inputs are 16px on mobile and the review card prints an excerpt"
+        "the review engine: a read, a write, an edit and a delete, under the visitor's own token",
+        "the visitor's own review, read back with its mine flag",
+        "the channel surface manages that review: edit, delete, and a trigger that says which"
       ]
     },
     {
@@ -22,6 +24,7 @@
       "role": "write",
       "paths": [
         "monorepo/frontend/src/components/channel/channel-panel.tsx",
+        "monorepo/frontend/src/components/channel/index.ts",
         "monorepo/frontend/src/components/header.tsx",
         "monorepo/frontend/src/app/page.tsx",
         "monorepo/frontend/src/app/canale/page.tsx",
@@ -29,10 +32,7 @@
       ],
       "outputs": [
         "a discoverable 'Scrie o recenzie' on the channel surface",
-        "the dead draft bridge is gone",
-        "the header link points at the reviews section that exists",
-        "the popular reviews sit where the eye lands",
-        "the channel panel offers a retry and 44px targets"
+        "the popular reviews sit where the eye lands"
       ]
     },
     {
@@ -44,7 +44,6 @@
         "monorepo/frontend/src/components/ui/dialog.tsx"
       ],
       "outputs": [
-        "the player offers 'Scrie o recenzie' for the programme on air",
         "one badge vocabulary for the whole app",
         "44px mute, warning, dialog and volume targets with a visible volume value",
         "the browser's Back button closes the player"
@@ -69,31 +68,6 @@
       ]
     },
     {
-      "id": "db-grants",
-      "role": "write",
-      "paths": [
-        "supabase",
-        "monorepo/frontend/supabase",
-        "monorepo/tv/supabase"
-      ],
-      "outputs": [
-        "a migration that revokes direct writes on the review tables",
-        "three byte-identical schema copies with the stricter root privileges",
-        "a Docker proof of the grants and the revoked function privileges"
-      ]
-    },
-    {
-      "id": "epg-cron",
-      "role": "write",
-      "paths": [
-        ".github/workflows/epg-refresh.yml"
-      ],
-      "outputs": [
-        "the guide refreshes twice a day on a clock",
-        "the run reports the guide's date and never turns the workflow red"
-      ]
-    },
-    {
       "id": "nav-bar",
       "role": "write",
       "paths": [
@@ -102,18 +76,73 @@
       ],
       "outputs": [
         "the bottom bar marks the current route",
-        "a tap on the bar lands the catalogue in under 1200ms",
         "a loading boundary for /canale that does not jump"
       ]
     },
     {
-      "id": "next-prefetch-research",
-      "role": "read",
+      "id": "tv-reviews",
+      "role": "write",
       "paths": [
-        "monorepo/frontend/node_modules/next/dist/docs",
-        "monorepo/frontend/src/app/canale",
-        "monorepo/frontend/src/components/mobile-nav.tsx",
-        "monorepo/frontend/next.config.ts"
+        "monorepo/tv/src/components/reviews/popular-reviews.tsx",
+        "monorepo/tv/src/components/reviews/reaction-row.tsx",
+        "monorepo/tv/src/components/reviews/review-card.tsx",
+        "monorepo/tv/src/components/reviews/review-composer.tsx",
+        "monorepo/tv/src/components/reviews/types.ts",
+        "monorepo/tv/src/components/reviews/index.ts",
+        "monorepo/tv/src/components/channel/channel-panel.tsx",
+        "monorepo/tv/src/app/page.tsx",
+        "monorepo/tv/src/app/api/reviews",
+        "monorepo/tv/src/hooks/use-reviews.ts",
+        "monorepo/tv/src/lib/reviews.ts",
+        "monorepo/tv/src/lib/review-rank.ts",
+        "monorepo/tv/src/lib/review-channels.ts"
+      ],
+      "outputs": [
+        "the same engine in the television app, under the visitor's own token",
+        "the popular reviews below the hero, and the composer on the channel panel",
+        "the channel surface manages the visitor's own review"
+      ]
+    },
+    {
+      "id": "tv-parity",
+      "role": "write",
+      "paths": [
+        "monorepo/tv/src/app/globals.css",
+        "monorepo/tv/src/app/error.tsx",
+        "monorepo/tv/src/app/not-found.tsx",
+        "monorepo/tv/src/components/browse.tsx",
+        "monorepo/tv/src/components/pages/shell.tsx",
+        "monorepo/tv/public/manifest.webmanifest",
+        "monorepo/tv/public/sw.js",
+        "monorepo/tv/src/components/player/player-controls.tsx"
+      ],
+      "outputs": [
+        "the phone rules the web app already follows: the dynamic viewport, the text size, the tap, the overscroll, the hover",
+        "one control size for the whole transport bar, and a volume the viewer can read",
+        "the service worker drops the dead asset cache, and the manifest opens the app where the app lives"
+      ]
+    },
+    {
+      "id": "overlay-history",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/components/reviews/zoom-overlay.tsx",
+        "monorepo/tv/src/components/reviews/zoom-overlay.tsx",
+        "monorepo/tv/src/components/reviews/star-rating.tsx"
+      ],
+      "outputs": [
+        "Back closes the sheet, and the page behind comes back where it was",
+        "one size for the stars: 44px, the same as the reaction row beside them"
+      ]
+    },
+    {
+      "id": "verify-reviews",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/scripts/verify-reviews.mjs"
+      ],
+      "outputs": [
+        "the harness that proves the whole life of a review, and cleans up after itself"
       ]
     },
     {
@@ -125,13 +154,12 @@
         "README.md",
         "monorepo/frontend/README.md",
         "monorepo/frontend/package.json",
-        "monorepo/tv/package.json",
-        "monorepo/frontend/scripts"
+        "monorepo/tv/package.json"
       ],
       "outputs": [
         "the changelog, the backlog, the verification log, the README and the diagrams",
         "the version line that moves with every release",
-        "the live proof scripts and the new review harness"
+        "the proof scripts, run against the deployed site"
       ]
     }
   ]

@@ -111,7 +111,7 @@ export function CataloguePanel() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Caută un canal…"
-              className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint"
+              className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-sm"
             />
           </label>
         </div>

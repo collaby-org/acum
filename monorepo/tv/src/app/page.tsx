@@ -17,9 +17,12 @@ import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { PlansGrid } from "@/components/account/plans-grid";
 import { LandingGate } from "@/components/landing-gate";
+import { PopularReviews } from "@/components/reviews";
+import { TVShell } from "@/components/tv/shell";
 import { Button } from "@/components/ui/button";
 import { CHANNEL_COUNT } from "@/data/channels";
 import { freeHours } from "@/lib/supabase/plans";
+import { REVIEW_CHANNELS } from "@/lib/review-channels";
 import {
   SITE_NAME,
   SITE_PROMISE,
@@ -85,7 +88,7 @@ export default async function LandingPage() {
   // hook documents — the visitor only ever sees their own prices).
 
   return (
-    <main className="relative isolate min-h-dvh bg-canvas">
+    <TVShell className="relative isolate min-h-dvh bg-canvas">
       {/* A signed-in account has no business on the front door; the gate
           sends it to the catalogue as soon as the session is known. */}
       <LandingGate />
@@ -215,6 +218,11 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      {/* The reviews: the social proof belongs directly below the hero. */}
+      <div className="mx-auto max-w-[1800px] px-4 pb-20 sm:px-8 lg:px-12">
+        <PopularReviews channels={REVIEW_CHANNELS} />
+      </div>
+
       {/* The pitch */}
       <section className="mx-auto max-w-[1800px] px-4 pb-20 sm:px-8 lg:px-12">
         <div className="fx-divider opacity-60" />
@@ -325,7 +333,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </footer>
-    </main>
+    </TVShell>
   );
 }
 

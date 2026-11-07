@@ -166,7 +166,7 @@ export function MinutesWarning({
         type="button"
         onClick={close}
         aria-label="Închide"
-        className="-mr-0.5 ml-auto grid size-6 shrink-0 place-items-center rounded-md text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink"
+        className="-mr-2 ml-auto grid size-11 shrink-0 place-items-center rounded-md text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink"
       >
         <X className="size-3.5" aria-hidden />
       </button>

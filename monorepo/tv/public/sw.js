@@ -68,6 +68,13 @@ self.addEventListener("activate", (event) => {
           .filter((name) => !CURRENT_CACHES.includes(name))
           .map((name) => caches.delete(name)),
       );
+      // The asset cache is emptied on every activation. What it holds are
+      // files whose names carry a content hash, so the last release's
+      // copies are dead weight that nothing will ever ask for again — and
+      // the cache name never changes, so they would otherwise pile up for
+      // as long as the app is installed. The shell and the pages stay:
+      // they are addressed by URL, not by hash.
+      await caches.delete(ASSET_CACHE);
       await self.clients.claim();
     })(),
   );

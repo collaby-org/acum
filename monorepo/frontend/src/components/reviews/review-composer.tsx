@@ -1,10 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
-import { Loader2, PenLine, Radio, X } from "lucide-react";
-import { ZoomOverlay, type ZoomPoint } from "@/components/reviews/zoom-overlay";
+import { GripHorizontal, Loader2, Pencil, PenLine, Radio, X } from "lucide-react";
+import {
+  pressPoint,
+  useZoomDismiss,
+  ZoomOverlay,
+  type ZoomPoint,
+} from "@/components/reviews/zoom-overlay";
 import { StarPicker } from "@/components/reviews/star-rating";
+import type { Review } from "@/components/reviews/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -21,6 +33,11 @@ import { cn } from "@/lib/utils";
  * visitor who is not signed in gets, and it appears at the moment they
  * act rather than before it: reading the reviews and pressing a reaction
  * are both open, and both ask for an account at the point of writing.
+ *
+ * It has two modes as well. A review the visitor already wrote is
+ * edited, not written again: the panel says so, it shows what the server
+ * holds, and it saves through the update path instead of inserting a
+ * second row for the same slot.
  *
  * Nothing here is stored in the browser. The draft lives in state so the
  * panel can be closed and reopened, and the moment the visitor submits,
@@ -66,6 +83,13 @@ export type ComposerDraft = {
   programmeEndsAt: string | null;
 };
 
+/** What a write answers with: it worked, or it did not and why. */
+export type ComposerAnswer = {
+  ok: boolean;
+  error?: string;
+  needsSession?: boolean;
+};
+
 export type ReviewComposerProps = {
   channels: ComposerChannel[];
   /**
@@ -81,8 +105,8 @@ export type ReviewComposerProps = {
   /** Which face: writing, or the session a write needs. */
   face?: "write" | "session";
   /**
-   * The programme the server resolved, or `null` when the server says the
-   * guide has nothing for this channel now.
+   * The programme the server resolved, or `null` when the server says
+   * the guide has nothing for this channel now.
    *
    * Left out, the composer asks the channel endpoint itself — a fallback,
    * not the source of truth. Given, the browser invents nothing: the
@@ -90,14 +114,36 @@ export type ReviewComposerProps = {
    * shown as exactly that.
    */
   programme?: ComposerProgramme | null;
-  /** Called when the visitor closes. The panel animates out first. */
-  onClose: () => void;
+  /**
+   * The review being edited, when the composer was opened from one of the
+   * visitor's own reviews. The values shown here come from the server's
+   * read store; the composer does not reconstruct them from a guess.
+   */
+  review?: Review | null;
+  /**
+   * The reviews the store holds, when the caller has them.
+   *
+   * They are used for one thing only: to find the visitor's own review of
+   * the slot they are writing about, so it is edited instead of written a
+   * second time. What the store holds is what the server said, so even
+   * this is not a guess.
+   */
+  reviews?: Review[];
+  /**
+   * Called when the visitor closes. The optional point is where the
+   * control that dismissed the composer was pressed.
+   */
+  onClose: (point?: ZoomPoint) => void;
   /** Called with the draft, and answers with whatever the server said. */
-  onSubmit: (draft: ComposerDraft) => Promise<{
-    ok: boolean;
-    error?: string;
-    needsSession?: boolean;
-  }>;
+  onSubmit: (draft: ComposerDraft) => Promise<ComposerAnswer>;
+  /**
+   * Called when an existing review is saved. Left out, the composer can
+   * still write new reviews but refuses to pretend it can edit one.
+   */
+  onUpdate?: (
+    reviewId: string,
+    changes: { rating: number; body: string },
+  ) => Promise<ComposerAnswer>;
 };
 
 /** The shortest comment that is a comment. */
@@ -105,9 +151,15 @@ const BODY_MIN = 2;
 /** The longest comment one review may carry. */
 const BODY_MAX = 1200;
 
-/** The shape every field in this panel wears. */
+/**
+ * The shape every field in this panel wears.
+ *
+ * The text is 16 pixels on a phone, because anything smaller makes iOS
+ * Safari zoom the whole page the moment the field is focused. On a wide
+ * screen the smaller size is fine, and it is kept there.
+ */
 const inputClass =
-  "mt-2 h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-[14px] text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25";
+  "mt-2 h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 text-base text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:text-sm";
 
 /**
  * The comment field, which is not a field but a page.
@@ -118,26 +170,98 @@ const inputClass =
  * screen. The counter sits under it, in the flow, and never over it.
  */
 const textareaClass =
-  "mt-2 min-h-[9.5rem] w-full resize-none appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-[14px] leading-relaxed text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:min-h-[8.5rem]";
+  "mt-2 min-h-[9.5rem] w-full resize-none appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-base leading-relaxed text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:min-h-[8.5rem] sm:text-sm";
 
-export function ReviewComposer({
+/** Two instants that say the same moment, whichever way they are written. */
+function sameInstant(a: string | null, b: string | null): boolean {
+  if (a === null || b === null) return a === b;
+  const first = new Date(a).getTime();
+  const second = new Date(b).getTime();
+  if (!Number.isFinite(first) || !Number.isFinite(second)) return a === b;
+  return first === second;
+}
+
+/** A title, said the same way twice. */
+function sameTitle(a: string | null, b: string | null): boolean {
+  const first = a?.trim().toLocaleLowerCase("ro-RO") ?? null;
+  const second = b?.trim().toLocaleLowerCase("ro-RO") ?? null;
+  return first === second;
+}
+
+/**
+ * Whether a review is about the slot the composer is showing.
+ *
+ * A slot is a channel and the programme that was on it. A review with no
+ * programme is a review of the channel itself, and it matches the
+ * channel alone.
+ */
+function sameSlot(
+  review: Review,
+  channelId: string,
+  programme: NowProgramme,
+): boolean {
+  if (review.channelId !== channelId) return false;
+  if (!sameTitle(review.programmeTitle, programme?.title ?? null)) return false;
+  if (!review.programmeTitle) return true;
+  return sameInstant(review.programmeStartsAt, programme?.startsAt ?? null);
+}
+
+export function ReviewComposer(props: ReviewComposerProps) {
+  return (
+    <ComposerPanel
+      key={props.review?.id ?? "new"}
+      {...props}
+    />
+  );
+}
+
+/**
+ * The composer itself.
+ *
+ * It is remounted when the visitor switches between writing a new review
+ * and editing an existing one. That is what makes the edit form honest:
+ * every field starts from the server's review, with no draft from the
+ * previous form left behind to be mistaken for it.
+ */
+function ComposerPanel({
   channels,
   open,
   origin = null,
   face = "write",
   programme,
+  review = null,
+  reviews: storeReviews,
   onClose,
   onSubmit,
+  onUpdate,
 }: ReviewComposerProps) {
-  const [channelId, setChannelId] = useState("");
-  const [now, setNow] = useState<NowProgramme | null>(null);
-  const [nowState, setNowState] = useState<"idle" | "loading" | "ready">("idle");
-  const [rating, setRating] = useState(0);
-  const [body, setBody] = useState("");
+  const [channelId, setChannelId] = useState(
+    review?.channelId ?? (channels.length === 1 ? channels[0].id : ""),
+  );
+  const singleChannel = channels.length === 1 ? channels[0] : null;
+  const [now, setNow] = useState<NowProgramme | null>(
+    review?.programmeTitle
+      ? {
+          title: review.programmeTitle,
+          startsAt: review.programmeStartsAt,
+          endsAt: review.programmeEndsAt,
+        }
+      : null,
+  );
+  const [nowState, setNowState] = useState<"idle" | "loading" | "ready">(
+    review ? "ready" : "idle",
+  );
+  const [rating, setRating] = useState(review?.rating ?? 0);
+  const [body, setBody] = useState(review?.body ?? "");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   /** The face actually shown, which the server can change. */
   const [shown, setShown] = useState<"write" | "session">(face);
+  /** Whether the visitor has written anything of their own yet. */
+  const [touched, setTouched] = useState(false);
+
+  /** True when the panel was opened on one of the visitor's own reviews. */
+  const isEdit = review !== null;
 
   // The face asked for by the section, unless the server has said a
   // session is what this visitor needs.
@@ -179,10 +303,13 @@ export function ReviewComposer({
    * for, and it never invents a title of its own either.
    */
   useEffect(() => {
+    // An edit keeps the programme snapshot the server stored with the
+    // review. The live guide is a different fact and must not replace it.
+    if (isEdit) return;
+
     if (!channelId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- reset for the "no channel" branch only
       setNow(null);
-      
       setNowState("idle");
       return;
     }
@@ -249,6 +376,7 @@ export function ReviewComposer({
     };
   }, [
     channelId,
+    isEdit,
     programmeChannel,
     programmeEndsAt,
     programmeKnown,
@@ -256,7 +384,55 @@ export function ReviewComposer({
     programmeTitle,
   ]);
 
-  const canWrite = rating > 0 && body.trim().length >= BODY_MIN && Boolean(channelId);
+  /**
+   * The visitor's own review of the slot they are writing about.
+   *
+   * Found in the reviews the server already sent, and only there: the
+   * browser knows nothing more than the server told it. When such a
+   * review is there, the panel edits it instead of asking for a second
+   * one — the database would refuse the second one anyway.
+   */
+  const slotReview = useMemo(() => {
+    if (isEdit) return null;
+    if (!channelId || nowState !== "ready") return null;
+    const list = storeReviews ?? [];
+    return (
+      list.find(
+        (candidate) =>
+          candidate.mine && sameSlot(candidate, channelId, now),
+      ) ?? null
+    );
+  }, [isEdit, storeReviews, channelId, now, nowState]);
+
+  const knownChannel = channels.find((channel) => channel.id === channelId);
+  const selectedChannel = knownChannel ?? singleChannel;
+
+  /** The review this panel is about, whether it was opened for one or found. */
+  const editing = review ?? slotReview;
+
+  /**
+   * What the fields show.
+   *
+   * The visitor's own review of the slot fills them in until the visitor
+   * writes something of their own — after that, what they wrote is what
+   * they see, and nothing is overwritten under their hands.
+   */
+  const shownRating = touched ? rating : (slotReview?.rating ?? rating);
+  const shownBody = touched ? body : (slotReview?.body ?? body);
+
+  /** Another channel means another subject: the draft starts over. */
+  const chooseChannel = useCallback((next: string) => {
+    setChannelId(next);
+    setRating(0);
+    setBody("");
+    setTouched(false);
+    setError(null);
+  }, []);
+
+  const canWrite =
+    shownRating > 0 &&
+    shownBody.trim().length >= BODY_MIN &&
+    Boolean(channelId);
 
   const submit = useCallback(async () => {
     if (sending) return;
@@ -266,30 +442,49 @@ export function ReviewComposer({
       setError("Alege canalul despre care scrii.");
       return;
     }
-    if (rating === 0) {
+    if (shownRating === 0) {
       setError("Alege un rating, de la 1 la 5 stele.");
       return;
     }
-    const text = body.trim();
+    const text = shownBody.trim();
     if (text.length < BODY_MIN) {
       setError("Scrie câteva cuvinte despre emisiune.");
       return;
     }
 
     setSending(true);
-    const answer = await onSubmit({
-      rating,
-      body: text.slice(0, BODY_MAX),
-      channelId,
-      programmeTitle: now?.title ?? null,
-      programmeStartsAt: now?.startsAt ?? null,
-      programmeEndsAt: now?.endsAt ?? null,
-    });
+
+    let answer: ComposerAnswer;
+    if (editing) {
+      // An existing review is changed, never inserted a second time.
+      answer = onUpdate
+        ? await onUpdate(editing.id, {
+            rating: shownRating,
+            body: text.slice(0, BODY_MAX),
+          })
+        : {
+            ok: false,
+            error: "Recenzia nu poate fi modificată aici.",
+            needsSession: false,
+          };
+    } else {
+      answer = await onSubmit({
+        rating: shownRating,
+        body: text.slice(0, BODY_MAX),
+        channelId,
+        programmeTitle: now?.title ?? null,
+        programmeStartsAt: now?.startsAt ?? null,
+        programmeEndsAt: now?.endsAt ?? null,
+      });
+    }
     setSending(false);
 
     if (answer.ok) {
-      setRating(0);
-      setBody("");
+      if (!editing) {
+        setRating(0);
+        setBody("");
+        setTouched(false);
+      }
       onClose();
       return;
     }
@@ -299,7 +494,17 @@ export function ReviewComposer({
     // The server said there is no session here: the panel becomes the
     // session face, and the way in is the accounts page.
     if (answer.needsSession) setShown("session");
-  }, [body, channelId, now, onClose, onSubmit, rating, sending]);
+  }, [
+    channelId,
+    editing,
+    now,
+    onClose,
+    onSubmit,
+    onUpdate,
+    sending,
+    shownBody,
+    shownRating,
+  ]);
 
   /** Where the visitor is now, so the accounts page can bring them back. */
   const returnTo =
@@ -310,37 +515,62 @@ export function ReviewComposer({
   const signInHref = `/conturi?intent=signin&next=${encodeURIComponent(returnTo)}`;
   const registerHref = `/conturi?intent=register&next=${encodeURIComponent(returnTo)}`;
 
+  const title =
+    shown === "session"
+      ? "Conectează-te"
+      : editing
+        ? "Editează recenzia"
+        : "Scrie o recenzie";
+
   return (
     <ZoomOverlay
       open={open}
       origin={origin}
       onClose={onClose}
-      label={shown === "session" ? "Conectează-te" : "Scrie o recenzie"}
+      label={title}
       className="sm:max-w-xl"
+      dragToDismiss
     >
       {/* The header: what this is, and the way out. */}
-      <div className="sticky top-0 z-10 flex items-start gap-3 border-b border-white/[0.07] bg-canvas-raised/85 px-4 py-3.5 backdrop-blur-xl sm:px-5">
-        <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-signal">
-          <PenLine aria-hidden className="size-4" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <h2 className="font-display text-[15px] font-semibold tracking-[-0.01em] text-ink">
-            {shown === "session" ? "Conectează-te" : "Scrie o recenzie"}
-          </h2>
-          <p className="mt-0.5 text-[12px] leading-snug text-ink-faint">
-            {shown === "session"
-              ? "Recenziile și reacțiile aparțin unui cont, ca să rămână oameni."
-              : "Despre ce rulează acum, pe canalul pe care îl privești."}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Închide"
-          className="grid size-11 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+      <div className="sticky top-0 z-10 border-b border-white/[0.07] bg-canvas-raised/85 px-4 py-3.5 backdrop-blur-xl sm:px-5">
+        {/* The handle the sheet is taken away by, on a phone. The drag
+            starts here and nowhere else, so the comment keeps its own
+            scrolling. */}
+        <div
+          aria-hidden="true"
+          data-zoom-drag-handle
+          className="mb-2 flex cursor-grab touch-none justify-center sm:hidden"
         >
-          <X aria-hidden className="size-4" />
-        </button>
+          <GripHorizontal className="size-5 text-ink-faint" />
+        </div>
+
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-signal">
+            {editing ? (
+              <Pencil aria-hidden className="size-4" />
+            ) : (
+              <PenLine aria-hidden className="size-4" />
+            )}
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-[15px] font-semibold tracking-[-0.01em] text-ink">
+              {title}
+            </h2>
+            <p className="mt-0.5 text-[12px] leading-snug text-ink-faint">
+              {shown === "session"
+                ? "Recenziile și reacțiile aparțin unui cont, ca să rămână oameni."
+                : editing
+                  ? "Modifici recenzia ta. Canalul și emisiunea rămân cele de la scriere."
+                  : "Despre ce rulează acum, pe canalul pe care îl privești."}
+            </p>
+          </div>
+          <DismissButton
+            ariaLabel="Închide"
+            className="grid size-11 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          >
+            <X aria-hidden className="size-4" />
+          </DismissButton>
+        </div>
       </div>
 
       {shown === "session" ? (
@@ -368,25 +598,45 @@ export function ReviewComposer({
       ) : (
         <div className="px-4 py-4 sm:px-5">
           {/* The channel. */}
-          <label
-            htmlFor="review-channel"
-            className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint"
-          >
-            Canal
-          </label>
-          <select
-            id="review-channel"
-            value={channelId}
-            onChange={(event) => setChannelId(event.target.value)}
-            className={inputClass}
-          >
-            <option value="">Alege canalul…</option>
-            {channels.map((channel) => (
-              <option key={channel.id} value={channel.id}>
-                {channel.name}
-              </option>
-            ))}
-          </select>
+          {editing || singleChannel ? (
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">
+                Canal
+              </p>
+              <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5">
+                <p className="text-[14px] text-ink">
+                  {editing?.channelName ?? selectedChannel?.name}
+                </p>
+                <p className="mt-0.5 text-[11px] leading-snug text-ink-faint">
+                  {editing
+                    ? "Canalul unei recenzii nu se schimbă."
+                    : "Recenzia rămâne legată de acest canal."}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <label
+                htmlFor="review-channel"
+                className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint"
+              >
+                Canal
+              </label>
+              <select
+                id="review-channel"
+                value={channelId}
+                onChange={(event) => chooseChannel(event.target.value)}
+                className={inputClass}
+              >
+                <option value="">Alege canalul…</option>
+                {channels.map((channel) => (
+                  <option key={channel.id} value={channel.id}>
+                    {channel.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* What is on it, as the server knows. */}
           <div className="mt-3 min-h-6">
@@ -398,12 +648,14 @@ export function ReviewComposer({
             ) : now ? (
               <p className="inline-flex items-center gap-2 text-[12px] text-ink-muted">
                 <Radio aria-hidden className="size-3.5 text-live" />
-                Acum: <span className="text-ink">{now.title}</span>
+                {editing ? "Emisiune: " : "Acum: "}
+                <span className="text-ink">{now.title}</span>
               </p>
             ) : channelId && nowState === "ready" ? (
               <p className="text-[12px] leading-snug text-ink-faint">
-                Ghidul nu are o emisiune pentru acest canal acum. Recenzia va
-                rămâne pe canal.
+                {editing
+                  ? "Recenzia rămâne legată de canal, fără o emisiune în ghid."
+                  : "Ghidul nu are o emisiune pentru acest canal acum. Recenzia va rămâne pe canal."}
               </p>
             ) : null}
           </div>
@@ -414,9 +666,16 @@ export function ReviewComposer({
               Rating
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-              <StarPicker value={rating} onChange={setRating} disabled={sending} />
+              <StarPicker
+                value={shownRating}
+                onChange={(value) => {
+                  setRating(value);
+                  setTouched(true);
+                }}
+                disabled={sending}
+              />
               <span className="text-[12px] tabular-nums text-ink-faint">
-                {rating > 0 ? `${rating} din 5` : "Fără rating"}
+                {shownRating > 0 ? `${shownRating} din 5` : "Fără rating"}
               </span>
             </div>
           </div>
@@ -432,21 +691,26 @@ export function ReviewComposer({
             <textarea
               id="review-body"
               rows={5}
-              value={body}
+              value={shownBody}
               maxLength={BODY_MAX}
-              onChange={(event) => setBody(event.target.value)}
+              onChange={(event) => {
+                setBody(event.target.value);
+                setTouched(true);
+              }}
               disabled={sending}
               placeholder="Ce ți s-a părut. Despre ce a fost, nu despre site."
               className={textareaClass}
             />
             <div className="mt-1.5 flex items-baseline justify-between gap-3">
               <span className="text-[11px] text-ink-faint">
-                {body.trim().length < BODY_MIN
+                {shownBody.trim().length < BODY_MIN
                   ? "Încă puține cuvinte — scrie cel puțin două."
-                  : "Recenzia rămâne legată de canalul ales."}
+                  : editing
+                    ? "Recenzia ta rămâne legată de emisiunea de la scriere."
+                    : "Recenzia rămâne legată de canalul ales."}
               </span>
               <span className="shrink-0 text-[11px] tabular-nums text-ink-faint">
-                {body.trim().length}/{BODY_MAX}
+                {shownBody.trim().length}/{BODY_MAX}
               </span>
             </div>
           </div>
@@ -464,14 +728,12 @@ export function ReviewComposer({
 
       {/* The footer, and its two actions. */}
       <div className="flex items-center gap-3 border-t border-white/[0.07] px-4 py-3.5 sm:px-5">
-        <button
-          type="button"
-          onClick={onClose}
+        <DismissButton
           disabled={sending}
           className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal disabled:pointer-events-none disabled:opacity-40"
         >
           Renunță
-        </button>
+        </DismissButton>
         <button
           type="button"
           onClick={() => void submit()}
@@ -485,12 +747,48 @@ export function ReviewComposer({
         >
           {sending ? (
             <Loader2 aria-hidden className="size-4 animate-spin" />
+          ) : editing ? (
+            <Pencil aria-hidden className="size-4" />
           ) : (
             <PenLine aria-hidden className="size-4" />
           )}
-          Publică recenzia
+          {editing ? "Salvează recenzia" : "Publică recenzia"}
         </button>
       </div>
     </ZoomOverlay>
+  );
+}
+
+/**
+ * A button that dismisses the panel.
+ *
+ * It hands the overlay the place it was pressed, so the panel leaves
+ * towards the control that closed it instead of towards the place it was
+ * opened from. A keyboard has no place of its own, so the middle of the
+ * button is used.
+ */
+function DismissButton({
+  ariaLabel,
+  children,
+  className,
+  disabled,
+}: {
+  ariaLabel?: string;
+  children: ReactNode;
+  className?: string;
+  disabled?: boolean;
+}) {
+  const dismiss = useZoomDismiss();
+
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onClick={(event) => dismiss(pressPoint(event))}
+      className={className}
+    >
+      {children}
+    </button>
   );
 }

@@ -16,7 +16,6 @@ import { ArrowRight, Radio, ShieldCheck, Users } from "lucide-react";
 
 
 import { AcumMark } from "@/components/brand";
-import { ReviewDraftBridge } from "@/components/channel/channel-panel";
 import { AccountButton } from "@/components/account/account-button";
 import { AccountPanel } from "@/components/account/account-panel";
 import { SessionGate } from "@/components/account/session-gate";
@@ -230,7 +229,7 @@ export default async function LandingPage() {
                 </span>
                 <Link
                   href="/canale"
-                  className="group inline-flex items-center gap-1.5 text-[12px] font-medium text-ink-muted transition-colors duration-300 hover:text-ink"
+                  className="group inline-flex min-h-11 items-center gap-1.5 text-[12px] font-medium text-ink-muted transition-colors duration-300 hover:text-ink"
                 >
                   Deschide catalogul
                   <ArrowRight className="size-3.5 transition-transform duration-300 ease-spring group-hover:translate-x-0.5" />
@@ -249,6 +248,13 @@ export default async function LandingPage() {
             />
           </div>
         </div>
+      </section>
+
+      {/* What the viewers said about what was on. It sits directly below
+          the hero, where the social proof belongs, without reserving an
+          empty shelf before the rest of the landing page. */}
+      <section className="mx-auto max-w-[1800px] px-4 pb-20 sm:px-8 lg:px-12">
+        <PopularReviews channels={REVIEW_CHANNELS} />
       </section>
 
       {/* The pitch */}
@@ -288,13 +294,6 @@ export default async function LandingPage() {
         </div>
 
         <PlansGrid region={region} className="mt-10" />
-      </section>
-
-      {/* What the viewers said about what was on. The bridge keeps a
-          signed-out visitor's draft while they make a session. */}
-      <section className="mx-auto max-w-[1800px] px-4 pb-24 sm:px-8 lg:px-12">
-        <ReviewDraftBridge />
-        <PopularReviews channels={REVIEW_CHANNELS} />
       </section>
 
       {/* The way in */}
@@ -355,13 +354,13 @@ export default async function LandingPage() {
           <div className="flex items-center gap-5">
             <Link
               href="/preturi"
-              className="transition-colors duration-300 hover:text-ink"
+              className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink"
             >
               Planuri
             </Link>
             <Link
               href="/conturi"
-              className="transition-colors duration-300 hover:text-ink"
+              className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink"
             >
               Conturi
             </Link>
@@ -384,7 +383,7 @@ function LandingBar() {
       <div className="mx-auto flex h-16 max-w-[1800px] items-center gap-3 px-4 sm:h-[72px] sm:gap-6 sm:px-8 lg:px-12">
         <Link
           href="/"
-          className="group flex shrink-0 items-center gap-3"
+          className="group flex min-h-11 shrink-0 items-center gap-3"
           aria-label={`${SITE_NAME} — acasă`}
         >
           <span className="relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-[11px] border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_10px_26px_-14px_rgba(242,167,27,0.85)]">
@@ -398,13 +397,13 @@ function LandingBar() {
         <nav className="hidden items-center gap-6 text-[13px] text-ink-muted md:flex">
           <Link
             href="#planuri"
-            className="transition-colors duration-300 hover:text-ink"
+            className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink"
           >
             Planuri
           </Link>
           <Link
             href="#cont"
-            className="transition-colors duration-300 hover:text-ink"
+            className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink"
           >
             Cont
           </Link>
@@ -412,7 +411,7 @@ function LandingBar() {
 
         <div className="flex-1" />
 
-        <AccountButton />
+        <AccountButton className="[&_a]:min-h-11 [&_button]:min-h-11" />
       </div>
     </header>
   );

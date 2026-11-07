@@ -176,9 +176,11 @@ export function SearchPanel<T extends ChannelLike>({
             type="button"
             onClick={() => onQueryChange("")}
             aria-label="Șterge căutarea"
-            className="grid size-8 place-items-center rounded-full text-ink-faint transition-colors hover:bg-white/10 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            className="-m-1.5 grid size-11 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
           >
-            <X aria-hidden className="size-4" />
+            <span className="grid size-8 place-items-center rounded-full text-ink-faint transition-colors hover:bg-white/10 hover:text-ink">
+              <X aria-hidden className="size-4" />
+            </span>
           </button>
         )}
         {onClose && (
@@ -186,9 +188,11 @@ export function SearchPanel<T extends ChannelLike>({
             type="button"
             onClick={onClose}
             aria-label="Închide căutarea"
-            className="grid size-8 place-items-center rounded-full text-ink-faint transition-colors hover:bg-white/10 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            className="-m-1.5 grid size-11 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
           >
-            <X aria-hidden className="size-4" />
+            <span className="grid size-8 place-items-center rounded-full text-ink-faint transition-colors hover:bg-white/10 hover:text-ink">
+              <X aria-hidden className="size-4" />
+            </span>
           </button>
         )}
       </div>
@@ -317,15 +321,19 @@ export function SearchPanel<T extends ChannelLike>({
                               : `Adaugă ${channel.name} la favorite`
                           }
                           aria-pressed={favorite}
-                          className={cn(
-                            "grid size-10 shrink-0 place-items-center rounded-full border border-transparent text-ink-faint transition-[color,background-color,border-color] duration-150 hover:border-hairline-strong hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
-                            favorite && "text-signal",
-                          )}
+                          className="-m-0.5 grid size-11 shrink-0 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
                         >
-                          <Heart
-                            aria-hidden
-                            className={cn("size-4", favorite && "fill-current")}
-                          />
+                          <span
+                            className={cn(
+                              "grid size-10 place-items-center rounded-full border border-transparent text-ink-faint transition-[color,background-color,border-color] duration-150 hover:border-hairline-strong hover:text-ink",
+                              favorite && "text-signal",
+                            )}
+                          >
+                            <Heart
+                              aria-hidden
+                              className={cn("size-4", favorite && "fill-current")}
+                            />
+                          </span>
                         </button>
                       </div>
                     </li>

@@ -220,7 +220,7 @@ export function PlayerChrome({ children, className }: PlayerChromeProps) {
  * ------------------------------------------------------------------ */
 
 /** Toate butoanele cu pictogramă au exact 44×44 px. */
-const CONTROL = "size-11 shrink-0 p-0";
+export const CONTROL = "size-11 shrink-0 p-0";
 
 /** Pictogramele rămân compacte, chiar dacă zona de apăsare este de 44 px. */
 const CONTROL_ICON = "size-[18px]";
@@ -485,6 +485,8 @@ export type PlayerControlsProps = {
   qualityAutomatic?: boolean;
   /** Ce rulează acum înaintea transportului. */
   nowPlaying?: ReactNode;
+  /** Acțiunea de recenzie, când programul de acum poate fi recenzat. */
+  reviewAction?: ReactNode;
   /** True când fluxul a eșuat și spectatorul poate încerca din nou. */
   error?: boolean;
   /** Cipul de calitate, în dreapta liniei live. */
@@ -530,6 +532,7 @@ export function PlayerControls({
   behindLive = false,
   qualityAutomatic = true,
   nowPlaying,
+  reviewAction,
   error = false,
   quality,
   onTogglePlay,
@@ -820,14 +823,24 @@ export function PlayerControls({
                     "absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
                     "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent",
-                    "[&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-ink [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-md",
+                    "[&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
                     "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent",
-                    "[&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md",
+                    "[&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
                   )}
                 />
               </div>
+              <span
+                aria-hidden
+                className="w-8 shrink-0 text-right font-mono text-[10px] tabular-nums text-ink-muted"
+              >
+                {volumePercent}%
+              </span>
             </div>
           </div>
+
+          {reviewAction ? (
+            <div className="flex min-w-0 shrink-0 items-center">{reviewAction}</div>
+          ) : null}
 
           {/* Conexiunea și calitatea stau împreună, dar rămân compacte. */}
           <div className="flex min-w-0 items-center gap-1.5 ml-auto">

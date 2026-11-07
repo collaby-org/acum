@@ -25,7 +25,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="grid min-h-screen place-items-center px-6 py-24 text-center">
+    <main className="grid min-h-[100dvh] place-items-center px-6 py-24 text-center">
       <div className="max-w-md">
         <span className="mx-auto grid size-12 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.09] to-white/[0.02] shadow-[0_12px_30px_-16px_rgba(242,167,27,0.85)]">
           <AcumMark id="acum-mark-error" className="size-7" />

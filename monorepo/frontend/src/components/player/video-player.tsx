@@ -31,7 +31,7 @@ import {
   type MouseEvent,
 } from "react";
 import type { CSSProperties } from "react";
-import { Loader2, Radio, TriangleAlert } from "lucide-react";
+import { Loader2, PenLine, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
 import { CinemaLights } from "@/components/player/cinema-lights";
@@ -45,11 +45,17 @@ import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import { Paywall } from "@/components/player/paywall";
 import { ProgrammeBadges } from "@/components/player/programme-badges";
 import {
+  ReviewComposer,
+  type ComposerProgramme,
+  type ZoomPoint,
+} from "@/components/reviews";
+import {
   usePlayer,
   type PlayerStatus,
 } from "@/hooks/use-player";
 import { useAccount, useWatchClock } from "@/hooks/use-account";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
+import { useReviews } from "@/hooks/use-reviews";
 import { cn } from "@/lib/utils";
 
 /**
@@ -220,6 +226,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // plan has two hours a day and the server is the one that counts them,
     // so the browser only asks what the answer is and obeys it.
     const account = useAccount();
+    const reviews = useReviews();
     const gated = account.ready && account.gated;
 
     // The guard the imperative handle reads: the handle is created once,
@@ -721,7 +728,11 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     const [programme, setProgramme] = useState<{
       id: string;
       title: string | null;
-    }>({ id: channelId, title: null });
+      startsAt: string | null;
+      endsAt: string | null;
+    }>({ id: channelId, title: null, startsAt: null, endsAt: null });
+    const [reviewOpen, setReviewOpen] = useState(false);
+    const [reviewOrigin, setReviewOrigin] = useState<ZoomPoint | null>(null);
 
     useEffect(() => {
       let live = true;
@@ -730,11 +741,22 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         .then((response) => {
           if (!response.ok) throw new Error("bad status");
           return response.json() as Promise<{
-            now?: { title?: string | null } | null;
+            now?: {
+              title?: string | null;
+              startsAt?: string | null;
+              endsAt?: string | null;
+            } | null;
           }>;
         })
         .then((sheet) => {
-          if (live) setProgramme({ id: channelId, title: sheet?.now?.title ?? null });
+          if (live) {
+            setProgramme({
+              id: channelId,
+              title: sheet?.now?.title ?? null,
+              startsAt: sheet?.now?.startsAt ?? null,
+              endsAt: sheet?.now?.endsAt ?? null,
+            });
+          }
         })
         .catch(() => {
           // The sheet did not answer: what the player already knew stays,
@@ -747,6 +769,29 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     }, [channelId, minuteTick]);
 
     const programmeTitle = programme.id === channelId ? programme.title : null;
+    const composerProgramme: ComposerProgramme | null =
+      programme.id === channelId && programmeTitle
+        ? {
+            title: programmeTitle,
+            startsAt: programme.startsAt,
+            endsAt: programme.endsAt,
+            channelId,
+          }
+        : null;
+
+    const openReview = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+      const box = event.currentTarget.getBoundingClientRect();
+      setReviewOrigin({
+        x: box.left + box.width / 2,
+        y: box.top + box.height / 2,
+      });
+      setReviewOpen(true);
+    }, []);
+
+    const closeReview = useCallback(() => {
+      setReviewOpen(false);
+      setReviewOrigin(null);
+    }, []);
 
     /**
      * The stall watchdog.
@@ -1402,60 +1447,90 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           />
 
           {bare || embedded ? null : (
-            <PlayerControls
-              playing={playing || (waiting && !paused)}
-              muted={muted}
-              volume={volume}
-              busy={busy}
-              connecting={connecting}
-              buffering={waiting}
-              fullscreen={fullscreen}
-              error={failed}
-              canFullscreen={fullscreenMode !== "none"}
-              canSwitch={hasNext}
-              canPictureInPicture={canPictureInPicture}
-              pictureInPictureActive={pictureInPictureActive}
-              canCast={castSupported}
-              castConnected={castConnected}
-              cinema={cinema}
-              canCinema={!fullscreen}
-              behindLive={behindLive}
-              qualityAutomatic={currentLevel === -1}
-              nowPlaying={
-                <>
-                  <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
-                    {channelName}
-                  </span>
-                  <ProgrammeBadges
-                    channelId={channelId}
-                    title={programmeTitle}
-                    className="min-w-0"
+            <>
+              <PlayerControls
+                playing={playing || (waiting && !paused)}
+                muted={muted}
+                volume={volume}
+                busy={busy}
+                connecting={connecting}
+                buffering={waiting}
+                fullscreen={fullscreen}
+                error={failed}
+                canFullscreen={fullscreenMode !== "none"}
+                canSwitch={hasNext}
+                canPictureInPicture={canPictureInPicture}
+                pictureInPictureActive={pictureInPictureActive}
+                canCast={castSupported}
+                castConnected={castConnected}
+                cinema={cinema}
+                canCinema={!fullscreen}
+                behindLive={behindLive}
+                qualityAutomatic={currentLevel === -1}
+                nowPlaying={
+                  <>
+                    <span className="min-w-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-ink [text-shadow:0_1px_6px_rgb(0_0_0/0.9)]">
+                      {channelName}
+                    </span>
+                    <ProgrammeBadges
+                      channelId={channelId}
+                      title={programmeTitle}
+                      className="min-w-0"
+                    />
+                  </>
+                }
+                reviewAction={
+                  composerProgramme ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={openReview}
+                      aria-label="Scrie o recenzie"
+                      title="Scrie o recenzie"
+                      className="size-11 shrink-0 gap-0 p-0 text-ink-muted hover:bg-white/8 hover:text-signal min-[1024px]:w-auto min-[1024px]:gap-2 min-[1024px]:px-3"
+                    >
+                      <PenLine className="size-[18px]" aria-hidden />
+                      <span className="hidden min-[1024px]:inline">
+                        Scrie o recenzie
+                      </span>
+                    </Button>
+                  ) : null
+                }
+                quality={
+                  <PlayerQualityBadge
+                    variants={qualityLevels}
+                    currentLevel={currentLevel}
+                    stream={stream}
+                    onLevelChange={selectLevel}
+                    // The bar is told: the menu is portaled out of it, so
+                    // this is the only way it can know to stay awake.
+                    onOpenChange={setQualityOpen}
                   />
-                </>
-              }
-              quality={
-                <PlayerQualityBadge
-                  variants={qualityLevels}
-                  currentLevel={currentLevel}
-                  stream={stream}
-                  onLevelChange={selectLevel}
-                  // The bar is told: the menu is portaled out of it, so
-                  // this is the only way it can know to stay awake.
-                  onOpenChange={setQualityOpen}
-                />
-              }
-              onTogglePlay={togglePlay}
-              onToggleMute={toggleMute}
-              onVolumeChange={changeVolume}
-              onToggleFullscreen={toggleFullscreen}
-              onTogglePictureInPicture={togglePictureInPicture}
-              onToggleCast={toggleCast}
-              onToggleCinema={() => setCinema((value) => !value)}
-              onJumpToLive={jumpToLive}
-              onRetry={player.retry}
-              onNextSource={player.advance}
-              onConnectionOpenChange={setConnectionOpen}
-            />
+                }
+                onTogglePlay={togglePlay}
+                onToggleMute={toggleMute}
+                onVolumeChange={changeVolume}
+                onToggleFullscreen={toggleFullscreen}
+                onTogglePictureInPicture={togglePictureInPicture}
+                onToggleCast={toggleCast}
+                onToggleCinema={() => setCinema((value) => !value)}
+                onJumpToLive={jumpToLive}
+                onRetry={player.retry}
+                onNextSource={player.advance}
+                onConnectionOpenChange={setConnectionOpen}
+              />
+              <ReviewComposer
+                channels={[{ id: channelId, name: channelName }]}
+                signedIn={account.signedIn}
+                open={reviewOpen}
+                origin={reviewOrigin}
+                face={account.signedIn ? "write" : "session"}
+                programme={composerProgramme}
+                onClose={closeReview}
+                onSubmit={reviews.submit}
+              />
+            </>
           )}
         </div>
 

@@ -49,6 +49,12 @@ export type Review = {
   counts: ReactionCounts;
   /** The reader's own reaction, when the server was told who is asking. */
   own: ReactionKind | null;
+  /**
+   * True when this review was written by the reader whose session was
+   * used for the read. This is separate from `own`, which marks the
+   * reader's reaction to a review and may belong to somebody else.
+   */
+  mine: boolean;
 };
 
 /** What `GET /api/reviews` answers with. */

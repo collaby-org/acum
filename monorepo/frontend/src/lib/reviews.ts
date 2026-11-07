@@ -36,10 +36,8 @@ import {
 } from "@/components/reviews/types";
 import {
   getPublicClient,
-  getServiceClient,
   getUserClient,
   hasPublicConfig,
-  hasServiceRole,
   readUser,
 } from "@/lib/supabase/server";
 
@@ -159,6 +157,7 @@ function toReview(
   row: ReviewRow,
   counts: ReactionCounts,
   own: ReactionKind | null,
+  mine: boolean,
 ): Review {
   return {
     id: row.id,
@@ -173,6 +172,7 @@ function toReview(
     createdAt: row.created_at,
     counts,
     own,
+    mine,
   };
 }
 
@@ -198,7 +198,84 @@ export async function readReviews(options: {
   channelId?: string | null;
   limit?: number;
   now?: Date;
+  mine?: boolean;
 } ): Promise<{ configured: boolean; reason: string | null; reviews: Review[] }> {
+  if (options.mine && !options.token) {
+    return { configured: true, reason: null, reviews: [] };
+  }
+
+  const limit = Math.min(Math.max(options.limit ?? POPULAR_LIMIT, 1), 100);
+
+  if (options.mine) {
+    const token = options.token;
+    if (!token) {
+      return { configured: true, reason: null, reviews: [] };
+    }
+
+    try {
+      const user = await readUser(token);
+      if (!user) {
+        return { configured: true, reason: null, reviews: [] };
+      }
+
+      const client = getUserClient(token);
+      let query = client
+        .from("reviews")
+        .select(
+          "id,user_id,channel_id,channel_name,programme_title,programme_starts_at,programme_ends_at,rating,body,author_label,created_at",
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (options.channelId) query = query.eq("channel_id", options.channelId);
+
+      const rows = await query;
+      const list = (rows.data as ReviewRow[] | null) ?? [];
+      if (list.length === 0) {
+        return { configured: true, reason: null, reviews: [] };
+      }
+
+      const ids = list.map((row) => row.id);
+      const [countAnswer, reactions] = await Promise.all([
+        client.rpc("review_reaction_counts", { p_ids: ids }),
+        client
+          .from("review_reactions")
+          .select("review_id,kind")
+          .in("review_id", ids),
+      ]);
+
+      const countMap = readCounts(countAnswer.data);
+      const reactionMap = new Map<string, ReactionKind>();
+      for (const row of (reactions.data as OwnReactionRow[] | null) ?? []) {
+        const kind = readKind(row.kind);
+        if (kind) reactionMap.set(row.review_id, kind);
+      }
+
+      const reviews = list.map((row) =>
+        toReview(
+          row,
+          countMap.get(row.id) ?? { like: 0, love: 0, clap: 0 },
+          reactionMap.get(row.id) ?? null,
+          true,
+        ),
+      );
+
+      const ranked = reviews
+        .sort((a, b) => byPopularity(a, b, (options.now ?? new Date()).getTime()))
+        .slice(0, limit);
+
+      return { configured: true, reason: null, reviews: ranked };
+    } catch {
+      return {
+        configured: false,
+        reason:
+          "Recenziile nu au putut fi citite acum. Încearcă din nou într-un moment.",
+        reviews: [],
+      };
+    }
+  }
+
   if (!hasPublicConfig()) {
     return {
       configured: false,
@@ -207,8 +284,6 @@ export async function readReviews(options: {
       reviews: [],
     };
   }
-
-  const limit = Math.min(Math.max(options.limit ?? POPULAR_LIMIT, 1), 100);
 
   try {
     const client = getPublicClient();
@@ -232,7 +307,7 @@ export async function readReviews(options: {
     }
 
     const ids = list.map((row) => row.id);
-    const [countAnswer, own] = await Promise.all([
+    const [countAnswer, reader] = await Promise.all([
       client.rpc("review_reaction_counts", { p_ids: ids }),
       readOwnReactions(ids, options.token ?? null),
     ]);
@@ -243,7 +318,8 @@ export async function readReviews(options: {
       toReview(
         row,
         countMap.get(row.id) ?? { like: 0, love: 0, clap: 0 },
-        own.get(row.id) ?? null,
+        reader.reactions.get(row.id) ?? null,
+        reader.userId !== null && row.user_id === reader.userId,
       ),
     );
 
@@ -274,12 +350,17 @@ export async function readReviews(options: {
 async function readOwnReactions(
   ids: string[],
   token: string | null,
-): Promise<Map<string, ReactionKind>> {
-  const map = new Map<string, ReactionKind>();
-  if (!token || ids.length === 0) return map;
+): Promise<{
+  userId: string | null;
+  reactions: Map<string, ReactionKind>;
+}> {
+  const reactions = new Map<string, ReactionKind>();
+  if (!token || ids.length === 0) {
+    return { userId: null, reactions };
+  }
 
   const user = await readUser(token);
-  if (!user) return map;
+  if (!user) return { userId: null, reactions };
 
   const { data } = await getUserClient(token)
     .from("review_reactions")
@@ -288,9 +369,9 @@ async function readOwnReactions(
 
   for (const row of (data as OwnReactionRow[] | null) ?? []) {
     const kind = readKind(row.kind);
-    if (kind) map.set(row.review_id, kind);
+    if (kind) reactions.set(row.review_id, kind);
   }
-  return map;
+  return { userId: user.id, reactions };
 }
 
 /* ------------------------------------------------------------------ *
@@ -425,7 +506,12 @@ export async function writeReview(
 
   return {
     ok: true,
-    review: toReview(data as ReviewRow, { like: 0, love: 0, clap: 0 }, null),
+    review: toReview(
+      data as ReviewRow,
+      { like: 0, love: 0, clap: 0 },
+      null,
+      true,
+    ),
   };
 }
 
@@ -577,6 +663,7 @@ async function oneReview(
       data,
       countMap.get(reviewId) ?? { like: 0, love: 0, clap: 0 },
       ownKind,
+      data.user_id === userId,
     ),
   };
 }
@@ -642,10 +729,9 @@ async function ownerOf(
  * moment the review was written, and a review that could change its
  * channel would be a review of something else.
  *
- * The write runs under the visitor's own token first, so the row level
- * policies have the last word. When the policies do not allow an update
- * at all, the desk's own key does the write — but only after the same
- * check, and only for the row that was found to be the visitor's.
+ * The write runs under the visitor's own token, so the row level policies
+ * have the last word. There is no service-role fallback: the visitor's
+ * token is the barrier for the write.
  */
 export async function editReview(
   token: string,
@@ -711,31 +797,11 @@ export async function editReview(
     .eq("user_id", user.id);
 
   if (ownWrite) {
-    if (!hasServiceRole()) {
-      // The policies do not allow an update, and the desk's own key is
-      // not there to do it. That is a fact about the server, said as
-      // such.
-      return {
-        ok: false,
-        error:
-          "Modificarea recenziilor nu este disponibilă acum. Încearcă mai târziu.",
-        status: 503,
-      };
-    }
-
-    const { error: deskWrite } = await getServiceClient()
-      .from("reviews")
-      .update(patch)
-      .eq("id", id)
-      .eq("user_id", user.id);
-
-    if (deskWrite) {
-      return {
-        ok: false,
-        error: "Recenzia nu a putut fi modificată. Încearcă din nou.",
-        status: 500,
-      };
-    }
+    return {
+      ok: false,
+      error: "Recenzia nu a putut fi modificată. Încearcă din nou.",
+      status: 500,
+    };
   }
 
   const answer = await oneReview(client, id, user.id);

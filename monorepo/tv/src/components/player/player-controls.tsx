@@ -164,11 +164,14 @@ function LiveBar({
               className={cn(
                 "pointer-events-auto absolute inset-0 hidden h-full w-full cursor-pointer appearance-none bg-transparent md:block",
                 // `appearance-none` takes the native thumb away, so it is
-                // drawn here — in both engines.
-                "[&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink",
+                // drawn here — in both engines. The thumb is the control's
+                // own size, and what it shows inside it is a small dot:
+                // the handle is large enough to be caught, and the mark on
+                // the bar is still a mark.
+                "[&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
                 "[&::-moz-range-track]:bg-transparent",
                 "[&::-webkit-slider-runnable-track]:bg-transparent",
-                "[&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
+                "[&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
               )}
             />
           </>
@@ -212,6 +215,22 @@ function LiveJump({ onJump, className }: { onJump: () => void; className?: strin
     </Button>
   );
 }
+
+/* ------------------------------------------------------------------ *
+ * Dimensiunile controlilor
+ * ------------------------------------------------------------------ */
+
+/**
+ * Every button with a picture in it is exactly the same size.
+ *
+ * One size for the whole bar: a control that is one size here and another
+ * there is a control the viewer has to look for twice, and the remote
+ * makes that cost more, not less.
+ */
+export const CONTROL = "size-11 shrink-0 p-0";
+
+/** The pictures stay compact, even though the button around them is not. */
+const CONTROL_ICON = "size-[18px]";
 
 export type PlayerControlsProps = {
   /** True while frames are on screen. */
@@ -296,6 +315,9 @@ export function PlayerControls({
 }: PlayerControlsProps) {
   const volumeId = useId();
 
+  /** The volume, as the percentage the viewer reads beside the slider. */
+  const volumePercent = Math.round(Math.max(0, Math.min(1, muted ? 0 : volume)) * 100);
+
   return (
     <div
       className={cn(
@@ -349,59 +371,88 @@ export function PlayerControls({
             onClick={onTogglePlay}
             aria-label={playing ? "Pauză" : "Redare"}
             title={playing ? "Pauză" : "Redare"}
+            className={CONTROL}
           >
-            {playing ? <Pause className="size-4.5" /> : <Play className="size-4.5" />}
+            {playing ? <Pause className={CONTROL_ICON} /> : <Play className={CONTROL_ICON} />}
           </Button>
 
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             onClick={onToggleMute}
             aria-label={muted ? "Ssună audio" : "Dezactivează sunetul"}
             aria-pressed={muted}
             title={muted ? "Ssună audio" : "Dezactivează sunetul"}
+            className={CONTROL}
           >
             {muted ? (
-              <VolumeX className="size-4" />
+              <VolumeX className={CONTROL_ICON} />
             ) : (
-              <Volume2 className="size-4" />
+              <Volume2 className={CONTROL_ICON} />
             )}
           </Button>
 
           <label htmlFor={volumeId} className="sr-only">
             Volum
           </label>
-          <input
-            id={volumeId}
-            type="range"
-            min={0}
-            max={1}
-            step={0.05}
-            value={muted ? 0 : volume}
-            onChange={(event) => onVolumeChange(Number(event.target.value))}
-            className="hidden h-1 w-24 cursor-pointer appearance-none rounded-full bg-white/15 accent-signal lg:block"
-            aria-label="Volum"
-          />
+          <div className="relative hidden h-11 w-24 lg:block">
+            <div
+              aria-hidden
+              className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-white/15"
+            >
+              <div
+                className="h-full rounded-full bg-signal"
+                style={{ width: `${volumePercent}%` }}
+              />
+            </div>
+            <input
+              id={volumeId}
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={muted ? 0 : volume}
+              onChange={(event) => onVolumeChange(Number(event.target.value))}
+              className={cn(
+                "absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
+                "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
+                "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent",
+                "[&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
+                "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent",
+                "[&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
+              )}
+              aria-label={`Volum: ${volumePercent}%`}
+              aria-valuetext={`${volumePercent}%`}
+            />
+          </div>
+          <span
+            aria-hidden
+            className="hidden w-8 shrink-0 text-right font-mono text-[10px] tabular-nums text-ink-muted lg:block"
+          >
+            {volumePercent}%
+          </span>
 
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             onClick={onRetry}
             aria-label="Reîncearcă fluxul"
             title="Reîncearcă fluxul"
+            className={CONTROL}
           >
-            <RotateCcw className={cn("size-4", busy && "animate-spin")} />
+            <RotateCcw className={cn(CONTROL_ICON, busy && "animate-spin")} />
           </Button>
 
           {canSwitch && onNextSource ? (
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={onNextSource}
               aria-label="Treci la următorul flux"
+              title="Treci la următorul flux"
+              className={CONTROL}
             >
-              <SkipForward className="size-4" />
-              <span className="hidden lg:inline">Flux următor</span>
+              <SkipForward className={CONTROL_ICON} />
             </Button>
           ) : null}
 
@@ -409,28 +460,30 @@ export function PlayerControls({
             {canPictureInPicture && onTogglePictureInPicture ? (
               <Button
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
                 onClick={onTogglePictureInPicture}
                 aria-label="Picture in Picture"
                 title="Picture in Picture"
+                className={CONTROL}
               >
-                <PictureInPicture2 className="size-4" />
+                <PictureInPicture2 className={CONTROL_ICON} />
               </Button>
             ) : null}
 
             {canFullscreen ? (
               <Button
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
                 onClick={onToggleFullscreen}
                 aria-label={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
                 aria-pressed={fullscreen}
                 title={fullscreen ? "Ieși din ecran complet" : "Ecran complet"}
+                className={CONTROL}
               >
                 {fullscreen ? (
-                  <Minimize className="size-4" />
+                  <Minimize className={CONTROL_ICON} />
                 ) : (
-                  <Maximize className="size-4" />
+                  <Maximize className={CONTROL_ICON} />
                 )}
               </Button>
             ) : null}

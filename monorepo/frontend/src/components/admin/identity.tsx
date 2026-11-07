@@ -52,11 +52,13 @@ export function DeskIdentity() {
       <button
         type="button"
         onClick={() => void account.signOut()}
-        className="grid size-9 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink"
+        className="-m-1 grid size-11 shrink-0 place-items-center"
         aria-label="Deconectare"
         title="Deconectare"
       >
-        <LogOut className="size-4" aria-hidden />
+        <span className="grid size-9 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink">
+          <LogOut className="size-4" aria-hidden />
+        </span>
       </button>
     </div>
   );

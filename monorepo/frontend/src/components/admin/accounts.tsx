@@ -120,7 +120,7 @@ export function AccountsPanel() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Caută după e-mail sau nume…"
-              className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint"
+              className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-sm"
             />
           </label>
 

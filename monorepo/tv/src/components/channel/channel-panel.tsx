@@ -11,11 +11,36 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import Image from "next/image";
-import { Eye, Radio, TrendingUp } from "lucide-react";
+import {
+  Eye,
+  Pencil,
+  PenLine,
+  Radio,
+  RefreshCw,
+  Trash2,
+  TrendingUp,
+} from "lucide-react";
 import { formatClock } from "@/components/now-next";
 import { ProgrammeBadges } from "@/components/player/programme-badges";
+import {
+  ReviewComposer,
+  type ComposerChannel,
+  type ComposerProgramme,
+  type ZoomPoint,
+} from "@/components/reviews";
+import { Stars } from "@/components/reviews/star-rating";
+import type { Review } from "@/components/reviews/types";
+import { TVFocusable } from "@/components/tv/focusable";
+import { accountToken, useAccount } from "@/hooks/use-account";
+import { useMyChannelReviews } from "@/hooks/use-reviews";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +111,75 @@ function clockOf(stamp: string | null): string | null {
   return formatClock(moment);
 }
 
+/** The visitor's own review, with the actions it really supports. */
+function OwnReviewCard({
+  review,
+  confirming,
+  onEdit,
+  onAskDelete,
+  onCancelDelete,
+  onDelete,
+}: {
+  review: Review;
+  confirming: boolean;
+  onEdit: (event: ReactMouseEvent<HTMLButtonElement>) => void;
+  onAskDelete: () => void;
+  onCancelDelete: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div
+      data-testid="channel-own-review"
+      className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-3.5"
+    >
+      <div className="flex items-center gap-2">
+        <Stars value={review.rating} />
+        <span className="text-[11px] tabular-nums text-ink-faint">
+          {review.rating}/5
+        </span>
+      </div>
+      <p className="mt-2 whitespace-pre-line text-[13px] leading-relaxed text-ink">
+        {review.body}
+      </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <TVFocusable
+          aria-label="Editează recenzia"
+          title="Editează recenzia"
+          onClick={onEdit}
+          className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink"
+        >
+          <Pencil aria-hidden className="size-4" />
+        </TVFocusable>
+        <TVFocusable
+          aria-label="Șterge recenzia"
+          title="Șterge recenzia"
+          onClick={onAskDelete}
+          className="grid size-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-ink-muted transition-colors duration-300 hover:border-live/40 hover:text-[#ffb3b8]"
+        >
+          <Trash2 aria-hidden className="size-4" />
+        </TVFocusable>
+      </div>
+      {confirming ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-live/30 bg-live/10 px-3 py-2.5">
+          <p className="text-[13px] font-medium text-ink">Ștergi recenzia?</p>
+          <TVFocusable
+            onClick={onDelete}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-live/40 bg-live/15 px-4 text-[13px] font-semibold text-[#ffb3b8] transition-colors duration-300 hover:bg-live/25"
+          >
+            Șterge
+          </TVFocusable>
+          <TVFocusable
+            onClick={onCancelDelete}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 text-[13px] font-medium text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink"
+          >
+            Anulează
+          </TVFocusable>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function ChannelPanel({
   channelId,
   channelName,
@@ -102,6 +196,14 @@ export function ChannelPanel({
     failed: boolean;
   }>({ id: channelId, sheet: null, failed: false });
 
+  /** The composer and the place on the screen it was asked from. */
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [composerOrigin, setComposerOrigin] = useState<ZoomPoint | null>(null);
+  /** Whether the delete is waiting for a second answer. */
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  /** What the server said about the last thing the viewer asked for. */
+  const [notice, setNotice] = useState<string | null>(null);
+
   /**
    * The sheet is read from the server, so it is the server's clock that
    * decides what is on. The minute tick is what makes it move: once a
@@ -109,6 +211,8 @@ export function ChannelPanel({
    * air now — not the one that was on when the panel was opened.
    */
   const tick = useMinuteTick();
+  const account = useAccount();
+  const myReviews = useMyChannelReviews(channelId);
 
   useEffect(() => {
     let live = true;
@@ -130,6 +234,88 @@ export function ChannelPanel({
     };
   }, [channelId, tick]);
 
+  /** Open the composer from the control the remote just activated. */
+  const openComposer = useCallback(
+    (event: ReactMouseEvent<HTMLButtonElement>) => {
+      const box = event.currentTarget.getBoundingClientRect();
+      setComposerOrigin({
+        x: box.left + box.width / 2,
+        y: box.top + box.height / 2,
+      });
+      setComposerOpen(true);
+    },
+    [],
+  );
+
+  const closeComposer = useCallback(() => setComposerOpen(false), []);
+
+  /**
+   * The viewer's own review of the programme that is on air right now.
+   *
+   * The same programme, the same way: the title is compared without its
+   * case, and the start of the slot has to be the same instant. A review
+   * of yesterday's programme is a different review, and the panel says
+   * so by not showing it here.
+   */
+  const ownReview = useMemo(() => {
+    const now = state.id === channelId ? state.sheet?.now : null;
+    if (!now) return null;
+
+    const sameTitle = (value: string | null): string | null =>
+      value?.trim().toLocaleLowerCase("ro-RO") ?? null;
+    const sameInstant = (a: string | null, b: string | null): boolean => {
+      if (a === null || b === null) return a === b;
+      const first = new Date(a).getTime();
+      const second = new Date(b).getTime();
+      if (!Number.isFinite(first) || !Number.isFinite(second)) return a === b;
+      return first === second;
+    };
+
+    return (
+      myReviews.reviews.find(
+        (review) =>
+          review.mine &&
+          review.channelId === channelId &&
+          sameTitle(review.programmeTitle) === sameTitle(now.title) &&
+          (!review.programmeTitle ||
+            sameInstant(review.programmeStartsAt, now.startsAt)),
+      ) ?? null
+    );
+  }, [channelId, myReviews.reviews, state.id, state.sheet?.now]);
+
+  /** Change the review, and let the server have the last word. */
+  const updateReview = useCallback(
+    async (
+      reviewId: string,
+      changes: { rating?: number; body?: string },
+    ) => {
+      const answer = await myReviews.update(reviewId, changes);
+      if (!answer.ok) setNotice(answer.error);
+      else {
+        setNotice(null);
+        myReviews.reload();
+      }
+      return answer;
+    },
+    [myReviews],
+  );
+
+  /** Take the review away, when the viewer says so twice. */
+  const removeReview = useCallback(
+    async (reviewId: string) => {
+      const answer = await myReviews.remove(reviewId);
+      if (!answer.ok) {
+        setNotice(answer.error);
+        return answer;
+      }
+      setNotice(null);
+      setConfirmingDelete(false);
+      myReviews.reload();
+      return answer;
+    },
+    [myReviews],
+  );
+
   const sheet = state.id === channelId ? state.sheet : null;
   const failed = state.id === channelId ? state.failed : false;
 
@@ -138,6 +324,15 @@ export function ChannelPanel({
   const popular = popularityLabel(sheet?.views ?? null);
   const nowClock = clockOf(sheet?.now?.startsAt ?? null);
   const nowEnd = clockOf(sheet?.now?.endsAt ?? null);
+  const composerChannels: ComposerChannel[] = [{ id: channelId, name }];
+  const composerProgramme: ComposerProgramme | null = sheet?.now
+    ? {
+        title: sheet.now.title,
+        startsAt: sheet.now.startsAt,
+        endsAt: sheet.now.endsAt,
+        channelId,
+      }
+    : null;
 
   return (
     <section
@@ -174,6 +369,62 @@ export function ChannelPanel({
               title={sheet.now.title}
               className="mt-2"
             />
+            <TVFocusable
+              data-testid="channel-review-trigger"
+              onClick={openComposer}
+              className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-signal px-5 text-[14px] font-semibold text-signal-ink transition-[background-color,transform] duration-300 ease-[var(--ease-spring)] hover:bg-signal-bright"
+            >
+              {ownReview ? (
+                <Pencil aria-hidden className="size-4" />
+              ) : (
+                <PenLine aria-hidden className="size-4" />
+              )}
+              {ownReview ? "Editează recenzia" : "Scrie o recenzie"}
+            </TVFocusable>
+
+            {myReviews.failed ? (
+              <div
+                role="alert"
+                className="mt-3 rounded-xl border border-live/30 bg-live/10 p-3.5"
+              >
+                <p className="text-[13px] font-medium leading-relaxed text-ink">
+                  Recenziile tale nu au putut fi citite acum.
+                </p>
+                <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">
+                  Încearcă din nou ca să poți vedea sau edita recenzia.
+                </p>
+                <TVFocusable
+                  onClick={myReviews.reload}
+                  className="mt-3 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08]"
+                >
+                  <RefreshCw aria-hidden className="size-4" />
+                  Încearcă din nou
+                </TVFocusable>
+              </div>
+            ) : null}
+
+            {ownReview ? (
+              <OwnReviewCard
+                review={ownReview}
+                confirming={confirmingDelete}
+                onEdit={openComposer}
+                onAskDelete={() => {
+                  setNotice(null);
+                  setConfirmingDelete(true);
+                }}
+                onCancelDelete={() => setConfirmingDelete(false)}
+                onDelete={() => void removeReview(ownReview.id)}
+              />
+            ) : null}
+
+            {notice ? (
+              <p
+                role="alert"
+                className="mt-3 rounded-xl border border-live/30 bg-live/10 px-3.5 py-2.5 text-[13px] leading-relaxed text-[#ffb3b8]"
+              >
+                {notice}
+              </p>
+            ) : null}
           </div>
         ) : sheet || failed ? (
           <p
@@ -303,6 +554,51 @@ export function ChannelPanel({
         )}
       </div>
 
+      <ReviewComposer
+        channels={composerChannels}
+        signedIn={account.signedIn}
+        open={composerOpen}
+        origin={composerOrigin}
+        face={account.signedIn ? "write" : "session"}
+        programme={composerProgramme}
+        review={ownReview}
+        reviews={myReviews.reviews}
+        onClose={closeComposer}
+        onSubmit={async (draft) => {
+          // The write goes out under the viewer's own token, so the
+          // database policies are the second line of defence after the
+          // bearer check — not instead of it.
+          const token = await accountToken();
+          const response = await fetch("/api/reviews", {
+            method: "POST",
+            headers: {
+              ...(token ? { authorization: `Bearer ${token}` } : {}),
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(draft),
+            cache: "no-store",
+          });
+          const payload = (await response
+            .json()
+            .catch(() => null)) as {
+            review?: Review;
+            error?: string;
+            needsSession?: boolean;
+          } | null;
+
+          if (!response.ok || !payload?.review) {
+            return {
+              ok: false,
+              error: payload?.error ?? "Recenzia nu a putut fi salvată.",
+              needsSession: Boolean(payload?.needsSession),
+            };
+          }
+
+          myReviews.reload();
+          return { ok: true };
+        }}
+        onUpdate={updateReview}
+      />
     </section>
   );
 }

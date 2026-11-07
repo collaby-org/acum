@@ -116,9 +116,11 @@ export function ProgrammeSearch({
             type="button"
             onClick={() => setQuery("")}
             aria-label="Șterge căutarea"
-            className="grid size-8 shrink-0 place-items-center rounded-full text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink"
+            className="-m-1.5 grid size-11 shrink-0 place-items-center"
           >
-            <X aria-hidden className="size-4" />
+            <span className="grid size-8 place-items-center rounded-full text-ink-faint transition-colors duration-300 hover:bg-white/10 hover:text-ink">
+              <X aria-hidden className="size-4" />
+            </span>
           </button>
         ) : null}
       </div>

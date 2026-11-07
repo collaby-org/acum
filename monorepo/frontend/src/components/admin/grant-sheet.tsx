@@ -103,10 +103,12 @@ export function GrantSheet({
               </DialogPrimitive.Description>
             </div>
             <DialogPrimitive.Close
-              className="grid size-9 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink"
+              className="-m-1 grid size-11 shrink-0 place-items-center"
               aria-label="Închide"
             >
-              <X className="size-4" aria-hidden />
+              <span className="grid size-9 place-items-center rounded-full border border-white/[0.08] bg-white/[0.03] text-ink-muted transition-colors duration-300 hover:border-white/20 hover:text-ink">
+                <X className="size-4" aria-hidden />
+              </span>
             </DialogPrimitive.Close>
           </div>
 
@@ -236,7 +238,7 @@ export function GrantSheet({
                     onChange={(event) => setNote(event.target.value)}
                     maxLength={400}
                     placeholder="De ce se acordă accesul. Rămâne în istoricul contului."
-                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-sm leading-relaxed text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25"
+                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-base leading-relaxed text-ink transition-colors duration-300 placeholder:text-ink-faint hover:border-white/20 focus:border-signal/60 focus:outline-none focus:ring-2 focus:ring-signal/25 sm:text-sm"
                   />
                 </section>
 

@@ -13,6 +13,7 @@
 "use client";
 
 import { Play, VolumeX } from "lucide-react";
+import { CONTROL } from "@/components/player/player-controls";
 import { cn } from "@/lib/utils";
 
 export type MuteOverlayProps = {
@@ -52,7 +53,10 @@ export function MuteOverlay({
           type="button"
           onClick={onStart}
           aria-label={label}
-          className="mx-auto grid size-16 place-items-center rounded-full bg-signal text-signal-ink shadow-[var(--shadow-glow)] transition-transform duration-300 ease-spring hover:scale-105 active:scale-95"
+          className={cn(
+            "mx-auto grid place-items-center rounded-full bg-signal text-signal-ink shadow-[var(--shadow-glow)] transition-transform duration-300 ease-spring hover:scale-105 active:scale-95",
+            CONTROL,
+          )}
         >
           <Play className="size-7 translate-x-[1px] fill-current" />
         </button>

@@ -141,7 +141,7 @@ export function Browse({
   return (
     // The bottom bar of the phone layout is fixed, so the page leaves room
     // for it — otherwise the last rail sits under the bar.
-    <div id="top" className={cn("min-h-screen", MOBILE_NAV_SPACE)}>
+    <div id="top" className={cn("min-h-dvh", MOBILE_NAV_SPACE)}>
       <Header
         query={query}
         onQueryChange={(value) => {

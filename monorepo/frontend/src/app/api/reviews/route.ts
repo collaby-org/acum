@@ -71,6 +71,9 @@ export async function GET(request: Request) {
   const search = new URL(request.url).searchParams;
   const channel = search.get("channel");
   const limit = search.get("limit");
+  const mine = ["1", "true", "yes"].includes(
+    (search.get("mine") ?? "").toLowerCase(),
+  );
 
   const parsed =
     limit && Number.isFinite(Number(limit)) ? Number(limit) : POPULAR_LIMIT;
@@ -83,6 +86,7 @@ export async function GET(request: Request) {
     token,
     channelId: channel,
     limit: Math.min(Math.max(parsed, 1), CHANNEL_LIMIT),
+    mine,
   });
 
   const payload: ReviewsPayload = {

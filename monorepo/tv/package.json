@@ -1,6 +1,6 @@
 {
   "name": "acum",
-  "version": "1.7.10",
+  "version": "1.8.0",
   "private": false,
   "scripts": {
     "dev": "next dev",

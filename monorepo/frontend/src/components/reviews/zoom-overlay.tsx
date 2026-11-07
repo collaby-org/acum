@@ -1,8 +1,11 @@
 "use client";
 
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -67,6 +70,48 @@ import { cn } from "@/lib/utils";
 /** A point on the screen, in viewport coordinates. */
 export type ZoomPoint = { x: number; y: number };
 
+/**
+ * Where a control was pressed, in viewport coordinates.
+ *
+ * A pointer knows exactly where it went down. A keyboard does not — the
+ * answer is then the middle of the control, which is as close to the
+ * truth as the browser allows.
+ */
+export function pressPoint(event: {
+  clientX: number;
+  clientY: number;
+  currentTarget: HTMLElement;
+}): ZoomPoint {
+  if (event.clientX !== 0 || event.clientY !== 0) {
+    return { x: event.clientX, y: event.clientY };
+  }
+  const box = event.currentTarget.getBoundingClientRect();
+  return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+}
+
+/**
+ * How a panel is dismissed from inside itself.
+ *
+ * The point is optional: Escape and other keyboard dismissals have no
+ * pointer position, while a button or a drag knows exactly where the
+ * visitor let go.
+ */
+export type ZoomDismiss = (point?: ZoomPoint) => void;
+
+const ZoomDismissContext = createContext<ZoomDismiss | null>(null);
+
+/**
+ * Dismiss the panel that contains this component and remember where the
+ * dismissal happened, so the exit travels towards that point.
+ */
+export function useZoomDismiss(): ZoomDismiss {
+  const dismiss = useContext(ZoomDismissContext);
+  if (!dismiss) {
+    throw new Error("useZoomDismiss trebuie folosit în interiorul ZoomOverlay.");
+  }
+  return dismiss;
+}
+
 /** The choreography, in milliseconds. */
 const ENTER_MS = 220;
 const EXIT_MS = 180;
@@ -82,6 +127,12 @@ const EASE_OUT = "cubic-bezier(0.4, 0, 0.2, 1)";
 /** The width below which the panel is a sheet rather than a popover. */
 const SHEET_QUERY = "(max-width: 639px)";
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+/** How far a sheet has to travel downwards before it lets go. */
+const DRAG_THRESHOLD = 72;
+
+/** The attribute that marks the handle a sheet is dragged by. */
+const DRAG_HANDLE = "[data-zoom-drag-handle]";
 
 /** The things inside a panel that Tab can reach. */
 const FOCUSABLE =
@@ -220,6 +271,24 @@ function unlockScroll(): void {
   body.style.paddingRight = scrollRestore.paddingRight;
 }
 
+/**
+ * Put the page back where it was before the panel took the screen.
+ *
+ * Called after the scroll is unlocked, because a page that cannot scroll
+ * cannot be scrolled back either. The page asks for a smooth scroll
+ * everywhere, and the restoration must not be one: the visitor watched
+ * the page drift to the top and then drift back, and that is a lag the
+ * panel promised not to have.
+ */
+function restoreScroll(top: number | null): void {
+  if (top === null || typeof window === "undefined") return;
+  const root = document.documentElement;
+  const previous = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  window.scrollTo(0, top);
+  root.style.scrollBehavior = previous;
+}
+
 /** Move the focus inside, so a keyboard is not left behind. */
 function focusFirst(panel: HTMLElement): void {
   const target = panel.querySelector<HTMLElement>(FOCUSABLE);
@@ -285,13 +354,22 @@ export type ZoomOverlayProps = {
    * the panel's own dismiss button. The panel leaves first and unmounts
    * itself afterwards; `open` is expected to already be false.
    */
-  onClose: () => void;
+  onClose: ZoomDismiss;
   /** What the panel says it is, for a screen reader. */
   label: string;
   /** The panel's own classes. */
   className?: string;
   /** A panel in the middle everywhere, or a sheet at the bottom. */
   variant?: "panel" | "sheet";
+  /**
+   * True when the sheet may be dragged downwards to dismiss it.
+   *
+   * The drag is started from the handle marked `data-zoom-drag-handle`,
+   * so the content underneath keeps its own scrolling: the textarea
+   * scrolls the comment, the handle dismisses the sheet, and the two
+   * never argue about the same gesture.
+   */
+  dragToDismiss?: boolean;
   children: ReactNode;
 };
 
@@ -303,6 +381,7 @@ export function ZoomOverlay({
   label,
   className,
   variant = "panel",
+  dragToDismiss = false,
   children,
 }: ZoomOverlayProps) {
   const [mounted, setMounted] = useState(false);
@@ -322,8 +401,42 @@ export function ZoomOverlay({
   const from = useRef<ZoomPoint | null>(null);
   /** The last press, wherever it was. The way out looks for it here. */
   const press = useRef<ZoomPoint | null>(null);
+  /**
+   * The drag that is under way, if any.
+   *
+   * A sheet can be taken away with a finger: the gesture is measured
+   * here and the sheet is dismissed once it has travelled far enough.
+   */
+  const drag = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    moved: boolean;
+  } | null>(null);
   /** Where focus came from, so it can go back. */
   const restore = useRef<HTMLElement | null>(null);
+  /** Where the page behind was, so it can go back there as well. */
+  const scrollAt = useRef<number | null>(null);
+  /** Whether the panel's own entry is still on the history stack. */
+  const historyEntry = useRef(false);
+  /** Set while the panel pops its own entry, so the pop is not read as Back. */
+  const popping = useRef(false);
+  /** The panel's own mark in the history state. */
+  const overlayId = useId();
+
+  /**
+   * Dismiss from inside the panel, with the place the visitor chose.
+   *
+   * The press is remembered before the parent is told, so the exit has a
+   * destination even when the parent closes the panel in the same tick.
+   */
+  const dismiss = useCallback(
+    (point?: ZoomPoint) => {
+      if (point) press.current = point;
+      onClose(point);
+    },
+    [onClose],
+  );
 
   const narrow = useMediaQuery(SHEET_QUERY);
   const reduced = useMediaQuery(REDUCED_QUERY);
@@ -337,6 +450,30 @@ export function ZoomOverlay({
     if (!open) return;
     from.current = origin ?? null;
     press.current = null;
+
+    // The page behind is remembered where it was, before the scroll is
+    // locked: a locked page cannot be scrolled back, so this is the
+    // only moment the place can still be read.
+    scrollAt.current = typeof window === "undefined" ? null : window.scrollY;
+
+    // The panel joins the history.
+    //
+    // Back is how a visitor expects to leave a thing that took over the
+    // screen, and on a phone it is the only way back there is. An entry
+    // of the panel's own is pushed — one argument, no URL, so the
+    // address bar and the router are left exactly as they were and the
+    // entry is only ever about the panel.
+    if (!historyEntry.current && typeof window !== "undefined") {
+      try {
+        window.history.pushState({ "acum:zoom-overlay": overlayId }, "");
+        historyEntry.current = true;
+      } catch {
+        // A browser that refuses the write still gets a panel; only the
+        // Back button goes on behaving the old way.
+        historyEntry.current = false;
+      }
+    }
+
     // The panel's own presence and its leaving phase are animation
     // state, not derived state: the panel has to exist for one frame
     // before it can animate, and it has to outlive the close for the
@@ -344,9 +481,9 @@ export function ZoomOverlay({
     // decided without the browser painting an intermediate frame.
     // eslint-disable-next-line react-hooks/set-state-in-effect -- animation phase, set once per open, never in a loop
     setLeaving(false);
-     
+    
     setMounted(true);
-  }, [open, origin]);
+  }, [open, origin, overlayId]);
 
   /**
    * Arrive.
@@ -494,19 +631,83 @@ export function ZoomOverlay({
   useEffect(() => {
     if (!mounted) return;
     lockScroll();
-    return unlockScroll;
+    return () => {
+      unlockScroll();
+      // The page behind comes back where the visitor left it.
+      restoreScroll(scrollAt.current);
+    };
   }, [mounted]);
+
+  /**
+   * Back leaves the panel.
+   *
+   * The browser pops the entry the panel pushed, and the panel goes with
+   * it: Back was pressed, and the thing that sat on top of the page is
+   * what Back was meant to dismiss.
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const onPopState = () => {
+      // The panel's own pop, from the close below: the panel is already
+      // on its way out and must not be told to leave twice.
+      if (popping.current) {
+        popping.current = false;
+        return;
+      }
+      if (!historyEntry.current) return;
+
+      historyEntry.current = false;
+      dismiss();
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [dismiss]);
+
+  /**
+   * The panel leaves the history on its way out.
+   *
+   * A close the visitor asked for — Escape, the page behind, the panel's
+   * own button — takes the entry with it, so Back does not later take
+   * the visitor to a page that looks exactly like the one they are on.
+   */
+  useEffect(() => {
+    if (open) return;
+    if (!historyEntry.current) return;
+    historyEntry.current = false;
+    if (typeof window === "undefined") return;
+    popping.current = true;
+    window.history.back();
+  }, [open]);
+
+  /**
+   * And if the panel is taken off the page for good.
+   *
+   * The entry must not stay behind a panel that no longer exists: a
+   * Back that finds it would move the visitor without anything on the
+   * screen to explain the move.
+   */
+  useEffect(() => {
+    return () => {
+      if (!historyEntry.current) return;
+      historyEntry.current = false;
+      if (typeof window === "undefined") return;
+      popping.current = true;
+      window.history.back();
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       event.preventDefault();
-      onClose();
+      dismiss();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, dismiss]);
 
   /**
    * Tab stays inside.
@@ -557,11 +758,135 @@ export function ZoomOverlay({
    */
   const onBackdropPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      press.current = { x: event.clientX, y: event.clientY };
-      if (event.target === event.currentTarget) onClose();
+      if (event.target === event.currentTarget) {
+        dismiss({ x: event.clientX, y: event.clientY });
+      }
     },
-    [onClose],
+    [dismiss],
   );
+
+  /* ---------------- dragging the sheet away ---------------- */
+
+  /**
+   * A drag begins on the handle, and only on the handle.
+   *
+   * Everything else inside the sheet keeps the gestures it already had:
+   * the textarea scrolls, the stars are picked, the buttons are pressed.
+   * The handle is the one piece that belongs to the sheet itself.
+   */
+  const onSheetPointerDown = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (!dragToDismiss || !sheet) return;
+      const target = event.target as Element | null;
+      if (!target || typeof target.closest !== "function") return;
+      if (!target.closest(DRAG_HANDLE)) return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+
+      // The sheet is now under a finger: the arrival animation has no
+      // say over it any more, and its transform has to be the browser's
+      // own so the finger can move it.
+      for (const animation of panel.getAnimations()) animation.cancel();
+      running.current = null;
+      panel.style.transform = "";
+
+      drag.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        moved: false,
+      };
+      event.currentTarget.setPointerCapture(event.pointerId);
+    },
+    [dragToDismiss, sheet],
+  );
+
+  /**
+   * The sheet follows the finger — downwards only, and only when the
+   * movement is wanted. Under reduced motion the sheet stays where it
+   * is: the gesture still decides, the sheet does not travel.
+   */
+  const onSheetPointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const state = drag.current;
+      if (!state || state.pointerId !== event.pointerId) return;
+
+      const dy = event.clientY - state.startY;
+      const dx = event.clientX - state.startX;
+      if (dy <= 0 || Math.abs(dy) <= Math.abs(dx)) return;
+
+      state.moved = true;
+      if (reduced) return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+      panel.style.transform = `translate3d(0, ${Math.round(dy)}px, 0)`;
+    },
+    [reduced],
+  );
+
+  /**
+   * The finger let go: far enough means the sheet goes, near enough
+   * means the sheet comes back.
+   */
+  const onSheetPointerUp = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const state = drag.current;
+      if (!state || state.pointerId !== event.pointerId) return;
+      drag.current = null;
+
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+
+      const dy = event.clientY - state.startY;
+      const panel = panelRef.current;
+      if (!panel) return;
+
+      if (state.moved && dy >= DRAG_THRESHOLD) {
+        // The sheet has been taken far enough: it goes back into the
+        // place the finger left it.
+        panel.style.transform = "";
+        dismiss({ x: event.clientX, y: event.clientY });
+        return;
+      }
+
+      if (!state.moved || reduced || dy <= 0) {
+        panel.style.transform = "";
+        return;
+      }
+
+      // Not far enough: the sheet returns to where it was. The return
+      // is a short move of its own, and it is skipped when the visitor
+      // has asked for less movement.
+      const back = panel.animate(
+        [
+          { transform: `translate3d(0, ${Math.round(dy)}px, 0)` },
+          { transform: "translate3d(0, 0, 0)" },
+        ],
+        { duration: 160, easing: EASE_OUT },
+      );
+      running.current = back;
+      back.finished.then(
+        () => {
+          if (running.current === back) running.current = null;
+          panel.style.transform = "";
+        },
+        () => {
+          if (running.current === back) running.current = null;
+        },
+      );
+    },
+    [dismiss, reduced],
+  );
+
+  /** The gesture was taken away — the sheet simply stays. */
+  const onSheetPointerCancel = useCallback(() => {
+    drag.current = null;
+    const panel = panelRef.current;
+    if (panel) panel.style.transform = "";
+  }, []);
 
   if (!mounted || typeof document === "undefined") return null;
 
@@ -591,6 +916,10 @@ export function ZoomOverlay({
         aria-modal="true"
         aria-label={label}
         onKeyDownCapture={onKeyDownCapture}
+        onPointerDown={onSheetPointerDown}
+        onPointerMove={onSheetPointerMove}
+        onPointerUp={onSheetPointerUp}
+        onPointerCancel={onSheetPointerCancel}
         // The panel is never taller than the room the keyboard left it:
         // otherwise the top of it would be cut off by the screen.
         style={
@@ -611,7 +940,9 @@ export function ZoomOverlay({
           className,
         )}
       >
-        {children}
+        <ZoomDismissContext.Provider value={dismiss}>
+          {children}
+        </ZoomDismissContext.Provider>
       </div>
     </div>,
     document.body,
