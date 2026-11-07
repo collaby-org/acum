@@ -1,0 +1,86 @@
+﻿# Findings that already live in the history.
+#
+# Every line is one finding, pinned to the commit, the file, the rule and
+# the line it sits on. A file is not silenced as a whole: a new value in
+# the same file is still reported.
+#
+# - scripts/harness-signin.mjs: the Supabase publishable key. It is
+#   published in the browser bundle by design; the secret key is the one
+#   that is never committed.
+# - data/secondary-sources.json: the public HLS address of a measured
+#   stream, the same kind of address the quality catalogue carries today.
+
+f04ddb6a943751a40f4ea63cb1d839eecce69945:scripts/harness-signin.mjs:generic-api-key:113
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:66
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:86
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:106
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:126
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:146
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:166
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:186
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:206
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:226
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:246
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:266
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:306
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:326
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:346
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:386
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:406
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:446
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:466
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:486
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:506
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:526
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:546
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:566
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:586
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:606
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:626
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:646
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:666
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:686
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:706
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:726
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:746
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:766
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:786
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:806
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:826
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:846
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:866
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:886
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:906
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:926
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:946
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:966
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:986
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1006
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1026
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1046
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1066
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1126
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1166
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1186
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1226
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1246
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1266
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1286
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1306
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1326
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1346
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1366
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1386
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1406
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1426
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1446
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1466
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1486
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1506
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1526
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1606
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1626
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1646
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1666
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1686
+def1bb44abfe7fd05ed329158dfac66ba025299c:data/secondary-sources.json:generic-api-key:1706
