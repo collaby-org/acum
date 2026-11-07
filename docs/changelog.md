@@ -9,6 +9,32 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.9] — 2026-11-07
+
+### Fixed
+
+- **The protected branch can read the secret scan.** The branch required a
+  status check named "gitleaks", and the workflow reported its job under
+  the name "Secret scan" — a check under any other name is never read by
+  the branch, so every pull request stayed blocked on a check that did
+  not exist. The job now reports the exact name the branch asks for.
+- **The scan reads the repository, not the documentation.** The scanner
+  read placeholder keys in the OpenCode skill library (examples inside
+  markdown) and the public HLS addresses in the quality catalogue as
+  leaked credentials. Those two places are now carved out with the reason
+  written next to them, and the findings that already live in the history
+  are listed one by one in `.gitleaksignore`, each pinned to its commit —
+  a file is never silenced as a whole, so a new value in it is still
+  reported.
+- Verified with gitleaks 8.30.1, the same version the workflow installs:
+  the working tree reports **no leaks**, and the 97 commits of history
+  report **no leaks**.
+
+### Changed
+
+- **Version 1.7.9** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.8] — 2026-11-06
 
 ### Fixed

@@ -117,3 +117,4 @@ Each push adds a line here.
 | 1.7.6 | `8a62994` | the manifest's phases are visible (`Server-Timing`), and the resolution phase has a 2.5 s ceiling |
 | 1.7.7 | see `git log` | the fallback programme guide refreshes twice a day and every run reports the guide's state |
 | 1.7.8 | see `git log` | the review tables' privileges and the author-scoped update; three identical schema copies; the CI gate the protected branch names |
+| 1.7.9 | see `git log` | the secret scan reports the name the protected branch asks for, and it reads the repository instead of the documentation |
