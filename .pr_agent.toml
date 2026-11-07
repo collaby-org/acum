@@ -1,24 +1,96 @@
+# PR-Agent's repository settings.
+#
+# The workflow (.github/workflows/pr-agent.yml) carries the provider, the
+# model and the token budget as env vars; this file carries what the repo
+# knows about itself — the rules a review must check against, and the files
+# the reviewer should read before it says anything.
+#
+# Env wins over this file, so the provider stays in one place (the
+# workflow) and the review's standards stay here.
+
 [config]
-model = "openai/deepseek-ai/deepseek-v4.1-flash"
-# NVIDIA NIM ladder, mirroring pr-agent.yml: locally reachable only when
-# OPENAI.API_BASE points at https://integrate.api.nvidia.com/v1 (this toml's
-# [openai] api_base is ignored - set the env vars for local runs). CI supplies
-# both from secrets. Re-add another provider only with the cost rule checked.
-fallback_models = ["openai/z-ai/glm-5.3-flash", "openai/stepfun-ai/step-5-preview"]
-# Unknown ids outside PR-Agent's token table — set to endpoint's published
-# window (operator placeholder; lower if the primary model is smaller).
-custom_model_max_tokens = 200000
-max_model_tokens = 200000
-enable_large_pr_chunking = true
+# The repository's own rules are the context for every command. The root
+# AGENTS.md carries them.
+repo_context_files = ["AGENTS.md"]
+# The review speaks the repository's working language: English for the
+# engineering notes, Romanian for the product's own copy.
+response_language = "en-US"
+# A review that cannot see the whole picture should say so rather than
+# guess; publishing the reason is what makes a skipped review legible.
 publish_error_details = true
+verbosity_level = 0
 
-[openai]
-# Host-only: openai.api_base in a repo-local .pr_agent.toml is IGNORED by
-# PR-Agent — set OPENAI.API_BASE via the workflow env instead.
-# Key NEVER lands in a file (comes from OPENAI.KEY env).
+[pr_reviewer]
+# The house rules. Every one of them has been a real bug in this
+# repository, so a review that does not check them is not reviewing this
+# repository.
+extra_instructions = """
+Review this repository against its own rules, and treat a violation of one
+of them as a finding:
 
-[github_action_config]
-auto_review = true
-auto_describe = true
-auto_improve = true
-pr_actions = ["opened", "synchronize", "reopened"]
+1. **The product's copy is Romanian.** Any user-facing string — a label, an
+   error, an empty state, a toast, an aria-label — must be Romanian. A
+   finding that names an English string in the interface is actionable.
+2. **Lucide icons only. No emoji, ever**, in the interface and in the
+   product's documentation.
+3. **Every touch target is at least 44x44 px**, and every input is at least
+   16 px on mobile so iOS Safari does not zoom the page on focus.
+4. **Honest UI.** Where the platform cannot know something, the interface
+   renders it absent rather than guessed. No invented data, no placeholder
+   numbers presented as measurements, no control that claims an action it
+   does not perform.
+5. **The server decides.** A client never names an upstream address, a
+   price, a plan or a permission; it asks the server and renders the
+   answer. A review finding that a client is trusted with something the
+   server owns is a security finding.
+6. **A failure is never painted as an empty state.** Every async surface
+   has three real states — loading, empty (with Romanian copy) and error
+   (with a retry).
+7. **The two apps are mirrors.** monorepo/tv/ mirrors monorepo/frontend/.
+   A fix that lands in one app and not the other is an incomplete fix; name
+   the file that was left behind.
+8. **No secrets in the repository.** Secret values are GitHub secrets or
+   environment variables, referenced by name only.
+9. **A version line moves with the change.** docs/VERSION, the frontend
+   package.json and the TV package.json move together, and the changelog
+   entry lands in the same commit as the change it describes.
+"""
+
+# A review that lists fifteen nits is a review nobody reads. Three
+# actionable findings, ranked, beat fifteen.
+num_max_findings = 3
+# The gates this repository actually cares about.
+require_tests_review = true
+require_security_review = true
+require_ticket_analysis_review = true
+# The three booleans above produce a block per area; the estimate rows are
+# noise here.
+require_estimate_effort_to_review = false
+require_estimate_contribution_time_cost = false
+require_can_be_split_review = false
+require_todo_scan = false
+# The repository does not score PRs.
+require_score_review = false
+# One review comment per PR, updated in place.
+persistent_comment = true
+final_update_message = true
+enable_help_text = false
+
+[pr_code_suggestions]
+# A suggestion is only worth reading if it is about a problem. The rules
+# above apply to code suggestions too.
+extra_instructions = """
+Apply the same house rules as the review: Romanian user-facing copy, Lucide
+icons and no emoji, 44 px touch targets, 16 px mobile inputs, honest states
+and no invented data. Never suggest a placeholder value where the honest
+answer is to render the thing absent.
+"""
+focus_only_on_problems = true
+persistent_comment = true
+enable_help_text = false
+
+[pr_questions]
+extra_instructions = """
+Answer in English, and cite the file and the line. When the answer depends
+on a rule this repository follows, name the rule.
+"""
