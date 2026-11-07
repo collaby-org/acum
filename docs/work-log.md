@@ -118,3 +118,4 @@ Each push adds a line here.
 | 1.7.7 | see `git log` | the fallback programme guide refreshes twice a day and every run reports the guide's state |
 | 1.7.8 | see `git log` | the review tables' privileges and the author-scoped update; three identical schema copies; the CI gate the protected branch names |
 | 1.7.9 | see `git log` | the secret scan reports the name the protected branch asks for, and it reads the repository instead of the documentation |
+| 1.7.10 | see `git log` | the broken Kodus CLI stops painting a red check on every pull request; Dependabot stops offering the opencode action that upstream removed |

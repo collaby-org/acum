@@ -67,9 +67,23 @@ jobs:
           node-version: '20.19.0'
 
       # No --fail-on error: findings are reported, not enforced.
+      # The step never fails the job either. The Kodus CLI published on npm
+      # currently dies with "TypeError: Cannot read properties of undefined
+      # (reading 'bind')" before it reaches the API, and a bot that is
+      # broken upstream must not paint a red check on every pull request.
+      # The error stays in the log and is repeated as a warning, so it is
+      # still visible. TODO(#10): the review is wired to the owner's Kodus
+      # account once KODUS_API_URL and KODUS_TEAM_KEY are set and the CLI
+      # is fixed.
       - name: Kodus review (advisory)
         if: ${{ env.KODUS_API_URL != '' && env.KODUS_TEAM_KEY != '' }}
-        run: npx -y @kodus/cli review --format json
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          npx -y @kodus/cli review --format json || {
+            echo "::warning::The Kodus CLI failed. The review did not run; see the log above."
+            exit 0
+          }
         env:
           KODUS_API_URL: ${{ secrets.KODUS_API_URL }}
           KODUS_TEAM_KEY: ${{ secrets.KODUS_TEAM_KEY }}

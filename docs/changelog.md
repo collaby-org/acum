@@ -9,6 +9,33 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.7.10] — 2026-11-07
+
+### Fixed
+
+- **The broken Kodus CLI no longer paints a red check on every pull
+  request.** The CLI published on npm dies before it reaches the API
+  (`TypeError: Cannot read properties of undefined (reading 'bind')`), and
+  the step failed the check even though the workflow says in its own
+  header that it is advisory: findings are reported, never enforced. The
+  step now repeats the failure as a warning and keeps the job green — the
+  error stays in the log. The review is still wired to the owner's Kodus
+  account once `KODUS_API_URL` and `KODUS_TEAM_KEY` are set and the CLI is
+  fixed (issue #10).
+- **Dependabot stops offering an opencode action that no longer exists.**
+  The action lives in the upstream repository's `github` folder, and that
+  folder is gone as of v2.2.x: the bumped commit has no `action.yml`, so
+  every workflow that used it failed to start with "Can't find
+  'action.yml'". The dependency is ignored with that reason, and the
+  repository stays on v2.0.9, where the action is present and runs — the
+  review bot reached the model call. Pull request #24 was closed with the
+  evidence; the CodeQL bump it carried is sound and comes back on its own.
+
+### Changed
+
+- **Version 1.7.10** — the frontend app, the TV app and `docs/VERSION` move
+  together.
+
 ## [1.7.9] — 2026-11-07
 
 ### Fixed

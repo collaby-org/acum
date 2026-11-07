@@ -17,6 +17,12 @@ updates:
       actions:
         patterns:
           - "*"
+    # The opencode action lives in the "github" folder of the upstream
+    # repository, and that folder is gone as of v2.2.x: the bumped commit
+    # has no action.yml, so every workflow that uses it fails to start.
+    # The repository stays on v2.0.9 until the action has a new home.
+    ignore:
+      - dependency-name: "anomalyco/opencode/github"
 
   # Frontend (Next.js 16 + React 19) - monorepo/frontend
   - package-ecosystem: "npm"
