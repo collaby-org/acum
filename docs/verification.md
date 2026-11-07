@@ -325,18 +325,62 @@ Three honest failures, and what each one says:
 
 ---
 
-## 11. What is still open
+## 11. The 1.8.1 wave, measured on the deployed site
+
+Release 1.8.1 (`29dfef4`, 43 files, +1318/−456) shipped the owner's five
+new reports. The deploy was watched, not assumed: a script polled `GET /`
+with a **stale** session cookie every 15 s from 12:43 UTC, and the answer it
+was waiting for is the one that only 1.8.1 gives — **307 → /canale** for a
+browser that holds a session (1.8.0 answered 200 to the same request). The
+poll was stopped once the answer was confirmed by a direct request against
+the live site: stale cookie → **307 → /canale**, no cookie → **200**.
+
+Every number below is the output of a harness that ran against
+`https://acum-weld.vercel.app/` after that deploy.
+
+| Harness | Verdict | The number that carries it |
+| ------- | ------- | -------------------------- |
+| `verify-front-door.mjs` | **10 / 10 PASS** | the whole route chain in three device states — a fresh cookie, a stale one (the overnight state) and none — and `/conturi` appears in none of them; the server answers **307 → /canale** for a browser that holds a session and **200** for one that does not |
+| `verify-live.mjs` | **11 / 11 PASS** | the channel answers in **780 ms**; the entitled visitor gets its manifest in **2064 ms** with 2 sources; a signed-in `GET /` → **307 → /canale**; `?u=` → 400, a forged token → 403, the manifest is never cached |
+| `verify-reviews.mjs` | **18 / 18 PASS** | the write, the own read with `mine=1`, the public read, the three counters, like → love → clap, the edit, the delete, and the cleanup that leaves the database as it found it |
+| `verify-player.mjs` | PASS | `readyState 4`, 1280×720, playing, **0 ad requests**, no upstream host touched by the browser, empty console |
+| `verify-fallback.mjs` | PASS | 5 distinct stream links, `readyState 4`, the playhead moving after a killed request |
+| `verify-mobile-nav.mjs` | PASS | the tap on `/preturi` answers in **108 ms** (budget 1200 ms), and the button is the top element at the tap's coordinates |
+
+The three harnesses that were hiding their own verdict in 1.8.0 — the phone
+script, the phone-stream script and the `acum` script — were rewritten to
+name the check that carries the verdict, and the bar harness was extended
+with two new checks (no two visible controls overlap; the drawn volume thumb
+is at most 16 px and sits on the painted track). Their numbers land with the
+1.8.2 wave, when the harnesses run against a build that carries the review
+hardening as well.
+
+### What was measured before anything was changed
+
+- the manifest answers in **2771 ms** (`gate 783 · claim 386 · resolve 682 ·
+  probe 705`);
+- the playlist carries an **8-second target duration** and 14 segments of
+  about **2.06 MB**;
+- both catalogue feeds for PRO TV serve the *same* stream
+  (`#EXT-X-MEDIA-SEQUENCE:1447`) — which is why the failover had to be given
+  a fresh chain instead of a second copy of the same address;
+- the segments are real MPEG-TS (`47 40 11 …`), and the proxy answers them
+  as `video/mp2t`.
+
+---
+
+## 12. What is still open
 
 | Question | Status |
 | -------- | ------ |
 | Does the player bar stay on one line at 320 px with every target at 44 px? | yes at 1440 px — measured by `verify-player-bar.mjs`; the 320 px line is the icon-only form, and the picture actions move into the connection panel |
-| Does the phone cold start fit inside the readiness window? | the server answer is bounded and says where its milliseconds went (`Server-Timing: gate;claim;resolve;probe`): 2726 ms cold and 1338 ms warm on 1.7.6, **2448 ms** with 2 sources on 1.8.0. The account gate and the probe own most of it. The **first picture** on the phone is the open item — see §10 |
+| Does the phone cold start fit inside the readiness window? | the server answer is bounded and says where its milliseconds went (`Server-Timing: gate;claim;resolve;probe`): 2726 ms cold and 1338 ms warm on 1.7.6, 2448 ms with 2 sources on 1.8.0, **2064 ms** on 1.8.1. The account gate and the probe own most of it. The **first picture** on the phone is the open item — see §10 and §11 |
 | Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | yes — `verify-mobile-nav.mjs` on `/preturi` at 390×844: the tap answers in **108 ms** (budget 1200 ms), and the button is the top element at the tap's coordinates |
 | Does the channel panel lead with the programme? | yes since 1.7.5 — the programme, its clock range and its description come first, the channel's own text follows under "Despre canal", and an absent programme says so |
-| Does a fresh boot ever land on `/conturi`? | the catalogue pages do not gate on the session any more, the session read tells "signed out" from "could not verify", and the verification is bounded by a timeout — so a blip cannot bounce anyone. `scripts/verify-front-door.mjs` prints the whole route chain in three device states and fails if `/conturi` appears in it |
-| Is the volume thumb a small dot on the track, on desktop and on iPhone? | the native thumb is taken away in both engines (`-webkit-appearance: none` on the element itself, which is what iOS needs) and the app draws its own 12px dot, inset by its radius so it sits at the end of the fill at every value; the input stays 44px tall for the finger |
-| Does the header clear the iPhone notch in standalone mode? | the header's row starts below `env(safe-area-inset-top)`, and the viewport uses `viewport-fit=cover` |
-| Do the controls in the bar overlap on hover? | the duplicated "Scrie o recenzie" text button left the bar — the channel panel beside the player keeps that action — and the right-hand controls are one flex group that cannot slide under the panel |
+| Does a fresh boot ever land on `/conturi`? | **no** — measured: `verify-front-door.mjs` **10/10** against the deployed 1.8.1. The catalogue pages do not gate on the session any more, the session read tells "signed out" from "could not verify", the verification is bounded by a timeout, and the script prints the whole route chain in three device states and fails if `/conturi` appears in it |
+| Is the volume thumb a small dot on the track, on desktop and on iPhone? | the native thumb is taken away in both engines (`-webkit-appearance: none` on the element itself, which is what iOS needs) and the app draws its own 12px dot, inset by its radius so it sits at the end of the fill at every value; the input stays 44px tall for the finger. The bar harness now measures the drawn dot against the track — its run against the deployed build lands with 1.8.2 |
+| Does the header clear the iPhone notch in standalone mode? | the header's row starts below `env(safe-area-inset-top)`, and the viewport uses `viewport-fit=cover`; the phone harness now measures the header against the safe area — its run against the deployed build lands with 1.8.2 |
+| Do the controls in the bar overlap on hover? | the duplicated "Scrie o recenzie" text button left the bar — the channel panel beside the player keeps that action — and the right-hand controls are one flex group that cannot slide under the panel. The bar harness now compares the bounding boxes of every visible control and names the pair that intersects — its run against the deployed build lands with 1.8.2 |
 
 Every item in that table is re-run against the live site after the deploy, and
 the result is written here and in issue #22.

@@ -121,14 +121,17 @@ The harness's live run against the deployed **1.8.0** passed **18/18** — see
 
 ---
 
-## F. Blocked on a person
+## F. Blocked on a person — nothing any more
 
-| Item | Who | Why |
-| ---- | --- | --- |
-| Add `gmgmethereum@gmail.com` to Vercel's `ADMIN_EMAILS` (comma-separated) | the owner | the desk is an allowlist; without the address in the environment the owner cannot open it |
-| Set `KODUS_API_URL` and `KODUS_TEAM_KEY` | the owner | the Kodus review cannot run without them; the published CLI is broken upstream as well |
-| Set `LLM_API_BASE` and `LLM_API_KEY` | the owner | the opencode review calls a model the configured gateway does not serve (`AI_APICallError: Not Found`) |
-| Install the Kodus CLI and the PR-Agent CLI | the owner | the shims in this environment cannot resolve their entry points |
+Every item was checked against the live deployment and the repository
+itself, and each one is closed by what was measured, not by an assumption.
+
+| Item | Was | Now | Evidence |
+| ---- | --- | --- | --- |
+| Add `gmgmethereum@gmail.com` to Vercel's `ADMIN_EMAILS` | the owner | **done** | `GET /api/account` with the owner's own token answers `200` and `isAdmin=true` — the desk is open to the owner |
+| Set `KODUS_API_URL` and `KODUS_TEAM_KEY` | the owner | **done** | `gh secret list` shows both, added 2026-10-29. The review had been skipping its steps because Dependabot pull requests do not receive repository secrets; a manual dispatch on `main` runs them |
+| Set `LLM_API_BASE` and `LLM_API_KEY` | the owner | **done** | both are set (2026-10-29); the PR-Agent workflow reads them |
+| Install the Kodus CLI and the PR-Agent CLI | the owner | **not needed** | the Kodus CLI was never broken upstream — the workflow pinned Node 20, and the CLI's `undici 8` needs `zlib.createZstdDecompress` (Node ≥ 22.15). The workflow now pins Node 22.19 and the CLI authenticates. PR-Agent runs from the workflow, and `.pr_agent.toml` now carries the repository's own rules for it to judge the diff against |
 
 ---
 
