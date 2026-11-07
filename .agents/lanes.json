@@ -108,6 +108,7 @@
       "role": "write",
       "paths": [
         ".agents/lanes.json",
+        ".github/workflows/kodus-review.yml",
         "docs",
         "README.md",
         "monorepo/frontend/package.json",
@@ -117,7 +118,8 @@
       "outputs": [
         "the changelog, the backlog, the verification log, the README and the diagrams",
         "the version line that moves with every release",
-        "the proof scripts, run against the deployed site"
+        "the proof scripts, run against the deployed site",
+        "the Kodus review actually runs: the CLI needs Node 22.15+, not 20"
       ]
     }
   ]

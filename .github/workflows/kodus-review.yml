@@ -64,7 +64,13 @@ jobs:
         if: ${{ env.KODUS_API_URL != '' && env.KODUS_TEAM_KEY != '' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '20.19.0'
+          # Node 22.15+ is required: the CLI pulls undici 8, whose
+          # zstd interceptor calls zlib.createZstdDecompress — an API that
+          # only exists from Node 22.15.0 on. On Node 20 the CLI dies at
+          # import time with "Cannot read properties of undefined (reading
+          # 'bind')", before it ever reaches the API, and the review never
+          # runs. Do not lower this version.
+          node-version: '22.19.0'
 
       # No --fail-on error: findings are reported, not enforced.
       # The step never fails the job either. The Kodus CLI published on npm
