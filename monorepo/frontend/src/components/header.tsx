@@ -59,7 +59,10 @@ export function Header({
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-out",
+        // The installed app draws edge to edge: the header's row starts
+        // below the status bar, so nothing sits under the island of an
+        // iPhone and nothing can be pressed there.
+        "fixed inset-x-0 top-0 z-40 pt-[var(--safe-top)] transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-out",
         scrolled
           ? "border-b border-white/[0.08] bg-canvas/80 shadow-[0_20px_44px_-34px_rgba(0,0,0,1)] backdrop-blur-2xl backdrop-saturate-150"
           : "border-b border-transparent bg-gradient-to-b from-black/70 via-black/35 to-transparent",

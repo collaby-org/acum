@@ -43,6 +43,12 @@ Status vocabulary: **Done** (landed and measured) · **In flight** (this wave)
 | The composer stops asking what it already knows | #16 | `components/reviews/review-composer.tsx` (both apps) | one channel → the channel is shown, not chosen; many → the select stays |
 | Back closes the composer, and the page comes back where it was | #17 (item 7) | `components/reviews/zoom-overlay.tsx` (both apps) | the sheet pushes a history entry, a Back press closes it, and the scroll behind it is restored |
 | The review engine gets its own harness | #16 | `scripts/verify-reviews.mjs` | the harness proves the write, the own read, the public read, the three counters, the reaction move, the edit, the delete and the refused anonymous write — and cleans up after itself |
+| The app never lands on `/conturi` | #10 (item 1), #17 (item 7) | `proxy.ts`, `lib/admin.ts`, `lib/supabase/server.ts`, the four catalogue pages (both apps), both manifests, both service workers | the catalogue pages do not gate on the session; the session read tells *signed out* apart from *could not be checked* and is bounded; `verify-front-door.mjs` prints the route chain in three device states and fails if `/conturi` appears in it |
+| The volume dot is small and on the track | #17 (item 9) | both apps' `player-controls.tsx` + `globals.css` | the native knob is gone (`-webkit-appearance: none` on the input element, which is what iOS reads) and the app draws a 12px dot, inset by its radius; the input stays 44px tall |
+| The bar's controls do not overlap on hover | #17 (item 9) | both apps' `player-controls.tsx`, `video-player.tsx` | the duplicated **"Scrie o recenzie"** button left the bar — the channel panel beside the picture keeps the action — and the right-hand controls are one group |
+| The header clears the iPhone notch | #17 (item 8) | `components/header.tsx` | the row starts below `env(safe-area-inset-top)`, with `viewport-fit=cover` |
+| A phone keeps the live edge | #17 (item 6) | both apps' `video-player.tsx` + `use-player.ts`, `app/api/stream/route.ts` | an interrupted `play()` is not a failure; the watchdog counts the seconds in which the picture does not move; the chain is asked for again once before the session is called a failure; the proxy answers inside the live window |
+| The proof harnesses tell the truth | #17 (item 15) | `scripts/verify-{mobile,mobile-stream,acum,player-bar}.mjs` | each script names the check that carries its verdict and prints the evidence it rests on |
 
 ---
 
@@ -50,7 +56,7 @@ Status vocabulary: **Done** (landed and measured) · **In flight** (this wave)
 
 | Item | Issue | Owner | Done when |
 | ---- | ----- | ----- | --------- |
-| The live proof of the new release | #16, #17 | orchestrator | the harnesses are run against the deployed 1.8.0 and the measured numbers are written into `docs/verification.md` |
+| The live proof of the new release | #16, #17 | orchestrator | the harnesses are run against the deployed 1.8.1 and the measured numbers are written into `docs/verification.md` |
 
 ---
 
@@ -94,10 +100,24 @@ and of the television app. What is still open:
 - the motion pass: the composer pops from the point it was opened from and
   closes toward the pointer, with the reduced-motion media query read by the
   Web Animations API path itself;
-- the harness's live run against the deployed 1.8.0 — the script is written
-  and has been run against the deployed 1.7.10 (16 of the 18 checks passed;
-  the two that failed are the `mine` flag, which the deployed build does not
-  carry yet).
+- the review engine's own hardening — the **1.8.2** wave:
+  - one Back press must close **one** layer: the composer and the player
+    modal each own a history entry, and each reacts only to a pop that
+    carries its own marker;
+  - the television app must answer the review API exactly like the web app
+    — the `mine` branch first, the visitor's own client, the same limit and
+    ranking, a case-insensitive `mine`, a memoised hook, a distinct error
+    state with a retry in the channel panel, and the honest 503 when an
+    edit cannot be made;
+  - the server must resolve the programme slot from the guide and refuse a
+    slot that is not in it, and the author label must never publish the
+    e-mail's local part;
+  - the harness's own cleanup: `fetchJson` belongs to the module scope, the
+    safety net must know the row it created, and the fallback lookup must
+    ask for `mine=1`.
+
+The harness's live run against the deployed **1.8.0** passed **18/18** — see
+`docs/verification.md` §10.
 
 ---
 

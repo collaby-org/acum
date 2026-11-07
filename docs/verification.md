@@ -264,14 +264,79 @@ and the probe are. The floor for the whole answer is the gate plus the probe
 
 ---
 
-## 10. What is still open
+## 10. The social layer (1.8.0), measured
+
+Release 1.8.0 (`64e4890`, 70 files, +8498/−734) shipped the review engine in
+both apps. It was proved against the deployed site before the release was
+called finished.
+
+```bash
+node monorepo/frontend/scripts/verify-reviews.mjs https://acum-weld.vercel.app/
+```
+
+**Result: 18 / 18 PASS.** The harness wrote a review, read it back with
+`mine=1`, read the public list, moved the reaction like → love → clap,
+read the three counters as an anonymous visitor, edited the review, deleted
+it, and confirmed the row was gone — leaving the database as it found it.
+
+| # | Check | Seen |
+| - | ----- | ---- |
+| 1 | anonymous read | 200 |
+| 2 | anonymous write | 401, refused |
+| 3 | the homepage section and its Romanian empty state | present |
+| 4 | no landing push | none |
+| 5 | the write | 200 |
+| 6 | **own review read with `mine=true`** | the visitor's row |
+| 7 | the public read (`mine=false`) | the public list |
+| 8–10 | the three server counters | as written |
+| 11 | the reaction moves | like → love → clap |
+| 12 | the counters, anonymously | readable |
+| 13 | the edit | 200 |
+| 14 | the delete | 204 |
+| 15 | the row is gone | gone |
+| 16–18 | the database afterwards | as found |
+
+The rest of the suite, same deploy:
+
+| Harness | Result | The number that matters |
+| ------- | ------ | ----------------------- |
+| `verify-live.mjs` | **11 / 11 PASS** | the channel answers in **333 ms**; the entitled visitor gets its manifest in **2448 ms** with 2 sources; a signed-in `GET /` → **307 → /canale** |
+| `verify-player.mjs` | PASS | `readyState 4`, 1280×720, playing, **0 ad requests** |
+| `verify-player-bar.mjs` | PASS | one line, 9 controls, smallest **44×44**, no progress strip, no live badge in the bar — and the note: *the quality chip is not offered, the manifest carries no rung yet* |
+| `verify-mobile-nav.mjs` | PASS | the tap answers in **108 ms** (budget 1200 ms) |
+| `verify-ui.mjs` | PASS | **no console errors** at 1440px and 390px |
+| `verify-fallback.mjs` | PASS | 5 distinct stream links, `readyState 4` |
+| `verify-mobile-stream.mjs` | **FAIL** | "the picture never arrived within 30s" — while the playhead advanced **36.33 s** over 59 samples, with **0 backwards jumps** and **0 paused samples**; the proxy answered `200 application/vnd.apple.mpegurl` ×4 and `200 video/mp2t` ×6 |
+| `verify-mobile.mjs` | **FAIL** | it exited 1 without printing which check failed — a harness that hid its own verdict |
+| `verify-acum.mjs` | **error** | it exited 1 in **0 s** with no output: the runner passed `--app=<url>` and the script expected something else |
+
+Three honest failures, and what each one says:
+
+1. **The phone stream.** The playhead moved and the bytes arrived, so the
+   media was flowing; the harness's "picture arrived" condition was not met.
+   The owner's own report — the connection loops and drops on mobile and in
+   the installed PWA — is the real fault, and the 1.8.1 wave works on the
+   failover, the token and the native-HLS path.
+2. **The phone harness.** A failing check with no name is a harness defect:
+   the script has to say what failed.
+3. **The `acum` harness.** It never started. The argument shape has to match
+   the other harnesses, and the zero-argument case has to work, because
+   `npm run verify:acum` passes no URL.
+
+---
+
+## 11. What is still open
 
 | Question | Status |
 | -------- | ------ |
 | Does the player bar stay on one line at 320 px with every target at 44 px? | yes at 1440 px — measured by `verify-player-bar.mjs`; the 320 px line is the icon-only form, and the picture actions move into the connection panel |
-| Does the phone cold start fit inside the readiness window? | measured on the deployed 1.7.6: `gate` 1037 ms + `claim` 401 ms + `resolve` 400 ms + `probe` 628 ms (2726 ms cold; 1338 ms warm) — the resolution phase is capped at 2.5 s, the probe at 1.2 s, and the account gate is the remaining owner |
-| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | the bar is rendered there and "home" is decided locally (1.7.4); the measured tap still took 3656 ms, because the destination is a blocking dynamic route — the fix (prefetch on intent + a loading boundary) is in flight |
+| Does the phone cold start fit inside the readiness window? | the server answer is bounded and says where its milliseconds went (`Server-Timing: gate;claim;resolve;probe`): 2726 ms cold and 1338 ms warm on 1.7.6, **2448 ms** with 2 sources on 1.8.0. The account gate and the probe own most of it. The **first picture** on the phone is the open item — see §10 |
+| Does the bar appear on `/preturi` and answer a tap in under 1200 ms? | yes — `verify-mobile-nav.mjs` on `/preturi` at 390×844: the tap answers in **108 ms** (budget 1200 ms), and the button is the top element at the tap's coordinates |
 | Does the channel panel lead with the programme? | yes since 1.7.5 — the programme, its clock range and its description come first, the channel's own text follows under "Despre canal", and an absent programme says so |
+| Does a fresh boot ever land on `/conturi`? | the catalogue pages do not gate on the session any more, the session read tells "signed out" from "could not verify", and the verification is bounded by a timeout — so a blip cannot bounce anyone. `scripts/verify-front-door.mjs` prints the whole route chain in three device states and fails if `/conturi` appears in it |
+| Is the volume thumb a small dot on the track, on desktop and on iPhone? | the native thumb is taken away in both engines (`-webkit-appearance: none` on the element itself, which is what iOS needs) and the app draws its own 12px dot, inset by its radius so it sits at the end of the fill at every value; the input stays 44px tall for the finger |
+| Does the header clear the iPhone notch in standalone mode? | the header's row starts below `env(safe-area-inset-top)`, and the viewport uses `viewport-fit=cover` |
+| Do the controls in the bar overlap on hover? | the duplicated "Scrie o recenzie" text button left the bar — the channel panel beside the player keeps that action — and the right-hand controls are one flex group that cannot slide under the panel |
 
 Every item in that table is re-run against the live site after the deploy, and
 the result is written here and in issue #22.

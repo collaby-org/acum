@@ -25,7 +25,9 @@ const CURRENT_CACHES = [SHELL_CACHE, PAGE_CACHE, ASSET_CACHE];
 
 /** The files the app needs before the network says anything. */
 const SHELL = [
-  "/",
+  // The catalogue is the home of the installed app: the manifest opens it,
+  // and an offline start must find it here rather than the front door.
+  "/canale",
   "/offline.html",
   "/manifest.webmanifest",
   "/icons/icon-192.png",

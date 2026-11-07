@@ -1,8 +1,8 @@
 /**
  * The front door.
  *
- * One decision, made before any page renders: a visitor holding a live
- * session does not see the landing page. The catalogue is where they were
+ * One decision, made before any page renders: a visitor who has been here
+ * before does not see the landing page — the catalogue is where they were
  * going.
  *
  * The decision used to live in the browser — the landing painted, its
@@ -12,32 +12,35 @@
  * and the landing page never renders at all; because the page itself
  * never reads the cookie, it also stays fully static.
  *
- * What the cookie is checked for is the session, not its mere presence. A
- * browser that was closed for longer than the access token's lifetime
- * comes back with a cookie whose token has expired, and redirecting on the
- * presence of that cookie sent the visitor to the catalogue, the
- * catalogue refused the expired token, and the visitor was thrown back to
- * the accounts page — again and again, because every bounce went through
- * this same door.
+ * What the cookie is checked for is the presence of a session, not its
+ * freshness. An access token expires after an hour, and a browser that
+ * was closed overnight comes back with a cookie whose token is spent —
+ * while the refresh token, which the browser owns, is still good. The
+ * visitor is still signed in; the cookie is just old. Sending that
+ * visitor to the landing page (or, worse, to the accounts page) would be
+ * wrong, so the cookie's mere presence is enough to send them to the
+ * catalogue.
  *
- * So the token is read, and only a token that is still good sends the
- * visitor to the catalogue. An expired one is cleared, and the page stays
- * the landing page: the browser refreshes its own session (it owns the
- * refresh token), writes the new access token into the cookie, and the
- * front door's client half — `SessionGate` — sends the visitor on. The
- * server never renews with the refresh token: the auth server rotates it,
- * and a token used from two places can revoke the whole session.
+ * Nothing is granted here. The catalogue is the public face of the
+ * product — names, artwork, the guide, the audience — and the way in
+ * lives in the player, where the picture is: `/api/player` checks the
+ * account, the plan and the allowance, and refuses what is not due.
+ * The worst a forged cookie buys is a hop to a page that is public
+ * anyway.
  *
- * The catalogue still verifies the token against the auth server on its
- * own. Nothing here grants anything: the worst a forged cookie buys is a
- * hop to the catalogue, which is the authority and refuses it.
+ * And there is one more thing this file rules out: the accounts page.
+ * `/conturi` is where a visitor goes when they ask for something that
+ * needs an account — opening a channel they have no plan for. It is
+ * never where a visitor is *sent* while the app is starting. The
+ * catalogue pages do not gate on the session either, so a network blip
+ * at the auth server can never bounce anyone to `/conturi` on the way
+ * in.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
 import {
   decodeSessionCookie,
   SESSION_COOKIE,
-  tokenIsFresh,
 } from "@/lib/session-token";
 
 /** Where a visitor with a session goes instead of the front door. */
@@ -68,17 +71,7 @@ export function proxy(request: NextRequest) {
   );
   if (!mirrored) return NextResponse.next();
 
-  if (tokenIsFresh(mirrored.access_token)) {
-    return catalogueRedirect(request);
-  }
-
-  // The access token is gone: the cookie is cleared, and the front door
-  // stays the landing page. The browser refreshes its own session, writes
-  // the new token into the cookie, and the page's client half sends the
-  // visitor to the catalogue — once, and only once.
-  const response = NextResponse.next();
-  response.cookies.delete(SESSION_COOKIE);
-  return response;
+  return catalogueRedirect(request);
 }
 
 export const config = {

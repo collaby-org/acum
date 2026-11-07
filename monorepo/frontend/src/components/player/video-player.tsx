@@ -31,7 +31,7 @@ import {
   type MouseEvent,
 } from "react";
 import type { CSSProperties } from "react";
-import { Loader2, PenLine, Radio, TriangleAlert } from "lucide-react";
+import { Loader2, Radio, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerControls } from "@/components/player/player-controls";
 import { CinemaLights } from "@/components/player/cinema-lights";
@@ -45,17 +45,11 @@ import { MuteOverlay, SoundHint } from "@/components/player/mute-overlay";
 import { Paywall } from "@/components/player/paywall";
 import { ProgrammeBadges } from "@/components/player/programme-badges";
 import {
-  ReviewComposer,
-  type ComposerProgramme,
-  type ZoomPoint,
-} from "@/components/reviews";
-import {
   usePlayer,
   type PlayerStatus,
 } from "@/hooks/use-player";
 import { useAccount, useWatchClock } from "@/hooks/use-account";
 import { useMinuteTick } from "@/hooks/use-guide-clock";
-import { useReviews } from "@/hooks/use-reviews";
 import { cn } from "@/lib/utils";
 
 /**
@@ -226,7 +220,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     // plan has two hours a day and the server is the one that counts them,
     // so the browser only asks what the answer is and obeys it.
     const account = useAccount();
-    const reviews = useReviews();
     const gated = account.ready && account.gated;
 
     // The guard the imperative handle reads: the handle is created once,
@@ -314,9 +307,15 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
             // The browser refused the picture as well. Only a tap can start
             // it now, so the overlay goes up and waits.
             setBlocked(true);
-          } else {
+          } else if (retryName !== "AbortError") {
             failRef.current("Fluxul nu poate fi redat. Se încearcă următorul.");
           }
+          // An AbortError here is not a broken link: it is the element
+          // still loading the one it was just given. Safari answers with
+          // exactly that when the picture is muted and started right
+          // after a new source was attached — and failing the source
+          // there is what used to throw a phone from one feed to the
+          // next, until the chain ran out and the connection dropped.
         }
       }
     }, []);
@@ -731,8 +730,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       startsAt: string | null;
       endsAt: string | null;
     }>({ id: channelId, title: null, startsAt: null, endsAt: null });
-    const [reviewOpen, setReviewOpen] = useState(false);
-    const [reviewOrigin, setReviewOrigin] = useState<ZoomPoint | null>(null);
 
     useEffect(() => {
       let live = true;
@@ -769,49 +766,35 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     }, [channelId, minuteTick]);
 
     const programmeTitle = programme.id === channelId ? programme.title : null;
-    const composerProgramme: ComposerProgramme | null =
-      programme.id === channelId && programmeTitle
-        ? {
-            title: programmeTitle,
-            startsAt: programme.startsAt,
-            endsAt: programme.endsAt,
-            channelId,
-          }
-        : null;
-
-    const openReview = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-      const box = event.currentTarget.getBoundingClientRect();
-      setReviewOrigin({
-        x: box.left + box.width / 2,
-        y: box.top + box.height / 2,
-      });
-      setReviewOpen(true);
-    }, []);
-
-    const closeReview = useCallback(() => {
-      setReviewOpen(false);
-      setReviewOrigin(null);
-    }, []);
 
     /**
      * The stall watchdog.
      *
-     * A picture that stops on a slow line is nudged back to work: the
-     * loader is asked to pull again and — when frames are already waiting
-     * in the buffer but the pipeline sits on them — the playhead moves a
-     * hair forward so the decoder takes them. The chain only moves to the
-     * next feed when two nudges, five seconds apart, have all failed;
-     * while the video is paused (the wall, the visitor) nothing counts
-     * and nothing advances.
+     * What it watches is the playhead, not the events. A `waiting` event
+     * on a phone is a normal buffer refill — the line is a second slower
+     * than the feed — and counting it as a dead stream is what used to
+     * end a session that was about to recover. So the counter only grows
+     * while the playhead stands still, and the moment it moves, the count
+     * is back to zero.
+     *
+     * The nudges are the same two: the loader is asked to pull again,
+     * and on the native-HLS path (Safari, where there is no loader to
+     * ask) the element is asked to read its playlist once more, because
+     * that is the only thing Safari listens to.
+     *
+     * The chain moves on only after twenty seconds without a single
+     * frame; while the video is paused (the wall, the visitor) nothing
+     * counts and nothing advances.
      */
     useEffect(() => {
       const video = videoRef.current;
       if (!video || embedded) return;
 
       const GRACE_MS = 5000;
-      const NUDGES = 2;
+      const STALLS = 4;
       let timer = 0;
-      let attempts = 0;
+      let stalls = 0;
+      let lastSecond = video.currentTime;
       // Set once the chain has been told to move on: a frozen picture
       // must not keep sending the same message every few seconds. A new
       // source re-runs this effect from scratch.
@@ -826,21 +809,40 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
       const nudge = () => {
         // A loader that went quiet looks exactly like a stall: ask it to
-        // pull again. On Safari's native HLS there is no instance and
-        // the seek below is the whole nudge.
+        // pull again. On Safari's native HLS there is no instance, and
+        // the element itself is the only thing that can be asked.
         hlsRef.current?.startLoad();
-        const ranges = video.buffered;
-        if (ranges.length > 0) {
-          const end = ranges.end(ranges.length - 1);
-          if (end - video.currentTime > 0.25) {
-            try {
-              video.currentTime += 0.1;
-            } catch {
-              /* the seek was refused; the next nudge tries again */
+        if (video.paused) {
+          void video.play().catch(() => undefined);
+          return;
+        }
+        if (hlsRef.current) {
+          // The frames are already in the buffer; the decoder needs a
+          // hair more of them.
+          const ranges = video.buffered;
+          if (ranges.length > 0) {
+            const end = ranges.end(ranges.length - 1);
+            if (end - video.currentTime > 0.25) {
+              try {
+                video.currentTime += 0.1;
+              } catch {
+                /* the seek was refused; the next nudge tries again */
+              }
             }
           }
+          return;
         }
-        if (video.paused) void video.play().catch(() => undefined);
+        // Native HLS: Safari owns the session, and the only way to make
+        // it read its playlist again is to ask the element to load. That
+        // is worth one try before the chain is given up on.
+        if (stalls >= 2) {
+          try {
+            video.load();
+            void video.play().catch(() => undefined);
+          } catch {
+            /* the element refused; the next tick gives up */
+          }
+        }
       };
 
       const tick = () => {
@@ -848,8 +850,16 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         // Paused by the wall or by the visitor: nothing is stalled, and
         // a pause must never send the chain forward.
         if (video.paused) return;
-        attempts += 1;
-        if (attempts > NUDGES) {
+        const second = video.currentTime;
+        if (second > lastSecond + 0.05) {
+          // The picture is moving: this was a refill, not a stall.
+          lastSecond = second;
+          stalls = 0;
+          timer = window.setTimeout(tick, GRACE_MS);
+          return;
+        }
+        stalls += 1;
+        if (stalls > STALLS) {
           givenUp = true;
           failRef.current("Fluxul se blochează. Se încearcă următorul.");
           return;
@@ -865,7 +875,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
       const heal = () => {
         disarm();
-        attempts = 0;
+        stalls = 0;
+        lastSecond = video.currentTime;
       };
 
       video.addEventListener("waiting", watch);
@@ -1479,24 +1490,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                     />
                   </>
                 }
-                reviewAction={
-                  composerProgramme ? (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={openReview}
-                      aria-label="Scrie o recenzie"
-                      title="Scrie o recenzie"
-                      className="size-11 shrink-0 gap-0 p-0 text-ink-muted hover:bg-white/8 hover:text-signal min-[1024px]:w-auto min-[1024px]:gap-2 min-[1024px]:px-3"
-                    >
-                      <PenLine className="size-[18px]" aria-hidden />
-                      <span className="hidden min-[1024px]:inline">
-                        Scrie o recenzie
-                      </span>
-                    </Button>
-                  ) : null
-                }
                 quality={
                   <PlayerQualityBadge
                     variants={qualityLevels}
@@ -1519,16 +1512,6 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
                 onRetry={player.retry}
                 onNextSource={player.advance}
                 onConnectionOpenChange={setConnectionOpen}
-              />
-              <ReviewComposer
-                channels={[{ id: channelId, name: channelName }]}
-                signedIn={account.signedIn}
-                open={reviewOpen}
-                origin={reviewOrigin}
-                face={account.signedIn ? "write" : "session"}
-                programme={composerProgramme}
-                onClose={closeReview}
-                onSubmit={reviews.submit}
               />
             </>
           )}

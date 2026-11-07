@@ -632,22 +632,31 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
     /**
      * The stall watchdog.
      *
-     * A picture that stops on a slow line is nudged back to work: the
-     * loader is asked to pull again and — when frames are already waiting
-     * in the buffer but the pipeline sits on them — the playhead moves a
-     * hair forward so the decoder takes them. The chain only moves to the
-     * next feed when two nudges, five seconds apart, have all failed;
-     * while the video is paused (the wall, the visitor) nothing counts
-     * and nothing advances.
+     * What it watches is the playhead, not the events. A `waiting` event
+     * on a phone is a normal buffer refill — the line is a second slower
+     * than the feed — and counting it as a dead stream is what used to
+     * end a session that was about to recover. So the counter only grows
+     * while the playhead stands still, and the moment it moves, the count
+     * is back to zero.
+     *
+     * The nudges are the same two: the loader is asked to pull again,
+     * and on the native-HLS path (Safari, where there is no loader to
+     * ask) the element is asked to read its playlist once more, because
+     * that is the only thing Safari listens to.
+     *
+     * The chain moves on only after twenty seconds without a single
+     * frame; while the video is paused (the wall, the visitor) nothing
+     * counts and nothing advances.
      */
     useEffect(() => {
       const video = videoRef.current;
       if (!video || embedded) return;
 
       const GRACE_MS = 5000;
-      const NUDGES = 2;
+      const STALLS = 4;
       let timer = 0;
-      let attempts = 0;
+      let stalls = 0;
+      let lastSecond = video.currentTime;
       // Set once the chain has been told to move on: a frozen picture
       // must not keep sending the same message every few seconds. A new
       // source re-runs this effect from scratch.
@@ -662,21 +671,40 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
       const nudge = () => {
         // A loader that went quiet looks exactly like a stall: ask it to
-        // pull again. On Safari's native HLS there is no instance and
-        // the seek below is the whole nudge.
+        // pull again. On Safari's native HLS there is no instance, and
+        // the element itself is the only thing that can be asked.
         hlsRef.current?.startLoad();
-        const ranges = video.buffered;
-        if (ranges.length > 0) {
-          const end = ranges.end(ranges.length - 1);
-          if (end - video.currentTime > 0.25) {
-            try {
-              video.currentTime += 0.1;
-            } catch {
-              /* the seek was refused; the next nudge tries again */
+        if (video.paused) {
+          void video.play().catch(() => undefined);
+          return;
+        }
+        if (hlsRef.current) {
+          // The frames are already in the buffer; the decoder needs a
+          // hair more of them.
+          const ranges = video.buffered;
+          if (ranges.length > 0) {
+            const end = ranges.end(ranges.length - 1);
+            if (end - video.currentTime > 0.25) {
+              try {
+                video.currentTime += 0.1;
+              } catch {
+                /* the seek was refused; the next nudge tries again */
+              }
             }
           }
+          return;
         }
-        if (video.paused) void video.play().catch(() => undefined);
+        // Native HLS: Safari owns the session, and the only way to make
+        // it read its playlist again is to ask the element to load. That
+        // is worth one try before the chain is given up on.
+        if (stalls >= 2) {
+          try {
+            video.load();
+            void video.play().catch(() => undefined);
+          } catch {
+            /* the element refused; the next tick gives up */
+          }
+        }
       };
 
       const tick = () => {
@@ -684,8 +712,16 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         // Paused by the wall or by the visitor: nothing is stalled, and
         // a pause must never send the chain forward.
         if (video.paused) return;
-        attempts += 1;
-        if (attempts > NUDGES) {
+        const second = video.currentTime;
+        if (second > lastSecond + 0.05) {
+          // The picture is moving: this was a refill, not a stall.
+          lastSecond = second;
+          stalls = 0;
+          timer = window.setTimeout(tick, GRACE_MS);
+          return;
+        }
+        stalls += 1;
+        if (stalls > STALLS) {
           givenUp = true;
           failRef.current("Fluxul se blochează. Se încearcă următorul.");
           return;
@@ -701,7 +737,8 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
 
       const heal = () => {
         disarm();
-        attempts = 0;
+        stalls = 0;
+        lastSecond = video.currentTime;
       };
 
       video.addEventListener("waiting", watch);

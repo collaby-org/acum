@@ -988,3 +988,47 @@ html[data-tv-cursor="remote"] ::selection {
     transform: none;
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * The volume slider draws its own thumb
+ *
+ * The native thumb has to go, and on iOS `appearance-none` on the element
+ * is not enough: Safari keeps painting its own big white knob, in the
+ * wrong place, unless the element itself is told `-webkit-appearance:
+ * none`. The knob is therefore taken away in both engines and the visible
+ * mark is the small dot the app draws (`.player-volume-thumb`). The input
+ * itself stays 44px tall, so the control keeps its touch target.
+ * ------------------------------------------------------------------ */
+.player-volume-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.player-volume-range::-webkit-slider-runnable-track {
+  height: 1.5rem;
+  background: transparent;
+  border: 0;
+}
+
+.player-volume-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+}
+
+.player-volume-range::-moz-range-track {
+  height: 1.5rem;
+  background: transparent;
+  border: 0;
+}
+
+.player-volume-range::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+}

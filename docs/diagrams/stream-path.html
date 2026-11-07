@@ -105,7 +105,7 @@
   </head>
   <body>
     <main>
-      <p class="eyebrow">ACUM · architecture · 1.7.1</p>
+      <p class="eyebrow">ACUM · architecture · 1.8.1</p>
       <h1>The stream path: a channel in, a picture out</h1>
       <p class="standfirst">
         The browser never names an upstream address. It asks for a
@@ -692,9 +692,11 @@
         </svg>
 
         <figcaption>
-          The stream path after the 1.7.x fixes. The orange box is the only
+          The stream path after the 1.8.1 fixes. The orange box is the only
           place an upstream address exists at runtime, and it exists there
-          because a signed token said so.
+          because a signed token said so. The proxy answers inside the live
+          window — five seconds — so a feed that does not answer is a
+          refusal the player can retry, not a silence it can only give up on.
         </figcaption>
       </figure>
 

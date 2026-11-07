@@ -400,11 +400,24 @@ export function PlayerControls({
               aria-hidden
               className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-white/15"
             >
+              {/* The fill is inset by the radius of the dot, so the dot
+                  always sits at the end of the colour and never half
+                  outside the track. */}
               <div
-                className="h-full rounded-full bg-signal"
-                style={{ width: `${volumePercent}%` }}
+                className="absolute left-[0.375rem] top-0 h-full rounded-full bg-signal"
+                style={{
+                  width: `calc((100% - 0.75rem) * ${volumePercent / 100})`,
+                }}
               />
             </div>
+            <span
+              aria-hidden
+              data-player-volume-thumb=""
+              className="player-volume-thumb pointer-events-none absolute top-1/2 z-20 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink"
+              style={{
+                left: `calc(0.375rem + (100% - 0.75rem) * ${volumePercent / 100})`,
+              }}
+            />
             <input
               id={volumeId}
               type="range"
@@ -414,12 +427,8 @@ export function PlayerControls({
               value={muted ? 0 : volume}
               onChange={(event) => onVolumeChange(Number(event.target.value))}
               className={cn(
-                "absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
+                "player-volume-range absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
                 "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
-                "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent",
-                "[&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
-                "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent",
-                "[&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
               )}
               aria-label={`Volum: ${volumePercent}%`}
               aria-valuetext={`${volumePercent}%`}

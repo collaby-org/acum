@@ -485,8 +485,6 @@ export type PlayerControlsProps = {
   qualityAutomatic?: boolean;
   /** Ce rulează acum înaintea transportului. */
   nowPlaying?: ReactNode;
-  /** Acțiunea de recenzie, când programul de acum poate fi recenzat. */
-  reviewAction?: ReactNode;
   /** True când fluxul a eșuat și spectatorul poate încerca din nou. */
   error?: boolean;
   /** Cipul de calitate, în dreapta liniei live. */
@@ -532,7 +530,6 @@ export function PlayerControls({
   behindLive = false,
   qualityAutomatic = true,
   nowPlaying,
-  reviewAction,
   error = false,
   quality,
   onTogglePlay,
@@ -795,20 +792,33 @@ export function PlayerControls({
               )}
             </Button>
 
-            <div className="hidden h-11 min-w-0 items-center min-[400px]:flex">
+            <div className="hidden h-11 shrink-0 items-center min-[400px]:flex">
               <label htmlFor={volumeId} className="sr-only">
                 Volum
               </label>
-              <div className="relative h-11 w-20 min-[560px]:w-24">
+              <div className="relative h-11 w-20 shrink-0 min-[560px]:w-24">
                 <div
                   aria-hidden
                   className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-white/15"
                 >
+                  {/* The fill is inset by the radius of the dot, so the dot
+                      always sits at the end of the colour and never half
+                      outside the track. */}
                   <div
-                    className="h-full rounded-full bg-signal"
-                    style={{ width: `${volumePercent}%` }}
+                    className="absolute left-[0.375rem] top-0 h-full rounded-full bg-signal"
+                    style={{
+                      width: `calc((100% - 0.75rem) * ${volumePercent / 100})`,
+                    }}
                   />
                 </div>
+                <span
+                  aria-hidden
+                  data-player-volume-thumb=""
+                  className="player-volume-thumb pointer-events-none absolute top-1/2 z-20 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink"
+                  style={{
+                    left: `calc(0.375rem + (100% - 0.75rem) * ${volumePercent / 100})`,
+                  }}
+                />
                 <input
                   id={volumeId}
                   type="range"
@@ -820,12 +830,8 @@ export function PlayerControls({
                   aria-label={`Volum: ${volumePercent}%`}
                   aria-valuetext={`${volumePercent}%`}
                   className={cn(
-                    "absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
+                    "player-volume-range absolute inset-0 z-10 h-11 w-full cursor-pointer appearance-none bg-transparent",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal",
-                    "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:bg-transparent",
-                    "[&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
-                    "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:bg-transparent",
-                    "[&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-[radial-gradient(circle,var(--color-ink)_0_5px,transparent_5.5px)]",
                   )}
                 />
               </div>
@@ -838,20 +844,24 @@ export function PlayerControls({
             </div>
           </div>
 
-          {reviewAction ? (
-            <div className="flex min-w-0 shrink-0 items-center">{reviewAction}</div>
-          ) : null}
-
-          {/* Conexiunea și calitatea stau împreună, dar rămân compacte. */}
-          <div className="flex min-w-0 items-center gap-1.5 ml-auto">
-            <ConnectionStatus
-              state={connectionState}
-              qualityAutomatic={qualityAutomatic}
-              compactActions={compactActions}
-              onOpenChange={onConnectionOpenChange}
-            />
-            {quality}
-          </div>
+          {/* Toate comenzile din dreapta formează un singur grup, astfel
+              încât niciun buton nu poate trece peste altul sau peste
+              panoul canalului când bara apare. */}
+          <div className="ml-auto flex shrink-0 items-center gap-1.5">
+            {/* Conexiunea și calitatea stau împreună, dar rămân compacte. */}
+            <div className="flex min-w-0 items-center gap-1.5">
+              <ConnectionStatus
+                state={connectionState}
+                qualityAutomatic={qualityAutomatic}
+                compactActions={compactActions}
+                onOpenChange={onConnectionOpenChange}
+              />
+              {quality ? (
+                <div className="shrink-0 [&>button>span]:gap-0 [&>button>span]:px-0 [&>button>span>span]:hidden [&>button>span>svg:last-child]:hidden">
+                  {quality}
+                </div>
+              ) : null}
+            </div>
 
           {/* Saltul la direct și recuperarea fluxului. */}
           <div className="hidden min-w-0 items-center gap-1.5 min-[768px]:flex">
@@ -979,6 +989,7 @@ export function PlayerControls({
                 <Maximize className={CONTROL_ICON} />
               )}
             </Button>
+          </div>
           </div>
         </div>
       </div>

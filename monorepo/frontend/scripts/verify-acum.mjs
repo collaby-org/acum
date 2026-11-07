@@ -18,9 +18,10 @@
  * panel is answered by the server, so its proof always waits for the real
  * clock to turn the minute over.
  *
- *   "C:\Program Files\nodejs\node.exe" scripts/verify-acum.mjs [options]
+ *   node scripts/verify-acum.mjs [url] [options]
  *
- *     --app=<url>       the running app (default http://127.0.0.1:3115/)
+ *     url               the running app (default https://acum-weld.vercel.app/)
+ *     --app=<url>       the running app (an alias for the positional URL)
  *     --channel=<id>    the channel to check (default: the one whose next
  *                       programme starts soonest)
  *     --out=<dir>       where the evidence goes (default docs/reviews/acum)
@@ -30,7 +31,6 @@ import { spawn, spawnSync } from "node:child_process";
 import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { installSession } from "./harness-signin.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -43,13 +43,22 @@ const CDP_PORT = Number(process.env.CDP_PORT ?? 9414);
 const PANEL_CDP_PORT = Number(process.env.PANEL_CDP_PORT ?? 9415);
 
 const options = {
-  app: "http://127.0.0.1:3115/",
+  app: "https://acum-weld.vercel.app/",
   channel: null,
   out: resolve(ROOT, "docs/reviews/acum"),
   skipPanel: false,
 };
 
-for (const raw of process.argv.slice(2)) {
+const args = process.argv.slice(2);
+let positionalApp = null;
+for (const raw of args) {
+  if (!raw.startsWith("-")) {
+    if (positionalApp) {
+      throw new Error(`unexpected argument: ${raw}`);
+    }
+    positionalApp = raw;
+    continue;
+  }
   const [key, ...rest] = raw.replace(/^--/, "").split("=");
   const value = rest.join("=");
   switch (key) {
@@ -66,10 +75,16 @@ for (const raw of process.argv.slice(2)) {
       options.skipPanel = true;
       break;
     default:
-      console.log(`unknown option --${key}`);
-      break;
+      throw new Error(`unknown option --${key}`);
   }
 }
+if (positionalApp) options.app = positionalApp;
+options.app = options.app.replace(/\/$/, "");
+
+console.log("=== the Acum check ===");
+console.log(`app: ${options.app}`);
+console.log(`channel: ${options.channel ?? "the next programme on the local guide"}`);
+console.log(`evidence: ${options.out}`);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -555,6 +570,7 @@ function check(name, ok, detail) {
 }
 
 async function main() {
+  const { installSession } = await import("./harness-signin.mjs");
   await mkdir(options.out, { recursive: true });
 
   const [catalogue, guide] = await Promise.all([
@@ -614,6 +630,9 @@ async function main() {
     if (!options.skipPanel) {
       const panelBrowser = await Browser.launch(EDGE, PANEL_CDP_PORT);
       try {
+        await installSession((method, params) =>
+          panelBrowser.send(method, params),
+        );
         await provePanel(panelBrowser, catalogue, guide, options);
       } finally {
         panelBrowser.close();
@@ -627,6 +646,7 @@ async function main() {
     // browser Chrome may have put to sleep.
     const browser = await Browser.launch(EDGE, CDP_PORT);
     try {
+      await installSession((method, params) => browser.send(method, params));
       await browser.navigate(options.app);
     // The page has to be alive before it can be read: a card that is not
     // hydrated yet shows the server's markup, which is the truth for the

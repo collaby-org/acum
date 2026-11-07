@@ -9,6 +9,77 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.8.1] — 2026-11-07
+
+### Fixed
+
+- **The app never lands on the accounts page.** A fresh boot of `/` went
+  first to `/conturi` — on the web, on a phone and in the installed PWA.
+  The catalogue is the public face of the product, so the catalogue pages
+  (`/canale`, `/canale/toate`, `/canale/grupate`, `/canale/[categorie]`)
+  no longer gate on the session at all; the way in lives where the picture
+  is, in `/api/player`, and `use-channel-launcher.ts` keeps the one
+  deliberate jump ("open a channel without a plan"). Behind that, the
+  session read itself learned to tell three answers apart — *signed in*,
+  *signed out* and *could not be checked right now* — and it is bounded by
+  a timeout, so a hiccup at the auth server can no longer throw a visitor
+  onto the accounts page on the way in. The proxy sends a browser that
+  holds a session to `/canale` on the strength of that session's presence
+  (fresh or stale: the refresh token, which the browser owns, is what
+  renews it), and the installed app opens the catalogue — `start_url` is
+  `/canale` in both manifests, and the service worker precaches the
+  catalogue, not the front door.
+- **The volume dot is small, and it sits on the track.** The native slider
+  knob is taken away in both engines — on the input element itself, which
+  is what iOS reads (`-webkit-appearance: none`) — and the app draws its
+  own 12-pixel dot, inset by its own radius so that it stands at the end
+  of the fill at every value, on desktop and on iPhone alike. The control
+  itself stays 44 pixels tall, because the finger is bigger than the dot.
+- **The bar's controls no longer collide on hover.** The transport bar
+  carried a second **"Scrie o recenzie"** button, the same action the
+  channel panel beside the picture already offers; it is gone, so the bar
+  cannot slide under the panel, and the right-hand controls are one group
+  that cannot overlap each other.
+- **The header clears the iPhone notch.** In standalone mode the header sat
+  under the status bar, and the buttons there could be pressed by the
+  island. The header's row now starts below `env(safe-area-inset-top)`,
+  with the viewport on `viewport-fit=cover`.
+- **A phone keeps the live edge.** Three things ended a mobile session
+  that was about to recover. A `play()` that the browser interrupted with
+  an `AbortError` — which is what Safari answers when a picture is muted
+  and started right after the source was attached — was read as a dead
+  link and threw the player onto the next feed. The stall watchdog counted
+  `waiting` events instead of watching the playhead, so a normal buffer
+  refill on a slow line was read as a dead stream after fifteen seconds.
+  And when the chain was walked out, the player gave up on the addresses
+  it had been given minutes earlier instead of asking for a fresh chain.
+  Now: an interrupted start is not a failure, the watchdog counts the
+  seconds in which the picture does not move (and gives up only after
+  twenty of them), and the chain is asked for once more before the
+  session is called a failure. The proxy answers inside the live window
+  too: it says plainly that the feed did not answer within five seconds
+  rather than hanging for thirty, because a refusal the player can retry
+  is worth more than a silence it can only give up on.
+
+### Added
+
+- **A harness for the front door.** `monorepo/frontend/scripts/verify-front-door.mjs`
+  drives the real site in headless Edge in the three states a device is in
+  — a fresh session cookie, a stale one (the overnight state) and no
+  cookie at all — prints the whole route chain, and fails if `/conturi`
+  appears anywhere in it.
+
+### Changed
+
+- **The proof harnesses tell the truth.** `verify-mobile.mjs` names the
+  check that failed instead of exiting silently; `verify-mobile-stream.mjs`
+  says what "the picture arrived" measures and prints the evidence its
+  verdict rests on; `verify-acum.mjs` takes the same positional address as
+  the other harnesses and works with no address at all (which is how
+  `npm run verify:acum` calls it); `verify-player-bar.mjs` compares the
+  bounding boxes of every visible control and measures the drawn volume
+  thumb against the track.
+
 ## [1.8.0] — 2026-11-07
 
 ### Added

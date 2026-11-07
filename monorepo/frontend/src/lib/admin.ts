@@ -35,7 +35,7 @@ import {
   bearerToken,
   getServiceClient,
   hasServiceRole,
-  readUser,
+  verifyUser,
 } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/admin-access";
 
@@ -154,6 +154,12 @@ export type AuthSession = {
   email: string | null;
 };
 
+/** The result of reading the session without hiding a failed verification. */
+export type SessionRead =
+  | { status: "signed-in"; session: AuthSession }
+  | { status: "signed-out" }
+  | { status: "unavailable" };
+
 type SessionCookie = {
   access_token?: string;
 };
@@ -239,17 +245,35 @@ function cookieCandidates(jar: { name: string; value: string }[]): string[] {
 }
 
 /**
- * The signed-in account, or null.
+ * The signed-in account, and what the read could and could not prove.
  *
  * The header comes first: it is how the rest of the product carries the
  * session, and it is the only one that survives a page reload. The cookie
  * is the second way in, for a sign-in that keeps the session on the server.
+ *
+ * The three answers are kept apart on purpose. A rejected token means the
+ * visitor is signed out. An auth server that could not be reached, or that
+ * answered with a 5xx, means nobody knows yet — and a visitor must never be
+ * treated as signed out because the network blinked.
+ *
+ * The read is bounded: the first candidate that verifies ends it, and the
+ * first "could not verify" ends it too, because a second round trip to an
+ * auth server that is already failing would only make the page slower.
  */
-export async function readSession(request?: Request): Promise<AuthSession | null> {
+export async function readSessionState(
+  request?: Request,
+): Promise<SessionRead> {
   const header = request ? bearerToken(request) : null;
   if (header) {
-    const user = await readUser(header);
-    if (user) return { userId: user.id, email: user.email };
+    const result = await verifyUser(header);
+    if (result.status === "authenticated") {
+      return {
+        status: "signed-in",
+        session: { userId: result.user.id, email: result.user.email },
+      };
+    }
+    if (result.status === "unavailable") return { status: "unavailable" };
+    return { status: "signed-out" };
   }
 
   let jar: { name: string; value: string }[] = [];
@@ -257,17 +281,39 @@ export async function readSession(request?: Request): Promise<AuthSession | null
     jar = (await cookies()).getAll();
   } catch {
     // A context without a request has no cookies to offer.
-    return null;
+    return { status: "signed-out" };
   }
 
+  const tried = new Set<string>();
   for (const raw of cookieCandidates(jar)) {
     const session = sessionFromValue(raw);
-    if (!session?.access_token) continue;
-    const user = await readUser(session.access_token);
-    if (user) return { userId: user.id, email: user.email };
+    const token = session?.access_token;
+    if (!token || tried.has(token)) continue;
+    tried.add(token);
+
+    const result = await verifyUser(token);
+    if (result.status === "authenticated") {
+      return {
+        status: "signed-in",
+        session: { userId: result.user.id, email: result.user.email },
+      };
+    }
+    if (result.status === "unavailable") return { status: "unavailable" };
   }
 
-  return null;
+  return { status: "signed-out" };
+}
+
+/**
+ * The signed-in account, or null.
+ *
+ * The thin version of `readSessionState`, for the callers that only need to
+ * know whether there is a session. It keeps the old contract: no session
+ * means null, and a verification that could not be made also means null.
+ */
+export async function readSession(request?: Request): Promise<AuthSession | null> {
+  const state = await readSessionState(request);
+  return state.status === "signed-in" ? state.session : null;
 }
 
 /* ------------------------------------------------------------------ *

@@ -28,6 +28,36 @@ import { touchAudience } from "@/lib/audience";
 const PLAYLIST_CONTENT_TYPE = "application/vnd.apple.mpegurl";
 const SEGMENT_CONTENT_TYPE = "video/mp2t";
 
+/**
+ * How long the upstream may take to answer at all.
+ *
+ * The live feed the proxy carries has an eight-second target duration:
+ * the player asks for the playlist again every eight seconds, and a phone
+ * that waits longer than that for a refreshed playlist has already lost
+ * the live edge — Safari tears the session down rather than wait. So the
+ * proxy answers inside the window, or it says plainly that the feed did
+ * not answer; it never hangs for the full thirty seconds the upstream
+ * read allows, because a refusal the player can retry is worth more than
+ * a silence it can only give up on.
+ */
+const UPSTREAM_DEADLINE_MS = 5_000;
+
+/** The upstream's answer, or null when it did not come in time. */
+async function openInTime(
+  upstream: string,
+): Promise<Awaited<ReturnType<typeof openUpstream>>> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const expired = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), UPSTREAM_DEADLINE_MS);
+  });
+
+  try {
+    return await Promise.race([openUpstream(upstream), expired]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const token = params.get("t");
@@ -61,7 +91,7 @@ export async function GET(request: Request) {
 
   let opened;
   try {
-    opened = await openUpstream(upstream);
+    opened = await openInTime(upstream);
   } catch (error) {
     if (error instanceof StreamPolicyError) {
       return new Response("Adresă nepermisă.", {

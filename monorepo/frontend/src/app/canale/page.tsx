@@ -8,7 +8,6 @@ import { getSecondaryMeta } from "@/lib/secondary";
 import { loadGuide } from "@/lib/guide";
 import { liveAudienceMap } from "@/lib/audience";
 import { pickTrending } from "@/lib/popularity";
-import { requireSignedIn } from "@/lib/session";
 
 /**
  * The guide is about now, so the page is rendered per request.
@@ -35,10 +34,10 @@ export const instant = false;
 export default async function Home() {
   await connection();
 
-  // A signed-out visitor never sees the catalogue or the error that would
-  // follow — the accounts page is where the way in lives.
-  await requireSignedIn("/canale");
-
+  // The catalogue is the public face of the product: the names, the
+  // artwork, the guide and the audience. It is never a door to the
+  // accounts page — a visitor who opens the app lands here, signed in or
+  // not, and the way in lives in the player, where the picture is.
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);
   const guide = await loadGuide(channels);

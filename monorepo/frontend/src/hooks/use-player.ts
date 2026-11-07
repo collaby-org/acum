@@ -111,6 +111,17 @@ export type UsePlayerResult = {
 const FAILED_MESSAGE = "Fluxul nu este disponibil.";
 const EMPTY_SOURCES: PlayerSource[] = [];
 
+/**
+ * How many times the chain may be asked for again.
+ *
+ * The first answer is the chain the player walks. When it is walked out,
+ * the chain is asked for once more — the addresses are older than the
+ * failure that ended them, and a fresh answer may name a different feed.
+ * One more round is enough: a second one would be a loop, and a loop is
+ * what the owner sees on the phone.
+ */
+const MAX_ROUNDS = 2;
+
 type ChainState = {
   /** The feeds the chain was resolved for. */
   signature: string;
@@ -123,6 +134,8 @@ type ChainState = {
   session: string | null;
   /** The plan's answer, when it is what stopped the chain. */
   block: StreamBlock | null;
+  /** How many times the chain has been asked for. */
+  round: number;
 };
 
 /**
@@ -149,6 +162,7 @@ export function usePlayer({
     status: "idle",
     session: null,
     block: null,
+    round: 0,
   });
 
   const requestRef = useRef<AbortController | null>(null);
@@ -171,6 +185,7 @@ export function usePlayer({
   const status = fresh ? state.status : "idle";
   const block = fresh ? state.block : null;
   const session = fresh ? state.session : null;
+  const round = fresh ? state.round : 0;
 
   const resolve = useCallback(async () => {
     requestRef.current?.abort();
@@ -184,6 +199,8 @@ export function usePlayer({
       error: null,
       block: null,
       session: null,
+      attempts: 0,
+      round: current.round + 1,
     }));
     announce("resolving");
 
@@ -345,6 +362,7 @@ export function usePlayer({
       error: null,
       block: null,
       session: null,
+      round: 0,
     }));
     void resolve();
   }, [resolve, signature]);
@@ -398,6 +416,20 @@ export function usePlayer({
         advance();
         return;
       }
+      /**
+       * The chain is walked out.
+       *
+       * That is not a verdict on the channel: the addresses were minted
+       * before the failure that ended them, and the upstream may have
+       * moved since. So the chain is asked for again — once — before the
+       * session is called a failure. Without this the player kept
+       * walking the same two addresses, and the phone dropped the
+       * connection instead of being given a fresh one.
+       */
+      if (round < MAX_ROUNDS) {
+        void resolve();
+        return;
+      }
       setState((current) => ({
         ...current,
         signature,
@@ -406,7 +438,16 @@ export function usePlayer({
       }));
       announce("error");
     },
-    [advance, announce, fresh, signature, sourceIndex, sources],
+    [
+      advance,
+      announce,
+      fresh,
+      resolve,
+      round,
+      signature,
+      sourceIndex,
+      sources,
+    ],
   );
 
   useEffect(() => {

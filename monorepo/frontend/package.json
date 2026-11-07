@@ -1,6 +1,6 @@
 {
   "name": "acum",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -15,6 +15,7 @@
     "verify:live": "node scripts/verify-live.mjs",
     "verify:mobile:stream": "node scripts/verify-mobile-stream.mjs",
     "verify:mobile:nav": "node scripts/verify-mobile-nav.mjs",
+    "verify:front:door": "node scripts/verify-front-door.mjs",
     "verify:fallback": "node scripts/verify-fallback.mjs",
     "verify:acum": "node scripts/verify-acum.mjs",
     "verify:reviews": "node scripts/verify-reviews.mjs",

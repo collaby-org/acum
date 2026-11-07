@@ -1,148 +1,106 @@
 {
   "lanes": [
     {
-      "id": "reviews-core",
+      "id": "front-door",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/components/reviews/popular-reviews.tsx",
-        "monorepo/frontend/src/components/reviews/review-card.tsx",
-        "monorepo/frontend/src/components/reviews/review-composer.tsx",
-        "monorepo/frontend/src/components/reviews/types.ts",
-        "monorepo/frontend/src/components/reviews/index.ts",
-        "monorepo/frontend/src/hooks/use-reviews.ts",
-        "monorepo/frontend/src/lib/reviews.ts",
-        "monorepo/frontend/src/app/api/reviews"
-      ],
-      "outputs": [
-        "the review engine: a read, a write, an edit and a delete, under the visitor's own token",
-        "the visitor's own review, read back with its mine flag",
-        "the channel surface manages that review: edit, delete, and a trigger that says which"
-      ]
-    },
-    {
-      "id": "reviews-entry",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/components/channel/channel-panel.tsx",
-        "monorepo/frontend/src/components/channel/index.ts",
-        "monorepo/frontend/src/components/header.tsx",
-        "monorepo/frontend/src/app/page.tsx",
+        "monorepo/frontend/src/proxy.ts",
+        "monorepo/frontend/src/lib/session.ts",
+        "monorepo/frontend/src/lib/admin.ts",
+        "monorepo/frontend/src/lib/supabase/server.ts",
         "monorepo/frontend/src/app/canale/page.tsx",
-        "monorepo/frontend/src/app/canal/[id]/page.tsx"
-      ],
-      "outputs": [
-        "a discoverable 'Scrie o recenzie' on the channel surface",
-        "the popular reviews sit where the eye lands"
-      ]
-    },
-    {
-      "id": "player-polish",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/components/player",
-        "monorepo/frontend/src/components/programme-badges",
-        "monorepo/frontend/src/components/ui/dialog.tsx"
-      ],
-      "outputs": [
-        "one badge vocabulary for the whole app",
-        "44px mute, warning, dialog and volume targets with a visible volume value",
-        "the browser's Back button closes the player"
-      ]
-    },
-    {
-      "id": "mobile-polish",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/app/error.tsx",
-        "monorepo/frontend/src/app/not-found.tsx",
-        "monorepo/frontend/src/app/global-error.tsx",
-        "monorepo/frontend/src/app/reset-password",
-        "monorepo/frontend/src/components/pages",
-        "monorepo/frontend/src/components/admin",
-        "monorepo/frontend/src/components/search-panel.tsx"
-      ],
-      "outputs": [
-        "no input zooms the page on iOS (16px on mobile)",
-        "the error shells use a dynamic viewport unit",
-        "every remaining touch target is at least 44px"
-      ]
-    },
-    {
-      "id": "nav-bar",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/components/mobile-nav.tsx",
-        "monorepo/frontend/src/app/canale/loading.tsx"
-      ],
-      "outputs": [
-        "the bottom bar marks the current route",
-        "a loading boundary for /canale that does not jump"
-      ]
-    },
-    {
-      "id": "tv-reviews",
-      "role": "write",
-      "paths": [
-        "monorepo/tv/src/components/reviews/popular-reviews.tsx",
-        "monorepo/tv/src/components/reviews/reaction-row.tsx",
-        "monorepo/tv/src/components/reviews/review-card.tsx",
-        "monorepo/tv/src/components/reviews/review-composer.tsx",
-        "monorepo/tv/src/components/reviews/types.ts",
-        "monorepo/tv/src/components/reviews/index.ts",
-        "monorepo/tv/src/components/channel/channel-panel.tsx",
-        "monorepo/tv/src/app/page.tsx",
-        "monorepo/tv/src/app/api/reviews",
-        "monorepo/tv/src/hooks/use-reviews.ts",
-        "monorepo/tv/src/lib/reviews.ts",
-        "monorepo/tv/src/lib/review-rank.ts",
-        "monorepo/tv/src/lib/review-channels.ts"
-      ],
-      "outputs": [
-        "the same engine in the television app, under the visitor's own token",
-        "the popular reviews below the hero, and the composer on the channel panel",
-        "the channel surface manages the visitor's own review"
-      ]
-    },
-    {
-      "id": "tv-parity",
-      "role": "write",
-      "paths": [
-        "monorepo/tv/src/app/globals.css",
-        "monorepo/tv/src/app/error.tsx",
-        "monorepo/tv/src/app/not-found.tsx",
-        "monorepo/tv/src/components/browse.tsx",
-        "monorepo/tv/src/components/pages/shell.tsx",
+        "monorepo/frontend/src/app/canale/toate/page.tsx",
+        "monorepo/frontend/src/app/canale/grupate/page.tsx",
+        "monorepo/frontend/src/app/canale/[categorie]/page.tsx",
+        "monorepo/frontend/public/manifest.webmanifest",
+        "monorepo/frontend/public/sw.js",
+        "monorepo/frontend/scripts/verify-front-door.mjs",
+        "monorepo/tv/src/app/canale/page.tsx",
+        "monorepo/tv/src/app/canale/toate/page.tsx",
+        "monorepo/tv/src/app/canale/grupate/page.tsx",
+        "monorepo/tv/src/app/canale/[categorie]/page.tsx",
+        "monorepo/tv/src/lib/session.ts",
         "monorepo/tv/public/manifest.webmanifest",
-        "monorepo/tv/public/sw.js",
-        "monorepo/tv/src/components/player/player-controls.tsx"
+        "monorepo/tv/public/sw.js"
       ],
       "outputs": [
-        "the phone rules the web app already follows: the dynamic viewport, the text size, the tap, the overscroll, the hover",
-        "one control size for the whole transport bar, and a volume the viewer can read",
-        "the service worker drops the dead asset cache, and the manifest opens the app where the app lives"
+        "a fresh boot lands on /canale and never on /conturi — desktop, mobile, installed PWA",
+        "a transient auth failure cannot bounce the visitor to the accounts page",
+        "a regression harness that prints the whole route chain"
       ]
     },
     {
-      "id": "overlay-history",
+      "id": "player-bar",
       "role": "write",
       "paths": [
+        "monorepo/frontend/src/components/player/player-controls.tsx",
+        "monorepo/frontend/src/components/player/video-player.tsx",
+        "monorepo/frontend/src/hooks/use-player.ts",
+        "monorepo/frontend/src/components/header.tsx",
+        "monorepo/frontend/src/app/globals.css",
+        "monorepo/frontend/src/app/layout.tsx",
+        "monorepo/tv/src/components/player/player-controls.tsx",
+        "monorepo/tv/src/components/player/video-player.tsx",
+        "monorepo/tv/src/hooks/use-player.ts",
+        "monorepo/tv/src/app/globals.css",
+        "monorepo/tv/src/app/layout.tsx"
+      ],
+      "outputs": [
+        "the volume dot is small, on the track, on desktop and on iPhone",
+        "the transport bar's controls never overlap on hover",
+        "the header clears the iPhone notch in standalone mode"
+      ]
+    },
+    {
+      "id": "reviews-hardening",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/src/lib/reviews.ts",
+        "monorepo/frontend/src/lib/guide.ts",
+        "monorepo/frontend/src/hooks/use-reviews.ts",
+        "monorepo/frontend/src/app/api/reviews",
         "monorepo/frontend/src/components/reviews/zoom-overlay.tsx",
+        "monorepo/frontend/src/components/player/player-modal.tsx",
+        "monorepo/frontend/src/components/channel/channel-panel.tsx",
+        "monorepo/frontend/scripts/verify-reviews.mjs",
+        "monorepo/tv/src/lib/reviews.ts",
+        "monorepo/tv/src/lib/guide.ts",
+        "monorepo/tv/src/hooks/use-reviews.ts",
+        "monorepo/tv/src/app/api/reviews",
         "monorepo/tv/src/components/reviews/zoom-overlay.tsx",
-        "monorepo/tv/src/components/reviews/star-rating.tsx"
+        "monorepo/tv/src/components/player/player-modal.tsx",
+        "monorepo/tv/src/components/channel/channel-panel.tsx"
       ],
       "outputs": [
-        "Back closes the sheet, and the page behind comes back where it was",
-        "one size for the stars: 44px, the same as the reaction row beside them"
+        "one Back press closes one layer, and the layer behind it stays open",
+        "the television app answers the review API exactly like the web app",
+        "the server resolves the programme slot from the guide and never publishes the e-mail"
       ]
     },
     {
-      "id": "verify-reviews",
+      "id": "stream-resilience",
       "role": "write",
       "paths": [
-        "monorepo/frontend/scripts/verify-reviews.mjs"
+        "monorepo/frontend/src/app/api/stream/route.ts"
       ],
       "outputs": [
-        "the harness that proves the whole life of a review, and cleans up after itself"
+        "the proxy answers inside the live window instead of hanging for thirty seconds",
+        "a refused playlist is a refusal the player can retry, not a silence"
+      ]
+    },
+    {
+      "id": "harnesses",
+      "role": "write",
+      "paths": [
+        "monorepo/frontend/scripts/verify-mobile.mjs",
+        "monorepo/frontend/scripts/verify-mobile-stream.mjs",
+        "monorepo/frontend/scripts/verify-acum.mjs",
+        "monorepo/frontend/scripts/verify-player-bar.mjs"
+      ],
+      "outputs": [
+        "the phone harness names the check that fails instead of exiting silently",
+        "the stream harness says what 'the picture arrived' means",
+        "the bar harness proves the controls do not overlap and the volume dot is small"
       ]
     },
     {
@@ -152,9 +110,9 @@
         ".agents/lanes.json",
         "docs",
         "README.md",
-        "monorepo/frontend/README.md",
         "monorepo/frontend/package.json",
-        "monorepo/tv/package.json"
+        "monorepo/tv/package.json",
+        "monorepo/frontend/docs"
       ],
       "outputs": [
         "the changelog, the backlog, the verification log, the README and the diagrams",

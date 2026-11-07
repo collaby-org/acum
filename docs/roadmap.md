@@ -54,6 +54,15 @@ ships or changes shape.
   composer joins the history so Back closes it, and the television app
   follows the same viewport, tap, overscroll and hover rules the web app
   already had.
+- [x] **v1.8.1 — The front door, the bar and the live edge on a phone.**
+  The catalogue is public and never bounces a visitor to the accounts page
+  (web, phone, installed PWA); the volume thumb is a small dot that sits on
+  the track in both engines; the transport bar carries one review action,
+  not two; the header clears the iPhone notch; and a phone keeps the live
+  edge, because an interrupted start is no longer read as a dead link, the
+  stall watchdog watches the playhead instead of the events, and a chain
+  that runs out is asked for again once before the session is called a
+  failure.
 
 ## Next
 

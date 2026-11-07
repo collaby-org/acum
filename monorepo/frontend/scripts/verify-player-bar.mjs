@@ -27,13 +27,19 @@ import { installSession } from "./harness-signin.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const OUT = resolve(tmpdir(), "acum-verify-player-bar");
-const APP = (process.argv[2] ?? "http://127.0.0.1:3115/").replace(/\/$/, "");
+const APP = (
+  process.argv[2] ?? "https://acum-weld.vercel.app/"
+).replace(/\/$/, "");
 const EDGE =
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const PORT = 9336;
 
 /** The smallest touch target the project accepts. */
 const MIN_TARGET = 44;
+/** The largest visible volume dot the project accepts. */
+const MAX_VOLUME_THUMB = 16;
+/** How far the dot's centre may sit from the painted track's centre line. */
+const MAX_THUMB_TRACK_OFFSET = 2;
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
@@ -127,11 +133,110 @@ while (Date.now() - started < 30_000) {
         return {
           label: el.getAttribute('aria-label') || el.textContent.trim().slice(0, 24),
           tag: el.tagName.toLowerCase(),
+          x: Math.round(rect.left),
+          y: Math.round(rect.top),
           w: Math.round(rect.width),
           h: Math.round(rect.height),
           top: Math.round(rect.top),
+          right: Math.round(rect.right),
+          bottom: Math.round(rect.bottom),
         };
       });
+
+    const overlaps = [];
+    for (let i = 0; i < controls.length; i += 1) {
+      for (let j = i + 1; j < controls.length; j += 1) {
+        const a = controls[i];
+        const b = controls[j];
+        const width = Math.min(a.right, b.right) - Math.max(a.x, b.x);
+        const height = Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y);
+        if (width > 0 && height > 0) {
+          overlaps.push({
+            first: a.label,
+            second: b.label,
+            intersection: { w: Math.round(width), h: Math.round(height) },
+          });
+        }
+      }
+    }
+
+    const range = bar.querySelector('input[type="range"][aria-label^="Volum:"]');
+    let volume = null;
+    if (range) {
+      const rangeRect = range.getBoundingClientRect();
+      const wrapper = range.parentElement;
+      const track = wrapper?.querySelector('div[aria-hidden="true"]');
+      const trackRect = track?.getBoundingClientRect();
+      const drawnThumb = wrapper?.querySelector('[data-player-volume-thumb]');
+      const drawnRect = drawnThumb?.getBoundingClientRect();
+
+      const webkit = getComputedStyle(range, '::-webkit-slider-thumb');
+      const moz = getComputedStyle(range, '::-moz-range-thumb');
+      const nativeBackground = webkit.backgroundImage || webkit.background || moz.backgroundImage || moz.background || '';
+      const nativeDot = /circle[^)]*?(?:0(?:\s+([\d.]+)px)|([\d.]+)px)/.exec(nativeBackground);
+      const nativeDotDiameter = nativeDot
+        ? Number(nativeDot[1] ?? nativeDot[2]) * 2
+        : null;
+
+      const value = Number(range.value);
+      const minimum = Number(range.min || 0);
+      const maximum = Number(range.max || 100);
+      const ratio = maximum === minimum ? 0 : (value - minimum) / (maximum - minimum);
+      const trackCentreX = trackRect
+        ? trackRect.left + trackRect.width / 2
+        : rangeRect.left + rangeRect.width / 2;
+
+      volume = {
+        inputRect: {
+          x: Math.round(rangeRect.left),
+          y: Math.round(rangeRect.top),
+          w: Math.round(rangeRect.width),
+          h: Math.round(rangeRect.height),
+        },
+        value,
+        ratio,
+        trackRect: trackRect
+          ? {
+              x: Math.round(trackRect.left),
+              y: Math.round(trackRect.top),
+              w: Math.round(trackRect.width),
+              h: Math.round(trackRect.height),
+              centreX: Math.round(trackRect.left + trackRect.width / 2),
+              centreY: Math.round(trackRect.top + trackRect.height / 2),
+            }
+          : null,
+        drawnThumbRect: drawnRect
+          ? {
+              x: Math.round(drawnRect.left),
+              y: Math.round(drawnRect.top),
+              w: Math.round(drawnRect.width),
+              h: Math.round(drawnRect.height),
+              centreX: Math.round(drawnRect.left + drawnRect.width / 2),
+              centreY: Math.round(drawnRect.top + drawnRect.height / 2),
+            }
+          : null,
+        nativeThumb: {
+          boxWidth: parseFloat(webkit.width) || parseFloat(moz.width) || null,
+          boxHeight: parseFloat(webkit.height) || parseFloat(moz.height) || null,
+          visibleDotDiameter: nativeDotDiameter,
+          background: nativeBackground,
+          // A native range thumb travels between half a thumb-width from
+          // each end. Its painted centre therefore follows the value on the
+          // painted track, not the centre of the whole input.
+          centreX: Math.round(
+            rangeRect.left +
+              ((rangeRect.width - (parseFloat(webkit.width) || 0)) * ratio) +
+              (parseFloat(webkit.width) || 0) / 2,
+          ),
+          centreY: Math.round(
+            rangeRect.top +
+              rangeRect.height / 2 +
+              (trackRect ? trackRect.top + trackRect.height / 2 - rangeRect.top - rangeRect.height / 2 : 0),
+          ),
+          trackCentreX: Math.round(trackCentreX),
+        },
+      };
+    }
 
     const overlay = document.querySelector('[data-player-buffering-overlay]');
     let overlayCentred = null;
@@ -151,6 +256,8 @@ while (Date.now() - started < 30_000) {
       barWidth: Math.round(barRect.width),
       lines: [...new Set(controls.map((c) => Math.round(c.top / 4)))].length,
       controls,
+      overlaps,
+      volume,
       smallestWidth: controls.length ? Math.min(...controls.map((c) => c.w)) : 0,
       smallestHeight: controls.length ? Math.min(...controls.map((c) => c.h)) : 0,
       hasProgressBar: Boolean(bar.querySelector('[role="progressbar"]')),
@@ -204,6 +311,73 @@ if (!report) {
     report.connectionChip,
     report.connectionChip ? "Conexiune: …" : "missing",
   ]);
+  checks.push([
+    "no two visible controls overlap",
+    report.overlaps.length === 0,
+    report.overlaps.length
+      ? report.overlaps
+          .map(
+            (overlap) =>
+              `${overlap.first} × ${overlap.second} (${overlap.intersection.w}×${overlap.intersection.h}px)`,
+          )
+          .join("; ")
+      : "no intersecting control boxes",
+  ]);
+
+  if (report.volume?.drawnThumbRect) {
+    const thumb = report.volume.drawnThumbRect;
+    const track = report.volume.trackRect;
+    const thumbSize = Math.max(thumb.w, thumb.h);
+    const centreOffset = track
+      ? Math.abs(thumb.centreY - track.centreY)
+      : Number.POSITIVE_INFINITY;
+    const onTrack = Boolean(
+      track &&
+        thumb.centreX >= track.x &&
+        thumb.centreX <= track.x + track.w &&
+        centreOffset <= MAX_THUMB_TRACK_OFFSET,
+    );
+    checks.push([
+      "the drawn volume thumb is at most 16px",
+      thumbSize <= MAX_VOLUME_THUMB,
+      `${thumb.w}×${thumb.h}px at (${thumb.centreX}, ${thumb.centreY})`,
+    ]);
+    checks.push([
+      "the drawn volume thumb sits on the painted track",
+      onTrack,
+      track
+        ? `thumb centre (${thumb.centreX}, ${thumb.centreY}), track x=${track.x}..${track.x + track.w}px centre y=${track.centreY}px, vertical offset ${centreOffset}px`
+        : "the painted track was not found",
+    ]);
+  } else {
+    const native = report.volume?.nativeThumbBox;
+    const track = report.volume?.trackRect;
+    const centreOffset =
+      native && track
+        ? Math.abs(native.centreY - track.centreY)
+        : Number.POSITIVE_INFINITY;
+    const nativeOnTrack = Boolean(
+      native &&
+        track &&
+        native.centreX >= track.x &&
+        native.centreX <= track.x + track.w &&
+        centreOffset <= MAX_THUMB_TRACK_OFFSET,
+    );
+    checks.push([
+      "the drawn volume thumb is at most 16px",
+      false,
+      native
+        ? `no [data-player-volume-thumb]; native thumb box ${native.w}×${native.h}px, visible dot ${native.visibleDotDiameter ?? "unknown"}px diameter, centre (${native.centreX}, ${native.centreY})`
+        : "the volume control was not found",
+    ]);
+    checks.push([
+      "the drawn volume thumb sits on the painted track",
+      nativeOnTrack,
+      native && track
+        ? `native thumb centre (${native.centreX}, ${native.centreY}), track x=${track.x}..${track.x + track.w}px centre y=${track.centreY}px, vertical offset ${centreOffset}px`
+        : "the painted track or native thumb was not found",
+    ]);
+  }
   // The quality control stays away while the manifest carries no rung — an
   // empty menu is worse than no menu. It is a note, not a failure.
   console.log(

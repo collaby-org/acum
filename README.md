@@ -177,14 +177,16 @@ export ACUM_HARNESS_EMAIL='…'
 export ACUM_HARNESS_PASSWORD='…'
 
 npm run verify:live          # 11 questions about the live site
+npm run verify:front:door    # the front door: never /conturi, in three device states
 npm run verify:player        # one click → moving picture, no popup, no ad host
-npm run verify:player:bar    # the bar: one line, one size, 44px targets
+npm run verify:player:bar    # the bar: one line, one size, 44px targets, no overlap
 npm run verify:ui            # walk the app, fail on a console error
 npm run verify:mobile        # the phone: the channel page and the bottom bar
 npm run verify:mobile:stream # the playhead on a throttled line
 npm run verify:mobile:nav    # the bottom bar: is the tap eaten? how slow?
 npm run verify:acum          # the catalogue and the guide, against the live site
 npm run verify:fallback      # the failover chain, when a feed dies
+npm run verify:reviews       # the review engine, end to end, and cleans up after itself
 ```
 
 Every number these harnesses produced is written down in

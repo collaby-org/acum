@@ -123,16 +123,30 @@ export function getUserClient(accessToken: string): SupabaseClient {
   });
 }
 
+/** The result of checking an access token against the auth server. */
+export type UserVerification =
+  | { status: "authenticated"; user: { id: string; email: string | null } }
+  | { status: "signed-out" }
+  | { status: "unavailable" };
+
 /**
- * The visitor behind a request, read from the `Authorization` header.
+ * Check an access token and say what happened.
  *
- * The token is checked against Supabase, never decoded and believed: a
- * forged token is worth nothing here.
+ * A rejected token and an auth server that could not answer are different
+ * facts. The first means the visitor is signed out; the second means nobody
+ * knows yet. Callers that need that distinction use this helper.
+ *
+ * The check is bounded: an auth server that accepts the connection and then
+ * goes quiet cannot hold a page open forever.
  */
-export async function readUser(
+export async function verifyUser(
   accessToken: string,
-): Promise<{ id: string; email: string | null } | null> {
-  assertServer("readUser()");
+  timeoutMs = 2_500,
+): Promise<UserVerification> {
+  assertServer("verifyUser()");
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   let response: Response;
   let body: {
@@ -146,28 +160,51 @@ export async function readUser(
         authorization: `Bearer ${accessToken}`,
       },
       cache: "no-store",
+      signal: controller.signal,
     });
 
-    if (!response.ok) return null;
+    if (response.status === 400 || response.status === 401 || response.status === 403) {
+      return { status: "signed-out" };
+    }
+    if (!response.ok) return { status: "unavailable" };
 
     body = (await response.json()) as {
       id?: unknown;
       email?: unknown;
     };
   } catch {
-    // The auth server is unreachable or answered with a malformed body. A
-    // visitor is not signed in for as long as that lasts — the caller
-    // decides what a blip means for this route, but the read itself must not
-    // crash the page.
-    return null;
+    // The auth server is unreachable, timed out or answered with a
+    // malformed body. None of those proves that the visitor is signed out.
+    return { status: "unavailable" };
+  } finally {
+    clearTimeout(timeout);
   }
 
-  if (typeof body.id !== "string" || body.id.length === 0) return null;
+  if (typeof body.id !== "string" || body.id.length === 0) {
+    return { status: "unavailable" };
+  }
 
   return {
-    id: body.id,
-    email: typeof body.email === "string" ? body.email : null,
+    status: "authenticated",
+    user: {
+      id: body.id,
+      email: typeof body.email === "string" ? body.email : null,
+    },
   };
+}
+
+/**
+ * The visitor behind a request, read from the `Authorization` header.
+ *
+ * The token is checked against Supabase, never decoded and believed: a
+ * forged token is worth nothing here. The exported contract stays the same
+ * for callers that only need to know whether a user exists.
+ */
+export async function readUser(
+  accessToken: string,
+): Promise<{ id: string; email: string | null } | null> {
+  const result = await verifyUser(accessToken);
+  return result.status === "authenticated" ? result.user : null;
 }
 
 /**

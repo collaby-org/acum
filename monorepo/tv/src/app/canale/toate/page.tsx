@@ -21,7 +21,6 @@ import { loadGuide } from "@/lib/guide";
 import { CATEGORY_ORDER, sortChannels } from "@/lib/navigation";
 import { getSecondaryMeta } from "@/lib/secondary";
 import { SITE_NAME } from "@/lib/site";
-import { requireSignedIn } from "@/lib/session";
 import { plural } from "@/lib/utils";
 
 /**
@@ -54,7 +53,6 @@ const NO_GUIDE: EpgGuide = { date: null, reference: null, channels: [] };
 
 export default async function ToateCanalele() {
   await connection();
-  await requireSignedIn("/canale/toate");
 
   const meta = await getSecondaryMeta();
   const channels = toPublicChannels(CHANNELS, meta);

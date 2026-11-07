@@ -120,3 +120,28 @@ Each push adds a line here.
 | 1.7.9 | see `git log` | the secret scan reports the name the protected branch asks for, and it reads the repository instead of the documentation |
 | 1.7.10 | see `git log` | the broken Kodus CLI stops painting a red check on every pull request; Dependabot stops offering the opencode action that upstream removed |
 | 1.8.0 | see `git log` | the review engine in the television app, the channel surface managing the visitor's own review, Back closing the composer, the phone rules the television app was missing, and the harness that proves the review engine end to end |
+| 1.8.1 | see `git log` | the front door never lands on `/conturi` (web, phone, installed PWA); the volume dot is small and on the track; the bar's controls do not overlap; the header clears the iPhone notch; a phone keeps the live edge; the harnesses name the check that carries their verdict |
+
+---
+
+## 6. The 1.8.1 wave — the owner's five new reports
+
+The owner filed five new bugs against the live site after 1.8.0. They are
+recorded here in their own words, with what was measured and what was done.
+
+| # | Report as filed | What the measurement said | What landed |
+| - | --------------- | ------------------------ | ----------- |
+| 1 | A fresh boot of `/` always lands first on `/conturi` — it must always be `/canale`, on mobile and in the PWA too | the catalogue pages gated on the session, and the gate could not tell *signed out* from *could not be checked*: one network hiccup at the auth server meant `/conturi` | the catalogue is public and does not gate any more; the session read has three answers and a timeout; the proxy sends any browser with a session to `/canale`; both manifests open `/canale`, and the service worker precaches the catalogue |
+| 2 | On desktop, the icons/buttons overlap on hover | the bar carried a second **"Scrie o recenzie"** button — the same action the channel panel beside the picture already offers — and it could slide under the panel | the duplicate is gone; the right-hand controls are one flex group |
+| 3 | The volume bar dot is too big on desktop and mobile, and on mobile it is out of position | the native knob was a 44-pixel box with a 5-pixel dot in it; on iOS `appearance-none` on the element was missing, so Safari painted its own knob | the native knob is taken away in both engines (`-webkit-appearance: none` on the input element) and the app draws its own 12-pixel dot, inset by its radius so it stands at the end of the fill at every value |
+| 4 | The PWA still shows buttons under the signal bar in the iPhone notch | the header was `fixed top-0` with no safe-area padding, so in standalone mode it sat under the status bar | the header's row starts below `env(safe-area-inset-top)`; the viewport is on `viewport-fit=cover` |
+| 5 | The connection loops and then drops on mobile and in the PWA — it never stays at the live moment, it plays a few moments at one sequence and then drops completely | three separate faults, found by reading the code against the measured path: a `play()` interrupted by the browser (`AbortError`) was read as a dead link and threw the player onto the next feed; the stall watchdog counted `waiting` events instead of watching the playhead, so a normal buffer refill on a slow line was read as a dead stream after fifteen seconds; and when the chain was walked out the player gave up on addresses minted minutes earlier instead of asking for a fresh chain | an interrupted start is not a failure; the watchdog counts the seconds in which the picture does not move and gives up only after twenty; the chain is asked for once more before the session is called a failure; the proxy answers inside the live window (5 s) instead of hanging for 30 s |
+
+The live path was measured before any of it was changed: the manifest
+answers in **2771 ms** (`gate 783 · claim 386 · resolve 682 · probe 705`),
+the playlist carries an **8-second target duration** and 14 segments of
+about **2.06 MB**, both catalogue feeds for PRO TV serve the *same* stream
+(`#EXT-X-MEDIA-SEQUENCE:1447`), and the segments are real MPEG-TS
+(`47 40 11 …`). The two "sources" are therefore one feed in two places —
+which is why the failover had to be given a fresh chain instead of a
+second copy of the same address.
