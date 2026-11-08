@@ -1,54 +1,16 @@
 {
   "lanes": [
     {
-      "id": "front-door",
+      "id": "phone-stream",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/proxy.ts",
-        "monorepo/frontend/src/lib/session.ts",
-        "monorepo/frontend/src/lib/admin.ts",
-        "monorepo/frontend/src/lib/supabase/server.ts",
-        "monorepo/frontend/src/app/canale/page.tsx",
-        "monorepo/frontend/src/app/canale/toate/page.tsx",
-        "monorepo/frontend/src/app/canale/grupate/page.tsx",
-        "monorepo/frontend/src/app/canale/[categorie]/page.tsx",
-        "monorepo/frontend/public/manifest.webmanifest",
-        "monorepo/frontend/public/sw.js",
-        "monorepo/frontend/scripts/verify-front-door.mjs",
-        "monorepo/tv/src/app/canale/page.tsx",
-        "monorepo/tv/src/app/canale/toate/page.tsx",
-        "monorepo/tv/src/app/canale/grupate/page.tsx",
-        "monorepo/tv/src/app/canale/[categorie]/page.tsx",
-        "monorepo/tv/src/lib/session.ts",
-        "monorepo/tv/public/manifest.webmanifest",
-        "monorepo/tv/public/sw.js"
-      ],
-      "outputs": [
-        "a fresh boot lands on /canale and never on /conturi — desktop, mobile, installed PWA",
-        "a transient auth failure cannot bounce the visitor to the accounts page",
-        "a regression harness that prints the whole route chain"
-      ]
-    },
-    {
-      "id": "player-bar",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/src/components/player/player-controls.tsx",
         "monorepo/frontend/src/components/player/video-player.tsx",
-        "monorepo/frontend/src/hooks/use-player.ts",
-        "monorepo/frontend/src/components/header.tsx",
-        "monorepo/frontend/src/app/globals.css",
-        "monorepo/frontend/src/app/layout.tsx",
-        "monorepo/tv/src/components/player/player-controls.tsx",
-        "monorepo/tv/src/components/player/video-player.tsx",
-        "monorepo/tv/src/hooks/use-player.ts",
-        "monorepo/tv/src/app/globals.css",
-        "monorepo/tv/src/app/layout.tsx"
+        "monorepo/tv/src/components/player/video-player.tsx"
       ],
       "outputs": [
-        "the volume dot is small, on the track, on desktop and on iPhone",
-        "the transport bar's controls never overlap on hover",
-        "the header clears the iPhone notch in standalone mode"
+        "the stall watchdog never reloads the media element — a reset cancels the segment on its way",
+        "the cold start is counted but never disturbed: before the first picture there is no stall to mend",
+        "the phone's picture arrives: 32.55 s of playhead and 219 painted frames on a throttled line, where the element as shipped never left readyState 0"
       ]
     },
     {
@@ -57,16 +19,14 @@
       "paths": [
         "monorepo/frontend/src/lib/reviews.ts",
         "monorepo/frontend/src/lib/guide.ts",
-        "monorepo/frontend/src/hooks/use-reviews.ts",
-        "monorepo/frontend/src/app/api/reviews",
         "monorepo/frontend/src/components/reviews/zoom-overlay.tsx",
         "monorepo/frontend/src/components/player/player-modal.tsx",
-        "monorepo/frontend/src/components/channel/channel-panel.tsx",
         "monorepo/frontend/scripts/verify-reviews.mjs",
         "monorepo/tv/src/lib/reviews.ts",
         "monorepo/tv/src/lib/guide.ts",
+        "monorepo/tv/src/lib/supabase/server.ts",
         "monorepo/tv/src/hooks/use-reviews.ts",
-        "monorepo/tv/src/app/api/reviews",
+        "monorepo/tv/src/app/api/reviews/route.ts",
         "monorepo/tv/src/components/reviews/zoom-overlay.tsx",
         "monorepo/tv/src/components/player/player-modal.tsx",
         "monorepo/tv/src/components/channel/channel-panel.tsx"
@@ -78,29 +38,17 @@
       ]
     },
     {
-      "id": "stream-resilience",
+      "id": "harness-truth",
       "role": "write",
       "paths": [
-        "monorepo/frontend/src/app/api/stream/route.ts"
-      ],
-      "outputs": [
-        "the proxy answers inside the live window instead of hanging for thirty seconds",
-        "a refused playlist is a refusal the player can retry, not a silence"
-      ]
-    },
-    {
-      "id": "harnesses",
-      "role": "write",
-      "paths": [
-        "monorepo/frontend/scripts/verify-mobile.mjs",
-        "monorepo/frontend/scripts/verify-mobile-stream.mjs",
+        "monorepo/frontend/scripts/verify-player-bar.mjs",
         "monorepo/frontend/scripts/verify-acum.mjs",
-        "monorepo/frontend/scripts/verify-player-bar.mjs"
+        "monorepo/frontend/scripts/verify-mobile-stream.mjs"
       ],
       "outputs": [
-        "the phone harness names the check that fails instead of exiting silently",
-        "the stream harness says what 'the picture arrived' means",
-        "the bar harness proves the controls do not overlap and the volume dot is small"
+        "the bar harness's program reaches the browser with its escapes intact, and a protocol error fails loudly",
+        "the acum harness asks the running app for the schedule, not a committed snapshot",
+        "the phone-stream harness records the painted frames, the buffer and the playhead"
       ]
     },
     {
@@ -108,18 +56,15 @@
       "role": "write",
       "paths": [
         ".agents/lanes.json",
-        ".github/workflows/kodus-review.yml",
+        ".gitignore",
         "docs",
-        "README.md",
         "monorepo/frontend/package.json",
-        "monorepo/tv/package.json",
-        "monorepo/frontend/docs"
+        "monorepo/tv/package.json"
       ],
       "outputs": [
-        "the changelog, the backlog, the verification log, the README and the diagrams",
+        "the changelog, the backlog, the verification log and the work log",
         "the version line that moves with every release",
-        "the proof scripts, run against the deployed site",
-        "the Kodus review actually runs: the CLI needs Node 22.15+, not 20"
+        "the proof scripts, run against the deployed site"
       ]
     }
   ]

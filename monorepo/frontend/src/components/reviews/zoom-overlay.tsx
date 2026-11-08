@@ -481,7 +481,7 @@ export function ZoomOverlay({
     // decided without the browser painting an intermediate frame.
     // eslint-disable-next-line react-hooks/set-state-in-effect -- animation phase, set once per open, never in a loop
     setLeaving(false);
-    
+
     setMounted(true);
   }, [open, origin, overlayId]);
 
@@ -644,11 +644,18 @@ export function ZoomOverlay({
    * The browser pops the entry the panel pushed, and the panel goes with
    * it: Back was pressed, and the thing that sat on top of the page is
    * what Back was meant to dismiss.
+   *
+   * Only the panel's own entry counts. A panel that sits on top of
+   * another one — a sheet over a player, a sheet over a sheet — pushes an
+   * entry of its own, and a Back that consumes *that* entry must leave
+   * the panel below it exactly where it was. The marker in the history
+   * state says whose entry is now current: when it is this panel's own,
+   * the entry that was consumed was the one above it.
    */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const onPopState = () => {
+    const onPopState = (event: PopStateEvent) => {
       // The panel's own pop, from the close below: the panel is already
       // on its way out and must not be told to leave twice.
       if (popping.current) {
@@ -657,13 +664,17 @@ export function ZoomOverlay({
       }
       if (!historyEntry.current) return;
 
+      // The entry that is current now carries this panel's own marker:
+      // the pop consumed the entry above it, not this one.
+      if (event.state?.["acum:zoom-overlay"] === overlayId) return;
+
       historyEntry.current = false;
       dismiss();
     };
 
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, [dismiss]);
+  }, [dismiss, overlayId]);
 
   /**
    * The panel leaves the history on its way out.

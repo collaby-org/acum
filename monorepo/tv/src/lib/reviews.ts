@@ -26,8 +26,8 @@
  *      empty rather than filling itself with something plausible.
  */
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { catalogueChannel } from "@/lib/catalogue";
+import { resolveProgrammeSlot } from "@/lib/guide";
 import { byPopularity } from "@/lib/review-rank";
 import {
   REACTION_KINDS,
@@ -35,40 +35,12 @@ import {
   type ReactionKind,
   type Review,
 } from "@/components/reviews/types";
-import { getUserClient, readUser } from "@/lib/supabase/server";
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/client";
-
-/**
- * The public Supabase client used for open reads.
- *
- * The TV server module does not expose a public client, so this server-only
- * library builds one from the same publishable key. It never writes: every
- * write goes through the visitor's own token in `getUserClient`.
- */
-function getPublicClient(): SupabaseClient {
-  if (typeof window !== "undefined") {
-    throw new Error(
-      "getPublicClient() a fost apelat în browser. Cheile de server nu ajung niciodată în browser.",
-    );
-  }
-
-  const url = SUPABASE_URL;
-  const key = SUPABASE_ANON_KEY;
-  if (!url || !key) {
-    throw new Error(
-      "NEXT_PUBLIC_SUPABASE_URL și NEXT_PUBLIC_SUPABASE_ANON_KEY nu sunt setate. Operațiunile publice (recenzii) au nevoie de ele.",
-    );
-  }
-
-  return createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
-
-/** True when the public review tables can be reached. */
-function hasPublicConfig(): boolean {
-  return Boolean(SUPABASE_URL) && Boolean(SUPABASE_ANON_KEY);
-}
+import {
+  getPublicClient,
+  getUserClient,
+  hasPublicConfig,
+  readUser,
+} from "@/lib/supabase/server";
 
 /** How many reviews the popular section asks for. */
 export const POPULAR_LIMIT = 6;
@@ -237,7 +209,83 @@ export async function readReviews(options: {
    * else's.
    */
   mine?: boolean;
-} ): Promise<{ configured: boolean; reason: string | null; reviews: Review[] }> {
+}): Promise<{ configured: boolean; reason: string | null; reviews: Review[] }> {
+  if (options.mine && !options.token) {
+    return { configured: true, reason: null, reviews: [] };
+  }
+
+  const limit = Math.min(Math.max(options.limit ?? POPULAR_LIMIT, 1), 100);
+
+  if (options.mine) {
+    const token = options.token;
+    if (!token) {
+      return { configured: true, reason: null, reviews: [] };
+    }
+
+    try {
+      const user = await readUser(token);
+      if (!user) {
+        return { configured: true, reason: null, reviews: [] };
+      }
+
+      const client = getUserClient(token);
+      let query = client
+        .from("reviews")
+        .select(
+          "id,user_id,channel_id,channel_name,programme_title,programme_starts_at,programme_ends_at,rating,body,author_label,created_at",
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (options.channelId) query = query.eq("channel_id", options.channelId);
+
+      const rows = await query;
+      const list = (rows.data as ReviewRow[] | null) ?? [];
+      if (list.length === 0) {
+        return { configured: true, reason: null, reviews: [] };
+      }
+
+      const ids = list.map((row) => row.id);
+      const [countAnswer, reactions] = await Promise.all([
+        client.rpc("review_reaction_counts", { p_ids: ids }),
+        client
+          .from("review_reactions")
+          .select("review_id,kind")
+          .in("review_id", ids),
+      ]);
+
+      const countMap = readCounts(countAnswer.data);
+      const reactionMap = new Map<string, ReactionKind>();
+      for (const row of (reactions.data as OwnReactionRow[] | null) ?? []) {
+        const kind = readKind(row.kind);
+        if (kind) reactionMap.set(row.review_id, kind);
+      }
+
+      const reviews = list.map((row) =>
+        toReview(
+          row,
+          countMap.get(row.id) ?? { like: 0, love: 0, clap: 0 },
+          reactionMap.get(row.id) ?? null,
+          true,
+        ),
+      );
+
+      const ranked = reviews
+        .sort((a, b) => byPopularity(a, b, (options.now ?? new Date()).getTime()))
+        .slice(0, limit);
+
+      return { configured: true, reason: null, reviews: ranked };
+    } catch {
+      return {
+        configured: false,
+        reason:
+          "Recenziile nu au putut fi citite acum. Încearcă din nou într-un moment.",
+        reviews: [],
+      };
+    }
+  }
+
   if (!hasPublicConfig()) {
     return {
       configured: false,
@@ -247,53 +295,23 @@ export async function readReviews(options: {
     };
   }
 
-  const limit = Math.min(Math.max(options.limit ?? POPULAR_LIMIT, 1), 100);
-
   try {
     const client = getPublicClient();
 
-    let list: ReviewRow[];
+    // A generous window: the blend decides what is popular, and cutting
+    // the pool here would be ranking a room instead of the house.
+    let query = client
+      .from("reviews")
+      .select(
+        "id,user_id,channel_id,channel_name,programme_title,programme_starts_at,programme_ends_at,rating,body,author_label,created_at",
+      )
+      .order("created_at", { ascending: false })
+      .limit(200);
 
-    if (options.mine) {
-      // The visitor's own rows, read under the visitor's own token.
-      const token = options.token ?? null;
-      const user = token ? await readUser(token) : null;
-      if (!token || !user) {
-        // No session, no rows — and not an error: an empty answer is the
-        // honest one, and it never carries somebody else's review.
-        return { configured: true, reason: null, reviews: [] };
-      }
+    if (options.channelId) query = query.eq("channel_id", options.channelId);
 
-      let own = getUserClient(token)
-        .from("reviews")
-        .select(
-          "id,user_id,channel_id,channel_name,programme_title,programme_starts_at,programme_ends_at,rating,body,author_label,created_at",
-        )
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-      if (options.channelId) own = own.eq("channel_id", options.channelId);
-
-      const rows = await own;
-      list = (rows.data as ReviewRow[] | null) ?? [];
-    } else {
-      // A generous window: the blend decides what is popular, and cutting
-      // the pool here would be ranking a room instead of the house.
-      let query = client
-        .from("reviews")
-        .select(
-          "id,user_id,channel_id,channel_name,programme_title,programme_starts_at,programme_ends_at,rating,body,author_label,created_at",
-        )
-        .order("created_at", { ascending: false })
-        .limit(200);
-
-      if (options.channelId) query = query.eq("channel_id", options.channelId);
-
-      const rows = await query;
-      list = (rows.data as ReviewRow[] | null) ?? [];
-    }
-
+    const rows = await query;
+    const list = (rows.data as ReviewRow[] | null) ?? [];
     if (list.length === 0) {
       return { configured: true, reason: null, reviews: [] };
     }
@@ -390,9 +408,13 @@ export type DraftResult =
  *
  * The channel is checked against the catalogue: a review belongs to a
  * channel that exists, and a channel id invented in a console is not one.
- * The programme is optional — the guide does not cover every slot — and
- * when it is missing the review is a review of the channel and says so,
- * rather than being attached to a programme nobody named.
+ *
+ * The programme is the guide's, not the browser's. The browser may only
+ * say which slot it means — the start and the end — and the server looks
+ * that slot up in its own guide: the title that is stored is the guide's
+ * title, and the times are the guide's times. A slot the guide does not
+ * have is refused, and a review without a programme is a review of the
+ * channel and says so.
  */
 export async function readDraft(payload: unknown): Promise<DraftResult> {
   if (!payload || typeof payload !== "object") {
@@ -420,9 +442,35 @@ export async function readDraft(payload: unknown): Promise<DraftResult> {
     return { ok: false, error: "Alege un canal din catalog." };
   }
 
-  const programmeTitle = readText(body.programmeTitle, 1, TEXT_MAX);
-  const programmeStartsAt = readInstant(body.programmeStartsAt);
-  const programmeEndsAt = readInstant(body.programmeEndsAt);
+  const claimedTitle = readText(body.programmeTitle, 1, TEXT_MAX);
+  const claimedStartsAt = readInstant(body.programmeStartsAt);
+  const claimedEndsAt = readInstant(body.programmeEndsAt);
+
+  // A programme was named, so it has to be a whole slot: both instants,
+  // and a slot the guide knows. A title alone is not a slot.
+  const namesProgramme =
+    claimedTitle !== null || claimedStartsAt !== null || claimedEndsAt !== null;
+
+  let programmeTitle: string | null = null;
+  let programmeStartsAt: string | null = null;
+  let programmeEndsAt: string | null = null;
+
+  if (namesProgramme) {
+    const slot = await resolveProgrammeSlot(
+      channelId,
+      claimedStartsAt?.toISOString() ?? null,
+      claimedEndsAt?.toISOString() ?? null,
+    );
+    if (!slot) {
+      return {
+        ok: false,
+        error: "Emisiunea nu se găsește în programul canalului.",
+      };
+    }
+    programmeTitle = slot.title;
+    programmeStartsAt = slot.startsAt;
+    programmeEndsAt = slot.endsAt;
+  }
 
   return {
     ok: true,
@@ -430,9 +478,9 @@ export async function readDraft(payload: unknown): Promise<DraftResult> {
       rating,
       body: text,
       channelId,
-      programmeTitle: programmeTitle?.trim() ?? null,
-      programmeStartsAt: programmeStartsAt?.toISOString() ?? null,
-      programmeEndsAt: programmeEndsAt?.toISOString() ?? null,
+      programmeTitle,
+      programmeStartsAt,
+      programmeEndsAt,
     },
   };
 }
@@ -511,9 +559,9 @@ export async function writeReview(
  * The name an account goes by, or nothing invented.
  *
  * The profile row is read with the visitor's own client, so this is a row
- * the policy already says is theirs. When there is no name, the e-mail's
- * local part is used; when there is no e-mail either, the review is
- * signed "Vizionator" — a truthful label for somebody who was here.
+ * the policy already says is theirs. The name on that row is the name
+ * that is published — and nothing else: an account without a name is
+ * signed "Vizitator ACUM", never the first part of its e-mail address.
  */
 async function authorLabel(
   token: string,
@@ -522,23 +570,23 @@ async function authorLabel(
 ): Promise<string> {
   const { data } = await getUserClient(token)
     .from("profiles")
-    .select("display_name,email")
+    .select("display_name")
     .eq("id", userId)
     .maybeSingle();
 
-  const row = (data ?? {}) as { display_name?: unknown; email?: unknown };
+  const row = (data ?? {}) as { display_name?: unknown };
 
   const name = typeof row.display_name === "string" ? row.display_name.trim() : "";
-  if (name) return name.slice(0, TEXT_MAX);
 
-  const address =
-    typeof row.email === "string" && row.email.includes("@")
-      ? row.email
-      : (email ?? "");
-  const local = address.split("@")[0]?.trim() ?? "";
-  if (local) return local.slice(0, TEXT_MAX);
+  // A profile whose name is the account's own e-mail local part is not a
+  // name: the trigger fills it in when the account has none. It is not
+  // published.
+  const local = (email ?? "").split("@")[0]?.trim().toLowerCase() ?? "";
+  if (name && (!local || name.toLowerCase() !== local)) {
+    return name.slice(0, TEXT_MAX);
+  }
 
-  return "Vizionator";
+  return "Vizitator ACUM";
 }
 
 /**
@@ -721,9 +769,9 @@ async function ownerOf(
  * moment the review was written, and a review that could change its
  * channel would be a review of something else.
  *
- * The write runs under the visitor's own token, so the row level
- * policies have the last word. There is no service-role fallback: the
- * database policy is the barrier that keeps an edit on its author's row.
+ * The write runs under the visitor's own token, so the row level policies
+ * have the last word. There is no service-role fallback: the visitor's
+ * token is the barrier for the write.
  */
 export async function editReview(
   token: string,
@@ -789,10 +837,14 @@ export async function editReview(
     .eq("user_id", user.id);
 
   if (ownWrite) {
+    // The write did not go through. That is a fact about the desk, not
+    // about the review: the answer says the editing is not available
+    // right now, and the status says the same — a service that is not
+    // there is not a server error.
     return {
       ok: false,
-      error: "Recenzia nu a putut fi modificată. Încearcă din nou.",
-      status: 500,
+      error: "Modificarea recenziilor nu este disponibilă acum",
+      status: 503,
     };
   }
 

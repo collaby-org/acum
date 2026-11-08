@@ -196,6 +196,14 @@ export function ChannelPanel({
     failed: boolean;
   }>({ id: channelId, sheet: null, failed: false });
 
+  /**
+   * The counter that asks for the sheet again.
+   *
+   * A failed read is not an empty channel: the panel says so and offers a
+   * retry, and the retry is a new read of the same channel.
+   */
+  const [reloadToken, setReloadToken] = useState(0);
+
   /** The composer and the place on the screen it was asked from. */
   const [composerOpen, setComposerOpen] = useState(false);
   const [composerOrigin, setComposerOrigin] = useState<ZoomPoint | null>(null);
@@ -232,7 +240,18 @@ export function ChannelPanel({
     return () => {
       live = false;
     };
-  }, [channelId, tick]);
+  }, [channelId, tick, reloadToken]);
+
+  /**
+   * Ask for the sheet again.
+   *
+   * The desk did not answer the last time; it may answer now. The panel
+   * goes back to its waiting shape while it tries.
+   */
+  const retry = useCallback(() => {
+    setState({ id: channelId, sheet: null, failed: false });
+    setReloadToken((value) => value + 1);
+  }, [channelId]);
 
   /** Open the composer from the control the remote just activated. */
   const openComposer = useCallback(
@@ -426,7 +445,27 @@ export function ChannelPanel({
               </p>
             ) : null}
           </div>
-        ) : sheet || failed ? (
+        ) : failed ? (
+          <div
+            role="alert"
+            data-slot="channel-programme-error"
+            className="rounded-2xl border border-live/30 bg-live/10 p-3.5"
+          >
+            <p className="text-[13px] font-medium leading-relaxed text-ink">
+              Programul nu poate fi citit acum.
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">
+              Încearcă din nou ca să vezi ce rulează în acest moment.
+            </p>
+            <TVFocusable
+              onClick={retry}
+              className="mt-3 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.05] px-4 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08]"
+            >
+              <RefreshCw aria-hidden className="size-4" />
+              Încearcă din nou
+            </TVFocusable>
+          </div>
+        ) : sheet ? (
           <p
             data-slot="channel-programme-empty"
             className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-3.5 text-[13px] leading-relaxed text-ink-faint"

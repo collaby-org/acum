@@ -71,7 +71,9 @@ export async function GET(request: Request) {
   const search = new URL(request.url).searchParams;
   const channel = search.get("channel");
   const limit = search.get("limit");
-  const mine = search.get("mine");
+  const mine = ["1", "true", "yes"].includes(
+    (search.get("mine") ?? "").toLowerCase(),
+  );
 
   const parsed =
     limit && Number.isFinite(Number(limit)) ? Number(limit) : POPULAR_LIMIT;
@@ -84,9 +86,7 @@ export async function GET(request: Request) {
     token,
     channelId: channel,
     limit: Math.min(Math.max(parsed, 1), CHANNEL_LIMIT),
-    // "1", "true" and "yes" all mean the same thing: the visitor's own
-    // rows, and nothing else.
-    mine: mine === "1" || mine === "true" || mine === "yes",
+    mine,
   });
 
   const payload: ReviewsPayload = {

@@ -9,6 +9,64 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.8.2] — 2026-11-08
+
+### Fixed
+
+- **The phone never got a picture.** The stall watchdog that 1.8.1 added
+  to mend a frozen stream reset the media element every five seconds on
+  the browsers that play HLS natively — Safari on iOS, and Chromium, whose
+  `canPlayType("application/vnd.apple.mpegurl")` answers *"maybe"*. A
+  reset throws away every byte already fetched, puts the element back to
+  `readyState 0` and cancels the segment that was on its way; the pending
+  `play()` is rejected with an `AbortError`. On a slow line the picture
+  never arrived at all: the viewer waited for a frame that was cancelled
+  again and again, and the chain threw the phone from feed to feed. The
+  watchdog no longer reloads the element, and it leaves the cold start
+  alone — before the first picture there is no stall to mend, only a slow
+  line. The chain moving on is the recovery; the element stays as it is.
+  Measured on a throttled phone line, one element per run, against the
+  same signed manifest: the playhead advanced **32.55 s with 219 painted
+  frames** and the proxy answered **4 playlists and 6 segments**, where the
+  element as shipped never left `readyState 0`, painted nothing and pulled
+  19 playlists and 13 segments.
+- **A review could name a programme the guide does not know.** The stored
+  title and the two instants of a review are the guide's own now: the
+  server resolves the slot it is given and answers with the title and the
+  times the guide itself uses, or with nothing at all. A partial or a
+  forged slot has no answer.
+- **An account without a name published its e-mail.** A profile whose name
+  is the account's own e-mail local part is not a name — the trigger fills
+  it in when the account has none — so the review is signed
+  **„Vizitator ACUM"** instead.
+- **A failed edit said „server error".** When the write does not go
+  through, the answer says the editing is not available right now
+  (**503**, „Modificarea recenziilor nu este disponibilă acum") — a
+  service that is not there is not a server error.
+- **The television app's channel panel had no error state.** The panel now
+  says what happened and offers **„Încearcă din nou"**.
+- **Back closed the wrong thing.** The player and the review sheet each
+  push their own history entry, and each answers only for the entry it
+  pushed itself: a sheet over a player leaves the player exactly where it
+  was.
+
+### Changed
+
+- **The harnesses stopped lying.** `verify-player-bar.mjs` sends its
+  measurement program to the browser with its escapes intact and throws on
+  a protocol error instead of reporting a bar that was never missing;
+  `verify-acum.mjs` asks the running app (`/api/channel/<id>`) for the
+  schedule instead of reading a committed snapshot that is days old;
+  `verify-mobile-stream.mjs` records what the browser actually did — the
+  painted frames, the buffer, the playhead — and names the check that
+  carries its verdict.
+- **The two review engines are the same file.** The television app's
+  server module grew the public client the reviews need, so
+  `lib/reviews.ts` is now byte-for-byte the same in both apps.
+- **The browser harnesses' scratch folder is not a repository file.** The
+  Edge profile the harnesses write carries the signed-in session; it is
+  ignored now, and the tracked evidence stays in `docs/reviews/`.
+
 ## [1.8.1] — 2026-11-07
 
 ### Fixed

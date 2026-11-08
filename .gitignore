@@ -61,3 +61,9 @@ zz_*.bak
 *_probe_*.php
 *_ddl_probe.php
 *.bak
+
+# The browser harnesses write their screenshots, their evidence folders and
+# their Edge profile under monorepo/frontend/docs/. The profile carries the
+# signed-in session (Login Data, cookies) — it is a secret and never a file
+# of the repository. The tracked evidence lives in docs/reviews/ at the root.
+monorepo/frontend/docs/

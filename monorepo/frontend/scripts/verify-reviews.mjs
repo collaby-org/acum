@@ -54,6 +54,7 @@ const COPY = {
   empty: "Nicio recenzie încă",
   emptyAction: "Scrie prima recenzie",
   anonymousWrite: "Autentifică-te pentru a scrie o recenzie.",
+  forgedSlot: "Emisiunea nu se găsește în programul canalului.",
 };
 
 const MARKER = `verify-reviews-${Date.now()}-${randomUUID().slice(0, 8)}`;
@@ -63,8 +64,23 @@ const EDITED_BODY = `${BODY} — editată`;
 const sleep = (ms) => new Promise((resolve_) => setTimeout(resolve_, ms));
 const results = [];
 
-/** Set as soon as the browser helper exists, so cleanup can use it too. */
-let browserFetchJson = null;
+/**
+ * The browser and its DevTools socket.
+ *
+ * They live at module scope on purpose: the cleanup runs after the main
+ * run has thrown, and it needs the same browser and the same request
+ * helper the run itself used. A helper that only exists inside the run
+ * is a helper the cleanup cannot reach — and a review that stays in the
+ * database because the cleanup could not ask is a row nobody owns.
+ */
+let edge = null;
+let ws = null;
+
+/** The counter the DevTools messages are numbered with. */
+let messageId = 0;
+
+/** The DevTools calls that are still waiting for their answer. */
+const pending = new Map();
 
 /** What cleanup needs if a step throws half-way through. */
 let cleanupContext = null;
@@ -93,6 +109,84 @@ function sameInstant(first, second) {
   const a = Date.parse(first);
   const b = Date.parse(second);
   return Number.isFinite(a) && Number.isFinite(b) && a === b;
+}
+
+/**
+ * One DevTools call, and the answer it gets.
+ *
+ * The socket and the waiting calls live at module scope, so the cleanup
+ * can use this helper too — after a step has thrown and the run is over.
+ */
+function send(method, params = {}) {
+  return new Promise((resolveMessage, rejectMessage) => {
+    if (!ws) {
+      rejectMessage(new Error("the browser is not connected"));
+      return;
+    }
+
+    const id = ++messageId;
+    const timer = setTimeout(() => {
+      pending.delete(id);
+      rejectMessage(new Error(`${method} timed out`));
+    }, 20_000);
+
+    pending.set(id, {
+      resolve: (message) => {
+        clearTimeout(timer);
+        resolveMessage(message);
+      },
+      reject: (error) => {
+        clearTimeout(timer);
+        rejectMessage(error);
+      },
+    });
+
+    ws.send(JSON.stringify({ id, method, params }));
+  });
+}
+
+/**
+ * An expression, evaluated in the page.
+ *
+ * The answer is the value the expression returned, or the reason it did
+ * not: a check that cannot be measured is a check that failed.
+ */
+async function evaluate(expression) {
+  const reply = await send("Runtime.evaluate", {
+    expression,
+    awaitPromise: true,
+    returnByValue: true,
+  });
+  const details = reply.result?.exceptionDetails;
+  if (details) {
+    throw new Error(
+      details.exception?.description ??
+        details.text ??
+        "the browser could not evaluate the check",
+    );
+  }
+  return reply.result?.result?.value;
+}
+
+/**
+ * A request made by the page itself, so it has the site's origin.
+ *
+ * Module scope, so the cleanup can ask the same question the run asked.
+ */
+async function fetchJson(path, init = {}) {
+  const answer = await evaluate(`(async () => {
+    const response = await fetch(${JSON.stringify(path)}, ${JSON.stringify(init)});
+    const text = await response.text();
+    let body = null;
+    try { body = JSON.parse(text); } catch { /* the body is not JSON */ }
+    return {
+      status: response.status,
+      ok: response.ok,
+      body,
+      text: text.slice(0, 600),
+    };
+  })()`);
+  return answer;
 }
 
 async function main() {
@@ -141,8 +235,6 @@ async function main() {
     ws.addEventListener("error", rejectOpen, { once: true });
   });
 
-  let id = 0;
-  const pending = new Map();
   ws.addEventListener("message", (event) => {
     const message = JSON.parse(event.data);
     if (!message.id || !pending.has(message.id)) return;
@@ -154,62 +246,6 @@ async function main() {
       waiter.resolve(message);
     }
   });
-
-  const send = (method, params = {}) =>
-    new Promise((resolveMessage, rejectMessage) => {
-      const messageId = ++id;
-      const timer = setTimeout(() => {
-        pending.delete(messageId);
-        rejectMessage(new Error(`${method} timed out`));
-      }, 20_000);
-      pending.set(messageId, {
-        resolve: (message) => {
-          clearTimeout(timer);
-          resolveMessage(message);
-        },
-        reject: (error) => {
-          clearTimeout(timer);
-          rejectMessage(error);
-        },
-      });
-      ws.send(JSON.stringify({ id: messageId, method, params }));
-    });
-
-  const evaluate = async (expression) => {
-    const reply = await send("Runtime.evaluate", {
-      expression,
-      awaitPromise: true,
-      returnByValue: true,
-    });
-    const details = reply.result?.exceptionDetails;
-    if (details) {
-      throw new Error(
-        details.exception?.description ??
-          details.text ??
-          "the browser could not evaluate the check",
-      );
-    }
-    return reply.result?.result?.value;
-  };
-
-  /** A request made by the page itself, so it has the site's origin. */
-  const fetchJson = async (path, init = {}) => {
-    const answer = await evaluate(`(async () => {
-      const response = await fetch(${JSON.stringify(path)}, ${JSON.stringify(init)});
-      const text = await response.text();
-      let body = null;
-      try { body = JSON.parse(text); } catch { /* the body is not JSON */ }
-      return {
-        status: response.status,
-        ok: response.ok,
-        body,
-        text: text.slice(0, 600),
-      };
-    })()`);
-    return answer;
-  };
-
-  browserFetchJson = fetchJson;
 
   const auth = (token) => ({ authorization: `Bearer ${token}` });
 
@@ -341,6 +377,33 @@ async function main() {
   let channel = null;
   const slotNotes = [];
 
+  // A slot the guide does not have is refused, and nothing is written.
+  // The browser may say which slot it means; it may not name one.
+  const forgedSlot = await fetchJson("/api/reviews", {
+    method: "POST",
+    headers: {
+      ...auth(token),
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      rating: 3,
+      body: `Emisiune inventată. ${MARKER}`,
+      channelId: "pro-tv",
+      programmeTitle: "Emisiune inventată",
+      programmeStartsAt: "2020-01-01T00:00:00.000Z",
+      programmeEndsAt: "2020-01-01T01:00:00.000Z",
+    }),
+  });
+  const forgedSlotError =
+    typeof forgedSlot.body?.error === "string" ? forgedSlot.body.error : "";
+  record(
+    "a programme slot the guide does not have is refused",
+    forgedSlot.status === 400 && forgedSlotError === COPY.forgedSlot,
+    `status=${forgedSlot.status}, error=${JSON.stringify(
+      forgedSlotError,
+    )}, expected=${JSON.stringify(COPY.forgedSlot)}`,
+  );
+
   for (const channelId of CHANNEL_CANDIDATES) {
     const detail = await fetchJson(`/api/channel/${encodeURIComponent(channelId)}`);
     const now = detail.body?.now;
@@ -354,8 +417,11 @@ async function main() {
       continue;
     }
 
+    // The harness account's own rows for this channel: the lookup asks
+    // for them by name, so the answer is the visitor's list and nobody
+    // else's.
     const existing = await fetchJson(
-      `/api/reviews?channel=${encodeURIComponent(channelId)}&limit=100`,
+      `/api/reviews?channel=${encodeURIComponent(channelId)}&mine=1&limit=100`,
       { headers: auth(token) },
     );
     const occupied = (
@@ -431,7 +497,7 @@ async function main() {
   }
 
   const ownRead = await fetchJson(
-    `/api/reviews?channel=${encodeURIComponent(channel.id)}&limit=100`,
+    `/api/reviews?channel=${encodeURIComponent(channel.id)}&mine=1&limit=100`,
     { headers: auth(token) },
   );
   const ownReview = (
@@ -444,12 +510,17 @@ async function main() {
       ownReview?.mine === true &&
       ownReview?.rating === 4 &&
       ownReview?.body === BODY &&
-      ownReview?.programmeTitle === channel.title,
+      // The slot is the contract: the server names the programme from its
+      // own guide, so the title it stored is the guide's title and not
+      // necessarily the one the panel showed.
+      sameInstant(ownReview?.programmeStartsAt ?? null, channel.startsAt) &&
+      typeof ownReview?.programmeTitle === "string" &&
+      ownReview.programmeTitle.trim().length > 0,
     `status=${ownRead.status}, mine=${String(ownReview?.mine)}, rating=${String(
       ownReview?.rating,
-    )}, programme=${JSON.stringify(ownReview?.programmeTitle)}, bodyFound=${String(
-      ownReview?.body === BODY,
-    )}`,
+    )}, programme=${JSON.stringify(ownReview?.programmeTitle)}, slot=${String(
+      sameInstant(ownReview?.programmeStartsAt ?? null, channel.startsAt),
+    )}, bodyFound=${String(ownReview?.body === BODY)}`,
   );
 
   const publicRead = await fetchJson(
@@ -579,7 +650,7 @@ async function main() {
   );
 
   const editedRead = await fetchJson(
-    `/api/reviews?channel=${encodeURIComponent(channel.id)}&limit=100`,
+    `/api/reviews?channel=${encodeURIComponent(channel.id)}&mine=1&limit=100`,
     { headers: auth(token) },
   );
   const editedReview = (
@@ -610,7 +681,7 @@ async function main() {
   );
 
   const afterDelete = await fetchJson(
-    `/api/reviews?channel=${encodeURIComponent(channel.id)}&limit=100`,
+    `/api/reviews?channel=${encodeURIComponent(channel.id)}&mine=1&limit=100`,
     { headers: auth(token) },
   );
   const stillThere = (
@@ -638,8 +709,7 @@ async function cleanup(context) {
     return true;
   }
 
-  const request = browserFetchJson;
-  if (!request) {
+  if (!ws) {
     record(
       "the harness cleaned up after itself",
       false,
@@ -653,8 +723,10 @@ async function cleanup(context) {
   let ids = context.createdId ? [context.createdId] : [];
 
   if (ids.length === 0) {
-    const answer = await request(
-      `/api/reviews?channel=${encodeURIComponent(channel.id)}&limit=100`,
+    // The visitor's own rows: the harness asks for them by name, so the
+    // answer is the harness account's list and nobody else's.
+    const answer = await fetchJson(
+      `/api/reviews?channel=${encodeURIComponent(channel.id)}&mine=1&limit=100`,
       { headers },
     );
     ids = (
@@ -690,8 +762,6 @@ async function cleanup(context) {
   return clean;
 }
 
-let edge = null;
-let ws = null;
 let context = null;
 
 try {
@@ -703,9 +773,12 @@ try {
     error instanceof Error ? error.message : String(error),
   );
 } finally {
-  if (context || edge) {
+  // The cleanup reads the module-scope context: a step that threw
+  // half-way through may still have left a row behind, and that row has
+  // to go even when the run never finished.
+  if (cleanupContext || context || edge) {
     try {
-      await cleanup(context);
+      await cleanup(cleanupContext ?? context);
     } catch (error) {
       record(
         "the harness cleaned up after itself",
