@@ -369,7 +369,60 @@ hardening as well.
 
 ---
 
-## 12. What is still open
+## 12. The 1.8.2 wave, measured
+
+Release 1.8.2 carries the phone's picture, the review engine's honesty and
+the harnesses that tell the truth.
+
+### The phone: one element per run
+
+The owner's report — *"the connection loops and drops on mobile and in the
+installed PWA"* — had two candidate causes, and reading the code could not
+separate them. So the phone was measured as a controlled experiment: one
+browser per run, one `<video>` per browser, the **same signed manifest**
+read from the running app, the same throttled phone line (1.4 Mbps,
+180 ms), the same phone emulation. The only thing that differs is the
+watchdog.
+
+| Run | Watchdog | Playhead | Painted frames | `play()` | Proxy traffic |
+| --- | -------- | -------- | -------------- | -------- | ------------- |
+| as shipped (1.8.1) | the app's own | **0 s** | **0** | — | 19 playlists / 13 segments |
+| old | `video.load()` on every stall | **0 s** | **0** | **rejected: AbortError** | 13 / 10 |
+| new | no reset; no nudge before the first picture | **32.55 s** | **219** | **fulfilled** | **4 / 6** |
+
+The last row is the traffic pattern of the **passing 1.8.0** run of the
+same harness (4 playlists, 6 segments): the picture arrives, the line is
+left alone, and the proxy is asked only for what it needs.
+
+### What was wrong
+
+`video-player.tsx` asks the browser what it can play:
+`canPlayType("application/vnd.apple.mpegurl")` answers *"maybe"* in
+Chromium and on Safari, so the element is handed the manifest itself and
+the browser owns the session — hls.js is the fallback, not the rule. On
+that path the 1.8.1 watchdog "mended" a stall with `video.load()`, which
+throws away every byte already fetched, puts the element back to
+`readyState 0` and cancels the segment that was on its way; the pending
+`play()` is rejected with an `AbortError`. On a slow line the segment
+never lands, the watchdog fires again five seconds later, and the viewer
+waits for a frame that is cancelled again and again — the loop that was
+reported.
+
+The fix keeps the watchdog's promise (a picture that stops is mended; a
+dead link moves the chain on) and drops the destructive part: the element
+is never reloaded, and before the first picture there is no stall to mend
+— only a slow line. The chain moving on is the recovery.
+
+### The harness that proves it
+
+`verify-mobile-stream.mjs` now records what the browser actually did: the
+painted frames (`requestVideoFrameCallback` and
+`getVideoPlaybackQuality`), the buffer, the playhead — and it names the
+check that carries its verdict.
+
+---
+
+## 13. What is still open
 
 | Question | Status |
 | -------- | ------ |

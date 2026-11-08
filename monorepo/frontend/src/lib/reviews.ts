@@ -27,6 +27,7 @@
  */
 
 import { catalogueChannel } from "@/lib/catalogue";
+import { resolveProgrammeSlot } from "@/lib/guide";
 import { byPopularity } from "@/lib/review-rank";
 import {
   REACTION_KINDS,
@@ -198,8 +199,17 @@ export async function readReviews(options: {
   channelId?: string | null;
   limit?: number;
   now?: Date;
+  /**
+   * True to read only the visitor's own rows.
+   *
+   * The channel surface asks for this: the visitor's own review of the
+   * programme that is on air is the one thing it cannot show without a
+   * read of their own. It runs under their own token, and the rows are
+   * filtered to their account id, so the answer is theirs and nobody
+   * else's.
+   */
   mine?: boolean;
-} ): Promise<{ configured: boolean; reason: string | null; reviews: Review[] }> {
+}): Promise<{ configured: boolean; reason: string | null; reviews: Review[] }> {
   if (options.mine && !options.token) {
     return { configured: true, reason: null, reviews: [] };
   }
@@ -398,9 +408,13 @@ export type DraftResult =
  *
  * The channel is checked against the catalogue: a review belongs to a
  * channel that exists, and a channel id invented in a console is not one.
- * The programme is optional — the guide does not cover every slot — and
- * when it is missing the review is a review of the channel and says so,
- * rather than being attached to a programme nobody named.
+ *
+ * The programme is the guide's, not the browser's. The browser may only
+ * say which slot it means — the start and the end — and the server looks
+ * that slot up in its own guide: the title that is stored is the guide's
+ * title, and the times are the guide's times. A slot the guide does not
+ * have is refused, and a review without a programme is a review of the
+ * channel and says so.
  */
 export async function readDraft(payload: unknown): Promise<DraftResult> {
   if (!payload || typeof payload !== "object") {
@@ -428,9 +442,35 @@ export async function readDraft(payload: unknown): Promise<DraftResult> {
     return { ok: false, error: "Alege un canal din catalog." };
   }
 
-  const programmeTitle = readText(body.programmeTitle, 1, TEXT_MAX);
-  const programmeStartsAt = readInstant(body.programmeStartsAt);
-  const programmeEndsAt = readInstant(body.programmeEndsAt);
+  const claimedTitle = readText(body.programmeTitle, 1, TEXT_MAX);
+  const claimedStartsAt = readInstant(body.programmeStartsAt);
+  const claimedEndsAt = readInstant(body.programmeEndsAt);
+
+  // A programme was named, so it has to be a whole slot: both instants,
+  // and a slot the guide knows. A title alone is not a slot.
+  const namesProgramme =
+    claimedTitle !== null || claimedStartsAt !== null || claimedEndsAt !== null;
+
+  let programmeTitle: string | null = null;
+  let programmeStartsAt: string | null = null;
+  let programmeEndsAt: string | null = null;
+
+  if (namesProgramme) {
+    const slot = await resolveProgrammeSlot(
+      channelId,
+      claimedStartsAt?.toISOString() ?? null,
+      claimedEndsAt?.toISOString() ?? null,
+    );
+    if (!slot) {
+      return {
+        ok: false,
+        error: "Emisiunea nu se găsește în programul canalului.",
+      };
+    }
+    programmeTitle = slot.title;
+    programmeStartsAt = slot.startsAt;
+    programmeEndsAt = slot.endsAt;
+  }
 
   return {
     ok: true,
@@ -438,9 +478,9 @@ export async function readDraft(payload: unknown): Promise<DraftResult> {
       rating,
       body: text,
       channelId,
-      programmeTitle: programmeTitle?.trim() ?? null,
-      programmeStartsAt: programmeStartsAt?.toISOString() ?? null,
-      programmeEndsAt: programmeEndsAt?.toISOString() ?? null,
+      programmeTitle,
+      programmeStartsAt,
+      programmeEndsAt,
     },
   };
 }
@@ -519,9 +559,9 @@ export async function writeReview(
  * The name an account goes by, or nothing invented.
  *
  * The profile row is read with the visitor's own client, so this is a row
- * the policy already says is theirs. When there is no name, the e-mail's
- * local part is used; when there is no e-mail either, the review is
- * signed "Vizionator" — a truthful label for somebody who was here.
+ * the policy already says is theirs. The name on that row is the name
+ * that is published — and nothing else: an account without a name is
+ * signed "Vizitator ACUM", never the first part of its e-mail address.
  */
 async function authorLabel(
   token: string,
@@ -530,23 +570,23 @@ async function authorLabel(
 ): Promise<string> {
   const { data } = await getUserClient(token)
     .from("profiles")
-    .select("display_name,email")
+    .select("display_name")
     .eq("id", userId)
     .maybeSingle();
 
-  const row = (data ?? {}) as { display_name?: unknown; email?: unknown };
+  const row = (data ?? {}) as { display_name?: unknown };
 
   const name = typeof row.display_name === "string" ? row.display_name.trim() : "";
-  if (name) return name.slice(0, TEXT_MAX);
 
-  const address =
-    typeof row.email === "string" && row.email.includes("@")
-      ? row.email
-      : (email ?? "");
-  const local = address.split("@")[0]?.trim() ?? "";
-  if (local) return local.slice(0, TEXT_MAX);
+  // A profile whose name is the account's own e-mail local part is not a
+  // name: the trigger fills it in when the account has none. It is not
+  // published.
+  const local = (email ?? "").split("@")[0]?.trim().toLowerCase() ?? "";
+  if (name && (!local || name.toLowerCase() !== local)) {
+    return name.slice(0, TEXT_MAX);
+  }
 
-  return "Vizionator";
+  return "Vizitator ACUM";
 }
 
 /**
@@ -797,10 +837,14 @@ export async function editReview(
     .eq("user_id", user.id);
 
   if (ownWrite) {
+    // The write did not go through. That is a fact about the desk, not
+    // about the review: the answer says the editing is not available
+    // right now, and the status says the same — a service that is not
+    // there is not a server error.
     return {
       ok: false,
-      error: "Recenzia nu a putut fi modificată. Încearcă din nou.",
-      status: 500,
+      error: "Modificarea recenziilor nu este disponibilă acum",
+      status: 503,
     };
   }
 

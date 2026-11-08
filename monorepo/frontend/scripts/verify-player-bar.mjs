@@ -82,6 +82,15 @@ const evaluate = async (expression) => {
     awaitPromise: true,
     returnByValue: true,
   });
+  if (reply.error) {
+    throw new Error(`Runtime.evaluate failed: ${reply.error.message}`);
+  }
+  const exception = reply.result?.exceptionDetails;
+  if (exception) {
+    throw new Error(
+      `Runtime.evaluate threw: ${exception.exception?.description ?? exception.text}`,
+    );
+  }
   return reply.result?.result?.value;
 };
 
@@ -117,7 +126,7 @@ while (Date.now() - started < 30_000) {
   await new Promise((r) => setTimeout(r, 500));
   await wake();
   await new Promise((r) => setTimeout(r, 300));
-  report = await evaluate(`(() => {
+  report = await evaluate(String.raw`(() => {
     const bar = document.querySelector('[data-player-controls-bar]');
     if (!bar) return null;
 
@@ -173,10 +182,110 @@ while (Date.now() - started < 30_000) {
       const webkit = getComputedStyle(range, '::-webkit-slider-thumb');
       const moz = getComputedStyle(range, '::-moz-range-thumb');
       const nativeBackground = webkit.backgroundImage || webkit.background || moz.backgroundImage || moz.background || '';
-      const nativeDot = /circle[^)]*?(?:0(?:\s+([\d.]+)px)|([\d.]+)px)/.exec(nativeBackground);
-      const nativeDotDiameter = nativeDot
-        ? Number(nativeDot[1] ?? nativeDot[2]) * 2
+
+      // Chromium does not expose a reliable box for a range thumb through
+      // getComputedStyle. Read the declaration that actually paints it so
+      // the old 44px native knob cannot masquerade as a small dot.
+      const unescapeCss = (text) => text.replace(/\\(.)/g, '$1');
+      const classTokens = (selector) => {
+        const tokens = [];
+        const pattern = /\.((?:\\.|[^\s.,:>+~()[\]])+)/g;
+        let match;
+        while ((match = pattern.exec(selector))) {
+          tokens.push(unescapeCss(match[1]));
+        }
+        return tokens;
+      };
+      const thumbRules = [];
+      const visitRules = (rules) => {
+        for (const rule of rules) {
+          const selector = rule.selectorText ?? '';
+          const kind = selector.includes('::-webkit-slider-thumb')
+            ? 'webkit'
+            : selector.includes('::-moz-range-thumb')
+              ? 'moz'
+              : null;
+          if (kind) {
+            const base = selector
+              .replace(/::-webkit-slider-thumb|::-moz-range-thumb[\s\S]*$/, '')
+              .trim();
+            let applies = false;
+            if (base) {
+              try {
+                applies = range.matches(base);
+              } catch {
+                applies = false;
+              }
+              if (!applies) {
+                // Tailwind's arbitrary variant ([&::-webkit-slider-thumb]:…)
+                // escapes the selector in a way matches() refuses; fall back
+                // to the class names the rule names.
+                const tokens = classTokens(base);
+                applies =
+                  tokens.length > 0 &&
+                  tokens.every((token) => range.classList.contains(token));
+              }
+            }
+            thumbRules.push({
+              kind,
+              selector,
+              applies,
+              width: rule.style.getPropertyValue('width'),
+              height: rule.style.getPropertyValue('height'),
+              background: rule.style.getPropertyValue('background'),
+              backgroundImage: rule.style.getPropertyValue('background-image'),
+            });
+          }
+          if (rule.cssRules) visitRules(rule.cssRules);
+        }
+      };
+      for (const sheet of document.styleSheets) {
+        try {
+          visitRules(sheet.cssRules);
+        } catch {
+          // Cross-origin stylesheets are not needed for this measurement.
+        }
+      }
+      const applicable = thumbRules.filter((rule) => rule.applies);
+      const nativeRule =
+        applicable.findLast((rule) => rule.kind === 'webkit') ??
+        applicable.findLast((rule) => rule.kind === 'moz') ??
+        null;
+      const cssPixels = (value) => {
+        const text = String(value ?? '').trim();
+        const px = /^(-?[\d.]+)px$/.exec(text);
+        if (px) return Number(px[1]);
+        const rem = /^(-?[\d.]+)rem$/.exec(text);
+        if (rem) {
+          const rootSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+          return Number(rem[1]) * rootSize;
+        }
+        const spacing = getComputedStyle(document.documentElement).getPropertyValue('--spacing').trim();
+        const spacingPixels = cssPixels(spacing);
+        const spacingMultiple = /^calc\(var\(--spacing\)\s*\*\s*(-?[\d.]+)\)$/.exec(text);
+        if (spacingPixels !== null && spacingMultiple) {
+          return spacingPixels * Number(spacingMultiple[1]);
+        }
+        return null;
+      };
+      const nativeBoxWidth = nativeRule
+        ? cssPixels(nativeRule.width) ??
+          parseFloat(
+            nativeRule.kind === 'moz' ? moz.width : webkit.width,
+          ) ??
+          null
         : null;
+      const nativeBoxHeight = nativeRule
+        ? cssPixels(nativeRule.height) ??
+          parseFloat(
+            nativeRule.kind === 'moz' ? moz.height : webkit.height,
+          ) ??
+          null
+        : null;
+      const nativeRuleBackground =
+        nativeRule?.backgroundImage || nativeRule?.background || nativeBackground;
+      const nativeDot = /circle[\s\S]{0,160}?0\s+([\d.]+)px/.exec(nativeRuleBackground);
+      const nativeDotDiameter = nativeDot ? Number(nativeDot[1]) * 2 : null;
 
       const value = Number(range.value);
       const minimum = Number(range.min || 0);
@@ -216,22 +325,23 @@ while (Date.now() - started < 30_000) {
             }
           : null,
         nativeThumb: {
-          boxWidth: parseFloat(webkit.width) || parseFloat(moz.width) || null,
-          boxHeight: parseFloat(webkit.height) || parseFloat(moz.height) || null,
+          boxWidth: nativeBoxWidth,
+          boxHeight: nativeBoxHeight,
           visibleDotDiameter: nativeDotDiameter,
-          background: nativeBackground,
+          background: nativeRuleBackground,
+          declaration: nativeRule,
           // A native range thumb travels between half a thumb-width from
           // each end. Its painted centre therefore follows the value on the
           // painted track, not the centre of the whole input.
           centreX: Math.round(
             rangeRect.left +
-              ((rangeRect.width - (parseFloat(webkit.width) || 0)) * ratio) +
-              (parseFloat(webkit.width) || 0) / 2,
+              ((rangeRect.width - (nativeBoxWidth ?? 0)) * ratio) +
+              (nativeBoxWidth ?? 0) / 2,
           ),
           centreY: Math.round(
-            rangeRect.top +
-              rangeRect.height / 2 +
-              (trackRect ? trackRect.top + trackRect.height / 2 - rangeRect.top - rangeRect.height / 2 : 0),
+            trackRect
+              ? trackRect.top + trackRect.height / 2
+              : rangeRect.top + rangeRect.height / 2,
           ),
           trackCentreX: Math.round(trackCentreX),
         },
@@ -262,7 +372,7 @@ while (Date.now() - started < 30_000) {
       smallestHeight: controls.length ? Math.min(...controls.map((c) => c.h)) : 0,
       hasProgressBar: Boolean(bar.querySelector('[role="progressbar"]')),
       liveBadgeTextInBar: text.includes('În direct'),
-      barText: text.replace(/\\s+/g, ' ').slice(0, 160),
+      barText: text.replace(/\s+/g, ' ').slice(0, 160),
       connectionChip: Boolean(bar.querySelector('[aria-label^="Conexiune:"]')),
       qualityChip: Boolean(
         bar.querySelector('[aria-label^="Calitate:"]'),
@@ -350,8 +460,11 @@ if (!report) {
         : "the painted track was not found",
     ]);
   } else {
-    const native = report.volume?.nativeThumbBox;
+    const native = report.volume?.nativeThumb;
     const track = report.volume?.trackRect;
+    const nativeSize = native
+      ? Math.max(native.boxWidth ?? 0, native.boxHeight ?? 0)
+      : 0;
     const centreOffset =
       native && track
         ? Math.abs(native.centreY - track.centreY)
@@ -365,9 +478,9 @@ if (!report) {
     );
     checks.push([
       "the drawn volume thumb is at most 16px",
-      false,
+      nativeSize > 0 && nativeSize <= MAX_VOLUME_THUMB,
       native
-        ? `no [data-player-volume-thumb]; native thumb box ${native.w}×${native.h}px, visible dot ${native.visibleDotDiameter ?? "unknown"}px diameter, centre (${native.centreX}, ${native.centreY})`
+        ? `no [data-player-volume-thumb]; native thumb box ${native.boxWidth ?? "unknown"}×${native.boxHeight ?? "unknown"}px, visible dot ${native.visibleDotDiameter ?? "unknown"}px diameter, centre (${native.centreX}, ${native.centreY})`
         : "the volume control was not found",
     ]);
     checks.push([

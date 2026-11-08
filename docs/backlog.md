@@ -49,6 +49,13 @@ Status vocabulary: **Done** (landed and measured) · **In flight** (this wave)
 | The header clears the iPhone notch | #17 (item 8) | `components/header.tsx` | the row starts below `env(safe-area-inset-top)`, with `viewport-fit=cover` |
 | A phone keeps the live edge | #17 (item 6) | both apps' `video-player.tsx` + `use-player.ts`, `app/api/stream/route.ts` | an interrupted `play()` is not a failure; the watchdog counts the seconds in which the picture does not move; the chain is asked for again once before the session is called a failure; the proxy answers inside the live window |
 | The proof harnesses tell the truth | #17 (item 15) | `scripts/verify-{mobile,mobile-stream,acum,player-bar}.mjs` | each script names the check that carries its verdict and prints the evidence it rests on |
+| The phone's picture arrives and stays | #10, #17 (item 6) | both apps' `components/player/video-player.tsx` | the watchdog never reloads the media element and leaves the cold start alone; on a throttled phone line, against the same signed manifest, the playhead advanced **32.55 s** with **219 painted frames** and the proxy answered **4 playlists / 6 segments** — where the element as shipped never left `readyState 0`, painted nothing and pulled 19 / 13 |
+| A review can only name a programme the guide knows | #16 | both apps' `lib/guide.ts`, `lib/reviews.ts` | the server resolves the slot it is given and answers with the guide's own title and instants; a partial or a forged slot has no answer |
+| An account without a name is not published by its e-mail | #16 | both apps' `lib/reviews.ts` | the review is signed **„Vizitator ACUM"**, never the e-mail's local part |
+| A failed edit is not a server error | #16 | both apps' `lib/reviews.ts` | **503** — „Modificarea recenziilor nu este disponibilă acum" |
+| The television app answers the review API like the web app | #16 | `monorepo/tv/src/app/api/reviews/route.ts`, `hooks/use-reviews.ts`, `components/channel/channel-panel.tsx`, `lib/supabase/server.ts` | the `mine` branch first, the visitor's own client, a case-insensitive `mine`, a memoised hook, an error state with **„Încearcă din nou"** — and `lib/reviews.ts` is byte-for-byte the same file in both apps |
+| One Back press closes one layer | #16, #17 | both apps' `components/player/player-modal.tsx`, `components/reviews/zoom-overlay.tsx` | the player and the sheet each push their own marker and answer only for the entry they pushed themselves |
+| The harnesses measure the app, not a stale file | #16, #17 | `scripts/verify-{player-bar,acum,mobile-stream}.mjs` | the bar program reaches the browser with its escapes intact and throws on a protocol error instead of reporting a missing bar; the `acum` harness asks the running app (`/api/channel/<id>`); the phone-stream harness records the painted frames, the buffer and the playhead |
 
 ---
 
@@ -56,7 +63,7 @@ Status vocabulary: **Done** (landed and measured) · **In flight** (this wave)
 
 | Item | Issue | Owner | Done when |
 | ---- | ----- | ----- | --------- |
-| The live proof of the new release | #16, #17 | orchestrator | the harnesses are run against the deployed 1.8.1 and the measured numbers are written into `docs/verification.md` |
+| The live proof of the new release | #10, #16, #17, #22 | orchestrator | the harnesses are run against the deployed **1.8.2** and the measured numbers are written into `docs/verification.md` |
 
 ---
 
@@ -99,25 +106,17 @@ and of the television app. What is still open:
 
 - the motion pass: the composer pops from the point it was opened from and
   closes toward the pointer, with the reduced-motion media query read by the
-  Web Animations API path itself;
-- the review engine's own hardening — the **1.8.2** wave:
-  - one Back press must close **one** layer: the composer and the player
-    modal each own a history entry, and each reacts only to a pop that
-    carries its own marker;
-  - the television app must answer the review API exactly like the web app
-    — the `mine` branch first, the visitor's own client, the same limit and
-    ranking, a case-insensitive `mine`, a memoised hook, a distinct error
-    state with a retry in the channel panel, and the honest 503 when an
-    edit cannot be made;
-  - the server must resolve the programme slot from the guide and refuse a
-    slot that is not in it, and the author label must never publish the
-    e-mail's local part;
-  - the harness's own cleanup: `fetchJson` belongs to the module scope, the
-    safety net must know the row it created, and the fallback lookup must
-    ask for `mine=1`.
+  Web Animations API path itself.
+
+Everything else that was open about the review engine landed in **1.8.2**:
+one Back press closes one layer; the television app answers the review API
+exactly like the web app; the server resolves the programme slot from the
+guide and refuses a slot that is not in it; the author label never
+publishes the e-mail's local part; and the harness's own cleanup knows the
+row it created. Each of those is in section A, with the proof.
 
 The harness's live run against the deployed **1.8.0** passed **18/18** — see
-`docs/verification.md` §10.
+`docs/verification.md` §10; the run against **1.8.2** lands with the deploy.
 
 ---
 

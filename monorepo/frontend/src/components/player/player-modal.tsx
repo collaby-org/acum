@@ -65,15 +65,29 @@ export function PlayerModal({
     closedByPopStateRef.current = false;
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
-    window.history.pushState(
-      { ...window.history.state, acumPlayer: historyMarker },
-      "",
-      window.location.href,
-    );
+
+    // The entry carries the player's own marker and nothing else. A layer
+    // that sits on top of the player — a review sheet — has a marker of
+    // its own, and the two must never be mistaken for one another: each
+    // of them answers only for the entry it pushed itself.
+    const state: Record<string, unknown> = {
+      ...(window.history.state ?? {}),
+    };
+    delete state["acum:zoom-overlay"];
+    delete state.acumPlayer;
+    state.acumPlayer = historyMarker;
+
+    window.history.pushState(state, "", window.location.href);
     historyEntryRef.current = true;
 
-    const onPopState = () => {
+    const onPopState = (event: PopStateEvent) => {
       if (!historyEntryRef.current) return;
+
+      // The entry that is current now carries the player's own marker:
+      // the pop consumed the entry above it — the sheet that sits on top
+      // of the player — and the player stays open.
+      if (event.state?.acumPlayer === historyMarker) return;
+
       historyEntryRef.current = false;
       closedByPopStateRef.current = true;
       onOpenChangeRef.current(false);
@@ -98,7 +112,12 @@ export function PlayerModal({
   if (!channel) return null;
 
   const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen && open && historyEntryRef.current && !closedByPopStateRef.current) {
+    if (
+      !nextOpen &&
+      open &&
+      historyEntryRef.current &&
+      !closedByPopStateRef.current
+    ) {
       // A close button or Escape must consume the history entry the modal
       // added, so the next Back still belongs to the page behind it.
       historyEntryRef.current = false;

@@ -245,6 +245,10 @@ while (Date.now() < watchUntil) {
             (typeof v.getVideoPlaybackQuality === 'function' &&
               (v.getVideoPlaybackQuality().totalVideoFrames ?? 0) > 0),
         ),
+        totalVideoFrames:
+          typeof v.getVideoPlaybackQuality === 'function'
+            ? v.getVideoPlaybackQuality().totalVideoFrames ?? null
+            : null,
       };
     })()`,
   );
@@ -312,16 +316,29 @@ const pictureEvidence = {
     (sample) => sample.videoWidth > 0 && sample.videoHeight > 0,
   ),
   framePresented: samples.some((sample) => sample.framePresented),
+  totalVideoFrames: Math.max(
+    0,
+    ...samples.map((sample) => sample.totalVideoFrames ?? 0),
+  ),
   mediaError: last?.error ?? null,
 };
+const framePresented =
+  startupEvidence.framePresented || pictureEvidence.framePresented;
 const checks = [
   {
-    name: "the picture reaches HAVE_CURRENT_DATA with a known frame size",
+    name: "the video reaches HAVE_CURRENT_DATA with a known frame size",
     ok:
+      pictureEvidence.videoElementPresent &&
       pictureEvidence.readyStateReached &&
-      pictureEvidence.videoSizeKnown &&
-      (startupEvidence.framePresented || pictureEvidence.framePresented),
-    detail: `readyState ${last?.readyState ?? "n/a"}, size ${last?.videoWidth ?? "n/a"}×${last?.videoHeight ?? "n/a"}, presented frame ${startupEvidence.framePresented || pictureEvidence.framePresented ? "yes" : "no"}`,
+      pictureEvidence.videoSizeKnown,
+    detail: `readyState ${last?.readyState ?? "n/a"}, size ${last?.videoWidth ?? "n/a"}×${last?.videoHeight ?? "n/a"}`,
+  },
+  {
+    name: "the browser presents a painted video frame",
+    ok: framePresented,
+    detail: framePresented
+      ? `presented frame yes (startup probe: ${startupEvidence.framePresented ? "yes" : "no"}; frames counted during the watch: ${pictureEvidence.totalVideoFrames})`
+      : "no presented frame was reported by requestVideoFrameCallback or getVideoPlaybackQuality",
   },
   {
     name: "the playhead advances on the slow line",

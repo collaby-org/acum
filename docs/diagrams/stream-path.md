@@ -21,7 +21,7 @@ that carries the address.
 ```mermaid
 flowchart LR
     subgraph B["BROWSER · PHONE & PWA"]
-        P["Player + hls.js<br/><small>video-player.tsx</small>"]
+        P["Player<br/><small>native HLS, or hls.js</small><br/><small>video-player.tsx</small>"]
     end
 
     subgraph S["ACUM · VERCEL"]
@@ -63,6 +63,7 @@ The four rules the picture has to carry:
 | The answer carries `no-store` | both routes | A stale or shared manifest |
 | The proxy answers inside the live window (5 s) | `app/api/stream/route.ts` | A playlist that takes thirty seconds to arrive |
 | A chain that runs out is asked for again, once | `hooks/use-player.ts` | A session that ends on addresses minted minutes earlier |
+| The watchdog never reloads the media element | `components/player/video-player.tsx` | A slow line whose segment is cancelled again and again, and a picture that never arrives |
 
 ---
 

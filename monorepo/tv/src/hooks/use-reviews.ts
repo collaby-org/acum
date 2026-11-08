@@ -694,5 +694,11 @@ export function useMyChannelReviews(channelId: string | null): {
     [],
   );
 
-  return { reviews, loading, failed, reload, update, remove };
+  // The same object between two changes: React compares it with
+  // `Object.is`, and a fresh one here would be a new answer on every
+  // render of the panel.
+  return useMemo(
+    () => ({ reviews, loading, failed, reload, update, remove }),
+    [failed, loading, reload, remove, reviews, update],
+  );
 }

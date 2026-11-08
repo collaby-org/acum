@@ -121,6 +121,42 @@ Each push adds a line here.
 | 1.7.10 | see `git log` | the broken Kodus CLI stops painting a red check on every pull request; Dependabot stops offering the opencode action that upstream removed |
 | 1.8.0 | see `git log` | the review engine in the television app, the channel surface managing the visitor's own review, Back closing the composer, the phone rules the television app was missing, and the harness that proves the review engine end to end |
 | 1.8.1 | see `git log` | the front door never lands on `/conturi` (web, phone, installed PWA); the volume dot is small and on the track; the bar's controls do not overlap; the header clears the iPhone notch; a phone keeps the live edge; the harnesses name the check that carries their verdict |
+| 1.8.2 | see `git log` | the phone's picture arrives and stays — the watchdog never resets the media element and leaves the cold start alone; the review engine stops guessing — the guide owns the slot, the account owns the name, a failed edit is a 503; the harnesses ask the running app instead of a stale file |
+
+---
+
+## 7. The 1.8.2 wave - the phone's picture and the review engine's honesty
+
+Two faults, found by measurement rather than by reading.
+
+**The phone.** The owner's report - the connection loops and drops on mobile
+and in the installed PWA - was measured as a controlled experiment: one
+browser per run, one `<video>` per browser, the same signed manifest, the
+same throttled phone line. The watchdog that 1.8.1 added to mend a frozen
+stream was resetting the media element every five seconds on the browsers
+that play HLS natively (Safari, and Chromium, whose
+`canPlayType("application/vnd.apple.mpegurl")` answers *"maybe"*). A reset
+throws away every byte already fetched, cancels the segment that was on its
+way and rejects the pending `play()` with an `AbortError` - so on a slow
+line the frame was cancelled again and again, and the viewer waited for a
+picture that never came. The watchdog keeps its promise (a picture that
+stops is mended, a dead link moves the chain on) and drops the destructive
+part. Measured: the playhead advanced **32.55 s** with **219 painted
+frames**, against **0 s** and **0 frames** for the element as shipped.
+
+**The review engine.** Ten findings, closed in both apps: the guide owns
+the programme slot; the account owns the name; a failed edit is a 503 and
+not a server error; the television app answers the review API exactly like
+the web app; one Back press closes one layer; the channel panel has an
+error state with a retry; and the harness cleans up after itself.
+
+**The harnesses.** Three of them were measuring the wrong thing. The bar
+harness's measurement program was cooked by the template literal it lived
+in, and the verdict it printed - "no bar found" - was a lie. The `acum`
+harness read a committed guide snapshot that was three days old while the
+app reads the live source. The phone-stream harness threw away the very
+evidence that tells a dead stream from a torn-down one. All three ask the
+running app now, and all three fail loudly instead of quietly.
 
 ---
 

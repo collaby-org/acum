@@ -7,7 +7,7 @@
  * the truth:
  *
  *   1. the card names the programme that is on air **at the real clock**,
- *      not the one that was on when the guide file was written;
+ *      according to the guide the rendered page shipped;
  *   2. the card **moves** when the clock moves — the page is not reloaded,
  *      the minute tick is what changes it;
  *   3. the channel panel moves too, on the server's answer.
@@ -41,6 +41,16 @@ const EDGE =
 const CDP_PORT = Number(process.env.CDP_PORT ?? 9414);
 /** The panel's proof gets a browser of its own — see `provePanel`. */
 const PANEL_CDP_PORT = Number(process.env.PANEL_CDP_PORT ?? 9415);
+
+/** Channels that are normally on air; the live sweep starts here. */
+const CHANNEL_CANDIDATES = [
+  "pro-tv",
+  "antena-1",
+  "national-tv",
+  "hbo",
+  "tvr-1",
+  "kanal-d",
+];
 
 const options = {
   app: "https://acum-weld.vercel.app/",
@@ -83,7 +93,7 @@ options.app = options.app.replace(/\/$/, "");
 
 console.log("=== the Acum check ===");
 console.log(`app: ${options.app}`);
-console.log(`channel: ${options.channel ?? "the next programme on the local guide"}`);
+console.log(`channel: ${options.channel ?? "the next programme in the live app answer"}`);
 console.log(`evidence: ${options.out}`);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -136,32 +146,29 @@ async function readCatalogue() {
   return JSON.parse(source.slice(open, close + 1));
 }
 
-/** The guide, read off the file the app reads. */
-async function readGuide() {
-  return JSON.parse(await readFile(resolve(ROOT, "data/epg.json"), "utf8"));
+/** Normalise the app's live channel answer into the guide shape. */
+function guideFromSheet(sheet) {
+  if (!sheet.body || typeof sheet.body !== "object") return { programmes: [] };
+  const programmes = [sheet.body.now, ...(sheet.body.next ?? [])].filter(
+    (programme) => programme && typeof programme === "object",
+  );
+  return { programmes };
 }
 
-/** The guide channel a catalogue channel belongs to, if any. */
-function guideChannelFor(guide, channel) {
-  const channels = guide?.channels ?? {};
-  const candidates = [
-    channel.id,
-    channel.name,
-    channel.family,
-    channel.familyKey,
-  ];
-  for (const candidate of candidates) {
-    const hit = channels[foldKey(candidate)];
-    if (hit) return hit;
+/** The guide, read live from the app's public channel endpoint. */
+async function readLiveGuide(app, id) {
+  const sheet = await readSheet(app, id);
+  if (sheet.status === 404) return { status: 404, programmes: [] };
+  if (!sheet.body || typeof sheet.body !== "object") {
+    throw new Error(
+      `the app answered ${sheet.status} for /api/channel/${id} without a channel body`,
+    );
   }
-  for (const candidate of candidates) {
-    const key = baseKey(candidate);
-    if (!key) continue;
-    for (const [slug, entry] of Object.entries(channels)) {
-      if (baseKey(slug) === key) return entry;
-    }
-  }
-  return null;
+  return {
+    status: sheet.status,
+    fetchedAt: new Date().toISOString(),
+    ...guideFromSheet(sheet),
+  };
 }
 
 /** The slots of a guide channel, with their moments. */
@@ -174,6 +181,114 @@ function slotsOf(guideChannel) {
     }))
     .filter((slot) => Number.isFinite(slot.start) && Number.isFinite(slot.end))
     .sort((a, b) => a.start - b.start);
+}
+
+/** The length of the balanced JSON object or array at `start`. */
+function balancedLength(text, start) {
+  const open = text[start];
+  const close = open === "{" ? "}" : "]";
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const character = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+    if (character === '"') inString = true;
+    else if (character === open) depth++;
+    else if (character === close) {
+      depth--;
+      if (depth === 0) return i + 1 - start;
+    }
+  }
+  return 0;
+}
+
+/** Every JSON value carried by the RSC flight text. */
+function jsonValues(text) {
+  const values = [];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] !== "{" && text[i] !== "[") continue;
+    const length = balancedLength(text, i);
+    if (!length) continue;
+    const raw = text.slice(i, i + length);
+    try {
+      values.push(JSON.parse(raw));
+      i += length;
+    } catch {
+      /* this is RSC framing rather than a JSON value */
+    }
+  }
+  return values;
+}
+
+/** The guide the rendered page actually shipped, read from its RSC payload. */
+function pageGuideFromFlight(text) {
+  const channels = new Map();
+  const visit = (node) => {
+    if (Array.isArray(node)) {
+      for (const item of node) visit(item);
+      return;
+    }
+    if (!node || typeof node !== "object") return;
+    if (
+      typeof node.slug === "string" &&
+      Array.isArray(node.programmes) &&
+      node.programmes.some(
+        (programme) =>
+          programme &&
+          typeof programme.title === "string" &&
+          Number.isFinite(programme.start) &&
+          Number.isFinite(programme.end),
+      )
+    ) {
+      const programmes = node.programmes
+        .filter(
+          (programme) =>
+            programme &&
+            typeof programme.title === "string" &&
+            Number.isFinite(programme.start) &&
+            Number.isFinite(programme.end),
+        )
+        .map((programme) => ({
+          title: programme.title,
+          startsAt: new Date(programme.start).toISOString(),
+          endsAt: new Date(programme.end).toISOString(),
+        }));
+      const existing = channels.get(node.slug);
+      if (!existing || existing.programmes.length < programmes.length) {
+        channels.set(node.slug, { slug: node.slug, name: node.name, programmes });
+      }
+    }
+    for (const value of Object.values(node)) visit(value);
+  };
+  for (const value of jsonValues(text)) visit(value);
+  return channels;
+}
+
+/** The page guide channel that belongs to a catalogue channel. */
+function pageGuideChannelFor(pageGuide, channel) {
+  const candidates = [
+    channel.id,
+    channel.name,
+    channel.family,
+    channel.familyKey,
+  ].map(foldKey);
+  for (const [slug, entry] of pageGuide) {
+    const key = foldKey(slug);
+    if (candidates.includes(key)) return entry;
+  }
+  for (const [slug, entry] of pageGuide) {
+    const key = baseKey(slug);
+    if (candidates.some((candidate) => baseKey(candidate) === key)) {
+      return entry;
+    }
+  }
+  return null;
 }
 
 /** The slot on air at a moment. */
@@ -220,17 +335,17 @@ function nextBoundary(slots, moment) {
 }
 
 /**
- * The channel whose schedule changes soonest.
+ * The channel whose live schedule changes soonest.
  *
  * The panel's proof has to wait for a changeover, so it takes the channel
- * that changes first — the wait is then as short as the guide allows.
+ * that changes first — the wait is then as short as the live guide allows.
  */
 function soonest(catalogue, guide, only) {
   let best = null;
   const now = Date.now();
   for (const channel of catalogue) {
     if (only && channel.id !== only) continue;
-    const guideChannel = guideChannelFor(guide, channel);
+    const guideChannel = guide?.channels?.[channel.id];
     if (!guideChannel) continue;
     const slots = slotsOf(guideChannel);
     if (!slotAt(slots, now)) continue;
@@ -557,6 +672,21 @@ const READ_HERO = `(() => {
   };
 })()`;
 
+/** The RSC flight chunks the rendered page shipped. */
+const READ_FLIGHT = `(() => {
+  const chunks = [];
+  const pattern = /self\\.__next_f\\.push\\(\\[\\s*1\\s*,\\s*("(?:[^"\\\\]|\\\\.)*")\\s*\\]\\)/g;
+  let match;
+  while ((match = pattern.exec(document.documentElement.innerHTML)) !== null) {
+    try {
+      chunks.push(JSON.parse(match[1]));
+    } catch {
+      /* skip a chunk we cannot decode */
+    }
+  }
+  return chunks.join("");
+})()`;
+
 /* ------------------------------------------------------------------ *
  * The check
  * ------------------------------------------------------------------ */
@@ -573,51 +703,80 @@ async function main() {
   const { installSession } = await import("./harness-signin.mjs");
   await mkdir(options.out, { recursive: true });
 
-  const [catalogue, guide] = await Promise.all([
-    readCatalogue(),
-    readGuide(),
-  ]);
+  const catalogue = await readCatalogue();
 
   /**
-   * The channel to check: the one the guide covers whose next programme
-   * starts soonest, so the check does not have to wait long for the
-   * schedule to move.
+   * The channel to check: the one whose live schedule changes soonest, so
+   * the check does not have to wait long for the schedule to move. The
+   * sweep starts with the small, usually-on-air candidate list; only if
+   * none of those is on air does it fall back to catalogue order.
    */
   const wanted = options.channel;
+  const liveGuide = { channels: {} };
   let target = null;
 
-  for (const channel of catalogue) {
-    const guideChannel = guideChannelFor(guide, channel);
-    if (!guideChannel) continue;
+  if (wanted) {
+    const channel = catalogue.find(
+      (entry) => entry.id.toLowerCase() === wanted,
+    );
+    if (!channel) {
+      throw new Error(`no catalogue channel matches --channel=${wanted}`);
+    }
+    const guideChannel = await readLiveGuide(options.app, channel.id);
     const slots = slotsOf(guideChannel);
-    if (!slotAt(slots, Date.now())) continue;
     const boundary = nextBoundary(slots, Date.now());
-    if (boundary === null) continue;
-    const matches =
-      !wanted ||
-      channel.id.toLowerCase() === wanted ||
-      channel.name.toLowerCase() === wanted;
-    if (!matches) continue;
-    if (!target || boundary < target.boundary) {
+    liveGuide.channels[channel.id] = guideChannel;
+    if (!slotAt(slots, Date.now()) || boundary === null) {
+      throw new Error(
+        `the app answered ${guideChannel.status} for /api/channel/${channel.id}; it has no programme on air with a next changeover`,
+      );
+    }
+    target = { channel, slots, boundary };
+  } else {
+    const candidates = CHANNEL_CANDIDATES.map((id) =>
+      catalogue.find((channel) => channel.id === id),
+    ).filter(Boolean);
+    for (const channel of candidates) {
+      const guideChannel = await readLiveGuide(options.app, channel.id);
+      liveGuide.channels[channel.id] = guideChannel;
+      const slots = slotsOf(guideChannel);
+      const boundary = nextBoundary(slots, Date.now());
+      if (!slotAt(slots, Date.now()) || boundary === null) continue;
       target = { channel, slots, boundary };
+      break;
+    }
+
+    if (!target) {
+      for (const channel of catalogue) {
+        if (CHANNEL_CANDIDATES.includes(channel.id)) continue;
+        const guideChannel = await readLiveGuide(options.app, channel.id);
+        liveGuide.channels[channel.id] = guideChannel;
+        const slots = slotsOf(guideChannel);
+        const boundary = nextBoundary(slots, Date.now());
+        if (!slotAt(slots, Date.now()) || boundary === null) continue;
+        target = { channel, slots, boundary };
+        break;
+      }
     }
   }
 
   if (!target) {
-    throw new Error(
-      wanted
-        ? `no channel matches --channel=${wanted} with a programme on air`
-        : "no channel with a programme on air",
-    );
+    throw new Error("no catalogue channel has a programme on air in the app's live answer");
   }
 
   const { channel, slots } = target;
-  const snapshot = slotAt(slots, Date.parse(guide.generatedAt));
+  const liveSource = {
+    type: "live-channel-api",
+    endpoint: `${options.app}/api/channel/${channel.id}`,
+    fetchedAt: liveGuide.channels[channel.id].fetchedAt,
+  };
 
   console.log(`channel:  ${channel.id} (${channel.name})`);
-  console.log(`guide:    ${guide.date}, written ${guide.generatedAt}`);
   console.log(
-    `at the file's own stamp the guide said: ${snapshot ? snapshot.title : "—"}`,
+    `live:     ${options.app}/api/channel/${channel.id} (read ${new Date().toISOString()})`,
+  );
+  console.log(
+    `on air:   "${slots.find((slot) => slotAt([slot], Date.now()))?.title ?? "—"}"`,
   );
 
   try {
@@ -633,7 +792,7 @@ async function main() {
         await installSession((method, params) =>
           panelBrowser.send(method, params),
         );
-        await provePanel(panelBrowser, catalogue, guide, options);
+        await provePanel(panelBrowser, catalogue, liveGuide, options);
       } finally {
         panelBrowser.close();
       }
@@ -647,7 +806,7 @@ async function main() {
     const browser = await Browser.launch(EDGE, CDP_PORT);
     try {
       await installSession((method, params) => browser.send(method, params));
-      await browser.navigate(options.app);
+      await browser.navigate(`${options.app}/canale`);
     // The page has to be alive before it can be read: a card that is not
     // hydrated yet shows the server's markup, which is the truth for the
     // moment of the render and not for the clock we are about to move.
@@ -672,16 +831,34 @@ async function main() {
       );
     }
 
+    // The card is rendered from the guide the server put in this page.
+    // Extract that exact guide from the page's RSC flight payload; the
+    // endpoint is deliberately not used as the card's oracle because the
+    // page's guide is cached and the endpoint is read fresh.
+    const flight = await browser.evaluate(READ_FLIGHT);
+    const pageGuide = pageGuideFromFlight(flight);
+    const pageChannel = pageGuideChannelFor(pageGuide, channel);
+    if (!pageChannel) {
+      throw new Error(
+        `the rendered page's RSC payload has no guide channel for ${channel.id}`,
+      );
+    }
+    const pageSlots = slotsOf(pageChannel);
+
     // A reading taken right at a change could name the slot before or the
     // slot after; wait for a moment that is well inside a slot.
-    let reading = await readInsideASlot(browser, slots);
+    const reading = await readInsideASlot(browser, pageSlots);
     const card = await browser.evaluate(READ_CARD(channel.id));
     const hero = await browser.evaluate(READ_HERO);
 
     console.log(
       `now:      ${new Date(reading.moment).toISOString()} (the page's clock)`,
     );
-    console.log(`on air:   ${reading.slot?.title ?? "—"}`);
+    console.log(
+      `on air:   "${reading.slot?.title ?? "—"}" (${
+        reading.slot ? new Date(reading.slot.start).toISOString() : "—"
+      } → ${reading.slot ? new Date(reading.slot.end).toISOString() : "—"})`,
+    );
 
     check(
       "the card is on the page",
@@ -691,21 +868,30 @@ async function main() {
     check(
       "the card names the programme on air at the real clock",
       card?.text === reading.slot?.title,
-      `the card says "${card?.text}", the guide says "${reading.slot?.title}"`,
+      `the card says "${card?.text}", the page's own instants say "${
+        reading.slot?.title ?? "—"
+      }"`,
     );
-    if (snapshot && snapshot.title !== reading.slot?.title) {
-      check(
-        "the card does not name the programme the guide file was written at",
-        card?.text !== snapshot.title,
-        `the card says "${card?.text}", the file's own stamp said "${snapshot.title}"`,
-      );
-    }
+    check(
+      "the card names the programme the page's own instants put on air",
+      Boolean(
+        reading.slot &&
+          card?.text === reading.slot.title &&
+          reading.moment >= reading.slot.start &&
+          reading.moment < reading.slot.end,
+      ),
+      `on air: "${
+        reading.slot?.title ?? "—"
+      }" (${
+        reading.slot ? new Date(reading.slot.start).toISOString() : "—"
+      } → ${reading.slot ? new Date(reading.slot.end).toISOString() : "—"})`,
+    );
     console.log(`hero:     ${hero?.headline ?? "—"} / on air: ${hero?.onAir ?? "—"} (${hero?.window ?? "—"})`);
 
     // The hero names the show that is on the channel it features. The guide
     // is asked whether any channel is airing that programme right now.
     if (hero?.onAir) {
-      const airing = Object.values(guide?.channels ?? {}).some((entry) =>
+      const airing = [...pageGuide.values()].some((entry) =>
         (entry?.programmes ?? []).some((programme) => {
           const start = Date.parse(programme.startsAt);
           const end = Date.parse(programme.endsAt);
@@ -742,8 +928,11 @@ async function main() {
       if (later?.countdown && later.countdown !== countdown?.countdown) break;
     }
     const minutesOf = (text) => {
-      const found = /(\d+)\s*min/.exec(String(text ?? ""));
-      return found ? Number(found[1]) : null;
+      const value = String(text ?? "");
+      const hours = /(\d+)\s*h\b/.exec(value);
+      const minutes = /(\d+)\s*(?:min|rămași)/.exec(value);
+      if (!hours && !minutes) return null;
+      return Number(hours?.[1] ?? 0) * 60 + Number(minutes?.[1] ?? 0);
     };
     check(
       "the page re-reads the guide on the minute",
@@ -758,7 +947,7 @@ async function main() {
     await browser.evaluate(`window.__acumProbe = "alive"; true`);
 
     const before = Number(await browser.evaluate("Date.now()"));
-    const boundary = nextBoundary(slots, before);
+    const boundary = nextBoundary(pageSlots, before);
     // Land thirty seconds inside the next slot, so the page's own clock and
     // the guide cannot disagree about which slot is on.
     const budget = Math.max(70_000, boundary - before + 30_000);
@@ -808,7 +997,7 @@ async function main() {
       moved = await browser.evaluate(READ_CARD(channel.id));
     }
 
-    const expected = slotAt(slots, Number(await browser.evaluate("Date.now()")));
+    const expected = slotAt(pageSlots, Number(await browser.evaluate("Date.now()")));
     console.log(`page now: ${new Date(after).toISOString()}`);
     check(
       "the card moved with the clock",
@@ -827,7 +1016,14 @@ async function main() {
       checkedAt: new Date().toISOString(),
       app: options.app,
       channel: { id: channel.id, name: channel.name },
-      guide: { date: guide.date, generatedAt: guide.generatedAt },
+      source: {
+        live: liveSource,
+        card: {
+          type: "rendered-page-rsc-flight",
+          endpoint: `${options.app}/canale`,
+          fetchedAt: new Date().toISOString(),
+        },
+      },
       results,
     };
     await writeFile(
@@ -878,7 +1074,7 @@ async function readInsideASlot(browser, slots) {
  */
 async function provePanel(browser, catalogue, guide, options) {
   // The proof waits for a changeover, so it takes the channel whose
-  // schedule turns over first.
+  // live schedule turns over first.
   const panel = soonest(catalogue, guide);
   if (!panel) {
     console.log("SKIP  the panel — no channel changes soon enough");
@@ -887,6 +1083,7 @@ async function provePanel(browser, catalogue, guide, options) {
 
   const panelChannel = panel.channel;
   const sheet = `/api/channel/${encodeURIComponent(panelChannel.id)}`;
+  const panelLive = await readSheet(options.app, panelChannel.id);
   const panelUrl = `${options.app.replace(/\/$/, "")}/canal/${encodeURIComponent(panelChannel.id)}`;
 
   await browser.navigate(panelUrl);
@@ -904,7 +1101,7 @@ async function provePanel(browser, catalogue, guide, options) {
   );
 
   const before = await browser.evaluate(READ_PANEL);
-  const onAir = slotAt(panel.slots, Date.now());
+  const onAir = panelLive.body?.now ?? null;
   console.log(`panel:    ${panelChannel.name} — ${before?.text ?? "—"}`);
 
   check(
@@ -915,7 +1112,7 @@ async function provePanel(browser, catalogue, guide, options) {
   check(
     "the panel names the programme on air at the real clock",
     before?.text === onAir?.title,
-    `the panel says "${before?.text}", the guide says "${onAir?.title}"`,
+    `the panel says "${before?.text}", the app says "${onAir?.title ?? "—"}"`,
   );
 
   // The panel asks the server again on the minute tick. Counting the
@@ -934,7 +1131,7 @@ async function provePanel(browser, catalogue, guide, options) {
   // the clock. The endpoint is asked directly, so the changeover can be
   // watched without the browser in the way.
   const first = await readSheet(options.app, panelChannel.id);
-  const boundary = nextBoundary(panel.slots, Date.now());
+  const boundary = nextBoundary(slotsOf(guideFromSheet(first)), Date.now());
   const wait = Math.max(0, boundary - Date.now()) + 5000;
   if (wait > 240_000) {
     console.log(
@@ -946,8 +1143,9 @@ async function provePanel(browser, catalogue, guide, options) {
     const second = await readSheet(options.app, panelChannel.id);
     check(
       "the answer the panel prints follows the clock",
-      Boolean(second?.now) && second.now.title !== first?.now?.title,
-      `it said "${first?.now?.title ?? "—"}", now it says "${second?.now?.title ?? "—"}"`,
+      Boolean(second?.body?.now) &&
+        second.body.now.title !== first?.body?.now?.title,
+      `it said "${first?.body?.now?.title ?? "—"}", now it says "${second?.body?.now?.title ?? "—"}"`,
     );
 
     // And the panel on the page says the same thing.
@@ -975,15 +1173,39 @@ async function provePanel(browser, catalogue, guide, options) {
  *
  * The panel prints what the server answers, and the server reads the
  * clock. Asking the endpoint directly watches the answer move without the
- * browser in the way.
+ * browser in the way. A failed answer keeps its status: a 503 must never
+ * look like a channel with nothing on air.
  */
 async function readSheet(app, id) {
-  const response = await fetch(
-    `${app.replace(/\/$/, "")}/api/channel/${encodeURIComponent(id)}`,
-    { cache: "no-store" },
-  );
-  if (!response.ok) return null;
-  return await response.json();
+  const path = `/api/channel/${encodeURIComponent(id)}`;
+  let response;
+  try {
+    response = await fetch(`${app.replace(/\/$/, "")}${path}`, {
+      cache: "no-store",
+    });
+  } catch (error) {
+    throw new Error(
+      `could not read ${path}: the app did not answer (${error.message})`,
+    );
+  }
+  if (response.status !== 404 && !response.ok) {
+    const answer = (await response.text()).trim();
+    throw new Error(
+      `the app answered ${response.status} for ${path}${
+        answer ? `: ${answer}` : ""
+      }`,
+    );
+  }
+  if (response.status === 404) return { status: 404, body: null };
+  let body;
+  try {
+    body = await response.json();
+  } catch (error) {
+    throw new Error(
+      `the app answered ${response.status} for ${path} with unreadable JSON: ${error.message}`,
+    );
+  }
+  return { status: response.status, body };
 }
 
 /** Poll a snippet until it answers something truthy. */

@@ -799,6 +799,13 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
       // must not keep sending the same message every few seconds. A new
       // source re-runs this effect from scratch.
       let givenUp = false;
+      /**
+       * True once the picture has actually begun.
+       *
+       * Until then the element is waiting for its first bytes, and that
+       * wait is a slow line — not a stall.
+       */
+      let started = false;
 
       const disarm = () => {
         if (timer) {
@@ -816,31 +823,27 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           void video.play().catch(() => undefined);
           return;
         }
-        if (hlsRef.current) {
-          // The frames are already in the buffer; the decoder needs a
-          // hair more of them.
-          const ranges = video.buffered;
-          if (ranges.length > 0) {
-            const end = ranges.end(ranges.length - 1);
-            if (end - video.currentTime > 0.25) {
-              try {
-                video.currentTime += 0.1;
-              } catch {
-                /* the seek was refused; the next nudge tries again */
-              }
+        // The frames are already in the buffer; the decoder needs a
+        // hair more of them. This is the native path's nudge too: the
+        // element owns the session there, and a small step forward makes
+        // it hand over the frames it already holds.
+        //
+        // The element is never reloaded here. `video.load()` throws away
+        // every byte already fetched and puts the element back to
+        // readyState 0 — on a slow line that is exactly how the picture
+        // never arrives: the reload cancels the segment that was on its
+        // way, the next reload cancels the next one, and the viewer waits
+        // for a frame that is cancelled again and again. The chain
+        // moving on is the recovery; the element stays as it is.
+        const ranges = video.buffered;
+        if (ranges.length > 0) {
+          const end = ranges.end(ranges.length - 1);
+          if (end - video.currentTime > 0.25) {
+            try {
+              video.currentTime += 0.1;
+            } catch {
+              /* the seek was refused; the next nudge tries again */
             }
-          }
-          return;
-        }
-        // Native HLS: Safari owns the session, and the only way to make
-        // it read its playlist again is to ask the element to load. That
-        // is worth one try before the chain is given up on.
-        if (stalls >= 2) {
-          try {
-            video.load();
-            void video.play().catch(() => undefined);
-          } catch {
-            /* the element refused; the next tick gives up */
           }
         }
       };
@@ -864,7 +867,13 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
           failRef.current("Fluxul se blochează. Se încearcă următorul.");
           return;
         }
-        nudge();
+        // The nudge is not a counter: it asks the loader to pull again,
+        // and on the hls.js path that cancels the fragment that is on its
+        // way. Before the first picture there is no stall to mend — the
+        // element is still waiting for its first bytes — so the cold
+        // start is counted but never disturbed. A dead link gets the
+        // chain, not a reload.
+        if (started) nudge();
         timer = window.setTimeout(tick, GRACE_MS);
       };
 
@@ -877,6 +886,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, VideoPlayerProps>(
         disarm();
         stalls = 0;
         lastSecond = video.currentTime;
+        started = true;
       };
 
       video.addEventListener("waiting", watch);

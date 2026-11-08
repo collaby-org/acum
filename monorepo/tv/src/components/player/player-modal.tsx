@@ -14,7 +14,7 @@
  */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import { Radio } from "lucide-react";
 import type { Channel } from "@/data/types";
 import {
@@ -43,6 +43,63 @@ export function PlayerModal({
   onStatusChange,
 }: PlayerModalProps) {
   const playerRef = useRef<PlayerHandle>(null);
+  /** The history entry this modal owns while it is open. */
+  const historyEntryRef = useRef(false);
+  /** Whether the last close came from the browser's Back button. */
+  const closedByPopStateRef = useRef(false);
+  /** The latest parent callback, without making the history effect re-run. */
+  const onOpenChangeRef = useRef(onOpenChange);
+  /** Marks this modal's history entry without changing the visible URL. */
+  const historyMarker = useId();
+
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  }, [onOpenChange]);
+
+  // The browser's Back button belongs to the player: opening it adds one
+  // entry, and Back returns to the page without the player.
+  useEffect(() => {
+    if (!open) return;
+
+    closedByPopStateRef.current = false;
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    // The entry carries the player's own marker and nothing else. A layer
+    // that sits on top of the player — a review sheet — has a marker of
+    // its own, and the two must never be mistaken for one another: each
+    // of them answers only for the entry it pushed itself.
+    const state: Record<string, unknown> = {
+      ...(window.history.state ?? {}),
+    };
+    delete state["acum:zoom-overlay"];
+    delete state.acumPlayer;
+    state.acumPlayer = historyMarker;
+
+    window.history.pushState(state, "", window.location.href);
+    historyEntryRef.current = true;
+
+    const onPopState = (event: PopStateEvent) => {
+      if (!historyEntryRef.current) return;
+
+      // The entry that is current now carries the player's own marker:
+      // the pop consumed the entry above it — the sheet that sits on top
+      // of the player — and the player stays open.
+      if (event.state?.acumPlayer === historyMarker) return;
+
+      historyEntryRef.current = false;
+      closedByPopStateRef.current = true;
+      onOpenChangeRef.current(false);
+    };
+
+    window.addEventListener("popstate", onPopState);
+
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.history.scrollRestoration = previousRestoration;
+      historyEntryRef.current = false;
+    };
+  }, [historyMarker, open]);
 
   // The dialog content mounts a tick after `open` flips, so the picture is
   // started by `autoPlay`; this call only matters when the player was
@@ -53,8 +110,24 @@ export function PlayerModal({
 
   if (!channel) return null;
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (
+      !nextOpen &&
+      open &&
+      historyEntryRef.current &&
+      !closedByPopStateRef.current
+    ) {
+      // A close button or Escape must consume the history entry the modal
+      // added, so the next Back still belongs to the page behind it.
+      historyEntryRef.current = false;
+      window.history.back();
+    }
+    closedByPopStateRef.current = false;
+    onOpenChange(nextOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={cn(
           // On a phone the player is the whole screen: no margins, no

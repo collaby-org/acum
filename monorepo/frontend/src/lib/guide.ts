@@ -1,7 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cacheLife } from "next/cache";
-import { prepareGuide, type EpgGuide } from "@/components/now-next";
+import {
+  matchGuideChannels,
+  normalizeGuide,
+  prepareGuide,
+  type EpgGuide,
+} from "@/components/now-next";
+import { catalogueChannel } from "@/lib/catalogue";
+import { loadChannelDetail, type ChannelProgramme } from "@/lib/channel-detail";
 import { readChannelProgrammes, type EpgProgramme } from "@/lib/epg-source";
 import type { Channel } from "@/data/types";
 
@@ -37,6 +44,127 @@ export async function loadGuide(channels: Channel[]): Promise<EpgGuide | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * One programme slot, resolved from the server's own guide.
+ *
+ * The browser may ask for a slot, but it does not get to name it. The start
+ * and end instants are looked up in the guide for that channel; only an
+ * exact guide slot comes back, carrying the title and timestamps the guide
+ * itself uses. A missing, partial or forged slot has no answer.
+ */
+export type ResolvedProgrammeSlot = {
+  title: string;
+  startsAt: string;
+  endsAt: string;
+};
+
+/**
+ * Resolve a claimed programme slot against the guide.
+ *
+ * A slot is identified by both instants, not by its title: broadcasters
+ * rename programmes, while the start and end of a broadcast do not move.
+ * The title is therefore read from the guide and never from the client.
+ *
+ * Two doors, both of them the server's own: the day's guide, and the
+ * channel sheet the panel shows. The app keeps the live guide and the
+ * committed one, and the panel may be reading the other of the two — so a
+ * slot that is in either of them is a real slot, and a slot that is in
+ * neither is not.
+ */
+export async function resolveProgrammeSlot(
+  channelId: string,
+  claimedStartsAt: string | null,
+  claimedEndsAt: string | null,
+): Promise<ResolvedProgrammeSlot | null> {
+  if (!claimedStartsAt || !claimedEndsAt) return null;
+
+  const startsAt = Date.parse(claimedStartsAt);
+  const endsAt = Date.parse(claimedEndsAt);
+  if (!Number.isFinite(startsAt) || !Number.isFinite(endsAt)) return null;
+
+  const channel = catalogueChannel(channelId);
+  if (!channel) return null;
+
+  const guide = await loadFullGuide();
+  const guideChannel = guide
+    ? matchGuideChannels(guide, [channel]).get(channelId)
+    : undefined;
+
+  const inGuide = guideChannel?.programmes.find(
+    (entry) => entry.start === startsAt && entry.end === endsAt,
+  );
+
+  if (inGuide) {
+    return {
+      title: inGuide.title,
+      startsAt: new Date(inGuide.start).toISOString(),
+      endsAt: new Date(inGuide.end).toISOString(),
+    };
+  }
+
+  const inSheet = (await slotsOfChannel(channelId)).find(
+    (slot) =>
+      Date.parse(slot.startsAt) === startsAt &&
+      Date.parse(slot.endsAt) === endsAt,
+  );
+
+  return inSheet ?? null;
+}
+
+/**
+ * The whole day's guide, as the source has it.
+ *
+ * The hero's guide is slimmed to the hours around the clock; a review is
+ * attached to a slot of the day, so the whole day is read here.
+ */
+async function loadFullGuide(): Promise<EpgGuide | null> {
+  const live = await loadLiveGuide();
+  if (live) return normalizeGuide(live);
+
+  try {
+    const raw = await readFile(
+      path.join(process.cwd(), "data", "epg.json"),
+      "utf8",
+    );
+    return normalizeGuide(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The slots the channel sheet shows: the one on air and the ones after it.
+ *
+ * The panel reads its own guide — the live source on the web, the
+ * committed file on the television — and this is that guide's answer, so
+ * a review can be attached to the very slot the visitor was shown.
+ */
+async function slotsOfChannel(
+  channelId: string,
+): Promise<ResolvedProgrammeSlot[]> {
+  const detail = await loadChannelDetail(channelId).catch(() => null);
+  if (!detail) return [];
+
+  const slots: ChannelProgramme[] = [detail.now, ...detail.next].filter(
+    (slot): slot is ChannelProgramme => Boolean(slot),
+  );
+
+  const resolved: ResolvedProgrammeSlot[] = [];
+  for (const slot of slots) {
+    if (!slot.startsAt || !slot.endsAt) continue;
+    const startsAt = Date.parse(slot.startsAt);
+    const endsAt = Date.parse(slot.endsAt);
+    if (!Number.isFinite(startsAt) || !Number.isFinite(endsAt)) continue;
+    resolved.push({
+      title: slot.title,
+      startsAt: new Date(startsAt).toISOString(),
+      endsAt: new Date(endsAt).toISOString(),
+    });
+  }
+
+  return resolved;
 }
 
 /** How long one read of the source is shared before it is read again. */
