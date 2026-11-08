@@ -9,6 +9,24 @@ The version line for this project lives in `package.json` and `docs/VERSION`.
 
 ## [Unreleased]
 
+## [1.8.3] — 2026-11-08
+
+### Fixed
+
+- **The guide in the deployment was four days old, and the guide screens
+  said so.** `data/epg.json` is read with `fs` from the working directory,
+  so on Vercel it is the copy that shipped inside the build: the deployment
+  carried 2026-11-04 in the web app and 2026-10-28 in the TV app, and every
+  screen that read it (`/azi`, `/ghid`, `/maine`, `/saptamana`, `/meciuri`,
+  `/trending`, `/top-emisiuni`, `/diaspora`, `/cauta-o-emisiune`,
+  `/canale/[categorie]`, `/canale/grupate`) had no programme on air for any
+  of the 77 channels. The live-source reader that the channel pages already
+  use is not affected, which is why the site looked half alive: the channel
+  panel said "Superspeed, 03:30" while `/azi` said "Nimic în aer". Both
+  committed copies are regenerated here — 77 of 83 channels, 1906
+  programmes, 73 with a slot on air — and the read path is unified on the
+  live source in a following change.
+
 ## [1.8.2] — 2026-11-08
 
 ### Fixed
